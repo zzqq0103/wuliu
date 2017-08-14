@@ -52,7 +52,14 @@
         return this.$route.path.replace('/', '')
       },
       getSideItems () {
-        return this.sideItems.operationAdmin.items
+        let username = localStorage.getItem('ms_username')
+        if (username === 'yingyun') {
+          return this.sideItems.operationAdmin.items
+        } else if (username === 'caiwu') {
+          return this.sideItems.financialAdmin.items
+        } else if (username === 'caiwuzongzhang') {
+          return this.sideItems.financialDirector.items
+        }
       }
 
     }
