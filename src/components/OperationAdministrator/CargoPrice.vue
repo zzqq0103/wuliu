@@ -1,3 +1,3 @@
 <template>
-  <div>cargoPrice</div>
+  <div>价格梯度信息管理</div>
 </template>
