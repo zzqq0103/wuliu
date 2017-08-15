@@ -88,23 +88,23 @@
               "title":"应收款项",
               "subs":[
                 {
-                  "index":"11",
+                  "index":"freight",
                   "title":"运费核销"
                 },
                 {
-                  "index":"12",
+                  "index":"receipt",
                   "title":"回单押款"
                 },
                 {
-                  "index":"13",
+                  "index":"additional",
                   "title":"附加费"
                 },
                 {
-                  "index":"14",
+                  "index":"tripartiteIncome",
                   "title":"三方收入"
                 },
                 {
-                  "index":"15",
+                  "index":"otherIncome",
                   "title":"其他收入"
                 }
               ]
@@ -115,31 +115,31 @@
               "title":"应付款项",
               "subs":[
                 {
-                  "index":"21",
+                  "index":"transferFee",
                   "title":"中转费"
                 },
                 {
-                  "index":"22",
+                  "index":"trunkTransport",
                   "title":"干线运输费"
                 },
                 {
-                  "index":"23",
+                  "index":"shortTransport",
                   "title":"短驳运输费"
                 },
                 {
-                  "index":"24",
+                  "index":"tripartitePayment",
                   "title":"三方运输费"
                 },
                 {
-                  "index":"25",
+                  "index":"rebate",
                   "title":"返款"
                 },
                 {
-                  "index":"26",
+                  "index":"otherPayment",
                   "title":"其他支出"
                 },
                 {
-                  "index":"27",
+                  "index":"staffSalary",
                   "title":"人员支出"
                 }
               ]
@@ -150,11 +150,11 @@
               "title":"货款中心",
               "subs":[
                 {
-                  "index":"1",
+                  "index":"paymentCollection",
                   "title":"货款代收"
                 },
                 {
-                  "index":"2",
+                  "index":"paymentReturn",
                   "title":"货款归还"
                 }
               ]
@@ -165,22 +165,22 @@
         "items": [
             {
                 "icon": "price",
-                "index": "1",
+                "index": "paymentCenter",
                 "title": "货款中心"
             },
             {
                 "icon": "tripartite",
-                "index": "2",
+                "index": "tripartiteSettlement",
                 "title": "三方结算"
             },
             {
                 "icon": "finance",
-                "index": "3",
+                "index": "financialLedger",
                 "title": "财务总账"
             },
             {
                 "icon": "car",
-                "index": "4",
+                "index": "grossProfit",
                 "title": "大车毛利"
             }
         ]
