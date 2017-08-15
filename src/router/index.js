@@ -34,78 +34,78 @@ export default new Router({
         // 应收
         {
           path: '/freight',
-          component: resolve => require(['../components/FinancialAdministrator/accountsReceivable/Freight.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/accountsReceivable/Freight.vue'], resolve)
         },
         {
           path: '/receipt',
-          component: resolve => require(['../components/FinancialAdministrator/accountsReceivable/Receipt.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/accountsReceivable/Receipt.vue'], resolve)
         },
         {
           path: '/additional',
-          component: resolve => require(['../components/FinancialAdministrator/accountsReceivable/Additional.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/accountsReceivable/Additional.vue'], resolve)
         },
         {
           path: '/tripartiteIncome',
-          component: resolve => require(['../components/FinancialAdministrator/accountsReceivable/TripartiteIncome.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/accountsReceivable/TripartiteIncome.vue'], resolve)
         },
         {
           path: '/otherIncome',
-          component: resolve => require(['../components/FinancialAdministrator/accountsReceivable/OtherIncome.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/accountsReceivable/OtherIncome.vue'], resolve)
         },
         // 应付
         {
           path: '/transferFee',
-          component: resolve => require(['../components/FinancialAdministrator/accountsPayable/TransferFee.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/TransferFee.vue'], resolve)
         },
         {
           path: '/trunkTransport',
-          component: resolve => require(['../components/FinancialAdministrator/accountsPayable/TrunkTransport.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/TrunkTransport.vue'], resolve)
         },
         {
           path: '/shortTransport',
-          component: resolve => require(['../components/FinancialAdministrator/accountsPayable/ShortTransport.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/ShortTransport.vue'], resolve)
         },
         {
           path: '/tripartitePayment',
-          component: resolve => require(['../components/FinancialAdministrator/accountsPayable/TripartitePayment.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/TripartitePayment.vue'], resolve)
         },
         {
           path: '/rebate',
-          component: resolve => require(['../components/FinancialAdministrator/accountsPayable/Rebate.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/Rebate.vue'], resolve)
         },
         {
           path: '/otherPayment',
-          component: resolve => require(['../components/FinancialAdministrator/accountsPayable/OtherPayment.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/OtherPayment.vue'], resolve)
         },
         {
           path: '/staffSalary',
-          component: resolve => require(['../components/FinancialAdministrator/accountsPayable/StaffSalary.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/StaffSalary.vue'], resolve)
         },
         // 货款中心
         {
           path: '/paymentCollection',
-          component: resolve => require(['../components/FinancialAdministrator/paymentCenter/PaymentCollection.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/paymentCenter/PaymentCollection.vue'], resolve)
         },
         {
           path: '/paymentReturn',
-          component: resolve => require(['../components/FinancialAdministrator/paymentCenter/PaymentReturn.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/paymentCenter/PaymentReturn.vue'], resolve)
         },
         // 财务总账
         {
           path: '/paymentCenter',
-          component: resolve => require(['../components/FinancialAdministrator/financialDirector/PaymentCenter.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/financialDirector/PaymentCenter.vue'], resolve)
         },
         {
           path: '/tripartiteSettlement',
-          component: resolve => require(['../components/FinancialAdministrator/financialDirector/TripartiteSettlement.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/financialDirector/TripartiteSettlement.vue'], resolve)
         },
         {
           path: '/financialLedger',
-          component: resolve => require(['../components/FinancialAdministrator/financialDirector/FinancialLedger.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/financialDirector/FinancialLedger.vue'], resolve)
         },
         {
           path: '/grossProfit',
-          component: resolve => require(['../components/FinancialAdministrator/financialDirector/GrossProfit.vue'], resolve)
+          component: resolve => require(['../components/financialAdministrator/financialDirector/GrossProfit.vue'], resolve)
         }
       ]
 
