@@ -1,10 +1,16 @@
-# vue-manage-project
 
-> A Vue.js project
+# 一个简单的物流管理系统（前端部分）
+
+> A logistics project using Vue2.0
 
 ## Build Setup
 
+## 构建项目
+
 ``` bash
+
+# 这些命令可以使用
+
 # install dependencies
 npm install
 
@@ -13,6 +19,12 @@ npm run dev
 
 # build for production with minification
 npm run build
+
+```
+
+``` bash
+
+# 以下命令现在还不能够使用
 
 # build for production and view the bundle analyzer report
 npm run build --report
@@ -25,6 +37,6 @@ npm run e2e
 
 # run all tests
 npm test
+
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
