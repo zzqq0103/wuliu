@@ -1,85 +1,188 @@
 {
-"test1":{
-                "items": [
+    "test1": {
+        "items": [
+            {
+                "icon": "el-icon-setting",
+                "index": "readme",
+                "title": "自述"
+            },
+            {
+                "icon": "el-icon-menu",
+                "index": "2",
+                "title": "表格",
+                "subs": [
                     {
-                        "icon": "el-icon-setting",
-                        "index": "readme",
-                        "title": "自述"
+                        "index": "basetable",
+                        "title": "基础表格"
                     },
                     {
-                        "icon": "el-icon-menu",
-                        "index": "2",
-                        "title": "表格",
-                        "subs": [
-                            {
-                                "index": "basetable",
-                                "title": "基础表格"
-                            },
-                            {
-                                "index": "vuetable",
-                                "title": "Vue表格组件"
-                            }
-                        ]
-                    },
-                    {
-                        "icon": "el-icon-date",
-                        "index": "3",
-                        "title": "表单",
-                        "subs": [
-                            {
-                                "index": "baseform",
-                                "title": "基本表单"
-                            },
-                            {
-                                "index": "vueeditor",
-                                "title": "编辑器"
-                            },
-                            {
-                                "index": "markdown",
-                                "title": "markdown"
-                            },
-                            {
-                                "index": "upload",
-                                "title": "文件上传"
-                            }
-                        ]
-                    },
-                    {
-                        "icon": "el-icon-star-on",
-                        "index": "basecharts",
-                        "title": "图表"
-                    },
-                    {
-                        "icon": "el-icon-upload2",
-                        "index": "drag",
-                        "title": "拖拽"
+                        "index": "vuetable",
+                        "title": "Vue表格组件"
                     }
                 ]
-
-},
-"operationAdmin":{
-                "items": [
+            },
+            {
+                "icon": "el-icon-date",
+                "index": "3",
+                "title": "表单",
+                "subs": [
                     {
-                        "icon": "car",
-                        "index": "vehicle",
-                        "title": "车辆信息管理"
+                        "index": "baseform",
+                        "title": "基本表单"
                     },
                     {
-                        "icon": "person",
-                        "index": "personnel",
-                        "title": "客户信息管理"
+                        "index": "vueeditor",
+                        "title": "编辑器"
                     },
                     {
-                        "icon": "price",
-                        "index": "cargoprice",
-                        "title": "价格梯度信息管理"
+                        "index": "markdown",
+                        "title": "markdown"
                     },
                     {
-                        "icon": "enterprise",
-                        "index": "enterprise",
-                        "title": "外包企业信息管理"
+                        "index": "upload",
+                        "title": "文件上传"
                     }
                 ]
-
-}
+            },
+            {
+                "icon": "el-icon-star-on",
+                "index": "basecharts",
+                "title": "图表"
+            },
+            {
+                "icon": "el-icon-upload2",
+                "index": "drag",
+                "title": "拖拽"
+            }
+        ]
+    },
+    "operationAdmin": {
+        "items": [
+            {
+                "icon": "car",
+                "index": "vehicle",
+                "title": "车辆信息管理"
+            },
+            {
+                "icon": "person",
+                "index": "personnel",
+                "title": "客户信息管理"
+            },
+            {
+                "icon": "price",
+                "index": "cargoprice",
+                "title": "价格梯度信息管理"
+            },
+            {
+                "icon": "enterprise",
+                "index": "enterprise",
+                "title": "外包企业信息管理"
+            }
+        ]
+    },
+    "financialAdmin": {
+        "items": [
+        {
+              "icon":"receipt",
+              "index":"1",
+              "title":"应收款项",
+              "subs":[
+                {
+                  "index":"freight",
+                  "title":"运费核销"
+                },
+                {
+                  "index":"receipt",
+                  "title":"回单押款"
+                },
+                {
+                  "index":"additional",
+                  "title":"附加费"
+                },
+                {
+                  "index":"tripartiteIncome",
+                  "title":"三方收入"
+                },
+                {
+                  "index":"otherIncome",
+                  "title":"其他收入"
+                }
+              ]
+         },
+        {
+              "icon":"payment",
+              "index":"2",
+              "title":"应付款项",
+              "subs":[
+                {
+                  "index":"transferFee",
+                  "title":"中转费"
+                },
+                {
+                  "index":"trunkTransport",
+                  "title":"干线运输费"
+                },
+                {
+                  "index":"shortTransport",
+                  "title":"短驳运输费"
+                },
+                {
+                  "index":"tripartitePayment",
+                  "title":"三方运输费"
+                },
+                {
+                  "index":"rebate",
+                  "title":"返款"
+                },
+                {
+                  "index":"otherPayment",
+                  "title":"其他支出"
+                },
+                {
+                  "index":"staffSalary",
+                  "title":"人员支出"
+                }
+              ]
+         },
+        {
+              "icon":"price",
+              "index":"3",
+              "title":"货款中心",
+              "subs":[
+                {
+                  "index":"paymentCollection",
+                  "title":"货款代收"
+                },
+                {
+                  "index":"paymentReturn",
+                  "title":"货款归还"
+                }
+              ]
+         }
+        ]
+    },
+  "financialDirector":{
+        "items": [
+            {
+                "icon": "price",
+                "index": "paymentCenter",
+                "title": "货款中心"
+            },
+            {
+                "icon": "tripartite",
+                "index": "tripartiteSettlement",
+                "title": "三方结算"
+            },
+            {
+                "icon": "finance",
+                "index": "financialLedger",
+                "title": "财务总账"
+            },
+            {
+                "icon": "car",
+                "index": "grossProfit",
+                "title": "大车毛利"
+            }
+        ]
+  }
 }

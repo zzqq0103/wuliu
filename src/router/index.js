@@ -13,21 +13,99 @@ export default new Router({
       path: '/home',
       component: reslove => require(['../components/common/Home.vue'], reslove),
       children: [
+        // 营运管理员
         {
           path: '/cargoprice',
-          component: resolve => require(['../components/OperationAdministrator/CargoPrice.vue'], resolve)
+          component: resolve => require(['../components/operationAdministrator/CargoPrice.vue'], resolve)
         },
         {
           path: '/enterprise',
-          component: resolve => require(['../components/OperationAdministrator/Enterprise.vue'], resolve)
+          component: resolve => require(['../components/operationAdministrator/Enterprise.vue'], resolve)
         },
         {
           path: '/personnel',
-          component: resolve => require(['../components/OperationAdministrator/PersonnelInfo.vue'], resolve)
+          component: resolve => require(['../components/operationAdministrator/PersonnelInfo.vue'], resolve)
         },
         {
           path: '/vehicle',
-          component: resolve => require(['../components/OperationAdministrator/VehicleInfo.vue'], resolve)
+          component: resolve => require(['../components/operationAdministrator/VehicleInfo.vue'], resolve)
+        },
+        // 财务管理员
+        // 应收
+        {
+          path: '/freight',
+          component: resolve => require(['../components/financialAdministrator/accountsReceivable/Freight.vue'], resolve)
+        },
+        {
+          path: '/receipt',
+          component: resolve => require(['../components/financialAdministrator/accountsReceivable/Receipt.vue'], resolve)
+        },
+        {
+          path: '/additional',
+          component: resolve => require(['../components/financialAdministrator/accountsReceivable/Additional.vue'], resolve)
+        },
+        {
+          path: '/tripartiteIncome',
+          component: resolve => require(['../components/financialAdministrator/accountsReceivable/TripartiteIncome.vue'], resolve)
+        },
+        {
+          path: '/otherIncome',
+          component: resolve => require(['../components/financialAdministrator/accountsReceivable/OtherIncome.vue'], resolve)
+        },
+        // 应付
+        {
+          path: '/transferFee',
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/TransferFee.vue'], resolve)
+        },
+        {
+          path: '/trunkTransport',
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/TrunkTransport.vue'], resolve)
+        },
+        {
+          path: '/shortTransport',
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/ShortTransport.vue'], resolve)
+        },
+        {
+          path: '/tripartitePayment',
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/TripartitePayment.vue'], resolve)
+        },
+        {
+          path: '/rebate',
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/Rebate.vue'], resolve)
+        },
+        {
+          path: '/otherPayment',
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/OtherPayment.vue'], resolve)
+        },
+        {
+          path: '/staffSalary',
+          component: resolve => require(['../components/financialAdministrator/accountsPayable/StaffSalary.vue'], resolve)
+        },
+        // 货款中心
+        {
+          path: '/paymentCollection',
+          component: resolve => require(['../components/financialAdministrator/paymentCenter/PaymentCollection.vue'], resolve)
+        },
+        {
+          path: '/paymentReturn',
+          component: resolve => require(['../components/financialAdministrator/paymentCenter/PaymentReturn.vue'], resolve)
+        },
+        // 财务总账
+        {
+          path: '/paymentCenter',
+          component: resolve => require(['../components/financialAdministrator/financialDirector/PaymentCenter.vue'], resolve)
+        },
+        {
+          path: '/tripartiteSettlement',
+          component: resolve => require(['../components/financialAdministrator/financialDirector/TripartiteSettlement.vue'], resolve)
+        },
+        {
+          path: '/financialLedger',
+          component: resolve => require(['../components/financialAdministrator/financialDirector/FinancialLedger.vue'], resolve)
+        },
+        {
+          path: '/grossProfit',
+          component: resolve => require(['../components/financialAdministrator/financialDirector/GrossProfit.vue'], resolve)
         }
       ]
 
@@ -38,27 +116,27 @@ export default new Router({
     }
   ]
 })
-export const asyncRouterMap = [
-  {
-    path: '/operation',
-    children: [
-      {
-        path: '/cargo',
-        component: resolve => require(['../components/OperationAdministrator/CargoPrice.vue'], resolve)
-      },
-      {
-        path: '/enterprise',
-        component: resolve => require(['../components/OperationAdministrator/Enterprise.vue'], resolve)
-      },
-      {
-        path: '/personnel',
-        component: resolve => require(['../components/OperationAdministrator/PersonnelInfo.vue'], resolve)
-      },
-      {
-        path: '/vehicle',
-        component: resolve => require(['../components/OperationAdministrator/VehicleInfo.vue'], resolve)
-      }
-    ]
-
-  }
-]
+// export const asyncRouterMap = [
+//   {
+//     path: '/operation',
+//     children: [
+//       {
+//         path: '/cargo',
+//         component: resolve => require(['../components/operationAdministrator/CargoPrice.vue'], resolve)
+//       },
+//       {
+//         path: '/enterprise',
+//         component: resolve => require(['../components/operationAdministrator/Enterprise.vue'], resolve)
+//       },
+//       {
+//         path: '/personnel',
+//         component: resolve => require(['../components/operationAdministrator/PersonnelInfo.vue'], resolve)
+//       },
+//       {
+//         path: '/vehicle',
+//         component: resolve => require(['../components/operationAdministrator/VehicleInfo.vue'], resolve)
+//       }
+//     ]
+//
+//   }
+// ]
