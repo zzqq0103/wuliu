@@ -213,6 +213,15 @@ export default new Router({
         {
           path: '/epobolingInfo',
           component: resolve => require(['../components/dispatch/epobolingInfo.vue'], resolve)
+        },
+        // 系统管理员
+        {
+          path: '/register',
+          component: resolve => require(['../components/systemAdministrator/Register.vue'], resolve)
+        },
+        {
+          path: '/authorityManagement',
+          component: resolve => require(['../components/systemAdministrator/AuthorityManagement.vue'], resolve)
         }
       ]
 

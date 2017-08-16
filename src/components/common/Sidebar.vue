@@ -63,6 +63,10 @@
           return this.sideItems.logitstiAdmin.items
         } else if (username === 'kefu') {
           return this.sideItems.customerService.items
+        } else if (username === 'xitong') {
+          return this.sideItems.systemAdmin.items
+        } else if (username === 'waibao') {
+          return this.sideItems.outsourcingAdmin.items
         }
       }
 

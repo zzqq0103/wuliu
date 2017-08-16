@@ -348,5 +348,17 @@
                 "title": "运费异常"
             }
         ]
+    },
+    "systemAdmin": {
+      "items": [
+        {
+          "index": "register",
+          "title": "账号注册"
+        },
+        {
+          "index": "authorityManagement",
+          "title": "权限管理"
+        }
+      ]
     }
 }
