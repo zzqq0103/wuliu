@@ -265,8 +265,8 @@
                 "icon": "",
                 "subs": [
                     {
-                        "index": "orderDetail",
-                        "title": "订单详情",
+                        "index": "reserveCheck",
+                        "title": "查看订单",
                         "icon": ""
                     },
                     {
@@ -278,14 +278,24 @@
                         "index": "orderAdd",
                         "title": "网点开单",
                         "icon": ""
+                    },
+                    {
+                        "index": "orderDetail",
+                        "title": "订单详情",
+                        "icon": ""
                     }
                 ]
             },
             {
                 "index": "appointInfo",
-                "title": "查看预约单",
+                "title": "预约单",
                 "icon": "",
                 "subs": [
+                    {
+                        "index": "appointInfo",
+                        "title": "查看预约单",
+                        "icon": ""                     
+                    },
                     {
                         "index": "appointAdd",
                         "title": "新建预约单",
@@ -300,9 +310,14 @@
             },
             {
                 "index": "logisticsInfo",
-                "title": "查看物流信息",
+                "title": "物流信息",
                 "icon": "",
                 "subs": [
+                     {
+                        "index": "logisticsInfo",
+                        "title": "查看物流信息",
+                        "icon": ""
+                    },
                     {
                         "index": "logisticsDetail",
                         "title": "查看物流详情信息",
@@ -317,9 +332,14 @@
             },
             {
                 "index": "orderInfo",
-                "title": "查看库存",
+                "title": "库存",
                 "icon": "",
                 "subs": [
+                    {
+                        "index": "orderInfo",
+                        "title": "查看库存",
+                        "icon": ""
+                    },
                     {
                         "index": "stockDetail",
                         "title": "库存详情",
@@ -327,9 +347,14 @@
                     },
                     {
                         "index": "stockinInfo",
-                        "title": "入库信息",
+                        "title": "入库管理",
                         "icon": "",
                         "subs": [
+                            {
+                                "index": "stockinInfo",
+                                "title": "入库信息",
+                                "icon": ""
+                            },
                             {
                                 "index": "stockinChange",
                                 "title": "入库更新",
