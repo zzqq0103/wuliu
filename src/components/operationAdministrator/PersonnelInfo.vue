@@ -9,15 +9,14 @@
         <el-button @click="setting">设置</el-button>
       </div>
 
-      <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
+      <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false" top="30%">
         <template v-for="(collist,i) in gridOptions.columnDefs">
           <div>
-            <el-checkbox v-model="collist.hide">{{collist.headerName}}</el-checkbox>
+            <el-checkbox v-model="collist.hide" @change="updataColumnDefs(gridOptions.columnDefs)">{{collist.headerName}}</el-checkbox>
           </div>
         </template>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="colVisible = false">取 消</el-button>
-          <el-button type="primary" @click="updataColumnDefs(gridOptions.columnDefs)">确 定</el-button>
+          <el-button type="primary" @click="colVisible = false">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -82,7 +81,6 @@
         this.gridOptions.rowData = testJson.personnelInfo.list
       },
       updataColumnDefs (collist) {
-        this.colVisible = false
         for (let i = 0; i < collist.length; i++) {
           this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
         }
