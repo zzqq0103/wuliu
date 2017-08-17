@@ -6,19 +6,26 @@
       </div>
       <div>
         <el-button @click="test">添加</el-button>
-        <el-button @click="colVisible = true">设置</el-button>
+        <el-button @click="setting">设置</el-button>
       </div>
 
-      <el-dialog title="个人中心:" :visible.sync="colVisible" size="tiny">
+      <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
         <template v-for="(collist,i) in gridOptions.columnDefs">
-          <el-checkbox v-model="gridOptions.columnDefs[i].hide">{{collist.headerName}}</el-checkbox>
+          <div>
+            <el-checkbox v-model="collist.hide">{{collist.headerName}}</el-checkbox>
+          </div>
         </template>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="colVisible = false">取 消</el-button>
+          <el-button type="primary" @click="updataColumnDefs(gridOptions.columnDefs)">确 定</el-button>
+        </div>
       </el-dialog>
     </div>
     <div style="clear: both;"></div>
     <div>
       <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
                    :gridOptions="gridOptions"
+                   :suppressMovableColumns="true"
                    :enableColResize="true"
                    :enableSorting="true"
                    :enableFilter="true"
@@ -37,7 +44,32 @@
       return {
         gridOptions: {
           rowData: null,
-          columnDefs: null
+          columnDefs: [
+            {
+              headerName: '客户企业ID', width: 150, field: 'clientCompId', filter: 'text', hide: false
+            },
+            {
+              headerName: '客户企业名称', width: 150, field: 'clientCompNam', filter: 'text', hide: false
+            },
+            {
+              headerName: '联系人姓名', width: 150, field: 'nam', filter: 'text', hide: false
+            },
+            {
+              headerName: '联系电话', width: 150, field: 'tel', filter: 'text', hide: false
+            },
+            {
+              headerName: '企业详细地址', width: 150, field: 'compAdr', filter: 'text', hide: false
+            },
+            {
+              headerName: '所属片区', width: 150, field: 'area', filter: 'text', hide: false
+            },
+            {
+              headerName: '业务员ID', width: 150, field: 'salesmanId', filter: 'text', hide: false
+            },
+            {
+              headerName: '是否三方', width: 150, field: 'isTril', filter: 'text', hide: false
+            }
+          ]
         },
         colVisible: false
       }
@@ -49,55 +81,45 @@
       createRowData () {
         this.gridOptions.rowData = testJson.personnelInfo.list
       },
-      createColumnDefs () {
-        this.gridOptions.columnDefs = [
-          {
-            headerName: '客户企业ID', width: 150, field: 'clientCompId', filter: 'text', hide: false
-          },
-          {
-            headerName: '客户企业名称', width: 150, field: 'clientCompNam', filter: 'text', hide: false
-          },
-          {
-            headerName: '联系人姓名', width: 150, field: 'nam', filter: 'text', hide: false
-          },
-          {
-            headerName: '联系电话', width: 150, field: 'tel', filter: 'text', hide: false
-          },
-          {
-            headerName: '企业详细地址', width: 150, field: 'compAdr', filter: 'text', hide: false
-          },
-          {
-            headerName: '所属片区', width: 150, field: 'area', filter: 'text', hide: false
-          },
-          {
-            headerName: '业务员ID', width: 150, field: 'salesmanId', filter: 'text', hide: false
-          },
-          {
-            headerName: '是否三方', width: 150, field: 'isTril', filter: 'text', hide: false
-          }
-        ]
+      updataColumnDefs (collist) {
+        this.colVisible = false
+        for (let i = 0; i < collist.length; i++) {
+          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+        }
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
       },
+      changeColumnDefsBoolen () {
+        var columnlist = this.gridOptions.columnDefs
+        for (let i = 0; i < columnlist.length; i++) {
+          columnlist[i].hide = !columnlist[i].hide
+        }
+      },
       test () {
+        console.log(this.gridOptions.columnDefs)
 //        console.log(this.gridOptions.columnDefs[0].hide)
 //        console.log(this.gridOptions.columnApi.getAllDisplayedColumns())
-        console.log(this.gridOptions.columnApi.getColumnState())
+//        if (this.gridOptions.columnDefs[0].hide) {
+//          this.gridOptions.columnDefs[0].hide = false
+//        } else {
+//          this.gridOptions.columnDefs[0].hide = true
+//        }
+//        this.gridOptions.columnApi.setColumnVisible('clientCompId', true)
+//        this.gridOptions.columnApi.setColumnVisible('isTril', false)
+//        console.log(this.gridOptions.columnDefs[0].hide)
+//        console.log(this.gridOptions.columnApi.getColumnState())
       },
       setting () {
-
-      }
-    },
-    computed: {
-      getcol () {
-
+        this.colVisible = true
       }
     },
     beforeMount () {
       this.createRowData()
-      this.createColumnDefs()
-      console.log(this.gridOptions)
+//      this.createColumnDefs()
+    },
+    mounted () {
+      this.changeColumnDefsBoolen()
     }
   }
 </script>
