@@ -294,7 +294,7 @@
                     {
                         "index": "appointInfo",
                         "title": "查看预约单",
-                        "icon": ""                     
+                        "icon": ""
                     },
                     {
                         "index": "appointAdd",
@@ -385,5 +385,14 @@
           "title": "权限管理"
         }
       ]
+    },
+    "outsourcingAdmin": {
+      "items":[
+        {
+          "index":"orderform",
+          "title":"订单查询"
+        }
+      ]
+
     }
 }
