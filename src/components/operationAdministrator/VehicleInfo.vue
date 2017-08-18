@@ -9,6 +9,7 @@
         </div>
         <div>
           <el-button @click="vehicleVisable = true">添加</el-button>
+          <el-button @click="setting">设置</el-button>
         </div>
       </p>
     </div>
@@ -23,7 +24,7 @@
                    :enableFilter="true"
                    :groupHeaders="true"
                    :rowHeight=40
-                   :color="red"
+                   :headerHeight=30
       ></ag-grid-vue>
     </div>
 
@@ -60,6 +61,7 @@
           <el-button type="primary" @click="vehicleVisable = false">确 定</el-button>
         </div>  
     </el-dialog>
+
     <el-dialog title="" :visible.sync="vehicleDelVisable" size=""tiny>
       <h2 style="padding:30px">确认删除吗？</h2>
       <div slot="footer" class="dialog-footer">
@@ -68,8 +70,19 @@
       </div>
     </el-dialog>
 
+    <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
+        <template v-for="(collist,i) in gridOptions.columnDefs">
+          <div>
+            <el-checkbox v-model="collist.hide">{{collist.headerName}}</el-checkbox>
+          </div>
+        </template>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="colVisible = false">取 消</el-button>
+          <el-button type="primary" @click="updataColumnDefs(gridOptions.columnDefs)">确 定</el-button>
+        </div>
+    </el-dialog>
+
   </div>
-  
 </template>
 
 <script>
@@ -78,8 +91,9 @@
   export default {
     data () {
       return {
-        vehicleVisable: false,  // ‘增加’弹窗
-        vehicleDelVisable: false, // ‘删除’弹窗
+        colVisible: false,
+        vehicleVisable: false,
+        vehicleDelVisable: false,
         vehicleForm: {
           'licePlateNum': '',
           'driverName': '',
@@ -90,12 +104,54 @@
           'carPosition': ''
         },
         rules: {
-
         },
         formLabelWidth: '150px',
         gridOptions: {
-          columnDefs: null,
-          rowData: null
+          context: {
+            componentParent: this
+          },
+          rowData: null,
+          columnDefs: [
+            {
+              headerName: '车牌号码', width: 150, field: 'licePlateNum', filter: 'text', hide: false
+            },
+            {
+              headerName: '司机姓名', width: 150, field: 'driverName', filter: 'text', hide: false
+            },
+            {
+              headerName: '联系电话', width: 150, field: 'tel', filter: 'text', hide: false
+            },
+            {
+              headerName: '合同号', width: 150, field: 'contractID', filter: 'text', hide: false
+            },
+            {
+              headerName: '合同价格', width: 150, field: 'contractPrice', filter: 'text', hide: false
+            },
+            {
+              headerName: '车容量', width: 150, field: 'capacity', filter: 'text', hide: false
+            },
+            {
+              headerName: '吨位', width: 150, field: 'tonnage', filter: 'text', hide: false
+            },
+            {
+              headerName: '车辆类型', width: 150, field: 'carType', filter: 'text', hide: false
+            },
+            {
+              headerName: '车辆接送区域', width: 150, field: 'pickUpArea', filter: 'text', hide: false
+            },
+            {
+              headerName: '司机状态', width: 150, field: 'receState', filter: 'text', hide: false
+            },
+            {
+              headerName: '车辆状态', width: 150, field: 'carState', filter: 'text', hide: false
+            },
+            {
+              headerName: '车辆位置', width: 150, field: 'carPosition', filter: 'text', hide: false
+            },
+            {
+              headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
+            }
+          ]
         }
       }
     },
@@ -114,61 +170,30 @@
       createRowData () {
         this.gridOptions.rowData = testJson.vehicleInfo.list
       },
-      createColumnDefs () {
-        this.gridOptions.columnDefs = [
-          {
-            headerName: '车牌号码', width: 150, field: 'licePlateNum', filter: 'text'
-          },
-          {
-            headerName: '司机姓名', width: 150, field: 'driverName', filter: 'text'
-          },
-          {
-            headerName: '联系电话', width: 150, field: 'tel', filter: 'text'
-          },
-          {
-            headerName: '合同号', width: 150, field: 'contractID', filter: 'text'
-          },
-          {
-            headerName: '合同价格', width: 150, field: 'contractPrice', filter: 'text'
-          },
-          {
-            headerName: '车容量', width: 150, field: 'capacity', filter: 'text'
-          },
-          {
-            headerName: '吨位', width: 150, field: 'tonnage', filter: 'text'
-          },
-          {
-            headerName: '车辆类型', width: 150, field: 'carType', filter: 'text'
-          },
-          {
-            headerName: '车辆接送区域', width: 150, field: 'pickUpArea', filter: 'text'
-          },
-          {
-            headerName: '司机状态', width: 150, field: 'receState', filter: 'text'
-          },
-          {
-            headerName: '车辆状态', width: 150, field: 'carState', filter: 'text'
-          },
-          {
-            headerName: '车辆位置', width: 150, field: 'carPosition', filter: 'text'
-          },
-          {
-            headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent'
-          }
-        ]
-      },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
+      },
+      changeColumnDefsBoolen () {
+        var columnlist = this.gridOptions.columnDefs
+        for (let i = 0; i < columnlist.length; i++) {
+          columnlist[i].hide = !columnlist[i].hide
+        }
+      },
+      setting () {
+        this.colVisible = true
+      },
+      updataColumnDefs (collist) {
+        this.colVisible = false
+        for (let i = 0; i < collist.length; i++) {
+          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+        }
       }
     },
     beforeMount () {
-      this.gridOptions = {
-        context: {
-          componentParent: this
-        }
-      }
       this.createRowData()
-      this.createColumnDefs()
+    },
+    mounted () {
+      this.changeColumnDefsBoolen()
     }
   }
 </script>
