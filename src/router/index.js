@@ -222,7 +222,11 @@ export default new Router({
         {
           path: '/authorityManagement',
           component: resolve => require(['../components/systemAdministrator/AuthorityManagement.vue'], resolve)
-        }
+        },
+        {
+          path: '/orderform',
+          component: resolve => require(['../components/orderFormer/OrderForm.vue'], resolve)
+        }        
       ]
 
     },
