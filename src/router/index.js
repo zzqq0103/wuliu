@@ -225,7 +225,7 @@ export default new Router({
         },
         {
           path: '/orderform',
-          component: resolve => require(['../components/orderFormer/OrderForm.vue'], resolve)
+          component: resolve => require(['../components/orderFormer/OrderFormer.vue'], resolve)
         }        
       ]
 
