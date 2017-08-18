@@ -29,7 +29,7 @@
       ></ag-grid-vue>
     </div>
 
-    <el-dialog title="车辆信息:" :visible.sync="vehicleVisable"">
+    <el-dialog title="车辆信息:" :visible.sync="vehicleVisable">
         <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
           <el-form-item label="车牌号码:" :label-width="formLabelWidth">
             <el-input v-model="vehicleForm.licePlateNum"></el-input>
@@ -78,8 +78,7 @@
           </div>
         </template>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="colVisible = false">取 消</el-button>
-          <el-button type="primary" @click="updataColumnDefs(gridOptions.columnDefs)">确 定</el-button>
+          <el-button type="primary" @change="updataColumnDefs(gridOptions.columnDefs)">确 定</el-button>
         </div>
     </el-dialog>
 
