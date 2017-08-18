@@ -27,37 +27,37 @@
     </div>
 
     <el-dialog title="车辆信息:" :visible.sync="vehicleVisable">
-    <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
-      <el-form-item label="车牌号码:" :label-width="formLabelWidth">
-        <el-input v-model="vehicleForm.licePlateNum"></el-input>
-      </el-form-item>
-      <el-form-item label="司机姓名:" :label-width="formLabelWidth">
-        <el-input v-model="vehicleForm.driverName"></el-input>
-      </el-form-item>
-      <el-form-item label="联系电话:" :label-width="formLabelWidth">
-        <el-input v-model="vehicleForm.tel"></el-input>
-      </el-form-item>
-      <el-form-item label="车容量:" :label-width="formLabelWidth">
-        <el-input v-model="vehicleForm.capacity"></el-input>
-      </el-form-item>
-      <el-form-item label="车辆类型:" :label-width="formLabelWidth">
-        <el-input v-model="vehicleForm.carType"></el-input>
-      </el-form-item>
-      <el-form-item label="车辆位置:" :label-width="formLabelWidth">
-        <el-input v-model="vehicleForm.carPosition"></el-input>
-      </el-form-item>
-      <el-form-item label="车辆接送区域:" label-width="150px">
-        <el-select v-model="vehicleForm.pickUpArea" placeholder="请选择" style="width:100%">
-          <el-option key="ct" label="长途" value="ct"></el-option>
-          <el-option key="dt" label="短途" value="dt"></el-option>
-          <el-option key="ctdt" label="长途与短途" value="ctdt"></el-option>
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="vehicleVisable = false">取 消</el-button>
-      <el-button type="primary" @click="vehicleVisable = false">确 定</el-button>
-    </div>
+      <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
+        <el-form-item label="车牌号码:" :label-width="formLabelWidth">
+          <el-input v-model="vehicleForm.licePlateNum"></el-input>
+        </el-form-item>
+        <el-form-item label="司机姓名:" :label-width="formLabelWidth">
+          <el-input v-model="vehicleForm.driverName"></el-input>
+        </el-form-item>
+        <el-form-item label="联系电话:" :label-width="formLabelWidth">
+          <el-input v-model="vehicleForm.tel"></el-input>
+        </el-form-item>
+        <el-form-item label="车容量:" :label-width="formLabelWidth">
+          <el-input v-model="vehicleForm.capacity"></el-input>
+        </el-form-item>
+        <el-form-item label="车辆类型:" :label-width="formLabelWidth">
+          <el-input v-model="vehicleForm.carType"></el-input>
+        </el-form-item>
+        <el-form-item label="车辆位置:" :label-width="formLabelWidth">
+          <el-input v-model="vehicleForm.carPosition"></el-input>
+        </el-form-item>
+        <el-form-item label="车辆接送区域:" label-width="150px">
+          <el-select v-model="vehicleForm.pickUpArea" placeholder="请选择" style="width:100%">
+            <el-option key="ct" label="长途" value="ct"></el-option>
+            <el-option key="dt" label="短途" value="dt"></el-option>
+            <el-option key="ctdt" label="长途与短途" value="ctdt"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="vehicleVisable = false">取 消</el-button>
+        <el-button type="primary" @click="vehicleVisable = false">确 定</el-button>
+      </div>
     </el-dialog>
     <el-dialog title="" :visible.sync="vehicleDelVisable" size="tiny">
       <h2 style="padding:30px">确认删除吗？</h2>
