@@ -29,7 +29,7 @@
       ></ag-grid-vue>
     </div>
 
-    <el-dialog title="车辆信息:" :visible.sync="vehicleVisable"">
+    <el-dialog title="车辆信息:" :visible.sync="vehicleVisable">
         <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
           <el-form-item label="车牌号码:" :label-width="formLabelWidth">
             <el-input v-model="vehicleForm.licePlateNum"></el-input>
