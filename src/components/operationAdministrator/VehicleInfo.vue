@@ -167,7 +167,7 @@
           },
           vehicleEdit () {
             /* var vehicleform = this.params.context.componentParent.vehicleForm
-            vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum*/
+            vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum */
             this.params.context.componentParent.vehicleVisable = true
             this.params.context.componentParent.vehicleForm = this.params.data
           }
