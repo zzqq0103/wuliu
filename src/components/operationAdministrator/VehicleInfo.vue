@@ -74,12 +74,13 @@
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
         <template v-for="(collist,i) in gridOptions.columnDefs">
           <div>
-            <el-checkbox v-model="collist.hide">{{collist.headerName}}</el-checkbox>
+            <el-checkbox v-model="collist.hide" @change="updataColumnDefs(gridOptions.columnDefs)">
+              {{collist.headerName}}
+            </el-checkbox>
           </div>
         </template>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="colVisible = false">取 消</el-button>
-          <el-button type="primary" @click="updataColumnDefs(gridOptions.columnDefs)">确 定</el-button>
+          <el-button type="primary" @click="colVisible = false">确 定</el-button>
         </div>
     </el-dialog>
 
@@ -165,15 +166,10 @@
             this.params.context.componentParent.vehicleDelVisable = true
           },
           vehicleEdit () {
-            var vehicleform = this.params.context.componentParent.vehicleForm
-            vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum
-            vehicleform.driverName = testJson.vehicleInfo.list[this.params.node.rowIndex].driverName
-            vehicleform.tel = testJson.vehicleInfo.list[this.params.node.rowIndex].tel
-            vehicleform.capacity = testJson.vehicleInfo.list[this.params.node.rowIndex].capacity
-            vehicleform.carType = testJson.vehicleInfo.list[this.params.node.rowIndex].carType
-            vehicleform.pickUpArea = testJson.vehicleInfo.list[this.params.node.rowIndex].pickUpArea
-            vehicleform.carPosition = testJson.vehicleInfo.list[this.params.node.rowIndex].carPosition
+            /* var vehicleform = this.params.context.componentParent.vehicleForm
+            vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum */
             this.params.context.componentParent.vehicleVisable = true
+            this.params.context.componentParent.vehicleForm = this.params.data
           }
         }
       }
@@ -195,7 +191,6 @@
         this.colVisible = true
       },
       updataColumnDefs (collist) {
-        this.colVisible = false
         for (let i = 0; i < collist.length; i++) {
           this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
         }
