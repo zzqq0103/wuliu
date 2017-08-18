@@ -167,13 +167,7 @@
           },
           vehicleEdit () {
             /* var vehicleform = this.params.context.componentParent.vehicleForm
-            vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum
-            vehicleform.driverName = testJson.vehicleInfo.list[this.params.node.rowIndex].driverName
-            vehicleform.tel = testJson.vehicleInfo.list[this.params.node.rowIndex].tel
-            vehicleform.capacity = testJson.vehicleInfo.list[this.params.node.rowIndex].capacity
-            vehicleform.carType = testJson.vehicleInfo.list[this.params.node.rowIndex].carType
-            vehicleform.pickUpArea = testJson.vehicleInfo.list[this.params.node.rowIndex].pickUpArea
-            vehicleform.carPosition = testJson.vehicleInfo.list[this.params.node.rowIndex].carPosition */
+            vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum*/
             this.params.context.componentParent.vehicleVisable = true
             this.params.context.componentParent.vehicleForm = this.params.data
           }
