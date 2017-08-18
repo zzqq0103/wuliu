@@ -8,7 +8,8 @@
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div>
-          <el-button @click="vehicleVisable = true">添加</el-button>
+          <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
+          <el-button @click="vehicleAdd">添加</el-button>
           <el-button @click="setting">设置</el-button>
         </div>
       </p>
@@ -162,6 +163,17 @@
         methods: {
           vehicleDel () {
             this.params.context.componentParent.vehicleDelVisable = true
+          },
+          vehicleEdit () {
+            var vehicleform = this.params.context.componentParent.vehicleForm
+            vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum
+            vehicleform.driverName = testJson.vehicleInfo.list[this.params.node.rowIndex].driverName
+            vehicleform.tel = testJson.vehicleInfo.list[this.params.node.rowIndex].tel
+            vehicleform.capacity = testJson.vehicleInfo.list[this.params.node.rowIndex].capacity
+            vehicleform.carType = testJson.vehicleInfo.list[this.params.node.rowIndex].carType
+            vehicleform.pickUpArea = testJson.vehicleInfo.list[this.params.node.rowIndex].pickUpArea
+            vehicleform.carPosition = testJson.vehicleInfo.list[this.params.node.rowIndex].carPosition
+            this.params.context.componentParent.vehicleVisable = true
           }
         }
       }
@@ -187,6 +199,17 @@
         for (let i = 0; i < collist.length; i++) {
           this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
         }
+      },
+      // 增加
+      vehicleAdd () {
+        this.vehicleVisable = true
+        this.vehicleForm.licePlateNum = ''
+        this.vehicleForm.driverName = ''
+        this.vehicleForm.tel = ''
+        this.vehicleForm.capacity = ''
+        this.vehicleForm.carType = ''
+        this.vehicleForm.pickUpArea = ''
+        this.vehicleForm.carPosition = ''
       }
     },
     beforeMount () {
