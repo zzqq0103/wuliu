@@ -8,7 +8,7 @@
         <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged"></el-input>
       </div>
       <div>
-        <el-button @click="addFormVisible = true">添加</el-button>
+        <el-button @click="addForm">添加</el-button>
         <el-button @click="setting">设置</el-button>
       </div>
 
@@ -75,7 +75,7 @@
     </el-dialog>
 
     <!--编辑客户信息-->
-    <el-dialog title="编辑:" :visible.sync="editFromVisible" size="tiny" :closeOnClickModal="false" top="30%">
+    <el-dialog title="编辑:" :visible.sync="editFormVisible" size="tiny" :closeOnClickModal="false">
       <el-form :model="personnelForm" :rules="rules" ref="personnelForm">
         <el-form-item label="客户企业名称:" :label-width="formLabelWidth">
           <el-input v-model="personnelForm.clientCompNam"></el-input>
@@ -102,10 +102,14 @@
           </el-select>
         </el-form-item>
       </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editFormVisible = false">确 定</el-button>
+      </div>
     </el-dialog>
 
     <!--删除客户信息-->
-    <el-dialog title="" :visible.sync="delFormVisible" size="tiny">
+    <el-dialog title="" :visible.sync="delFormVisible" size="tiny" top="30%">
       <h2 style="padding:30px">确认删除 {{personnelForm.clientCompNam}} 吗？</h2>
       <div slot="footer" class="dialog-footer">
         <el-button @click="delFormVisible = false">取 消</el-button>
@@ -167,14 +171,14 @@
         colVisible: false,
         addFormVisible: false,
         delFormVisible: false,
-        editFromVisible: false,
+        editFormVisible: false,
         formLabelWidth: '150px'
       }
     },
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><el-button @click="edit">编 辑</el-button><el-button class="del-but" @click="del">删 除</el-button></span>',
+        template: '<span><el-button  class="del-but" @click="edit">编 辑</el-button><el-button class="del-but" @click="del">删 除</el-button></span>',
         methods: {
           del () {
             let self = this.params.context.componentParent
@@ -184,7 +188,10 @@
 //            console.log(this.params.data.clientCompNam)
           },
           edit () {
-
+            let self = this.params.context.componentParent
+            self.editFormVisible = true
+            self.personnelForm = this.params.data
+            console.log(self.personnelForm)
           }
         }
       }
@@ -223,14 +230,21 @@
       },
       setting () {
         this.colVisible = true
+      },
+      addForm () {
+        this.addFormVisible = true
+        this.personnelForm = {
+          clientCompNam: '',
+          nam: '',
+          tel: '',
+          compAdr: '',
+          area: '',
+          salesmanId: '',
+          isTril: ''
+        }
       }
     },
     beforeMount () {
-//      this.gridOptions = {
-//        context: {
-//          componentParent: this
-//        }
-//      }
       this.createRowData()
 //      this.createColumnDefs()
     },
@@ -239,3 +253,16 @@
     }
   }
 </script>
+<style>
+  .del-but {
+    cursor: pointer;
+    float: right;
+    margin-right: 10px;
+    border-radius: 4px;
+    background: #fff;
+    border: 1px solid rgb(191, 217, 216);
+    color: rgb(31, 61, 60);
+    padding: 5px 10px;
+    font-size: 10px
+  }
+</style>
