@@ -7,6 +7,8 @@ import Icon from 'vue-awesome'
 // import 'element-ui/lib/theme-default/index.css';    // 默认主题
 import '../static/css/theme-green/index.css'     // 浅绿色主题
 import 'babel-polyfill'
+import '../node_modules/ag-grid/dist/styles/ag-grid.css'
+import '../node_modules/ag-grid/dist/styles/theme-blue.css'
 
 Vue.use(ElementUI)
 Vue.use(Icon)
