@@ -63,7 +63,7 @@
         </div>
     </el-dialog>
 
-    <el-dialog title="" :visible.sync="vehicleDelVisable" size=""tiny>
+    <el-dialog title="" :visible.sync="vehicleDelVisable" size="tiny">
       <h2 style="padding:30px">确认删除吗？</h2>
       <div slot="footer" class="dialog-footer">
         <el-button @click="vehicleDelVisable = false">取 消</el-button>

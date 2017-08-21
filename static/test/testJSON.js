@@ -2,7 +2,6 @@ export default {
   "personnelInfo": {
     "list": [
       {
-        "clientCompId":"1111",
         "clientCompNam": "test1",
         "nam": "test1",
         "tel": "11111",
@@ -12,7 +11,6 @@ export default {
         "isTril": "1",
       },
       {
-        "clientCompId":"222",
         "clientCompNam": "test2",
         "nam": "test2",
         "tel": "2222",

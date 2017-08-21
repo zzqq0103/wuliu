@@ -178,7 +178,7 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><el-button  class="del-but" @click="edit">编 辑</el-button><el-button class="del-but" @click="del">删 除</el-button></span>',
+        template: '<span><el-button class="del-but" @click="del">删 除</el-button><el-button  class="del-but" @click="edit">编 辑</el-button></span>',
         methods: {
           del () {
             let self = this.params.context.componentParent
