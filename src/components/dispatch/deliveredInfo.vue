@@ -8,7 +8,7 @@
           <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
           <!-- <el-button @click="vehicleAdd">添加</el-button> -->
           <el-input placeholder="请输入查询数据" icon="search"  v-model="filters.names" :on-icon-click="handleIconClick" style="width:145px;"> </el-input>
-          <el-select v-model="value" :placeholder="queryItemOptions[0].label" style="width:105px;">
+          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -22,14 +22,14 @@
     </div>
 
     <div style="margin-top:2%">
-      <ag-grid-vue style="width: 100%;height: 470px" class="ag-blue" :gridOptions="gridOptions" :suppressMovableColumns="true" :enableColResize="true" :enableSorting="true" :enableFilter="true" :groupHeaders="true" :rowHeight=40 :headerHeight=30></ag-grid-vue>
+      <ag-grid-vue style="width: 100%;height: 470px" class="ag-blue" :gridOptions="gridOptions" :suppressMovableColumns="true" :enableColResize="true" :enableSorting="true" :enableFilter="true" :groupHeaders="true" :rowHeight="40" :headerHeight="30"> </ag-grid-vue>
     </div>
 
     <div class="block" style="float:right; padding-top:10px;">
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page.sync="currentPage3"
+            :current-page.sync="currentPage1"
             :page-size="100"
             layout="prev, pager, next, jumper"
             :total="1000">
@@ -45,7 +45,7 @@
     </el-dialog>
 
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
-      <template v-for="(collist,i) in gridOptions.columnDefs">
+      <template v-for="(collist,i) in gridOptions.columnDefs ">
         <div>
           <el-checkbox v-model="collist.hide" @change="updataColumnDefs(gridOptions.columnDefs)">
             {{collist.headerName}}
@@ -62,10 +62,12 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
+import {getCurrentDelivered} from '../../api/api'
 import testJson from '../../../static/test/testJSON.js'
 export default {
   data () {
     return {
+      listLoading: false,
       filters: {
         name: '请输入查询数据'
       },
@@ -136,17 +138,22 @@ export default {
         ]
       },
       queryItemOptions: [{
-        value: '选项1',
+        value: 1,
         label: '装载单号'
       }, {
-        value: '选项2',
+        value: 2,
         label: '订单号'
+      }, {
+        value: 3,
+        label: '司机姓名'
       }],
-      value: '',
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4
+      selectvalue: 1,
+      currentPage1: 1,
+      driverName: '1',
+      orderId: '1',
+      deliverOrderId: '1',
+      orderlist: [],
+      totallists: 0
     }
   },
   components: {
@@ -179,7 +186,6 @@ export default {
       console.log(`当前页: ${val}`)
     },
     handleIconClick (input) {
-      this.gridOptions.api.setQuickFilter(input)
     },
     createRowData () {
       this.gridOptions.rowData = testJson.vehicleInfo.list
@@ -211,13 +217,29 @@ export default {
       this.vehicleForm.carType = ''
       this.vehicleForm.pickUpArea = ''
       this.vehicleForm.carPosition = ''
+    },
+    getOrderList () {
+      let para = {
+        page: this.page,
+        orderId: this.orderId,
+        driverName: this.driverName,
+        deliverOrderId: this.deliverOrderId,
+        selectvalue: this.selectvalue
+      }
+      // this.listLoading = true
+      getCurrentDelivered(para).then((res) => {
+        this.orderlist = res.data.orderlists
+        this.totallists = res.data.total
+        // this.listLoading = false
+      })
     }
   },
   beforeMount () {
     this.createRowData()
   },
   mounted () {
-    this.changeColumnDefsBoolen()
+    // this.changeColumnDefsBoolen()
+    this.getOrderList()
   }
 }
 </script>
