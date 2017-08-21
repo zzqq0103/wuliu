@@ -10,8 +10,8 @@ import 'babel-polyfill'
 import '../node_modules/ag-grid/dist/styles/ag-grid.css'
 import '../node_modules/ag-grid/dist/styles/theme-blue.css'
 // 导入假数据
-import Mock from './mock'
-Mock.bootstrap()
+import mock from './mock'
+mock.bootstrap()
 
 Vue.use(ElementUI)
 Vue.use(Icon)
