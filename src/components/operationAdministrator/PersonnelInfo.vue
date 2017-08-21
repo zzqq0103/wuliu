@@ -10,6 +10,7 @@
       <div>
         <el-button @click="addForm">添加</el-button>
         <el-button @click="setting">设置</el-button>
+        <!--<el-button @click="test">测试</el-button>-->
       </div>
 
     </div>
@@ -31,7 +32,7 @@
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false" top="30%">
       <template v-for="(collist,i) in gridOptions.columnDefs">
         <div>
-          <el-checkbox v-model="collist.hide" @change="updataColumnDefs(gridOptions.columnDefs)">
+          <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
             {{collist.headerName}}
           </el-checkbox>
         </div>
@@ -130,28 +131,33 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '客户企业名称', width: 150, field: 'clientCompNam', filter: 'text', hide: false
+              headerName: '客户企业名称', width: 150, field: 'clientCompNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '联系人姓名', width: 150, field: 'nam', filter: 'text', hide: false
+              headerName: '联系人姓名', width: 150, field: 'nam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '联系电话', width: 150, field: 'tel', filter: 'text', hide: false
+              headerName: '联系电话', width: 150, field: 'tel', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '企业详细地址', width: 150, field: 'compAdr', filter: 'text', hide: false
+              headerName: '企业详细地址', width: 150, field: 'compAdr', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '所属片区', width: 150, field: 'area', filter: 'text', hide: false
+              headerName: '所属片区', width: 150, field: 'area', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '业务员ID', width: 150, field: 'salesmanId', filter: 'text', hide: false
+              headerName: '业务员ID', width: 150, field: 'salesmanId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '是否三方', width: 150, field: 'isTril', filter: 'text', hide: false
+              headerName: '是否三方', width: 150, field: 'isTril', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
+              headerName: '操作',
+              field: 'value',
+              width: 150,
+              cellRendererFramework: 'operateComponent',
+              hide: false,
+              visible: true
             }
           ],
           context: {
@@ -202,20 +208,21 @@
       },
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
-          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
         }
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
       },
-      changeColumnDefsBoolen () {
-        var columnlist = this.gridOptions.columnDefs
-        for (let i = 0; i < columnlist.length; i++) {
-          columnlist[i].hide = !columnlist[i].hide
-        }
-      },
+//      changeColumnDefsBoolen () {
+//        var columnlist = this.gridOptions.columnDefs
+//        for (let i = 0; i < columnlist.length; i++) {
+//          columnlist[i].hide = !columnlist[i].hide
+//        }
+//      },
       test () {
-        console.log(this.gridOptions.columnDefs)
+//        this.gridOptions.api.refreshHeader()
+        console.log(this.gridOptions.columnApi.getAllColumns())
 //        console.log(this.gridOptions.columnDefs[0].hide)
 //        console.log(this.gridOptions.columnApi.getAllDisplayedColumns())
 //        if (this.gridOptions.columnDefs[0].hide) {
@@ -247,10 +254,10 @@
     beforeMount () {
       this.createRowData()
 //      this.createColumnDefs()
-    },
-    mounted () {
-      this.changeColumnDefsBoolen()
     }
+//    mounted () {
+//      this.changeColumnDefsBoolen()
+//    }
   }
 </script>
 <style>

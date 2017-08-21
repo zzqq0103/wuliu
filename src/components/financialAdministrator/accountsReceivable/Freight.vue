@@ -3,42 +3,96 @@
     <div style="text-align: center;margin: 10px">
       <h2>运费详情</h2>
     </div>
+    <!--表格上方操作区域-->
     <div>
-      <!--<div style="float: right">-->
-        <!--<el-button>开始核销</el-button>-->
-        <!--<el-button>导出</el-button>-->
-        <!--<el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged"></el-input>-->
-      <!--</div>-->
+      <!--第一行右侧按钮-->
+      <div style="float: right">
+        <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
+        <el-button @click="setting">设置</el-button>
+        <el-button>导出</el-button>
+      </div>
+      <!--第一行左侧按钮-->
       <div>
         <el-form :model="filterForm" ref="filterForm" :inline="true">
-            <el-form-item label="订单时间:">
-                <el-form-item prop="startTime">
-                  <el-date-picker type="date" placeholder="选择开始日期" v-model="filterForm.startTime" style="width: 150px"></el-date-picker>
-                </el-form-item>
-              <span>--&nbsp</span>
-                <el-form-item prop="endTime">
-                  <el-date-picker type="date" placeholder="选择结束日期" v-model="filterForm.endTime" style="width: 150px"></el-date-picker>
-                </el-form-item>
+          <el-form-item label="订单时间:">
+            <el-form-item prop="startTime">
+              <el-date-picker type="date" placeholder="选择开始日期" v-model="filterForm.startTime"
+                              style="width: 150px"></el-date-picker>
             </el-form-item>
-            <el-form-item label="区间:">
-              <el-select v-model="filterForm.startPoint" placeholder="起点" style="width: 100px">
-                <el-option label="北京" value="beijing"></el-option>
-                <el-option label="南京" value="nanjing"></el-option>
-                <el-option label="全部" value="all"></el-option>
-              </el-select>
-              <span>--&nbsp</span>
-              <el-select v-model="filterForm.endPoint" placeholder="终点" style="width: 100px">
-                <el-option label="北京" value="beijing"></el-option>
-                <el-option label="南京" value="nanjing"></el-option>
-                <el-option label="全部" value="all"></el-option>
-              </el-select>
+            <span>--&nbsp</span>
+            <el-form-item prop="endTime">
+              <el-date-picker type="date" placeholder="选择结束日期" v-model="filterForm.endTime"
+                              style="width: 150px"></el-date-picker>
             </el-form-item>
-            <el-button @click="addForm">添加</el-button>
-            <el-button @click="setting">设置</el-button>
+          </el-form-item>
+          <el-form-item label="区间:">
+            <el-select v-model="filterForm.startPoint" placeholder="起点" style="width: 100px">
+              <el-option label="北京" value="beijing"></el-option>
+              <el-option label="南京" value="nanjing"></el-option>
+              <el-option label="全部" value="all"></el-option>
+            </el-select>
+            <span>--&nbsp</span>
+            <el-select v-model="filterForm.endPoint" placeholder="终点" style="width: 100px">
+              <el-option label="北京" value="beijing"></el-option>
+              <el-option label="南京" value="nanjing"></el-option>
+              <el-option label="全部" value="all"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="类型:">
+            <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 110px">
+              <el-option label="现付" value="nowPay"></el-option>
+              <el-option label="到付" value="cashOnDelivery"></el-option>
+              <el-option label="欠付" value="inArrears"></el-option>
+              <el-option label="月结" value="monthly"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-button @click="updateGrid">提取</el-button>
+        </el-form>
+      </div>
+      <!--第二行开始-->
+      <div>
+        <el-form style="float: left" :model="totalForm" ref="totalForm" :inline="true">
+          <el-form-item label="中转费合计:">
+            <el-input v-model="totalForm.transferFeeTotal"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div style="float: right">
+        <el-button>开始核销</el-button>
+      </div>
+      <!--判断当前需要显示的label-->
+      <div v-if="this.filterForm.payType === 'nowPay'">
+        <el-form :model="totalForm" ref="totalForm" :inline="true">
+          <el-form-item label="现付金额合计:">
+            <el-input v-model="totalForm.nowPayTotal"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div v-else-if="this.filterForm.payType === 'cashOnDelivery'">
+        <el-form :model="totalForm" ref="totalForm" :inline="true">
+          <el-form-item label="到付金额合计:">
+            <el-input v-model="totalForm.cashOnDeliveryTotal"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div v-else-if="this.filterForm.payType === 'inArrears'">
+        <el-form :model="totalForm" ref="totalForm" :inline="true">
+          <el-form-item label="欠付金额合计:">
+            <el-input v-model="totalForm.inArrearsTotal"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div v-else-if="this.filterForm.payType === 'monthly'">
+        <el-form :model="totalForm" ref="totalForm" :inline="true">
+          <el-form-item label="月结金额合计:">
+            <el-input v-model="totalForm.monthlyTotal"></el-input>
+          </el-form-item>
         </el-form>
       </div>
     </div>
     <div style="clear: both;"></div>
+
+    <!--表格-->
     <div style="margin-top: 10px">
       <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
                    :gridOptions="gridOptions"
@@ -51,94 +105,19 @@
                    :rowHeight=40
       ></ag-grid-vue>
     </div>
-
     <!--列表切换显示-->
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false" top="30%">
       <template v-for="(collist,i) in gridOptions.columnDefs">
-        <div>
-          <el-checkbox v-model="collist.hide" @change="updataColumnDefs(gridOptions.columnDefs)">
+        <div v-if="collist.children">
+        </div>
+        <div v-else>
+          <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(gridOptions.columnDefs)">
             {{collist.headerName}}
           </el-checkbox>
         </div>
       </template>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="colVisible = false">确 定</el-button>
-      </div>
-    </el-dialog>
-    <!--添加客户信息-->
-    <el-dialog title="添加客户信息:" :visible.sync="addFormVisible">
-      <el-form :model="personnelForm" :rules="rules" ref="personnelForm">
-        <el-form-item label="客户企业名称:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.clientCompNam"></el-input>
-        </el-form-item>
-        <el-form-item label="联系人姓名:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.nam"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.tel"></el-input>
-        </el-form-item>
-        <el-form-item label="企业详细地址:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.compAdr"></el-input>
-        </el-form-item>
-        <el-form-item label="所属片区:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.area"></el-input>
-        </el-form-item>
-        <el-form-item label="业务员ID:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.salesmanId"></el-input>
-        </el-form-item>
-        <el-form-item label="是否三方:" :label-width="formLabelWidth">
-          <el-select v-model="personnelForm.isTril" placeholder="请选择" style="width:100%">
-            <el-option label="是" value="yes"></el-option>
-            <el-option label="否" value="no"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="vehicleVisable = false">取 消</el-button>
-        <el-button type="primary" @click="vehicleVisable = false">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <!--编辑客户信息-->
-    <el-dialog title="编辑:" :visible.sync="editFormVisible" size="tiny" :closeOnClickModal="false">
-      <el-form :model="personnelForm" :rules="rules" ref="personnelForm">
-        <el-form-item label="客户企业名称:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.clientCompNam"></el-input>
-        </el-form-item>
-        <el-form-item label="联系人姓名:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.nam"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.tel"></el-input>
-        </el-form-item>
-        <el-form-item label="企业详细地址:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.compAdr"></el-input>
-        </el-form-item>
-        <el-form-item label="所属片区:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.area"></el-input>
-        </el-form-item>
-        <el-form-item label="业务员ID:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.salesmanId"></el-input>
-        </el-form-item>
-        <el-form-item label="是否三方:" :label-width="formLabelWidth">
-          <el-select v-model="personnelForm.isTril" placeholder="请选择" style="width:100%">
-            <el-option label="是" value="yes"></el-option>
-            <el-option label="否" value="no"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="editFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editFormVisible = false">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <!--删除客户信息-->
-    <el-dialog title="" :visible.sync="delFormVisible" size="tiny" top="30%">
-      <h2 style="padding:30px">确认删除 {{personnelForm.clientCompNam}} 吗？</h2>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="delFormVisible = false">取 消</el-button>
-        <el-button @click="delFormVisible = false">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -150,55 +129,169 @@
   export default {
     data () {
       return {
-        filterForm: {
-          startTime: '',
-          endTime: '',
-          startPoint: '',
-          endPoint: '',
-          shipNam: '',
-          payType: '',
-          freiVeriState: ''
-        },
         gridOptions: {
           rowData: null,
           columnDefs: [
             {
-              headerName: '客户企业名称', width: 150, field: 'clientCompNam', filter: 'text', hide: false
+              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '联系人姓名', width: 150, field: 'nam', filter: 'text', hide: false
+              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '联系电话', width: 150, field: 'tel', filter: 'text', hide: false
+              headerName: '开单网点', width: 150, field: 'billBranch', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '企业详细地址', width: 150, field: 'compAdr', filter: 'text', hide: false
+              headerName: '开单日期', width: 150, field: 'orderTim', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '所属片区', width: 150, field: 'area', filter: 'text', hide: false
+              headerName: '发站', width: 150, field: 'startStation', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '业务员ID', width: 150, field: 'salesmanId', filter: 'text', hide: false
+              headerName: '到站', width: 150, field: 'arrStation', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '是否三方', width: 150, field: 'isTril', filter: 'text', hide: false
+              headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
-            }
+              headerName: '发货人联系方式', width: 150, field: 'shipTel', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '收货人联系方式', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '品名', width: 150, field: 'goodsNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '件数', width: 150, field: 'goodsNums', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '制单人', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '中转路线', width: 150, field: 'companyNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '中转费', width: 150, field: 'changeFee', filter: 'text', hide: false, visible: true
+            },
+            {}
           ],
           context: {
             componentParent: this
           }
         },
-        personnelForm: {
-          clientCompNam: '',
-          nam: '',
-          tel: '',
-          compAdr: '',
-          area: '',
-          salesmanId: '',
-          isTril: ''
+        filterForm: {
+          startTime: '', // 开始时间
+          endTime: '', // 截止时间
+          startPoint: '', //  区间起点
+          endPoint: '', //  区间终点
+          shipNam: '', //  发货人
+          payType: 'nowPay', // 类型（现付，到付，欠付，月结）
+          freiVeriState: '' // 运费核销状态
+        },
+        totalForm: {
+          transferFeeTotal: '', // 中转费合计
+          nowPayTotal: '', // 现付合计
+          cashOnDeliveryTotal: '', // 到付合计
+          inArrearsTotal: '', // 欠付合计
+          monthlyTotal: ''// 月结合计
+        },
+        additionalColumnDefs: {
+          nowPay: {
+            headerName: '现付',
+            children: [
+              {
+                headerName: '现付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销状态', width: 150, field: 'veriState', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销人', width: 150, field: 'veriNam', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销日期', width: 150, field: 'veriTim', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销网点', width: 150, field: 'veriSite', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '支付方式', width: 150, field: 'payMode', filter: 'text', hide: false, visible: true
+              }
+            ]
+          },
+          cashOnDelivery: {
+            headerName: '到付',
+            children: [
+              {
+                headerName: '到付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销状态', width: 150, field: 'veriState', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销人', width: 150, field: 'veriNam', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销日期', width: 150, field: 'veriTim', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销网点', width: 150, field: 'veriSite', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '支付方式', width: 150, field: 'payMode', filter: 'text', hide: false, visible: true
+              }
+            ]
+          },
+          inArrears: {
+            headerName: '欠付',
+            children: [
+              {
+                headerName: '欠付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销状态', width: 150, field: 'veriState', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销人', width: 150, field: 'veriNam', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销日期', width: 150, field: 'veriTim', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销网点', width: 150, field: 'veriSite', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '支付方式', width: 150, field: 'payMode', filter: 'text', hide: false, visible: true
+              }
+            ]
+          },
+          monthly: {
+            headerName: '月结',
+            children: [
+              {
+                headerName: '月结金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销状态', width: 150, field: 'veriState', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销人', width: 150, field: 'veriNam', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销日期', width: 150, field: 'veriTim', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '核销网点', width: 150, field: 'veriSite', filter: 'text', hide: false, visible: true
+              },
+              {
+                headerName: '支付方式', width: 150, field: 'payMode', filter: 'text', hide: false, visible: true
+              }
+            ]
+          }
         },
         rules: {},
         colVisible: false,
@@ -209,80 +302,53 @@
       }
     },
     components: {
-      'ag-grid-vue': AgGridVue,
-      operateComponent: {
-        template: '<span><el-button class="del-but" @click="del">删 除</el-button><el-button  class="del-but" @click="edit">编 辑</el-button></span>',
-        methods: {
-          del () {
-            let self = this.params.context.componentParent
-            self.delFormVisible = true
-            self.personnelForm.clientCompNam = this.params.data.clientCompNam
-//            self.delFormVisible = true
-//            console.log(this.params.data.clientCompNam)
-          },
-          edit () {
-            let self = this.params.context.componentParent
-            self.editFormVisible = true
-            self.personnelForm = this.params.data
-            console.log(self.personnelForm)
-          }
-        }
-      }
+      'ag-grid-vue': AgGridVue
     },
     methods: {
       createRowData () {
-        this.gridOptions.rowData = testJson.personnelInfo.list
+        this.gridOptions.rowData = testJson.freight.list
       },
-      updataColumnDefs (collist) {
+      updateGrid () {
+        const payType = this.filterForm.payType
+        const lenth = (this.gridOptions.columnDefs.length - 1)
+        if (payType === 'nowPay') {
+          this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.nowPay
+        } else if (payType === 'cashOnDelivery') {
+          this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.cashOnDelivery
+        } else if (payType === 'inArrears') {
+          this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.inArrears
+        } else if (payType === 'monthly') {
+          this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.monthly
+        }
+        this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
+        console.log(this.gridOptions.columnDefs)
+      },
+      updateColumnDefsVisible (collist) {
         for (let i = 0; i < collist.length; i++) {
-          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
         }
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
       },
       changeColumnDefsBoolen () {
-        var columnlist = this.gridOptions.columnDefs
+        const columnlist = this.gridOptions.columnDefs
         for (let i = 0; i < columnlist.length; i++) {
           columnlist[i].hide = !columnlist[i].hide
         }
       },
       test () {
         console.log(this.gridOptions.columnDefs)
-//        console.log(this.gridOptions.columnDefs[0].hide)
-//        console.log(this.gridOptions.columnApi.getAllDisplayedColumns())
-//        if (this.gridOptions.columnDefs[0].hide) {
-//          this.gridOptions.columnDefs[0].hide = false
-//        } else {
-//          this.gridOptions.columnDefs[0].hide = true
-//        }
-//        this.gridOptions.columnApi.setColumnVisible('clientCompId', true)
-//        this.gridOptions.columnApi.setColumnVisible('isTril', false)
-//        console.log(this.gridOptions.columnDefs[0].hide)
-//        console.log(this.gridOptions.columnApi.getColumnState())
       },
       setting () {
         this.colVisible = true
-      },
-      addForm () {
-        this.addFormVisible = true
-        this.personnelForm = {
-          clientCompNam: '',
-          nam: '',
-          tel: '',
-          compAdr: '',
-          area: '',
-          salesmanId: '',
-          isTril: ''
-        }
       }
     },
     beforeMount () {
       this.createRowData()
-//      this.createColumnDefs()
     },
     mounted () {
-      this.changeColumnDefsBoolen()
+      this.updateGrid()
     }
   }
 </script>
