@@ -35,7 +35,7 @@
             :total="1000">
         </el-pagination>
     </div>
-  
+
     <el-dialog title="" :visible.sync="vehicleDelVisable" size="" tiny>
       <h2 style="padding:30px">确认删除吗？</h2>
       <div slot="footer" class="dialog-footer">
@@ -43,7 +43,7 @@
         <el-button @click="vehicleDelVisable = false">确 定</el-button>
       </div>
     </el-dialog>
-  
+
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
       <template v-for="(collist,i) in gridOptions.columnDefs">
         <div>
@@ -56,7 +56,7 @@
         <el-button type="primary" @click="colVisible = false">确 定</el-button>
       </div>
     </el-dialog>
-  
+
   </div>
 </template>
 
