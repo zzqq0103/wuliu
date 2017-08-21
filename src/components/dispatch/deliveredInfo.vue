@@ -7,7 +7,7 @@
         <div>
           <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
           <!-- <el-button @click="vehicleAdd">添加</el-button> -->
-          <el-input placeholder="请输入查询数据" icon="search"  v-model="filters.names" :on-icon-click="handleIconClick" style="width:145px;"> </el-input>
+          <el-input placeholder="请输入查询数据" icon="search"  v-model="filters.title" :on-icon-click="handleIconClick" style="width:145px;"> </el-input>
           <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
@@ -21,8 +21,8 @@
     <div style="clear: both;">
     </div>
 
-    <div style="margin-top:2%">
-      <ag-grid-vue style="width: 100%;height: 470px" class="ag-blue" :gridOptions="gridOptions" :suppressMovableColumns="true" :enableColResize="true" :enableSorting="true" :enableFilter="true" :groupHeaders="true" :rowHeight="40" :headerHeight="30"> </ag-grid-vue>
+    <div style="margin-top:2%" v-loading="listLoading">
+      <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue" :gridOptions="gridOptions" :suppressMovableColumns="true" :enableColResize="true" :enableSorting="true" :enableFilter="true" :groupHeaders="true" :rowHeight="40" :headerHeight="30"> </ag-grid-vue>
     </div>
 
     <div class="block" style="float:right; padding-top:10px;">
@@ -56,33 +56,39 @@
         <el-button type="primary" @click="colVisible = false">确 定</el-button>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
 import {getCurrentDelivered} from '../../api/api'
-import testJson from '../../../static/test/testJSON.js'
+// import testJson from '../../../static/test/testJSON.js'
 export default {
   data () {
     return {
       listLoading: false,
       filters: {
-        name: '请输入查询数据'
+        title: ''
       },
       currentPage: 1,
       colVisible: false,
       vehicleVisable: false,
       vehicleDelVisable: false,
       vehicleForm: {
-        'licePlateNum': '',
-        'driverName': '',
-        'tel': '',
-        'capacity': '',
-        'carType': '',
-        'pickUpArea': '',
-        'carPosition': ''
+        'id': '',
+        'deliverOrderId': '',
+        'orderId': '',
+        'OrderDate': '',
+        'consignee': '',
+        'consigneeAddr': '',
+        'phone': '',
+        'address': '',
+        'goodsName': '',
+        'pack': '',
+        'numbers': '',
+        'weight': '',
+        'volume': '',
+        'remarks': ''
       },
       rules: {
       },
@@ -91,49 +97,49 @@ export default {
         context: {
           componentParent: this
         },
-        rowData: null,
+        rowData: [],
         columnDefs: [
           {
-            headerName: '序号', width: 120, field: 'licePlateNum', filter: 'text', hide: false
+            headerName: '序号', width: 120, field: 'id', hide: false
           },
           {
-            headerName: '装载单号', width: 120, field: 'driverName', filter: 'text', hide: false
+            headerName: '装载单号', width: 120, field: 'deliverOrderId', filter: 'text', hide: false
           },
           {
-            headerName: '订单号', width: 120, field: 'tel', filter: 'text', hide: false
+            headerName: '订单号', width: 120, field: 'orderId', filter: 'text', hide: false
           },
           {
-            headerName: '开单时间', width: 120, field: 'contractID', filter: 'text', hide: false
+            headerName: '开单时间', width: 120, field: 'OrderDate', filter: 'text', hide: false
           },
           {
-            headerName: '收货单位', width: 120, field: 'contractPrice', filter: 'text', hide: false
+            headerName: '收货单位', width: 120, field: 'consigneeAddr', filter: 'text', hide: false
           },
           {
-            headerName: '收货人姓名', width: 120, field: 'capacity', filter: 'text', hide: false
+            headerName: '收货人姓名', width: 120, field: 'consignee', filter: 'text', hide: false
           },
           {
-            headerName: '联系电话', width: 120, field: 'tonnage', filter: 'text', hide: false
+            headerName: '联系电话', width: 120, field: 'phone', filter: 'text', hide: false
           },
           {
-            headerName: '搜狐或地址', width: 120, field: 'carType', filter: 'text', hide: false
+            headerName: '收货地址', width: 120, field: 'address', filter: 'text', hide: false
           },
           {
-            headerName: '货物名称', width: 120, field: 'pickUpArea', filter: 'text', hide: false
+            headerName: '货物名称', width: 120, field: 'goodsName', filter: 'text', hide: false
           },
           {
-            headerName: '件数', width: 120, field: 'receState', filter: 'text', hide: false
+            headerName: '件数', width: 120, field: 'numbers', hide: false
           },
           {
-            headerName: '重量', width: 120, field: 'carState', filter: 'text', hide: false
+            headerName: '重量', width: 120, field: 'weight', hide: false
           },
           {
-            headerName: '体积', width: 120, field: 'carPosition', filter: 'text', hide: false
+            headerName: '体积', width: 120, field: 'volume', hide: false
           },
           {
-            headerName: '包装', field: 'value', width: 120, hide: false
+            headerName: '包装', field: 'pack', width: 120, filter: 'text', hide: false
           },
           {
-            headerName: '备注', field: 'value', width: 120, hide: false
+            headerName: '备注', field: 'remarks', width: 120, filter: 'text', hide: false
           }
         ]
       },
@@ -157,38 +163,25 @@ export default {
     }
   },
   components: {
-    'ag-grid-vue': AgGridVue,
-    operateComponent: {
-      template: '<span><button class="del-but" @click="vehicleDel">删 除</button><button class="del-but" @click="vehicleEdit">编 辑</button></span>',
-      methods: {
-        vehicleDel () {
-          this.params.context.componentParent.vehicleDelVisable = true
-        },
-        vehicleEdit () {
-          var vehicleform = this.params.context.componentParent.vehicleForm
-          vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum
-          vehicleform.driverName = testJson.vehicleInfo.list[this.params.node.rowIndex].driverName
-          vehicleform.tel = testJson.vehicleInfo.list[this.params.node.rowIndex].tel
-          vehicleform.capacity = testJson.vehicleInfo.list[this.params.node.rowIndex].capacity
-          vehicleform.carType = testJson.vehicleInfo.list[this.params.node.rowIndex].carType
-          vehicleform.pickUpArea = testJson.vehicleInfo.list[this.params.node.rowIndex].pickUpArea
-          vehicleform.carPosition = testJson.vehicleInfo.list[this.params.node.rowIndex].carPosition
-          this.params.context.componentParent.vehicleVisable = true
-        }
-      }
-    }
+    'ag-grid-vue': AgGridVue
   },
   methods: {
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.page = val
+      this.getOrderList()
     },
     handleIconClick (input) {
     },
     createRowData () {
-      this.gridOptions.rowData = testJson.vehicleInfo.list
+      // this.listLoading = true
+      this.gridOptions.rowData = this.orderlist
+      // return new Promise((resolve, reject) => {
+      //   resolve({
+      //     status: 1
+      //   })
+      // })
     },
     onQuickFilterChanged (input) {
       this.gridOptions.api.setQuickFilter(input)
@@ -207,39 +200,33 @@ export default {
         this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
       }
     },
-    // 增加
-    vehicleAdd () {
-      this.vehicleVisable = true
-      this.vehicleForm.licePlateNum = ''
-      this.vehicleForm.driverName = ''
-      this.vehicleForm.tel = ''
-      this.vehicleForm.capacity = ''
-      this.vehicleForm.carType = ''
-      this.vehicleForm.pickUpArea = ''
-      this.vehicleForm.carPosition = ''
-    },
     getOrderList () {
       let para = {
-        page: this.page,
+        page: this.currentPage,
         orderId: this.orderId,
         driverName: this.driverName,
         deliverOrderId: this.deliverOrderId,
         selectvalue: this.selectvalue
       }
-      // this.listLoading = true
       getCurrentDelivered(para).then((res) => {
         this.orderlist = res.data.orderlists
-        this.totallists = res.data.total
-        // this.listLoading = false
+        // this.totallists = res.data.total
+        this.createRowData()
+        // .then(res => {
+        //   if (res.data.status === 1) {
+        //     // this.listLoading = false
+        //   }
+        // })
       })
     }
   },
-  beforeMount () {
-    this.createRowData()
-  },
+  // beforeMount () {
+  // },
   mounted () {
     // this.changeColumnDefsBoolen()
-    this.getOrderList()
+    this.$nextTick(() => {
+      this.getOrderList()
+    })
   }
 }
 </script>

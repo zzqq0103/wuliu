@@ -10,7 +10,7 @@ import Mock from 'mockjs'
 // ]
 const Orderlist = []
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 20; i++) {
   Orderlist.push(Mock.mock({
     //  序号
     id: Mock.mock('@increment'),
@@ -19,15 +19,19 @@ for (let i = 0; i < 100; i++) {
     // 订单号
     orderId: Mock.mock('@guid'),
     // 开单时间
-    OrderDate: Mock.mock('@datatime'),
+    OrderDate: Mock.mock('@datetime'),
     // 收货人姓名
     consignee: Mock.mock('@cname'),
+    // 收货单位
+    consigneeAddr: Mock.mock('@county(true)'),
     // 联系电话
-    phone: /^0?(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
+    phone: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
     // 收货人地址
     address: Mock.mock('@county(true)'),
     // 货物名称
-    goodsName: Mock.mock('@csentence(10,20)'),
+    goodsName: Mock.mock('@ctitle(5)'),
+    // 包装
+    pack: Mock.mock('@ctitle(5)'),
     // 件数
     'numbers|1-100': 100,
     // 重量
