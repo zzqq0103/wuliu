@@ -2,15 +2,16 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align:center">车辆信息管理</h2>
+      <h2 style="text-align:center">外包企业订单管理</h2>
       <p style="margin-top:1%">
         <div style="float: right">
+          <el-row>订单号</el-row>
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div>
           <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
-          <el-button @click="vehicleAdd">添加</el-button>
-          <el-button @click="setting">设置</el-button>
+          <!-- <el-button @click="vehicleAdd">添加</el-button> -->
+          <!-- <el-button @click="setting">设置</el-button> -->
         </div>
       </p>
     </div>

@@ -1,15 +1,15 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align:center">车辆信息管理</h2>
+      <h2 style="text-align:center">外包企业订单信息</h2>
       <p style="margin-top:1%">
         <div style="float: right">
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div>
           <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
-          <el-button @click="vehicleAdd">添加</el-button>
-          <el-button @click="setting">设置</el-button>
+          <!-- <el-button @click="vehicleAdd">添加</el-button>
+          <el-button @click="setting">设置</el-button> -->
         </div>
       </p>
     </div>
@@ -30,7 +30,7 @@
 
     <el-dialog title="车辆信息:" :visible.sync="vehicleVisable">
         <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
-          <el-form-item label="车牌号码:" :label-width="formLabelWidth">
+          <el-form-item label="序号:" :label-width="formLabelWidth">
             <el-input v-model="vehicleForm.licePlateNum"></el-input>
           </el-form-item>
           <el-form-item label="司机姓名:" :label-width="formLabelWidth">
@@ -114,43 +114,40 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '车牌号码', width: 150, field: 'licePlateNum', filter: 'text', hide: false
+              headerName: '序号', width: 150, field: 'licePlateNum', filter: 'text', hide: false
             },
             {
-              headerName: '司机姓名', width: 150, field: 'driverName', filter: 'text', hide: false
+              headerName: '订单号', width: 150, field: 'driverName', filter: 'text', hide: false
             },
             {
-              headerName: '联系电话', width: 150, field: 'tel', filter: 'text', hide: false
+              headerName: '订单状态', width: 150, field: 'tel', filter: 'text', hide: false
             },
             {
-              headerName: '合同号', width: 150, field: 'contractID', filter: 'text', hide: false
+              headerName: '发货人', width: 150, field: 'contractID', filter: 'text', hide: false
             },
             {
-              headerName: '合同价格', width: 150, field: 'contractPrice', filter: 'text', hide: false
+              headerName: '发站', width: 150, field: 'contractPrice', filter: 'text', hide: false
             },
             {
-              headerName: '车容量', width: 150, field: 'capacity', filter: 'text', hide: false
+              headerName: '发货方联系方式', width: 150, field: 'capacity', filter: 'text', hide: false
             },
             {
-              headerName: '吨位', width: 150, field: 'tonnage', filter: 'text', hide: false
+              headerName: '收货人', width: 150, field: 'tonnage', filter: 'text', hide: false
             },
             {
-              headerName: '车辆类型', width: 150, field: 'carType', filter: 'text', hide: false
+              headerName: '收货方联系方式', width: 150, field: 'carType', filter: 'text', hide: false
             },
             {
-              headerName: '车辆接送区域', width: 150, field: 'pickUpArea', filter: 'text', hide: false
+              headerName: '货物名称', width: 150, field: 'pickUpArea', filter: 'text', hide: false
             },
             {
-              headerName: '司机状态', width: 150, field: 'receState', filter: 'text', hide: false
+              headerName: '数量', width: 150, field: 'receState', filter: 'text', hide: false
             },
             {
-              headerName: '车辆状态', width: 150, field: 'carState', filter: 'text', hide: false
+              headerName: '制单人', width: 150, field: 'carState', filter: 'text', hide: false
             },
             {
-              headerName: '车辆位置', width: 150, field: 'carPosition', filter: 'text', hide: false
-            },
-            {
-              headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
+              headerName: '状态', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
             }
           ]
         }
@@ -159,7 +156,8 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><button class="del-but" @click="vehicleDel">删 除</button><button class="del-but" @click="vehicleEdit">编 辑</button></span>',
+        // template:'<span></span><select><option  @click="vehicleDel" value="派送">派送</option><option  @click="vehicleDel" value="签收">签收</option></select></span>',
+        template: '<select><option class="del-but" @click="vehicleDel">派  送</option><option class="del-but" @click="vehicleEdit">签 收</option></select>',
         methods: {
           vehicleDel () {
             this.params.context.componentParent.vehicleDelVisable = true
