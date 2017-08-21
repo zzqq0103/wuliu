@@ -1,14 +1,13 @@
 import Mock from 'mockjs'
-const DiaoduloginUser = [
-  {
-    id: 1,
-    username: 'diaodu',
-    password: '123456',
-    avatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
-    name: '调度管理员'
-  }
-]
-
+// const DiaoduloginUser = [
+//   {
+//     id: 1,
+//     username: 'diaodu',
+//     password: '123456',
+//     avatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
+//     name: '调度管理员'
+//   }
+// ]
 const Orderlist = []
 
 for (let i = 0; i < 100; i++) {
@@ -40,4 +39,4 @@ for (let i = 0; i < 100; i++) {
   }))
 }
 
-export { DiaoduloginUser, Orderlist }
+export { Orderlist }

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
-import { DiaoduloginUser, Orderlist } from './data/orderlist'
+import { Orderlist } from './data/orderlist'
 let _Orderlist = Orderlist
 
 export default {
