@@ -59,6 +59,14 @@
           return this.sideItems.financialAdmin.items
         } else if (username === 'caiwuzongzhang') {
           return this.sideItems.financialDirector.items
+        } else if (username === 'diaodu') {
+          return this.sideItems.logitstiAdmin.items
+        } else if (username === 'kefu') {
+          return this.sideItems.customerService.items
+        } else if (username === 'xitong') {
+          return this.sideItems.systemAdmin.items
+        } else if (username === 'waibao') {
+          return this.sideItems.outsourcingAdmin.items
         }
       }
 
