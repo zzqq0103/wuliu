@@ -46,14 +46,18 @@
         <span class='col-1 label-content'>{{form.isListenToRele}}</span>
         <span class='col-1'>可放货(无</span>
         <span class='col-1 label-content'>{{form.isRelease}}</span>
-        <span class='col-1'>订单物流状态</span>
-        <span class='col-1 label-content'>{{form.orderLogiState}}</span>
+        <span class='col-1'>运输方式</span>
+        <span class='col-1 label-content'>{{form.tranMode}}</span>
+        <span class='col-1'>预约单号</span>
+        <span class='col-1 label-content'>{{form.reserveId}}</span>
+        <span class='col-2'>订单物流状态</span>
+        <span class='col-7 label-content'>{{form.orderLogiState}}</span>
         <span class='col-11 label-title'>费用信息</span>
         <!--<span v-for="(data,i) in datalist2" :key='data' :class="i==1? 'col-2':'col-1'">{{data}}</span> -->
         <span class='col-1' v-for="(data,i) in datalist2" :key='data'>{{data}}</span>
-        <span class='col-1 label-content' v-for="(value, key, i) in form" :key='key' v-if="i>59&&i<71">{{key}}</span>
+        <span class='col-1 label-content' v-for="(value, key, i) in form" :key='key' v-if="i>61&&i<73">{{key}}</span>
         <span class='col-1' v-for="(data,i) in datalist3" :key='data' :class="i==3?'col-2':'col-1'">{{data}}</span>
-        <span class='label-content' v-for="(value, key, i) in form" :key='key' v-if="i>70&&i<76" :class="i==74?'col-2':'col-1'">{{key}}</span>
+        <span class='label-content' v-for="(value, key, i) in form" :key='key' v-if="i>72&&i<78" :class="i==76?'col-2':'col-1'">{{key}}</span>
         <span class='col-1 label-content'>{{form.feeMoney[0]+form.feeMoney[1]+form.feeMoney[2]+form.feeMoney[3]}}</span>
         <span class='col-1 label-content' v-for="(data,i) in form.feeMoney" :key="data">{{data}}</span>
         <span class='col-11 label-title'>运输信息</span>
@@ -229,9 +233,11 @@ export default {
         daofu: '',
         qianfu: '',
         yuejie: '',
-        orderLogiState: '',
         isRelease: '',
         isListenToRele: '',
+        tranMode: '',
+        reserveId: '',
+        orderLogiState: '',
         /** 费用信息 */
         totalFreight: '111',
         baseFee: '100',
@@ -289,6 +295,10 @@ export default {
 
 .col-6 {
   width: 54.54%
+}
+
+.col-7 {
+  width: 63.63%
 }
 
 .col-11 {
