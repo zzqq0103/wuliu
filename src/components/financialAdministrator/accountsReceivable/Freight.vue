@@ -182,7 +182,7 @@
             <el-button @click="leftSelectAll"> >> </el-button>
           </div>
           <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged2" style="width: 200px"></el-input>
-          <!--表格-->
+          <!--未核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
                          :gridOptions="gridOptions2"
@@ -210,6 +210,7 @@
           <el-button @click="rightSelect"> < </el-button>
           <el-button @click="rightSelectAll"> << </el-button>
           <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
+          <!--待核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
                          :gridOptions="gridOptions3"
@@ -269,6 +270,7 @@
   export default {
     data () {
       return {
+        // 定义三个表格数据
         gridOptions: {
           rowData: [],
           columnDefs: [
@@ -431,6 +433,7 @@
             componentParent: this
           }
         },
+        // 定义筛选条件
         filterForm: {
           startTime: '', // 开始时间
           endTime: '', // 截止时间
@@ -441,6 +444,7 @@
           freiVeriState: '', // 运费核销状态
           orderId: '' // 运单号
         },
+        // 各种费用合计
         totalForm: {
           transferFeeTotal: '', // 中转费合计
           nowPayTotal: '', // 现付合计
@@ -448,11 +452,13 @@
           inArrearsTotal: '', // 欠付合计
           monthlyTotal: ''// 月结合计
         },
+        // 核销完成后提交给后台的数据
         confirmSubForm: {
           orderId: [],
           payMode: 'WeChat',
           digest: ''
         },
+        // 根据下拉框，表格最后显示不同的列
         additionalColumnDefs: {
           nowPay: {
             headerName: '现付',
@@ -575,19 +581,22 @@
             headerName: '月结金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
           }
         },
+        //  表单验证规则
         rules: {},
-        colVisible: false,
+        // dialog的可见性
+        colVisible: false, // 切换列可见性的弹窗
         colVisible2: false,
         colVisible3: false,
-        verVisible: false,
-        confirmSubVisible: false,
-        errorVisible: false
+        verVisible: false, // 进入核销页面的弹框
+        confirmSubVisible: false, // 提交核销信息的弹框
+        errorVisible: false // 错误信息弹框
       }
     },
     components: {
       'ag-grid-vue': AgGridVue
     },
     methods: {
+      // 绘制表格，包括更新列信息与行信息
       drawGrid (i) {
         if (i === 2) {
           this.gridOptions3.api.selectAll()
@@ -597,6 +606,7 @@
         this.updateGrid(i)
         this.createRowData(i)
       },
+      // 获取行数据
       createRowData (i) {
         if (i === 1) {
           this.gridOptions.rowData = testJson.freight.list
@@ -606,6 +616,7 @@
           this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
         }
       },
+      // 更新列数据
       updateGrid (i) {
         if (i === 1) {
           const payType = this.filterForm.payType
@@ -642,6 +653,7 @@
 
 //        console.log(this.gridOptions.columnDefs)
       },
+      // 切换列的可见性，三个表格，三个参数j
       updateColumnDefsVisible (j, collist) {
         if (j === 1) {
           for (let i = 0; i < collist.length; i++) {
@@ -657,6 +669,7 @@
           }
         }
       },
+      // 三个表格的快速匹配
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
       },
@@ -666,55 +679,68 @@
       onQuickFilterChanged3 (input) {
         this.gridOptions3.api.setQuickFilter(input)
       },
-      changeColumnDefsBoolen () {
-        const columnlist = this.gridOptions.columnDefs
-        for (let i = 0; i < columnlist.length; i++) {
-          columnlist[i].hide = !columnlist[i].hide
-        }
-      },
+      // 更改hide的值，（已放弃），添加了visible作为切换可见的条件
+//      changeColumnDefsBoolen () {
+//        const columnlist = this.gridOptions.columnDefs
+//        for (let i = 0; i < columnlist.length; i++) {
+//          columnlist[i].hide = !columnlist[i].hide
+//        }
+//      },
+      // 测试用的方法，没用
       test () {
         this.updateGrid(2)
         console.log(this.gridOptions2.columnDefs)
       },
+      // 显示切换列可见的弹框
       setting () {
         this.colVisible = true
       },
+      // 显示切换核销界面的弹框
       verification () {
         this.verVisible = true
       },
+      // 核销界面左侧表格双击时间
       leftDoubleClick (event) {
         this.leftSelect(event.data)
       },
+      // 核销界面右侧表格双击时间
       rightDoubleClick (event) {
         this.rightSelect(event.data)
       },
+      // 核销界面左侧表格多选切换至右侧
       leftSelect () {
         const selectedData = this.gridOptions2.api.getSelectedRows()
         this.addChoose(selectedData)
         console.log(this.gridOptions3.api.getAllRows())
       },
+      // 核销界面左侧表格全选切换至右侧
       leftSelectAll () {
         this.gridOptions2.api.selectAllFiltered()
         const selectedData = this.gridOptions2.api.getSelectedRows()
         this.addChoose(selectedData)
       },
+      // 核销界面右侧表格多选切换至左侧
       rightSelect () {
         const selectedData = this.gridOptions3.api.getSelectedRows()
         this.delChoose(selectedData)
       },
+      // 核销界面右侧表格全选切换至左侧
       rightSelectAll () {
         this.gridOptions3.api.selectAllFiltered()
         const selectedData = this.gridOptions3.api.getSelectedRows()
         this.delChoose(selectedData)
       },
+      // 核销界面右侧添加行数据，左侧删除行数据
       addChoose (newItems) {
         this.gridOptions3.api.updateRowData({add: newItems})
         this.gridOptions2.api.updateRowData({remove: newItems})
       },
+      // 核销界面左侧添加行数据，右侧删除行数据
       delChoose (newItems) {
         this.gridOptions2.api.updateRowData({add: newItems})
         this.gridOptions3.api.updateRowData({remove: newItems})
       },
+      // 打开提交核销结果的窗口
       confirmSubmit () {
         this.gridOptions3.api.selectAllFiltered()
         const confirmData = this.gridOptions3.api.getSelectedRows()
@@ -728,6 +754,7 @@
         }
         console.log(confirmData)
       },
+      // 提交后台
       submit () {
         console.log(this.confirmSubForm)
         this.confirmSubVisible = false
