@@ -10,16 +10,18 @@ import Mock from 'mockjs'
 // ]
 const Orderlist = []
 
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 100; i++) {
   Orderlist.push(Mock.mock({
     //  序号
     id: Mock.mock('@increment'),
     // 装载单号
-    deliverOrderId: Mock.mock('@id'),
+    deliverOrderId: Mock.mock('@integer(10,100)'),
     // 订单号
-    orderId: Mock.mock('@guid'),
+    orderId: Mock.mock('@integer(10,100)'),
     // 开单时间
     OrderDate: Mock.mock('@datetime'),
+    // 司机姓名
+    driverName: Mock.mock('@cname'),
     // 收货人姓名
     consignee: Mock.mock('@cname'),
     // 收货单位

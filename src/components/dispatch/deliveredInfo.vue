@@ -1,13 +1,10 @@
-
 <template>
   <div>
     <div>
       <h2 style="text-align:center">已 发 货 订 单 信 息 页</h2>
       <p style="margin-top:1%">
         <div>
-          <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
-          <!-- <el-button @click="vehicleAdd">添加</el-button> -->
-          <el-input placeholder="请输入查询数据" icon="search"  v-model="filters.title" :on-icon-click="handleIconClick" style="width:145px;"> </el-input>
+          <el-input placeholder="请输入查询数据" icon="search"  v-model="queryName" :on-icon-click="handleIconClick" style="width:145px;"> </el-input>
           <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
@@ -25,24 +22,10 @@
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue" :gridOptions="gridOptions" :suppressMovableColumns="true" :enableColResize="true" :enableSorting="true" :enableFilter="true" :groupHeaders="true" :rowHeight="40" :headerHeight="30"> </ag-grid-vue>
     </div>
 
-    <div class="block" style="float:right; padding-top:10px;">
-        <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="currentPage1"
-            :page-size="100"
-            layout="prev, pager, next, jumper"
-            :total="1000">
-        </el-pagination>
+    <div class="block" style="float:right; margin-top:30px;">
+       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentpage" :page-sizes="[25, 50, 75, 100]" :page-size="25" layout="total, sizes, prev, pager, next, jumper" :total="totalpages">
+       </el-pagination>
     </div>
-
-    <el-dialog title="" :visible.sync="vehicleDelVisable" size="" tiny>
-      <h2 style="padding:30px">确认删除吗？</h2>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="vehicleDelVisable = false">取 消</el-button>
-        <el-button @click="vehicleDelVisable = false">确 定</el-button>
-      </div>
-    </el-dialog>
 
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
       <template v-for="(collist,i) in gridOptions.columnDefs ">
@@ -61,16 +44,13 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import {getCurrentDelivered} from '../../api/api'
-// import testJson from '../../../static/test/testJSON.js'
+import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
 export default {
   data () {
     return {
       listLoading: false,
-      filters: {
-        title: ''
-      },
-      currentPage: 1,
+      queryName: '',
+      currentpage: 1,
       colVisible: false,
       vehicleVisable: false,
       vehicleDelVisable: false,
@@ -78,6 +58,7 @@ export default {
         'id': '',
         'deliverOrderId': '',
         'orderId': '',
+        'driverName': '',
         'OrderDate': '',
         'consignee': '',
         'consigneeAddr': '',
@@ -97,10 +78,10 @@ export default {
         context: {
           componentParent: this
         },
-        rowData: [],
+        rowData: null,
         columnDefs: [
           {
-            headerName: '序号', width: 120, field: 'id', hide: false
+            headerName: '序号', width: 120, field: 'id', filter: 'text', hide: false
           },
           {
             headerName: '装载单号', width: 120, field: 'deliverOrderId', filter: 'text', hide: false
@@ -110,6 +91,9 @@ export default {
           },
           {
             headerName: '开单时间', width: 120, field: 'OrderDate', filter: 'text', hide: false
+          },
+          {
+            headerName: '司机姓名', width: 120, field: 'driverName', filter: 'text', hide: false
           },
           {
             headerName: '收货单位', width: 120, field: 'consigneeAddr', filter: 'text', hide: false
@@ -127,13 +111,13 @@ export default {
             headerName: '货物名称', width: 120, field: 'goodsName', filter: 'text', hide: false
           },
           {
-            headerName: '件数', width: 120, field: 'numbers', hide: false
+            headerName: '件数', width: 120, field: 'numbers', filter: 'text', hide: false
           },
           {
-            headerName: '重量', width: 120, field: 'weight', hide: false
+            headerName: '重量', width: 120, field: 'weight', filter: 'text', hide: false
           },
           {
-            headerName: '体积', width: 120, field: 'volume', hide: false
+            headerName: '体积', width: 120, field: 'volume', filter: 'text', hide: false
           },
           {
             headerName: '包装', field: 'pack', width: 120, filter: 'text', hide: false
@@ -154,34 +138,30 @@ export default {
         label: '司机姓名'
       }],
       selectvalue: 1,
-      currentPage1: 1,
-      driverName: '1',
-      orderId: '1',
-      deliverOrderId: '1',
       orderlist: [],
-      totallists: 0
+      totalpages: 1,
+      pageSize: 25
     }
   },
   components: {
     'ag-grid-vue': AgGridVue
   },
   methods: {
+    // queryList () {
+    //   this.getQueryData()
+    // },
     handleSizeChange (val) {
+      this.pageSize = val
+      console.log(this.pageSize)
+      this.getOrderList()
     },
     handleCurrentChange (val) {
-      this.page = val
+      this.currentpage = val
+      console.log(this.currentpage)
       this.getOrderList()
     },
     handleIconClick (input) {
-    },
-    createRowData () {
-      // this.listLoading = true
-      this.gridOptions.rowData = this.orderlist
-      // return new Promise((resolve, reject) => {
-      //   resolve({
-      //     status: 1
-      //   })
-      // })
+      this.getQueryData()
     },
     onQuickFilterChanged (input) {
       this.gridOptions.api.setQuickFilter(input)
@@ -202,31 +182,42 @@ export default {
     },
     getOrderList () {
       let para = {
-        page: this.currentPage,
+        page: this.currentpage,
         orderId: this.orderId,
         driverName: this.driverName,
         deliverOrderId: this.deliverOrderId,
-        selectvalue: this.selectvalue
+        selectvalue: this.selectvalue,
+        pageSize: this.pageSize
       }
+      this.listLoading = true
       getCurrentDelivered(para).then((res) => {
+        console.log('进入getCurrentDelivered')
+        // this.gridOptions.rowData = res.data.orderlists
+        // 使用gridOptions中的api方法设定RowData数据
+        this.gridOptions.api.setRowData(res.data.orderlists)
         this.orderlist = res.data.orderlists
-        // this.totallists = res.data.total
-        this.createRowData()
-        // .then(res => {
-        //   if (res.data.status === 1) {
-        //     // this.listLoading = false
-        //   }
-        // })
+        this.totalpages = res.data.totalPages
+        // console.log(this.gridOptions.rowData)
+        this.listLoading = false
+      })
+    },
+    getQueryData () {
+      let para = {
+        queryName: this.queryName,
+        queryClass: this.selectvalue,
+        pageSize: this.pageSize
+      }
+      this.listLoading = true
+      getQueryOrderList(para).then(res => {
+        this.gridOptions.api.setRowData(res.data.querylists)
+        this.orderlist = res.data.querylists
+        this.totalpages = res.data.totalpages
+        this.listLoading = false
       })
     }
   },
-  // beforeMount () {
-  // },
   mounted () {
-    // this.changeColumnDefsBoolen()
-    this.$nextTick(() => {
-      this.getOrderList()
-    })
+    this.getOrderList()
   }
 }
 </script>

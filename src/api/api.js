@@ -4,19 +4,14 @@ let baseUrl = ''
 
 // -------  已 送 货 订 单 开 始 --------
 
-// 获取第几页的分页的已送货订单接口
-export const getListPage = params => {
-  return axios.get(`${baseUrl}/deliveredOrder/listpage`, { params: params })
-}
-
 // 获得当前已经运送的订单接口
 export const getCurrentDelivered = params => {
   return axios.get(`${baseUrl}/deliveredOrder/getlist`, { params: params })
 }
 
 // 获取查询的订单接口
-export const getQueryDelivered = params => {
-  return axios.get(`${baseUrl}/deliveredOrder/listpage`, { params: params })
+export const getQueryOrderList = params => {
+  return axios.get(`${baseUrl}/deliveredOrder/getQueryOrderList`, { params: params })
 }
 
 // -------  已 送 货 订 单 开 始 --------
