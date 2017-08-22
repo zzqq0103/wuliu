@@ -114,7 +114,7 @@
         <div v-if="collist.children">
         </div>
         <div v-else>
-          <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(gridOptions.columnDefs)">
+          <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)">
             {{collist.headerName}}
           </el-checkbox>
         </div>
@@ -123,7 +123,39 @@
         <el-button type="primary" @click="colVisible = false">确 定</el-button>
       </div>
     </el-dialog>
-    <!--核销界面-->
+    <el-dialog title="选择要显示的列表:" :visible.sync="colVisible2" size="tiny" :closeOnClickModal="false" top="30%">
+      <template v-for="(collist,i) in gridOptions2.columnDefs">
+        <div v-if="collist.children">
+        </div>
+        <div v-else>
+          <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)">
+            {{collist.headerName}}
+          </el-checkbox>
+        </div>
+      </template>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="colVisible2 = false">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="选择要显示的列表:" :visible.sync="colVisible3" size="tiny" :closeOnClickModal="false" top="30%">
+      <template v-for="(collist,i) in gridOptions3.columnDefs">
+        <div v-if="collist.children">
+        </div>
+        <div v-else>
+          <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)">
+            {{collist.headerName}}
+          </el-checkbox>
+        </div>
+      </template>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="colVisible3 = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
+
+    <!--
+    --核销界面
+    -->
     <el-dialog title="运费核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
       <el-row :gutter="20">
         <el-col :span="12">
@@ -143,6 +175,7 @@
               </el-select>
             </el-form-item>
             <el-button @click="drawGrid(2)">提取库存</el-button>
+            <el-button @click="colVisible2 = true">设置</el-button>
           </el-form>
           <div style="float: right">
             <el-button @click="leftSelect"> > </el-button>
@@ -171,6 +204,7 @@
           <el-form>
             <el-form-item>
               <el-button @click="confirmSubmit">确认核销</el-button>
+              <el-button @click="colVisible3 = true">设置</el-button>
             </el-form-item>
           </el-form>
           <el-button @click="rightSelect"> < </el-button>
@@ -187,6 +221,7 @@
                          :suppressCellSelection="true"
                          :rowHeight=40
 
+                         :gridReady="test"
                          :rowDoubleClicked="rightDoubleClick"
                          :animateRows="true"
                          rowSelection="multiple"
@@ -526,8 +561,24 @@
             headerName: '月结金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
           }
         },
+        additionalColumnDefs3: {
+          nowPay: {
+            headerName: '现付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+          },
+          cashOnDelivery: {
+            headerName: '到付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+          },
+          inArrears: {
+            headerName: '欠付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+          },
+          monthly: {
+            headerName: '月结金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+          }
+        },
         rules: {},
         colVisible: false,
+        colVisible2: false,
+        colVisible3: false,
         verVisible: false,
         confirmSubVisible: false,
         errorVisible: false
@@ -574,22 +625,36 @@
           const lenth = (this.gridOptions2.columnDefs.length - 1)
           if (payType === 'nowPay') {
             this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.nowPay
+            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.nowPay
           } else if (payType === 'cashOnDelivery') {
             this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.cashOnDelivery
+            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.cashOnDelivery
           } else if (payType === 'inArrears') {
             this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.inArrears
+            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.inArrears
           } else if (payType === 'monthly') {
             this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.monthly
+            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.monthly
           }
           this.gridOptions2.api.setColumnDefs(this.gridOptions2.columnDefs)
-          this.gridOptions3.api.setColumnDefs(this.gridOptions2.columnDefs)
+          this.gridOptions3.api.setColumnDefs(this.gridOptions3.columnDefs)
         }
 
 //        console.log(this.gridOptions.columnDefs)
       },
-      updateColumnDefsVisible (collist) {
-        for (let i = 0; i < collist.length; i++) {
-          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
+      updateColumnDefsVisible (j, collist) {
+        if (j === 1) {
+          for (let i = 0; i < collist.length; i++) {
+            this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
+          }
+        } else if (j === 2) {
+          for (let i = 0; i < collist.length; i++) {
+            this.gridOptions2.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
+          }
+        } else if (j === 3) {
+          for (let i = 0; i < collist.length; i++) {
+            this.gridOptions3.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
+          }
         }
       },
       onQuickFilterChanged (input) {
@@ -608,6 +673,7 @@
         }
       },
       test () {
+        this.updateGrid(2)
         console.log(this.gridOptions2.columnDefs)
       },
       setting () {
@@ -676,7 +742,6 @@
       this.updateGrid(1)
     },
     updated () {
-      this.updateGrid(2)
     }
   }
 </script>
