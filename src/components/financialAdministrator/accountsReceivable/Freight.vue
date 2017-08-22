@@ -46,7 +46,7 @@
               <el-option label="月结" value="monthly"></el-option>
             </el-select>
           </el-form-item>
-          <el-button @click="drawGrid">提取</el-button>
+          <el-button @click="drawGrid(1)">提取</el-button>
         </el-form>
       </div>
       <!--第二行开始-->
@@ -103,6 +103,9 @@
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
+
+                   :animateRows="true"
+                   rowSelection="multiple"
       ></ag-grid-vue>
     </div>
     <!--列表切换显示-->
@@ -139,9 +142,13 @@
                 <el-option label="月结" value="monthly"></el-option>
               </el-select>
             </el-form-item>
-            <el-button @click="drawGrid">提取库存</el-button>
+            <el-button @click="drawGrid(2)">提取库存</el-button>
           </el-form>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 200px"></el-input>
+          <div style="float: right">
+            <el-button @click="leftSelect"> > </el-button>
+            <el-button @click="leftSelectAll"> >> </el-button>
+          </div>
+          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged2" style="width: 200px"></el-input>
           <!--表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
@@ -153,16 +160,22 @@
                          :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
+
+                         :rowDoubleClicked="leftDoubleClick"
+                         :animateRows="true"
+                         rowSelection="multiple"
             ></ag-grid-vue>
           </div>
         </el-col>
         <el-col :span="12">
           <el-form>
             <el-form-item>
-              <el-button>确认核销</el-button>
+              <el-button @click="confirmSubmit">确认核销</el-button>
             </el-form-item>
           </el-form>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 200px"></el-input>
+          <el-button @click="rightSelect"> < </el-button>
+          <el-button @click="rightSelectAll"> << </el-button>
+          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
                          :gridOptions="gridOptions3"
@@ -173,10 +186,44 @@
                          :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
+
+                         :rowDoubleClicked="rightDoubleClick"
+                         :animateRows="true"
+                         rowSelection="multiple"
             ></ag-grid-vue>
           </div>
         </el-col>
       </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="verVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
+    <!--确认核销弹框，选择支付方式与填写摘要-->
+    <el-dialog title="确认核销" :visible.sync="confirmSubVisible" size="tiny" :closeOnClickModal="false">
+      <el-form :model="confirmSubForm" ref="confirmSubForm" labelWidth="80px">
+        <el-form-item label="支付方式">
+          <el-select v-model="confirmSubForm.payMode" placeholder="支付方式" style="width: 110px">
+            <el-option label="微信" value="WeChat"></el-option>
+            <el-option label="支付宝" value="Alipay"></el-option>
+            <el-option label="转账" value="transfer "></el-option>
+            <el-option label="现金" value="cash"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="摘要:">
+          <el-input v-model="confirmSubForm.digest"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="confirmSubVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!--警告弹窗-->
+    <el-dialog title="错误" :visible.sync="errorVisible" size="tiny">
+      <p>未发现需要核销的内容</p>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="errorVisible = false">取 消</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -366,6 +413,11 @@
           inArrearsTotal: '', // 欠付合计
           monthlyTotal: ''// 月结合计
         },
+        confirmSubForm: {
+          orderId: [],
+          payMode: 'WeChat',
+          digest: ''
+        },
         additionalColumnDefs: {
           nowPay: {
             headerName: '现付',
@@ -460,36 +512,79 @@
             ]
           }
         },
+        additionalColumnDefs2: {
+          nowPay: {
+            headerName: '现付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+          },
+          cashOnDelivery: {
+            headerName: '到付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+          },
+          inArrears: {
+            headerName: '欠付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+          },
+          monthly: {
+            headerName: '月结金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+          }
+        },
         rules: {},
         colVisible: false,
-        verVisible: false
+        verVisible: false,
+        confirmSubVisible: false,
+        errorVisible: false
       }
     },
     components: {
       'ag-grid-vue': AgGridVue
     },
     methods: {
-      drawGrid () {
-        this.updateGrid()
-        this.createRowData()
-      },
-      createRowData () {
-        this.gridOptions.rowData = testJson.freight.list
-        this.gridOptions.api.setRowData(this.gridOptions.rowData)
-      },
-      updateGrid () {
-        const payType = this.filterForm.payType
-        const lenth = (this.gridOptions.columnDefs.length - 1)
-        if (payType === 'nowPay') {
-          this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.nowPay
-        } else if (payType === 'cashOnDelivery') {
-          this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.cashOnDelivery
-        } else if (payType === 'inArrears') {
-          this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.inArrears
-        } else if (payType === 'monthly') {
-          this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.monthly
+      drawGrid (i) {
+        if (i === 2) {
+          this.gridOptions3.api.selectAll()
+          const selectedData = this.gridOptions3.api.getSelectedRows()
+          this.delChoose(selectedData)
         }
-        this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
+        this.updateGrid(i)
+        this.createRowData(i)
+      },
+      createRowData (i) {
+        if (i === 1) {
+          this.gridOptions.rowData = testJson.freight.list
+          this.gridOptions.api.setRowData(this.gridOptions.rowData)
+        } else if (i === 2) {
+          this.gridOptions2.rowData = testJson.freight.list
+          this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
+        }
+      },
+      updateGrid (i) {
+        if (i === 1) {
+          const payType = this.filterForm.payType
+          const lenth = (this.gridOptions.columnDefs.length - 1)
+          if (payType === 'nowPay') {
+            this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.nowPay
+          } else if (payType === 'cashOnDelivery') {
+            this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.cashOnDelivery
+          } else if (payType === 'inArrears') {
+            this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.inArrears
+          } else if (payType === 'monthly') {
+            this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.monthly
+          }
+          this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
+        } else if (i === 2) {
+          const payType = this.filterForm.payType
+          const lenth = (this.gridOptions2.columnDefs.length - 1)
+          if (payType === 'nowPay') {
+            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.nowPay
+          } else if (payType === 'cashOnDelivery') {
+            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.cashOnDelivery
+          } else if (payType === 'inArrears') {
+            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.inArrears
+          } else if (payType === 'monthly') {
+            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.monthly
+          }
+          this.gridOptions2.api.setColumnDefs(this.gridOptions2.columnDefs)
+          this.gridOptions3.api.setColumnDefs(this.gridOptions2.columnDefs)
+        }
+
 //        console.log(this.gridOptions.columnDefs)
       },
       updateColumnDefsVisible (collist) {
@@ -499,7 +594,12 @@
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
-        console.log(this.gridOptions.rowData)
+      },
+      onQuickFilterChanged2 (input) {
+        this.gridOptions2.api.setQuickFilter(input)
+      },
+      onQuickFilterChanged3 (input) {
+        this.gridOptions3.api.setQuickFilter(input)
       },
       changeColumnDefsBoolen () {
         const columnlist = this.gridOptions.columnDefs
@@ -508,13 +608,64 @@
         }
       },
       test () {
-        console.log(this.gridOptions.columnDefs)
+        console.log(this.gridOptions2.columnDefs)
       },
       setting () {
         this.colVisible = true
       },
       verification () {
         this.verVisible = true
+      },
+      leftDoubleClick (event) {
+        this.leftSelect(event.data)
+      },
+      rightDoubleClick (event) {
+        this.rightSelect(event.data)
+      },
+      leftSelect () {
+        const selectedData = this.gridOptions2.api.getSelectedRows()
+        this.addChoose(selectedData)
+        console.log(this.gridOptions3.api.getAllRows())
+      },
+      leftSelectAll () {
+        this.gridOptions2.api.selectAllFiltered()
+        const selectedData = this.gridOptions2.api.getSelectedRows()
+        this.addChoose(selectedData)
+      },
+      rightSelect () {
+        const selectedData = this.gridOptions3.api.getSelectedRows()
+        this.delChoose(selectedData)
+      },
+      rightSelectAll () {
+        this.gridOptions3.api.selectAllFiltered()
+        const selectedData = this.gridOptions3.api.getSelectedRows()
+        this.delChoose(selectedData)
+      },
+      addChoose (newItems) {
+        this.gridOptions3.api.updateRowData({add: newItems})
+        this.gridOptions2.api.updateRowData({remove: newItems})
+      },
+      delChoose (newItems) {
+        this.gridOptions2.api.updateRowData({add: newItems})
+        this.gridOptions3.api.updateRowData({remove: newItems})
+      },
+      confirmSubmit () {
+        this.gridOptions3.api.selectAllFiltered()
+        const confirmData = this.gridOptions3.api.getSelectedRows()
+        if (confirmData.length < 1) {
+          this.errorVisible = true
+        } else {
+          for (let i = 0; i < confirmData.length; i++) {
+            this.confirmSubForm.orderId[i] = confirmData[i].orderId
+          }
+          this.confirmSubVisible = true
+        }
+        console.log(confirmData)
+      },
+      submit () {
+        console.log(this.confirmSubForm)
+        this.confirmSubVisible = false
+        this.drawGrid(2)
       }
     },
 //    beforeMount () {
@@ -522,7 +673,10 @@
 //      console.log(this.gridOptions)
 //    },
     mounted () {
-      this.updateGrid()
+      this.updateGrid(1)
+    },
+    updated () {
+      this.updateGrid(2)
     }
   }
 </script>
