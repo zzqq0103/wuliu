@@ -46,7 +46,7 @@
               <el-option label="月结" value="monthly"></el-option>
             </el-select>
           </el-form-item>
-          <el-button @click="updateGrid">提取</el-button>
+          <el-button @click="drawGrid">提取</el-button>
         </el-form>
       </div>
       <!--第二行开始-->
@@ -58,7 +58,7 @@
         </el-form>
       </div>
       <div style="float: right">
-        <el-button>开始核销</el-button>
+        <el-button @click="verification">开始核销</el-button>
       </div>
       <!--判断当前需要显示的label-->
       <div v-if="this.filterForm.payType === 'nowPay'">
@@ -120,6 +120,64 @@
         <el-button type="primary" @click="colVisible = false">确 定</el-button>
       </div>
     </el-dialog>
+    <!--核销界面-->
+    <el-dialog title="运费核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form :model="filterForm" ref="filterForm" :inline="true">
+            <el-form-item label="运单号:">
+              <el-input v-model="filterForm.orderId"></el-input>
+            </el-form-item>
+            <el-form-item label="发货人:">
+              <el-input v-model="filterForm.shipNam"></el-input>
+            </el-form-item>
+            <el-form-item label="类型:">
+              <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 110px">
+                <el-option label="现付" value="nowPay"></el-option>
+                <el-option label="到付" value="cashOnDelivery"></el-option>
+                <el-option label="欠付" value="inArrears"></el-option>
+                <el-option label="月结" value="monthly"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-button @click="drawGrid">提取库存</el-button>
+          </el-form>
+          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 200px"></el-input>
+          <!--表格-->
+          <div style="margin-top: 10px">
+            <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+                         :gridOptions="gridOptions2"
+                         :suppressMovableColumns="true"
+                         :enableColResize="true"
+                         :enableSorting="true"
+                         :enableFilter="true"
+                         :groupHeaders="true"
+                         :suppressCellSelection="true"
+                         :rowHeight=40
+            ></ag-grid-vue>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <el-form>
+            <el-form-item>
+              <el-button>确认核销</el-button>
+            </el-form-item>
+          </el-form>
+          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 200px"></el-input>
+          <div style="margin-top: 10px">
+            <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+                         :gridOptions="gridOptions3"
+                         :suppressMovableColumns="true"
+                         :enableColResize="true"
+                         :enableSorting="true"
+                         :enableFilter="true"
+                         :groupHeaders="true"
+                         :suppressCellSelection="true"
+                         :rowHeight=40
+            ></ag-grid-vue>
+          </div>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -130,7 +188,115 @@
     data () {
       return {
         gridOptions: {
-          rowData: null,
+          rowData: [],
+          columnDefs: [
+            {
+              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '开单网点', width: 150, field: 'billBranch', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '开单日期', width: 150, field: 'orderTim', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '发站', width: 150, field: 'startStation', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '到站', width: 150, field: 'arrStation', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '发货人联系方式', width: 150, field: 'shipTel', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '收货人联系方式', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '品名', width: 150, field: 'goodsNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '件数', width: 150, field: 'goodsNums', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '制单人', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '中转路线', width: 150, field: 'companyNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '中转费', width: 150, field: 'changeFee', filter: 'text', hide: false, visible: true
+            },
+            {}
+          ],
+          context: {
+            componentParent: this
+          }
+        },
+        gridOptions2: {
+          rowData: [],
+          columnDefs: [
+            {
+              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '开单网点', width: 150, field: 'billBranch', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '开单日期', width: 150, field: 'orderTim', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '发站', width: 150, field: 'startStation', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '到站', width: 150, field: 'arrStation', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '发货人联系方式', width: 150, field: 'shipTel', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '收货人联系方式', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '品名', width: 150, field: 'goodsNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '件数', width: 150, field: 'goodsNums', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '制单人', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '中转路线', width: 150, field: 'companyNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '中转费', width: 150, field: 'changeFee', filter: 'text', hide: false, visible: true
+            },
+            {}
+          ],
+          context: {
+            componentParent: this
+          }
+        },
+        gridOptions3: {
+          rowData: [],
           columnDefs: [
             {
               headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
@@ -190,7 +356,8 @@
           endPoint: '', //  区间终点
           shipNam: '', //  发货人
           payType: 'nowPay', // 类型（现付，到付，欠付，月结）
-          freiVeriState: '' // 运费核销状态
+          freiVeriState: '', // 运费核销状态
+          orderId: '' // 运单号
         },
         totalForm: {
           transferFeeTotal: '', // 中转费合计
@@ -295,18 +462,20 @@
         },
         rules: {},
         colVisible: false,
-        addFormVisible: false,
-        delFormVisible: false,
-        editFormVisible: false,
-        formLabelWidth: '150px'
+        verVisible: false
       }
     },
     components: {
       'ag-grid-vue': AgGridVue
     },
     methods: {
+      drawGrid () {
+        this.updateGrid()
+        this.createRowData()
+      },
       createRowData () {
         this.gridOptions.rowData = testJson.freight.list
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
       },
       updateGrid () {
         const payType = this.filterForm.payType
@@ -321,7 +490,7 @@
           this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.monthly
         }
         this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
-        console.log(this.gridOptions.columnDefs)
+//        console.log(this.gridOptions.columnDefs)
       },
       updateColumnDefsVisible (collist) {
         for (let i = 0; i < collist.length; i++) {
@@ -330,6 +499,7 @@
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
+        console.log(this.gridOptions.rowData)
       },
       changeColumnDefsBoolen () {
         const columnlist = this.gridOptions.columnDefs
@@ -342,11 +512,15 @@
       },
       setting () {
         this.colVisible = true
+      },
+      verification () {
+        this.verVisible = true
       }
     },
-    beforeMount () {
-      this.createRowData()
-    },
+//    beforeMount () {
+//      this.createRowData()
+//      console.log(this.gridOptions)
+//    },
     mounted () {
       this.updateGrid()
     }
