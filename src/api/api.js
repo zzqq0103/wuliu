@@ -23,11 +23,21 @@ export const getCurrentReceived = params => {
 
 // 获取查询的接收订单接口
 export const getQueryReceiveList = params => {
-  return axios.get(`${baseUrl}/deliveredOrder/getQueryOrderList`, { params: params })
+  return axios.get(`${baseUrl}/receivedOrder/getQueryOrderList`, { params: params })
 }
 // -------  已 接 货 订 单 结 束 --------
 
 // -------  已 中 转 订 单 开 始 --------
+
+// 获得当前已经中转的订单接口
+export const getCurrentEpiboliedList = params => {
+  return axios.get(`${baseUrl}/epiboliedListOrder/getlist`, { params: params })
+}
+
+// 获取查询的中转订单接口
+export const getQueryEpiboliedList = params => {
+  return axios.get(`${baseUrl}/epiboliedListOrder/getQueryOrderList`, { params: params })
+}
 
 // -------  已 中 转 订 单 结 束 --------
 

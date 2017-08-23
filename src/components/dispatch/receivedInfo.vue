@@ -2,17 +2,31 @@
   <div>
     <div>
       <h2 style="text-align:center">已 接 货 订 单 信 息</h2>
-      <p style="margin-top:1%">
-        <div>
+      <div style="margin-top:2%">
+
+        <div class="block" style="float:right;">
+          <el-date-picker
+            v-model="dateValue"
+            type="daterange"
+            align="right"
+            placeholder="选择日期范围"
+            :picker-options="pickerOptions">
+          </el-date-picker>
+        </div>
+
+        <div  style="float:left;">
           <el-input placeholder="请输入查询数据" icon="search"  v-model="queryName" :on-icon-click="handleIconClick" style="width:145px;"> </el-input>
           <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-          <el-button @click="setting">设置</el-button>
-          <el-button style="float:right;">导出</el-button>
+          <el-button @click="setting" style="padding: 10px 15px 9px 15px !important;">设置</el-button>
         </div>
-      </p>
+
+        <div>
+          <el-button style="float:right; margin-right:10px;">导出</el-button>
+        </div>
+      </div>
     </div>
 
     <div style="clear: both;">
@@ -56,19 +70,23 @@ export default {
       vehicleDelVisable: false,
       vehicleForm: {
         'id': '',
-        'deliverOrderId': '',
         'orderId': '',
-        'driverName': '',
-        'OrderDate': '',
-        'consignee': '',
-        'consigneeAddr': '',
+        'orderDate': '',
+        'forwarding': '',
+        'shipper': '',
         'phone': '',
-        'address': '',
+        'receivedAddr': '',
+        'receivedArea': '',
         'goodsName': '',
         'pack': '',
         'numbers': '',
         'weight': '',
         'volume': '',
+        'driverName': '',
+        'driverPhone': '',
+        'carLicence': '',
+        'carTon': '',
+        'carVolume': '',
         'remarks': ''
       },
       rules: {
@@ -152,7 +170,35 @@ export default {
       selectvalue: 1,
       orderlist: [],
       totalpages: 1,
-      pageSize: 25
+      pageSize: 25,
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      },
+      dateValue: ''
     }
   },
   components: {
@@ -196,8 +242,6 @@ export default {
       let para = {
         page: this.currentpage,
         orderId: this.orderId,
-        driverName: this.driverName,
-        shipper: this.shipper,
         selectvalue: this.selectvalue,
         pageSize: this.pageSize
       }

@@ -2,17 +2,31 @@
   <div>
     <div>
       <h2 style="text-align:center">已 中 转 订 单 信 息 页</h2>
-      <p style="margin-top:1%">
-        <div>
+      <div style="margin-top:2%">
+
+        <div class="block" style="float:right;">
+          <el-date-picker
+            v-model="dateValue"
+            type="daterange"
+            align="right"
+            placeholder="选择日期范围"
+            :picker-options="pickerOptions">
+          </el-date-picker>
+        </div>
+
+        <div  style="float:left;">
           <el-input placeholder="请输入查询数据" icon="search"  v-model="queryName" :on-icon-click="handleIconClick" style="width:145px;"> </el-input>
           <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-          <el-button @click="setting">设置</el-button>
-          <el-button style="float:right;">导出</el-button>
+          <el-button @click="setting" style="padding: 10px 15px 9px 15px !important;">设置</el-button>
         </div>
-      </p>
+
+        <div>
+          <el-button style="float:right; margin-right:10px;">导出</el-button>
+        </div>
+      </div>
     </div>
 
     <div style="clear: both;">
@@ -44,7 +58,7 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
+import {getCurrentEpiboliedList, getQueryEpiboliedList} from '../../api/api'
 export default {
   data () {
     return {
@@ -56,19 +70,22 @@ export default {
       vehicleDelVisable: false,
       tableForm: {
         'id': '',
-        'deliverOrderId': '',
         'orderId': '',
-        'driverName': '',
-        'OrderDate': '',
-        'consignee': '',
-        'consigneeAddr': '',
-        'phone': '',
-        'address': '',
+        'orderDate': '',
+        'destinaiton': '',
+        'transitOpen': '',
+        'transitCompany': '',
+        'contractSpend': '',
+        'contractPrice': '',
+        'ectocyster': '',
+        'ectocystPhone': '',
+        'senderName': '',
+        'receiverName': '',
         'goodsName': '',
-        'pack': '',
         'numbers': '',
         'weight': '',
         'volume': '',
+        'pack': '',
         'remarks': ''
       },
       rules: {
@@ -84,43 +101,52 @@ export default {
             headerName: '序号', width: 120, field: 'id', filter: 'text', hide: false
           },
           {
-            headerName: '装载单号', width: 120, field: 'deliverOrderId', filter: 'text', hide: false
-          },
-          {
             headerName: '订单号', width: 120, field: 'orderId', filter: 'text', hide: false
           },
           {
-            headerName: '开单时间', width: 120, field: 'OrderDate', filter: 'text', hide: false
+            headerName: '开单时间', width: 120, field: 'orderDate', filter: 'text', hide: false
           },
           {
-            headerName: '司机姓名', width: 120, field: 'driverName', filter: 'text', hide: false
+            headerName: '到站', width: 120, field: 'destinaiton', filter: 'text', hide: false
           },
           {
-            headerName: '收货单位', width: 120, field: 'consigneeAddr', filter: 'text', hide: false
+            headerName: '中转起始站', width: 120, field: 'transitOpen', filter: 'text', hide: false
           },
           {
-            headerName: '收货人姓名', width: 120, field: 'consignee', filter: 'text', hide: false
+            headerName: '中转公司名称', width: 120, field: 'transitCompany', filter: 'text', hide: false
           },
           {
-            headerName: '联系电话', width: 120, field: 'phone', filter: 'text', hide: false
+            headerName: '中转费用', width: 120, field: 'contractSpend', filter: 'text', hide: false
           },
           {
-            headerName: '收货地址', width: 120, field: 'address', filter: 'text', hide: false
+            headerName: '合同价格', width: 120, field: 'contractPrice', filter: 'text', hide: false
           },
           {
-            headerName: '货物名称', width: 120, field: 'goodsName', filter: 'text', hide: false
+            headerName: '外包企业联系人', width: 120, field: 'ectocyster', filter: 'text', hide: false
           },
           {
-            headerName: '件数', width: 120, field: 'numbers', filter: 'text', hide: false
+            headerName: '外包企业联系电话', width: 180, field: 'ectocystPhone', filter: 'text', hide: false
           },
           {
-            headerName: '重量', width: 120, field: 'weight', filter: 'text', hide: false
+            headerName: '发货人姓名', width: 120, field: 'senderName', filter: 'text', hide: false
           },
           {
-            headerName: '体积', width: 120, field: 'volume', filter: 'text', hide: false
+            headerName: '收货人姓名', field: 'receiverName', width: 120, filter: 'text', hide: false
           },
           {
-            headerName: '包装', field: 'pack', width: 120, filter: 'text', hide: false
+            headerName: '货物名称', field: 'goodsName', width: 120, filter: 'text', hide: false
+          },
+          {
+            headerName: '货物件数', field: 'numbers', width: 120, filter: 'text', hide: false
+          },
+          {
+            headerName: '货物重量', field: 'weight', width: 120, filter: 'text', hide: false
+          },
+          {
+            headerName: '货物体积', field: 'volume', width: 120, filter: 'text', hide: false
+          },
+          {
+            headerName: '货物包装', field: 'pack', width: 120, filter: 'text', hide: false
           },
           {
             headerName: '备注', field: 'remarks', width: 120, filter: 'text', hide: false
@@ -129,18 +155,43 @@ export default {
       },
       queryItemOptions: [{
         value: 1,
-        label: '装载单号'
+        label: '外包企业查询'
       }, {
         value: 2,
         label: '订单号'
-      }, {
-        value: 3,
-        label: '司机姓名'
       }],
-      selectvalue: 1,
+      selectvalue: 2,
       orderlist: [],
       totalpages: 1,
-      pageSize: 25
+      pageSize: 25,
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      },
+      dateValue: ''
     }
   },
   components: {
@@ -190,8 +241,7 @@ export default {
         pageSize: this.pageSize
       }
       this.listLoading = true
-      getCurrentDelivered(para).then((res) => {
-        console.log('进入getCurrentDelivered')
+      getCurrentEpiboliedList(para).then((res) => {
         // this.gridOptions.rowData = res.data.orderlists
         // 使用gridOptions中的api方法设定RowData数据
         this.gridOptions.api.setRowData(res.data.orderlists)
@@ -208,7 +258,7 @@ export default {
         pageSize: this.pageSize
       }
       this.listLoading = true
-      getQueryOrderList(para).then(res => {
+      getQueryEpiboliedList(para).then(res => {
         this.gridOptions.api.setRowData(res.data.querylists)
         this.orderlist = res.data.querylists
         this.totalpages = res.data.totalpages

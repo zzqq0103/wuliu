@@ -1,8 +1,11 @@
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
-import { Orderlist, transportedList } from './data/orderlist'
+import {searchByIndexOf, getListDataBySize} from '../filter/util'
+import {Orderlist, transportedList, receivedList, epibolyList} from './data/orderlist'
 let _Orderlist = Orderlist
 let _transportedList = transportedList
+let _receivedList = receivedList
+let _epibolyList = epibolyList
 console.log(typeof _Orderlist[0].orderId)
 
 export default {
@@ -11,9 +14,7 @@ export default {
     // 获取到已送货订单列表
     mock.onGet('/deliveredOrder/getlist').reply(config => {
       let { page, pageSize } = config.params
-      let mockList = _Orderlist.filter(
-        (u, index) => index < pageSize * page && index >= pageSize * (page - 1)
-      )
+      let mockList = getListDataBySize(_Orderlist, pageSize, page)
       let pages = _Orderlist.length
       return new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -25,46 +26,20 @@ export default {
     // 获取已送货订单的查询接口
     mock.onGet('/deliveredOrder/getQueryOrderList').reply(config => {
       let { queryName, queryClass } = config.params
-      console.log(
-        `queryName: ${queryName} ${typeof queryName} 和 queryClass: ${parseInt(
-          queryClass
-        )},  ${typeof parseInt(queryClass)}`
-      )
       let parseclass = parseInt(queryClass)
       let queryData
       // 装载单查询
       if (parseclass === 1) {
-        console.log(typeof parseInt(queryName))
-        let mockOrderLists = _Orderlist.filter(order => {
-          console.log(typeof order.deliverOrderId)
-          if (queryName && !(order.deliverOrderId === parseInt(queryName))) { return false }
-          return true
-        })
-        console.log(parseclass)
+        let mockOrderLists = searchByIndexOf(_Orderlist, queryName, 'deliverOrderId')
         queryData = mockOrderLists
-        console.log(mockOrderLists)
         // 司机姓名查询
       } else if (parseclass === 3) {
-        console.log(typeof parseInt(queryName))
-        let mockOrderLists = _Orderlist.filter(order => {
-          console.log(typeof order.driverName)
-          if (queryName && order.driverName.indexOf(queryName) === -1) { return false }
-          return true
-        })
+        let mockOrderLists = searchByIndexOf(_Orderlist, queryName, 'driverName')
         queryData = mockOrderLists
-        console.log(mockOrderLists)
-        console.log(parseclass)
         // 订单号查询
       } else {
-        console.log(typeof parseInt(queryName))
-        let mockOrderLists = _Orderlist.filter(order => {
-          console.log(typeof order.orderId)
-          if (queryName && !(order.orderId === parseInt(queryName))) { return false }
-          return true
-        })
+        let mockOrderLists = searchByIndexOf(_Orderlist, queryName, 'orderId')
         queryData = mockOrderLists
-        console.log(mockOrderLists)
-        console.log(parseclass)
       }
       return new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -79,9 +54,7 @@ export default {
     // 获取到已长途运输订单列表
     mock.onGet('/transportedOrder/getlist').reply(config => {
       let { page, pageSize } = config.params
-      let mockList = _transportedList.filter(
-        (u, index) => index < pageSize * page && index >= pageSize * (page - 1)
-      )
+      let mockList = getListDataBySize(_transportedList, pageSize, page)
       let pages = mockList.length
       return new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -93,57 +66,100 @@ export default {
     // 获取已长途订单的查询接口
     mock.onGet('/transportedOrder/getQueryOrderList').reply(config => {
       let { queryName, queryClass } = config.params
-      console.log(
-        `queryName: ${queryName} ${typeof queryName} 和 queryClass: ${parseInt(
-          queryClass
-        )},  ${typeof parseInt(queryClass)}`
-      )
       let parseclass = parseInt(queryClass)
       let queryData
       // 装载单查询
       if (parseclass === 1) {
-        console.log(typeof parseInt(queryName))
-        let mockOrderLists = _transportedList.filter(order => {
-          console.log(typeof order.deliverOrderId)
-          if (queryName && !(order.deliverOrderId === parseInt(queryName))) { return false }
-          return true
-        })
-        console.log(parseclass)
+        let mockOrderLists = searchByIndexOf(_transportedList, queryName, 'deliverOrderId')
         queryData = mockOrderLists
-        console.log(mockOrderLists)
         // 司机姓名查询
       } else if (parseclass === 3) {
-        console.log(typeof parseInt(queryName))
-        let mockOrderLists = _transportedList.filter(order => {
-          console.log(typeof order.driverName)
-          if (queryName && order.driverName.indexOf(queryName) === -1) { return false }
-          return true
-        })
+        let mockOrderLists = searchByIndexOf(_transportedList, queryName, 'driverName')
         queryData = mockOrderLists
-        console.log(mockOrderLists)
-        console.log(parseclass)
         // 订单号查询
       } else if (parseclass === 2) {
-        console.log(typeof parseInt(queryName))
-        let mockOrderLists = _transportedList.filter(order => {
-          console.log(typeof order.orderId)
-          if (queryName && !(order.orderId === parseInt(queryName))) { return false }
-          return true
-        })
+        let mockOrderLists = searchByIndexOf(_transportedList, queryName, 'orderId')
         queryData = mockOrderLists
-        console.log(mockOrderLists)
-        console.log(parseclass)
       } else {
         // 按到站地点名称查询
-        console.log(typeof parseInt(queryName))
-        let mockOrderLists = _transportedList.filter(order => {
-          console.log(typeof order.orderId)
-          if (queryName && order.destination.indexOf(queryName) === -1) { return false }
-          return true
-        })
+        let mockOrderLists = searchByIndexOf(_transportedList, queryName, 'destination')
         queryData = mockOrderLists
-        console.log(mockOrderLists)
-        console.log(parseclass)
+      }
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([
+            200,
+            { querylists: queryData, totalpages: queryData.length }
+          ])
+        }, 1000)
+      })
+    })
+
+     // 获取到已接货订单列表
+    mock.onGet('/receivedOrder/getlist').reply(config => {
+      let { page, pageSize } = config.params
+      let mockList = getListDataBySize(_receivedList, pageSize, page)
+      let pages = _receivedList.length
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, { orderlists: mockList, totalPages: pages }])
+        }, 1000)
+      })
+    })
+
+    // 获取已接货订单的查询接口
+    mock.onGet('/receivedOrder/getQueryOrderList').reply(config => {
+      let { queryName, queryClass } = config.params
+      let parseclass = parseInt(queryClass)
+      let queryData
+      // 单号查询
+      if (parseclass === 1) {
+        let mockOrderLists = searchByIndexOf(_receivedList, queryName, 'orderId')
+        queryData = mockOrderLists
+        // 发货人姓名查询
+      } else if (parseclass === 2) {
+        let mockOrderLists = searchByIndexOf(_receivedList, queryName, 'shipper')
+        queryData = mockOrderLists
+        // 司机姓名查询
+      } else {
+        let mockOrderLists = searchByIndexOf(_receivedList, queryName, 'driverName')
+        queryData = mockOrderLists
+      }
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([
+            200,
+            { querylists: queryData, totalpages: queryData.length }
+          ])
+        }, 1000)
+      })
+    })
+
+     // 获取到已中转订单列表
+    mock.onGet('/epiboliedListOrder/getlist').reply(config => {
+      let { page, pageSize } = config.params
+      let mockList = getListDataBySize(_epibolyList, pageSize, page)
+      let pages = _epibolyList.length
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, { orderlists: mockList, totalPages: pages }])
+        }, 1000)
+      })
+    })
+
+    // 获取已中转订单的查询接口
+    mock.onGet('/epiboliedListOrder/getQueryOrderList').reply(config => {
+      let { queryName, queryClass } = config.params
+      let parseclass = parseInt(queryClass)
+      let queryData
+      // 外包企业查询(此处采用模糊搜素)
+      if (parseclass === 1) {
+        let mockOrderLists = searchByIndexOf(_epibolyList, queryName, 'transitCompany')
+        queryData = mockOrderLists
+        // 订单查询
+      } else {
+        let mockOrderLists = searchByIndexOf(_epibolyList, queryName, 'orderId')
+        queryData = mockOrderLists
       }
       return new Promise((resolve, reject) => {
         setTimeout(() => {
