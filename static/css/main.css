@@ -41,7 +41,6 @@ a{text-decoration: none}
 .mgb20{
     margin-bottom: 20px;
 }
-
 .move-enter-active,.move-leave-active{
     transition: opacity .5s;
 }

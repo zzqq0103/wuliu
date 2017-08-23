@@ -2,16 +2,16 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align:center">外包企业订单管理</h2>
+      <h2 style="text-align:center">外包企业信息管理</h2>
       <p style="margin-top:1%">
         <div style="float: right">
-          <el-row>订单号</el-row>
+          <!-- <el-row>订单号</el-row> -->
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div>
           <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
-          <el-button @click="vehicleAdd">添加</el-button>
-          <!-- <el-button @click="setting">设置</el-button> -->
+          <el-button @click="enterpriseAdd">添加</el-button>
+          <el-button @click="setting">设置</el-button>
         </div>
       </p>
     </div>
@@ -25,46 +25,46 @@
                    :enableSorting="true"
                    :enableFilter="true"
                    :groupHeaders="true"
-                   :rowHeight=40
-                   :headerHeight=30
+                   :rowHeight="40"
+                   :headerHeight="30"
       ></ag-grid-vue>
     </div>
 
-    <el-dialog title="车辆信息:" :visible.sync="vehicleVisable">
-        <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
+    <el-dialog title="外包企业信息:" :visible.sync="enterpriseVisable">
+        <el-form :model="enterpriseForm" :rules="rules" ref="enterpriseForm">
           <el-form-item label="公司名称:" :label-width="formLabelWidth">
-            <el-input v-model="vehicleForm.licePlateNum"></el-input>
+            <el-input v-model="enterpriseForm.licePlateNum"></el-input>
           </el-form-item>
           <el-form-item label="中转起始点:" :label-width="formLabelWidth">
-            <el-input v-model="vehicleForm.driverName"></el-input>
+            <el-input v-model="enterpriseForm.driverName"></el-input>
           </el-form-item>
           <el-form-item label="中转目的地:" :label-width="formLabelWidth">
-            <el-input v-model="vehicleForm.tel"></el-input>
+            <el-input v-model="enterpriseForm.tel"></el-input>
           </el-form-item>
           <el-form-item label="联系人:" :label-width="formLabelWidth">
-            <el-input v-model="vehicleForm.capacity"></el-input>
+            <el-input v-model="enterpriseForm.capacity"></el-input>
           </el-form-item>
           <el-form-item label="联系方式:" :label-width="formLabelWidth">
-            <el-input v-model="vehicleForm.carType"></el-input>
+            <el-input v-model="enterpriseForm.carType"></el-input>
           </el-form-item>
           <el-form-item label="合同号:" :label-width="formLabelWidth">
-            <el-input v-model="vehicleForm.carPosition"></el-input>
+            <el-input v-model="enterpriseForm.carPosition"></el-input>
           </el-form-item>
           <el-form-item label="合同价格:" :label-width="formLabelWidth">
-            <el-input v-model="vehicleForm.carPositionjiage"></el-input>
+            <el-input v-model="enterpriseForm.carPositionjiage"></el-input>
           </el-form-item>          
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="vehicleVisable = false">取 消</el-button>
-          <el-button type="primary" @click="vehicleVisable = false">确 定</el-button>
+          <el-button @click="enterpriseVisable = false">取 消</el-button>
+          <el-button type="primary" @click="enterpriseVisable = false">确 定</el-button>
         </div>
     </el-dialog>
 
-    <el-dialog title="" :visible.sync="vehicleDelVisable" size=""tiny>
+    <el-dialog title="" :visible.sync="enterpriseDelVisable" size=""tiny>
       <h2 style="padding:30px">确认删除吗？</h2>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="vehicleDelVisable = false">取 消</el-button>
-        <el-button @click="vehicleDelVisable = false">确 定</el-button>
+        <el-button @click="enterpriseDelVisable = false">取 消</el-button>
+        <el-button @click="enterpriseDelVisable = false">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -91,9 +91,9 @@
     data () {
       return {
         colVisible: false,
-        vehicleVisable: false,
-        vehicleDelVisable: false,
-        vehicleForm: {
+        enterpriseVisable: false,
+        enterpriseDelVisable: false,
+        enterpriseForm: {
           'licePlateNum': '',
           'driverName': '',
           'tel': '',
@@ -115,10 +115,10 @@
               headerName: '公司名称', width: 150, field: 'licePlateNum', filter: 'text', hide: false
             },
             {
-              headerName: '中转起始点', width: 150, field: 'driverName', filter: 'text', hide: false
+              headerName: '中转起始点', width: 120, field: 'driverName', filter: 'text', hide: false
             },
             {
-              headerName: '中转目的地', width: 150, field: 'tel', filter: 'text', hide: false
+              headerName: '中转目的地', width: 120, field: 'tel', filter: 'text', hide: false
             },
             {
               headerName: '联系人', width: 150, field: 'contractID', filter: 'text', hide: false
@@ -130,7 +130,7 @@
               headerName: '合同号', width: 150, field: 'capacity', filter: 'text', hide: false
             },
             {
-              headerName: '合同价格', width: 150, field: 'tonnage', filter: 'text', hide: false
+              headerName: '合同价格', width: 100, field: 'tonnage', filter: 'text', hide: false
             },
             {
               headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
@@ -145,13 +145,13 @@
         template: '<span><button class="del-but" @click="vehicleDel">删 除</button><button class="del-but" @click="vehicleEdit">编 辑</button></span>',
         methods: {
           vehicleDel () {
-            this.params.context.componentParent.vehicleDelVisable = true
+            this.params.context.componentParent.enterpriseDelVisable = true
           },
           vehicleEdit () {
             /* var vehicleform = this.params.context.componentParent.vehicleForm
             vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum */
-            this.params.context.componentParent.vehicleVisable = true
-            this.params.context.componentParent.vehicleForm = this.params.data
+            this.params.context.componentParent.enterpriseVisable = true
+            this.params.context.componentParent.enterpriseForm = this.params.data
           }
         }
       }
@@ -178,15 +178,15 @@
         }
       },
       // 增加
-      vehicleAdd () {
-        this.vehicleVisable = true
-        this.vehicleForm.licePlateNum = ''
-        this.vehicleForm.driverName = ''
-        this.vehicleForm.tel = ''
-        this.vehicleForm.capacity = ''
-        this.vehicleForm.carType = ''
-        this.vehicleForm.pickUpArea = ''
-        this.vehicleForm.carPosition = ''
+      enterpriseAdd () {
+        this.enterpriseVisable = true
+        this.enterpriseForm.licePlateNum = ''
+        this.enterpriseForm.driverName = ''
+        this.enterpriseForm.tel = ''
+        this.enterpriseForm.capacity = ''
+        this.enterpriseForm.carType = ''
+        this.enterpriseForm.pickUpArea = ''
+        this.enterpriseForm.carPosition = ''
       }
     },
     beforeMount () {
