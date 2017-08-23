@@ -108,13 +108,13 @@
         <div class='label col-1 label-title'>总付金额</div>
         <input class='input col-4' v-model="form.totalFreight"></input>
         <div class='label col-1'>现付金额</div>
-        <input class='input col-1' v-model="form.xainfu"></input>
+        <input class='input col-1' v-model="form.feeMoney[0]"></input>
         <div class='label col-1'>到付金额</div>
-        <input class='input col-1' v-model="form.daofu"></input>
+        <input class='input col-1' v-model="form.feeMoney[1]"></input>
         <div class='label col-1'>欠付金额</div>
-        <input class='input col-1' v-model="form.qianfu"></input>
+        <input class='input col-1' v-model="form.feeMoney[2]"></input>
         <div class='label col-1'>月结金额</div>
-        <input class='input col-1' v-model="form.yuejie"></input>
+        <input class='input col-1' v-model="form.feeMoney[3]"></input>
         <div class='label col-1'>备注：</div>
         <input class='input col-12' v-model="form.orderNote"></input>
       </div>
@@ -173,10 +173,7 @@ export default {
         receMoney: '',
         refuMoney: '',
         totalFreight: '',
-        xianfu: '',
-        daofu: '',
-        qianfu: '',
-        yuejie: '',
+        feeMoney: [100.2, 200.3, 333.2, 100.00],
         orderNote: ''
       },
       selectItem: [
@@ -246,9 +243,8 @@ export default {
 
 .input {
   background-color: #fff;
-  border: 1px solid;
+  border: 1px solid #000000;
   box-sizing: border-box;
-  color: rgb(31, 61, 60);
   float: left;
   font-size: inherit;
   height: 38px;

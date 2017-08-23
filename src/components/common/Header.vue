@@ -92,7 +92,6 @@
           callback()
         }
       }
-
       return {
         personalCenterVisable: false,
         confirmPasswordVisable: false,
