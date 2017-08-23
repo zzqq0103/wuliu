@@ -104,9 +104,22 @@
                    :suppressCellSelection="true"
                    :rowHeight=40
 
-                   :animateRows="true"
-                   rowSelection="multiple"
+                   :pagination="true"
+                   :paginationPageSize="10"
+                   :suppressPaginationPanel="true"
+                   :filterChanged="gridfilterChange"
       ></ag-grid-vue>
+    </div>
+    <!--分页-->
+    <div>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrnetChange"
+        :current-page="currentPage"
+        :page-sizes="[20,50,100,200]"
+        :page-size="pageSize"
+        layout="total,sizes,prev,pager,next,jumper"
+        :total="rowCount"></el-pagination>
     </div>
     <!--列表切换显示-->
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false" top="30%">
@@ -589,7 +602,10 @@
         colVisible3: false,
         verVisible: false, // 进入核销页面的弹框
         confirmSubVisible: false, // 提交核销信息的弹框
-        errorVisible: false // 错误信息弹框
+        errorVisible: false, // 错误信息弹框
+        currentPage: 1, // 分页当前页面
+        pageSize: 20, // 每页显示的数据
+        rowCount: 0 // 总数据量（如果有筛选，则是筛选后的）
       }
     },
     components: {
@@ -605,6 +621,7 @@
         }
         this.updateGrid(i)
         this.createRowData(i)
+        this.calculateGrid()
       },
       // 获取行数据
       createRowData (i) {
@@ -686,6 +703,29 @@
 //          columnlist[i].hide = !columnlist[i].hide
 //        }
 //      },
+
+      // 分页的操作
+      // 每页显示数量改变时
+      handleSizeChange (val) {
+        this.gridOptions.api.paginationSetPageSize(Number(val))
+      },
+      // 切换不同分页时
+      handleCurrnetChange (val) {
+        this.gridOptions.api.paginationGoToPage(val)
+      },
+      // 发生筛选时，重新计算分页数量
+      gridfilterChange () {
+        this.calculateGrid()
+      },
+      // 计算总数据量
+      calculateGrid () {
+        this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
+        let model = this.gridOptions.api.getModel()
+        let processedRows = model.getRowCount()
+//        let totalRows = this.gridOptions.rowData.length
+//        console.log(totalRows, processedRows)
+        this.rowCount = processedRows
+      },
       // 测试用的方法，没用
       test () {
         this.updateGrid(2)

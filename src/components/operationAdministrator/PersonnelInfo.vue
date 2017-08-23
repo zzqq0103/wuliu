@@ -25,7 +25,24 @@
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
+
+                   :pagination="true"
+                   :paginationPageSize="10"
+                   :suppressPaginationPanel="true"
+                   :filterChanged="gridfilterChange"
       ></ag-grid-vue>
+    </div>
+
+    <!--分页-->
+    <div>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrnetChange"
+        :current-page="currentPage"
+        :page-sizes="[20,50,100,200]"
+        :page-size="pageSize"
+        layout="total,sizes,prev,pager,next,jumper"
+        :total="rowCount"></el-pagination>
     </div>
 
     <!--列表切换显示-->
@@ -178,7 +195,10 @@
         addFormVisible: false,
         delFormVisible: false,
         editFormVisible: false,
-        formLabelWidth: '150px'
+        formLabelWidth: '150px',
+        currentPage: 1,
+        pageSize: 20,
+        rowCount: 0
       }
     },
     components: {
@@ -249,15 +269,34 @@
           salesmanId: '',
           isTril: ''
         }
+      },
+      handleSizeChange (val) {
+        this.gridOptions.api.paginationSetPageSize(Number(val))
+      },
+      handleCurrnetChange (val) {
+        this.gridOptions.api.paginationGoToPage(val)
+      },
+      gridfilterChange () {
+        this.calculateGrid()
+      },
+      calculateGrid () {
+        this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
+        let model = this.gridOptions.api.getModel()
+        console.log(model)
+        let processedRows = model.getRowCount()
+//        let totalRows = this.gridOptions.rowData.length
+//        console.log(totalRows, processedRows)
+        this.rowCount = processedRows
       }
     },
     beforeMount () {
       this.createRowData()
 //      this.createColumnDefs()
-    }
-//    mounted () {
+    },
+    mounted () {
+      this.calculateGrid()
 //      this.changeColumnDefsBoolen()
-//    }
+    }
   }
 </script>
 <style>
