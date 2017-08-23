@@ -1,26 +1,26 @@
 <template>
     <div>
         <div>
-            <h2 style="text-align:center">预约单详情</h2>
+            <h2 style="text-align:center">订单信息</h2>
             <p style="margin-top:1%;float:left" class="appointment">
                 <el-h5 class="appointmenttime">预约时间</el-h5>
                 <el-input type="text" class="appointmenttimes" placeholder="开始时间"></el-input>
                 <el-h5 class="appointmenttimes">到</el-h5>
                 <el-input type="text" class="appointmenttimes" placeholder="结束时间"></el-input>
                 <el-h5 class="appointmenttimes">始发站：</el-h5>
-                <select class="appointmentoption">
-                    <option>北 京</option>
-                    <option>南 京</option>
-                </select>
+                <el-select v-model="appointlnfoForm.Selectsite" placeholder="选择" class="appointmentoption col-1" style='width:80px'>
+                    <el-option key="yes" label="北 京" value="yes"></el-option>
+                    <el-option key="no" label="南 京" value="no"></el-option>
+                </el-select>
                 <el-h5 class="appointmenttimes">发货方：</el-h5>
                 <el-input class="appointmenttimes"></el-input>
                 <el-h5 class="appointmenttimes">预约单号：</el-h5>
                 <el-input class="appointmenttimes"></el-input>
                 <el-h5 class="appointmenttimes">预约单状态：</el-h5>
-                <select class="appointmentoption">
-                    <option>待生成</option>
-                    <option>已生成</option>
-                </select>
+                <el-select v-model="appointlnfoForm.state" placeholder="选择" class="appointmentoption" style='width:100px'>
+                    <el-option key="yes" label="待生成" value="yes"></el-option>
+                    <el-option key="no" label="已生成" value="no"></el-option>
+                </el-select>
             </p>
             <p style="margin-top:1%;float:right;margin-right:5%">
                 <el-button>查找</el-button>
@@ -42,16 +42,23 @@
     data () {
       return {
         colVisible: false,
-        enterpriseVisable: false,
-        enterpriseDelVisable: false,
-        enterpriseForm: {
-          'licePlateNum': '',
-          'driverName': '',
-          'tel': '',
-          'capacity': '',
-          'carType': '',
-          'pickUpArea': '',
-          'carPosition': ''
+        appointlnfoVisable: false,
+        appointlnfoDelVisable: false,
+        appointlnfoForm: {
+          Selectsite: '',
+          state: '',
+          'Reservationnumber': '',
+          'ordertime': '',
+          'forwardingunit': '',
+          'consignershipper': '',
+          'deliveryphone': '',
+          'consignee': '',
+          'consigneeman': '',
+          'Receivingphone': '',
+          'driverreceiving': '',
+          'receivingstate': '',
+          'Cancelreservations': ''
+
         },
         rules: {
         },
@@ -63,25 +70,37 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '公司名称', width: 150, field: 'licePlateNum', filter: 'text', hide: false
+              headerName: '预约单号', width: 100, field: 'Reservationnumber', filter: 'text', hide: false
             },
             {
-              headerName: '中转起始点', width: 120, field: 'driverName', filter: 'text', hide: false
+              headerName: '下单时间', width: 120, field: 'ordertime', filter: 'text', hide: false
             },
             {
-              headerName: '中转目的地', width: 120, field: 'tel', filter: 'text', hide: false
+              headerName: '发货单位', width: 120, field: 'forwardingunit', filter: 'text', hide: false
             },
             {
-              headerName: '联系人', width: 150, field: 'contractID', filter: 'text', hide: false
+              headerName: '发货人', width: 80, field: 'consignershipper', filter: 'text', hide: false
             },
             {
-              headerName: '联系方式', width: 150, field: 'contractPrice', filter: 'text', hide: false
+              headerName: '发货电话', width: 150, field: 'deliveryphone', filter: 'text', hide: false
             },
             {
-              headerName: '合同号', width: 150, field: 'capacity', filter: 'text', hide: false
+              headerName: '收货单位', width: 150, field: 'consignee', filter: 'text', hide: false
             },
             {
-              headerName: '合同价格', width: 100, field: 'tonnage', filter: 'text', hide: false
+              headerName: '收货人', width: 80, field: 'consigneeman', filter: 'text', hide: false
+            },
+            {
+              headerName: '收货电话', width: 100, field: 'Receivingphone', filter: 'text', hide: false
+            },
+            {
+              headerName: '接货司机', width: 100, field: 'driverreceiving', filter: 'text', hide: false
+            },
+            {
+              headerName: '接货状态', width: 100, field: 'receivingstate', filter: 'text', hide: false
+            },
+            {
+              headerName: '取消预约单', width: 100, field: 'Cancelreservations', filter: 'text', hide: false
             },
             {
               headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
@@ -109,7 +128,7 @@
     },
     methods: {
       createRowData () {
-        this.gridOptions.rowData = testJson.vehicleInfo.list
+        this.gridOptions.rowData = testJson.appointInfo.list
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)

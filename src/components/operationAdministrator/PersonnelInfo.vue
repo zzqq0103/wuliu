@@ -23,7 +23,7 @@
                    :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
-                   :rowHeight=40
+                   :rowHeight="40"
       ></ag-grid-vue>
     </div>
 

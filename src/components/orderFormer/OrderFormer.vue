@@ -104,13 +104,17 @@
         orderFormVisable: false,
         orderFormDelVisable: false,
         orderForm: {
-          'licePlateNum': '',
-          'driverName': '',
-          'tel': '',
-          'capacity': '',
-          'carType': '',
-          'pickUpArea': '',
-          'carPosition': ''
+          'liceNum': '',
+          'ordernumber': '',
+          'orderstatus': '',
+          'consignor': '',
+          'standing': '',
+          'Shippercontactinformation': '',
+          'consignee': '',
+          'Receivingpartycontactinformation': '',
+          'descriptionofgoods': '',
+          'quantity': '',
+          'preparedby': ''
         },
         rules: {
         },
@@ -122,37 +126,37 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '序号', width: 70, field: 'licePlateNum', filter: 'text', hide: false
+              headerName: '序号', width: 60, field: 'liceNum', filter: 'text', hide: false
             },
             {
-              headerName: '订单号', width: 150, field: 'driverName', filter: 'text', hide: false
+              headerName: '订单号', width: 120, field: 'ordernumber', filter: 'text', hide: false
             },
             {
-              headerName: '订单状态', width: 100, field: 'tel', filter: 'text', hide: false
+              headerName: '订单状态', width: 100, field: 'orderstatus', filter: 'text', hide: false
             },
             {
-              headerName: '发货人', width: 100, field: 'contractID', filter: 'text', hide: false
+              headerName: '发货人', width: 80, field: 'consignor', filter: 'text', hide: false
             },
             {
-              headerName: '发站', width: 100, field: 'contractPrice', filter: 'text', hide: false
+              headerName: '发站', width: 70, field: 'standing', filter: 'text', hide: false
             },
             {
-              headerName: '发货方联系方式', width: 150, field: 'capacity', filter: 'text', hide: false
+              headerName: '发货方联系方式', width: 120, field: 'Shippercontactinformation', filter: 'text', hide: false
             },
             {
-              headerName: '收货人', width: 100, field: 'tonnage', filter: 'text', hide: false
+              headerName: '收货人', width: 80, field: 'consignee', filter: 'text', hide: false
             },
             {
-              headerName: '收货方联系方式', width: 150, field: 'carType', filter: 'text', hide: false
+              headerName: '收货方联系方式', width: 150, field: 'Receivingpartycontactinformation', filter: 'text', hide: false
             },
             {
-              headerName: '货物名称', width: 150, field: 'pickUpArea', filter: 'text', hide: false
+              headerName: '货物名称', width: 150, field: 'descriptionofgoods', filter: 'text', hide: false
             },
             {
-              headerName: '数量', width: 80, field: 'receState', filter: 'text', hide: false
+              headerName: '数量', width: 60, field: 'quantity', filter: 'text', hide: false
             },
             {
-              headerName: '制单人', width: 100, field: 'carState', filter: 'text', hide: false
+              headerName: '制单人', width: 80, field: 'preparedby', filter: 'text', hide: false
             },
             {
               headerName: '状态', field: 'value', width: 80, cellRendererFramework: 'operateComponent', hide: false
@@ -181,7 +185,7 @@
     },
     methods: {
       createRowData () {
-        this.gridOptions.rowData = testJson.vehicleInfo.list
+        this.gridOptions.rowData = testJson.orderformInfo.list
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
