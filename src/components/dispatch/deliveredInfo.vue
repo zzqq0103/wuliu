@@ -54,7 +54,7 @@ export default {
       colVisible: false,
       vehicleVisable: false,
       vehicleDelVisable: false,
-      vehicleForm: {
+      tableForm: {
         'id': '',
         'deliverOrderId': '',
         'orderId': '',

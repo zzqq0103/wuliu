@@ -1,14 +1,11 @@
-
 <template>
   <div>
     <div>
       <h2 style="text-align:center">已 中 转 订 单 信 息 页</h2>
       <p style="margin-top:1%">
         <div>
-          <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
-          <!-- <el-button @click="vehicleAdd">添加</el-button> -->
-          <el-input placeholder="请输入查询字段" icon="search"  v-model="input2" :on-icon-click="handleIconClick" style="width:145px;"> </el-input>
-          <el-select v-model="value" :placeholder="queryItemOptions[0].label" style="width:105px;">
+          <el-input placeholder="请输入查询数据" icon="search"  v-model="queryName" :on-icon-click="handleIconClick" style="width:145px;"> </el-input>
+          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -21,31 +18,17 @@
     <div style="clear: both;">
     </div>
 
-    <div style="margin-top:2%">
-      <ag-grid-vue style="width: 100%;height: 470px" class="ag-blue" :gridOptions="gridOptions" :suppressMovableColumns="true" :enableColResize="true" :enableSorting="true" :enableFilter="true" :groupHeaders="true" :rowHeight=40 :headerHeight=30></ag-grid-vue>
+    <div style="margin-top:2%" v-loading="listLoading">
+      <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue" :gridOptions="gridOptions" :suppressMovableColumns="true" :enableColResize="true" :enableSorting="true" :enableFilter="true" :groupHeaders="true" :rowHeight="40" :headerHeight="30"> </ag-grid-vue>
     </div>
 
-    <div class="block" style="float:right; padding-top:10px;">
-        <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="currentPage3"
-            :page-size="100"
-            layout="prev, pager, next, jumper"
-            :total="1000">
-        </el-pagination>
+    <div class="block" style="float:right; margin-top:30px;">
+       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentpage" :page-sizes="[25, 50, 75, 100]" :page-size="25" layout="total, sizes, prev, pager, next, jumper" :total="totalpages">
+       </el-pagination>
     </div>
-  
-    <el-dialog title="" :visible.sync="vehicleDelVisable" size="" tiny>
-      <h2 style="padding:30px">确认删除吗？</h2>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="vehicleDelVisable = false">取 消</el-button>
-        <el-button @click="vehicleDelVisable = false">确 定</el-button>
-      </div>
-    </el-dialog>
-  
+
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
-      <template v-for="(collist,i) in gridOptions.columnDefs">
+      <template v-for="(collist,i) in gridOptions.columnDefs ">
         <div>
           <el-checkbox v-model="collist.hide" @change="updataColumnDefs(gridOptions.columnDefs)">
             {{collist.headerName}}
@@ -56,27 +39,37 @@
         <el-button type="primary" @click="colVisible = false">确 定</el-button>
       </div>
     </el-dialog>
-  
   </div>
 </template>
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import testJson from '../../../static/test/testJSON.js'
+import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
 export default {
   data () {
     return {
+      listLoading: false,
+      queryName: '',
+      currentpage: 1,
       colVisible: false,
       vehicleVisable: false,
       vehicleDelVisable: false,
-      vehicleForm: {
-        'licePlateNum': '',
+      tableForm: {
+        'id': '',
+        'deliverOrderId': '',
+        'orderId': '',
         'driverName': '',
-        'tel': '',
-        'capacity': '',
-        'carType': '',
-        'pickUpArea': '',
-        'carPosition': ''
+        'OrderDate': '',
+        'consignee': '',
+        'consigneeAddr': '',
+        'phone': '',
+        'address': '',
+        'goodsName': '',
+        'pack': '',
+        'numbers': '',
+        'weight': '',
+        'volume': '',
+        'remarks': ''
       },
       rules: {
       },
@@ -88,98 +81,87 @@ export default {
         rowData: null,
         columnDefs: [
           {
-            headerName: '序号', width: 120, field: 'licePlateNum', filter: 'text', hide: false
+            headerName: '序号', width: 120, field: 'id', filter: 'text', hide: false
           },
           {
-            headerName: '装载单号', width: 120, field: 'driverName', filter: 'text', hide: false
+            headerName: '装载单号', width: 120, field: 'deliverOrderId', filter: 'text', hide: false
           },
           {
-            headerName: '订单号', width: 120, field: 'tel', filter: 'text', hide: false
+            headerName: '订单号', width: 120, field: 'orderId', filter: 'text', hide: false
           },
           {
-            headerName: '开单时间', width: 120, field: 'contractID', filter: 'text', hide: false
+            headerName: '开单时间', width: 120, field: 'OrderDate', filter: 'text', hide: false
           },
           {
-            headerName: '收货单位', width: 120, field: 'contractPrice', filter: 'text', hide: false
+            headerName: '司机姓名', width: 120, field: 'driverName', filter: 'text', hide: false
           },
           {
-            headerName: '收货人姓名', width: 120, field: 'capacity', filter: 'text', hide: false
+            headerName: '收货单位', width: 120, field: 'consigneeAddr', filter: 'text', hide: false
           },
           {
-            headerName: '联系电话', width: 120, field: 'tonnage', filter: 'text', hide: false
+            headerName: '收货人姓名', width: 120, field: 'consignee', filter: 'text', hide: false
           },
           {
-            headerName: '搜狐或地址', width: 120, field: 'carType', filter: 'text', hide: false
+            headerName: '联系电话', width: 120, field: 'phone', filter: 'text', hide: false
           },
           {
-            headerName: '货物名称', width: 120, field: 'pickUpArea', filter: 'text', hide: false
+            headerName: '收货地址', width: 120, field: 'address', filter: 'text', hide: false
           },
           {
-            headerName: '件数', width: 120, field: 'receState', filter: 'text', hide: false
+            headerName: '货物名称', width: 120, field: 'goodsName', filter: 'text', hide: false
           },
           {
-            headerName: '重量', width: 120, field: 'carState', filter: 'text', hide: false
+            headerName: '件数', width: 120, field: 'numbers', filter: 'text', hide: false
           },
           {
-            headerName: '体积', width: 120, field: 'carPosition', filter: 'text', hide: false
+            headerName: '重量', width: 120, field: 'weight', filter: 'text', hide: false
           },
           {
-            headerName: '包装', field: 'value', width: 120, hide: false
+            headerName: '体积', width: 120, field: 'volume', filter: 'text', hide: false
           },
           {
-            headerName: '备注', field: 'value', width: 120, hide: false
+            headerName: '包装', field: 'pack', width: 120, filter: 'text', hide: false
+          },
+          {
+            headerName: '备注', field: 'remarks', width: 120, filter: 'text', hide: false
           }
         ]
       },
       queryItemOptions: [{
-        value: '选项1',
+        value: 1,
         label: '装载单号'
       }, {
-        value: '选项2',
+        value: 2,
         label: '订单号'
+      }, {
+        value: 3,
+        label: '司机姓名'
       }],
-      value: '',
-      input2: '',
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4
+      selectvalue: 1,
+      orderlist: [],
+      totalpages: 1,
+      pageSize: 25
     }
   },
   components: {
-    'ag-grid-vue': AgGridVue,
-    operateComponent: {
-      template: '<span><button class="del-but" @click="vehicleDel">删 除</button><button class="del-but" @click="vehicleEdit">编 辑</button></span>',
-      methods: {
-        vehicleDel () {
-          this.params.context.componentParent.vehicleDelVisable = true
-        },
-        vehicleEdit () {
-          var vehicleform = this.params.context.componentParent.vehicleForm
-          vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum
-          vehicleform.driverName = testJson.vehicleInfo.list[this.params.node.rowIndex].driverName
-          vehicleform.tel = testJson.vehicleInfo.list[this.params.node.rowIndex].tel
-          vehicleform.capacity = testJson.vehicleInfo.list[this.params.node.rowIndex].capacity
-          vehicleform.carType = testJson.vehicleInfo.list[this.params.node.rowIndex].carType
-          vehicleform.pickUpArea = testJson.vehicleInfo.list[this.params.node.rowIndex].pickUpArea
-          vehicleform.carPosition = testJson.vehicleInfo.list[this.params.node.rowIndex].carPosition
-          this.params.context.componentParent.vehicleVisable = true
-        }
-      }
-    }
+    'ag-grid-vue': AgGridVue
   },
   methods: {
+    // queryList () {
+    //   this.getQueryData()
+    // },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.pageSize = val
+      console.log(this.pageSize)
+      this.getOrderList()
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.currentpage = val
+      console.log(this.currentpage)
+      this.getOrderList()
     },
     handleIconClick (input) {
-      this.gridOptions.api.setQuickFilter(input)
-    },
-    createRowData () {
-      this.gridOptions.rowData = testJson.vehicleInfo.list
+      this.getQueryData()
     },
     onQuickFilterChanged (input) {
       this.gridOptions.api.setQuickFilter(input)
@@ -198,23 +180,44 @@ export default {
         this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
       }
     },
-    // 增加
-    vehicleAdd () {
-      this.vehicleVisable = true
-      this.vehicleForm.licePlateNum = ''
-      this.vehicleForm.driverName = ''
-      this.vehicleForm.tel = ''
-      this.vehicleForm.capacity = ''
-      this.vehicleForm.carType = ''
-      this.vehicleForm.pickUpArea = ''
-      this.vehicleForm.carPosition = ''
+    getOrderList () {
+      let para = {
+        page: this.currentpage,
+        orderId: this.orderId,
+        driverName: this.driverName,
+        deliverOrderId: this.deliverOrderId,
+        selectvalue: this.selectvalue,
+        pageSize: this.pageSize
+      }
+      this.listLoading = true
+      getCurrentDelivered(para).then((res) => {
+        console.log('进入getCurrentDelivered')
+        // this.gridOptions.rowData = res.data.orderlists
+        // 使用gridOptions中的api方法设定RowData数据
+        this.gridOptions.api.setRowData(res.data.orderlists)
+        this.orderlist = res.data.orderlists
+        this.totalpages = res.data.totalPages
+        // console.log(this.gridOptions.rowData)
+        this.listLoading = false
+      })
+    },
+    getQueryData () {
+      let para = {
+        queryName: this.queryName,
+        queryClass: this.selectvalue,
+        pageSize: this.pageSize
+      }
+      this.listLoading = true
+      getQueryOrderList(para).then(res => {
+        this.gridOptions.api.setRowData(res.data.querylists)
+        this.orderlist = res.data.querylists
+        this.totalpages = res.data.totalpages
+        this.listLoading = false
+      })
     }
   },
-  beforeMount () {
-    this.createRowData()
-  },
   mounted () {
-    this.changeColumnDefsBoolen()
+    this.getOrderList()
   }
 }
 </script>
