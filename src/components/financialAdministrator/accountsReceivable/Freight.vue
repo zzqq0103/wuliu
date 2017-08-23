@@ -104,6 +104,7 @@
                    :suppressCellSelection="true"
                    :rowHeight=40
 
+                   :rowDoubleClicked="detailDoubleClick"
                    :pagination="true"
                    :paginationPageSize="10"
                    :suppressPaginationPanel="true"
@@ -111,7 +112,7 @@
       ></ag-grid-vue>
     </div>
     <!--分页-->
-    <div>
+    <div style="text-align: right">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrnetChange"
@@ -274,12 +275,15 @@
         <el-button @click="errorVisible = false">取 消</el-button>
       </div>
     </el-dialog>
+
+    <order-details :orderId="filterForm.orderId" :detailVisible="detailVisible"></order-details>
   </div>
 </template>
 
 <script>
   import {AgGridVue} from 'ag-grid-vue'
   import testJson from '../../../../static/test/testJSON.js'
+  import OrderDetails from '../OrderDetails '
   export default {
     data () {
       return {
@@ -603,12 +607,14 @@
         verVisible: false, // 进入核销页面的弹框
         confirmSubVisible: false, // 提交核销信息的弹框
         errorVisible: false, // 错误信息弹框
+        detailVisible: false, // 订单详情弹框
         currentPage: 1, // 分页当前页面
         pageSize: 20, // 每页显示的数据
         rowCount: 0 // 总数据量（如果有筛选，则是筛选后的）
       }
     },
     components: {
+      OrderDetails,
       'ag-grid-vue': AgGridVue
     },
     methods: {
@@ -738,6 +744,11 @@
       // 显示切换核销界面的弹框
       verification () {
         this.verVisible = true
+      },
+      // 订单详情弹框
+      detailDoubleClick (event) {
+        this.filterForm.orderId = event.data.orderId
+        this.detailVisible = true
       },
       // 核销界面左侧表格双击时间
       leftDoubleClick (event) {

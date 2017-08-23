@@ -34,7 +34,7 @@
     </div>
 
     <!--分页-->
-    <div>
+    <div style="text-align: right">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrnetChange"
@@ -283,6 +283,7 @@
         this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
         let model = this.gridOptions.api.getModel()
         console.log(model)
+        console.log(this.gridOptions.rowData)
         let processedRows = model.getRowCount()
 //        let totalRows = this.gridOptions.rowData.length
 //        console.log(totalRows, processedRows)
