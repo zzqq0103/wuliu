@@ -276,14 +276,17 @@
       </div>
     </el-dialog>
 
-    <order-details :orderId="filterForm.orderId" :detailVisible="detailVisible"></order-details>
+    <!--订单详情弹框-->
+    <el-dialog title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
+      <order-details :orderId="filterForm.orderId"></order-details>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import {AgGridVue} from 'ag-grid-vue'
   import testJson from '../../../../static/test/testJSON.js'
-  import OrderDetails from '../OrderDetails '
+  import OrderDetails from '../ShowOrderDetails'
   export default {
     data () {
       return {
@@ -812,6 +815,7 @@
         this.drawGrid(2)
       }
     },
+    computed: {},
 //    beforeMount () {
 //      this.createRowData()
 //      console.log(this.gridOptions)
