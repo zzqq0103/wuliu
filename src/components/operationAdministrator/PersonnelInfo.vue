@@ -10,7 +10,6 @@
       <div>
         <el-button @click="addForm">添加</el-button>
         <el-button @click="setting">设置</el-button>
-        <!--<el-button @click="test">测试</el-button>-->
       </div>
 
     </div>
@@ -49,7 +48,7 @@
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false" top="30%">
       <template v-for="(collist,i) in gridOptions.columnDefs">
         <div>
-          <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
+          <el-checkbox v-model="collist.hide" @change="updataColumnDefs(gridOptions.columnDefs)">
             {{collist.headerName}}
           </el-checkbox>
         </div>
