@@ -24,7 +24,24 @@
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
+
+                   :pagination="true"
+                   :paginationPageSize="10"
+                   :suppressPaginationPanel="true"
+                   :filterChanged="gridfilterChange"
       ></ag-grid-vue>
+    </div>
+
+    <!--分页-->
+    <div style="text-align: right">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrnetChange"
+        :current-page="currentPage"
+        :page-sizes="[20,50,100,200]"
+        :page-size="pageSize"
+        layout="total,sizes,prev,pager,next,jumper"
+        :total="rowCount"></el-pagination>
     </div>
 
     <!--列表切换显示-->
@@ -130,28 +147,33 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '客户企业名称', width: 150, field: 'clientCompNam', filter: 'text', hide: false
+              headerName: '客户企业名称', width: 150, field: 'clientCompNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '联系人姓名', width: 150, field: 'nam', filter: 'text', hide: false
+              headerName: '联系人姓名', width: 150, field: 'nam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '联系电话', width: 150, field: 'tel', filter: 'text', hide: false
+              headerName: '联系电话', width: 150, field: 'tel', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '企业详细地址', width: 150, field: 'compAdr', filter: 'text', hide: false
+              headerName: '企业详细地址', width: 150, field: 'compAdr', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '所属片区', width: 150, field: 'area', filter: 'text', hide: false
+              headerName: '所属片区', width: 150, field: 'area', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '业务员ID', width: 150, field: 'salesmanId', filter: 'text', hide: false
+              headerName: '业务员ID', width: 150, field: 'salesmanId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '是否三方', width: 150, field: 'isTril', filter: 'text', hide: false
+              headerName: '是否三方', width: 150, field: 'isTril', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
+              headerName: '操作',
+              field: 'value',
+              width: 150,
+              cellRendererFramework: 'operateComponent',
+              hide: false,
+              visible: true
             }
           ],
           context: {
@@ -172,7 +194,10 @@
         addFormVisible: false,
         delFormVisible: false,
         editFormVisible: false,
-        formLabelWidth: '150px'
+        formLabelWidth: '150px',
+        currentPage: 1,
+        pageSize: 20,
+        rowCount: 0
       }
     },
     components: {
@@ -202,20 +227,21 @@
       },
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
-          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
         }
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
       },
-      changeColumnDefsBoolen () {
-        var columnlist = this.gridOptions.columnDefs
-        for (let i = 0; i < columnlist.length; i++) {
-          columnlist[i].hide = !columnlist[i].hide
-        }
-      },
+//      changeColumnDefsBoolen () {
+//        var columnlist = this.gridOptions.columnDefs
+//        for (let i = 0; i < columnlist.length; i++) {
+//          columnlist[i].hide = !columnlist[i].hide
+//        }
+//      },
       test () {
-        console.log(this.gridOptions.columnDefs)
+//        this.gridOptions.api.refreshHeader()
+        console.log(this.gridOptions.columnApi.getAllColumns())
 //        console.log(this.gridOptions.columnDefs[0].hide)
 //        console.log(this.gridOptions.columnApi.getAllDisplayedColumns())
 //        if (this.gridOptions.columnDefs[0].hide) {
@@ -242,6 +268,25 @@
           salesmanId: '',
           isTril: ''
         }
+      },
+      handleSizeChange (val) {
+        this.gridOptions.api.paginationSetPageSize(Number(val))
+      },
+      handleCurrnetChange (val) {
+        this.gridOptions.api.paginationGoToPage(val)
+      },
+      gridfilterChange () {
+        this.calculateGrid()
+      },
+      calculateGrid () {
+        this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
+        let model = this.gridOptions.api.getModel()
+        console.log(model)
+        console.log(this.gridOptions.rowData)
+        let processedRows = model.getRowCount()
+//        let totalRows = this.gridOptions.rowData.length
+//        console.log(totalRows, processedRows)
+        this.rowCount = processedRows
       }
     },
     beforeMount () {
@@ -249,7 +294,8 @@
 //      this.createColumnDefs()
     },
     mounted () {
-      this.changeColumnDefsBoolen()
+      this.calculateGrid()
+//      this.changeColumnDefsBoolen()
     }
   }
 </script>

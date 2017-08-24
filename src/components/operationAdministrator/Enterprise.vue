@@ -94,13 +94,13 @@
         enterpriseVisable: false,
         enterpriseDelVisable: false,
         enterpriseForm: {
-          'licePlateNum': '',
-          'driverName': '',
-          'tel': '',
-          'capacity': '',
-          'carType': '',
-          'pickUpArea': '',
-          'carPosition': ''
+          'companyname': '',
+          'Transferstartingpoint': '',
+          'Transferdestination': '',
+          'linkman': '',
+          'contact': '',
+          'contractnumber': '',
+          'contractprice': ''
         },
         rules: {
         },
@@ -112,25 +112,25 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '公司名称', width: 150, field: 'licePlateNum', filter: 'text', hide: false
+              headerName: '公司名称', width: 150, field: 'companyname', filter: 'text', hide: false
             },
             {
-              headerName: '中转起始点', width: 120, field: 'driverName', filter: 'text', hide: false
+              headerName: '中转起始点', width: 120, field: 'Transferstartingpoint', filter: 'text', hide: false
             },
             {
-              headerName: '中转目的地', width: 120, field: 'tel', filter: 'text', hide: false
+              headerName: '中转目的地', width: 120, field: 'Transferdestination', filter: 'text', hide: false
             },
             {
-              headerName: '联系人', width: 150, field: 'contractID', filter: 'text', hide: false
+              headerName: '联系人', width: 150, field: 'linkman', filter: 'text', hide: false
             },
             {
-              headerName: '联系方式', width: 150, field: 'contractPrice', filter: 'text', hide: false
+              headerName: '联系方式', width: 150, field: 'contact', filter: 'text', hide: false
             },
             {
-              headerName: '合同号', width: 150, field: 'capacity', filter: 'text', hide: false
+              headerName: '合同号', width: 150, field: 'contractnumber', filter: 'text', hide: false
             },
             {
-              headerName: '合同价格', width: 100, field: 'tonnage', filter: 'text', hide: false
+              headerName: '合同价格', width: 100, field: 'contractprice', filter: 'text', hide: false
             },
             {
               headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
@@ -158,7 +158,7 @@
     },
     methods: {
       createRowData () {
-        this.gridOptions.rowData = testJson.vehicleInfo.list
+        this.gridOptions.rowData = testJson.enterpriseInfo.list
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
