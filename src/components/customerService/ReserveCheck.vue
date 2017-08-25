@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 style="text-align: center">库存信息</h2>
+    <h2 style="text-align: center">库存信息git</h2>
     <p style="margin-top: 2%"></p>
     <div style="width: 100%">
       <el-row>
