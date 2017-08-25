@@ -29,13 +29,55 @@
         <div class='label col-1'>联系方式:</div>
         <input v-model="form.shipTel" class='input col-2'></input>
         <div class='label col-1'>发货地址:</div>
-        <input v-model="form.pickUpAdr" class='input col-6'></input>
+        <div class='dropdown'>
+            <input type="text" v-model="pickUpAdr" v-bind:readonly="isReadOnly" class='input col-3' @focus="addressVisible=true" placeholder="请选择地址"></input>
+            <div class="dropdown-content" v-show="addressVisible"> 
+              <ul class='dropdown-content-select'>
+                <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
+                <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
+                <li @click="setQuyu(1)" class='dropdown-li' v-bind:class="{'selectOn':quyu}">区县</li>
+              </ul>
+              <div class='dropdown-select'>
+                <ul class='dropdown-shenfen' v-show="shenfen">
+                  <li v-for="(data,i) in this.regionList" @click="selectShenfen(1,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
+                </ul>
+                <ul class='dropdown-shi' v-show="shi">
+                  <li v-for="(data,i) in this.shiList.sub" @click="selectShi(1,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
+                </ul>
+                <ul v-show="quyu">
+                  <li v-for="(data,i) in this.quList" @click="selectQu(1,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
+                </ul>
+              </div>
+            </div>
+        </div>
+        <input class='input col-3' placeholder="详细地址"></input>
         <div class='label col-1'>发货方:</div>
         <input v-model="form.receNam" class='input col-2'></input>
         <div class='label col-1'>联系方式:</div>
         <input v-model="form.recetel" class='input col-2'></input>
-        <div class='label col-1'>发货地址:</div>
-        <input v-model="form.receAdr" class='input col-6'></input>
+        <div class='label col-1'>收货地址:</div>
+        <div class='dropdown'>
+            <input type="text" v-model="receAdr" v-bind:readonly="isReadOnly2" class='input col-3' @focus="addressVisible2=true" placeholder="请选择地址"></input>
+            <div class="dropdown-content" style='margin-top:7%' v-show="addressVisible2"> 
+              <ul class='dropdown-content-select'>
+                <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
+                <li @click="setShi(2)" class='dropdown-li' v-bind:class="{'selectOn':shi2}">城市</li>
+                <li @click="setQuyu(2)" class='dropdown-li' v-bind:class="{'selectOn':quyu2}">区县</li>
+              </ul>
+              <div class='dropdown-select'>
+                <ul class='dropdown-shenfen' v-show="shenfen2">
+                  <li v-for="(data,i) in this.regionList2" @click="selectShenfen(2,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
+                </ul>
+                <ul class='dropdown-shi' v-show="shi2">
+                  <li v-for="(data,i) in this.shiList2.sub" @click="selectShi(2,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
+                </ul>
+                <ul v-show="quyu2">
+                  <li v-for="(data,i) in this.quList2" @click="selectQu(2,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
+                </ul>
+              </div>
+            </div>
+        </div>
+        <input class='input col-3' placeholder="详细地址"></input>
         <div class='label col-1'>货物名称</div>
         <div class='label col-1'>件 数</div>
         <div class='label col-1'>重 量</div>
@@ -134,10 +176,39 @@
 </template>
 
 <script>
+import regionJson from '../../../static/region.json'
 export default {
+  created () {
+    this.regionList = regionJson
+    this.regionList2 = regionJson
+  },
   data: function () {
     return {
-      cancleVisable: false,
+      /** 地址内容 */
+      shenfenSelected: '',
+      shiSelected: '',
+      quSelected: '',
+      shenfenSelected2: '',
+      shiSelected2: '',
+      quSelected2: '',
+      regionList: [],
+      shiList: [],
+      quList: [],
+      shiList2: [],
+      quList2: [],
+      /** 地址样式 */
+      addressVisible: false,
+      addressVisible2: false,
+      shenfen: false,
+      shi: false,
+      quyu: false,
+      shenfen2: false,
+      shi2: false,
+      quyu2: false,
+      isFocus: false,
+      isFocus2: false,
+      idReadOnly: false,
+      isReadOnly2: false,
       form: {
         id: '12345',
         billBranch: '',
@@ -189,11 +260,219 @@ export default {
     },
     submitOrder () {
       this.cancleVisable = false
+    },
+    selectShenfen (num, name) {
+      if (num === 1) {
+        this.shenfenSelected = name
+        this.shiSelected = ''
+        this.quSelected = ''
+        this.quList = []
+        this.shiList = []
+      } else {
+        this.shenfenSelected2 = name
+        this.shiSelected2 = ''
+        this.quSelected2 = ''
+        this.quList2 = []
+        this.shiList2 = []
+      }
+      this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+      this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+    },
+    selectShi (num, name) {
+      if (num === 1) {
+        this.shiSelected = name
+        this.quSelected = ''
+        this.quList = []
+      } else {
+        this.shiSelected2 = name
+        this.quSelected2 = ''
+        this.quList2 = []
+      }
+      this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+      this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+    },
+    selectQu (num, name) {
+      if (num === 1) {
+        this.quSelected = name
+        this.addressVisible = false
+        this.detailVisible = true
+        this.isReadOnly = true
+      } else {
+        this.quSelected2 = name
+        this.addressVisible2 = false
+        this.detailVisible2 = true
+        this.isReadOnly2 = true
+      }
+      this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+      this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+    },
+    setShenfen (num) {
+      if (num === 1) {
+        this.shenfen = true
+        this.shi = false
+        this.quyu = false
+      } else {
+        this.shenfen2 = true
+        this.shi2 = false
+        this.quyu2 = false
+      }
+    },
+   /** 设置城市级 */
+    setShi (num) {
+      if (num === 1) {
+        this.shenfen = false
+        this.shi = true
+        this.quyu = false
+        if (this.shenfenSelected) {
+          regionJson.filter(item => {
+            if (item.name === this.shenfenSelected) {
+              this.shiList = item
+              return true
+            }
+          })
+        }
+      } else {
+        this.shenfen2 = false
+        this.shi2 = true
+        this.quyu2 = false
+        if (this.shenfenSelected2) {
+          regionJson.filter(item => {
+            if (item.name === this.shenfenSelected2) {
+              this.shiList2 = item
+              return true
+            }
+          })
+        }
+      }
+    },
+    /** 设置地区 */
+    setQuyu (num) {
+      if (num === 1) {
+        this.shenfen = false
+        this.shi = false
+        this.quyu = true
+        if (this.shiSelected && this.shenfenSelected) {
+          this.shiList.sub.filter(item => {
+            if (item.name === this.shiSelected) {
+              this.quList = item.sub
+              return true
+            }
+          })
+        }
+      } else {
+        this.shenfen2 = false
+        this.shi2 = false
+        this.quyu2 = true
+        if (this.shiSelected2 && this.shenfenSelected2) {
+          this.shiList2.sub.filter(item => {
+            if (item.name === this.shiSelected2) {
+              this.quList2 = item.sub
+              return true
+            }
+          })
+        }
+      }
     }
   }
 }
 </script>
 <style scoped>
+.dropdown{
+
+}
+.dropdown-content {
+  height:200px;
+  position: absolute;
+  background-color: #fff;
+  margin-left:-3%;
+  padding: 0;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  width:22%;
+  margin-left:52%;
+  margin-top:3.5%
+}
+
+.dropdown-select{
+  clear:both;
+  height:160px;
+  overflow-y:scroll
+}
+
+.dropdown-select ul{
+  clear:both;
+  list-style-type:none
+}
+
+.dropdown-select ul li:hover{
+    cursor: pointer;
+    background-color: #D1E5E5
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.dropdown-content-select {
+  list-style-type:none;
+}
+
+.dropdown-li{
+  cursor: pointer;
+  font-size: 15px;
+  padding: 3% 2%;
+  border-right: 1px solid #C0C0C0;
+  width: 33.33%;
+  margin: 0;
+  float:left;
+  box-sizing: border-box;
+  background-color: #D1E5E5;
+  text-align: center
+}
+
+.dropdown-shenfen li:hover{
+  cursor: pointer;
+  background-color: #D1E5E5
+}
+.addressDetail{
+  width:45%;
+  float:left;
+  margin-left:-5%
+}
+.selectOn{
+  background-color:#00d1b2;
+}
+
+.selectNo{
+  background-color: #EEF6F6
+}
+
+.div-form {
+  border: 2px solid black;
+  width: 60%;
+  margin-left: 18%;
+  display: inline-block;
+  margin-top: 2%;
+  padding: 2%;
+  box-sizing: border-box
+}
+
+.input-tishi {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  background-image: none;
+  border-radius: 4px;
+  border: 1px solid rgb(191, 217, 216);
+  box-sizing: border-box;
+  color: rgb(31, 61, 60);
+  display: block;
+  font-size: inherit;
+  height: 36px;
+  line-height: 1;
+  outline: 0;
+  padding: 3px 10px;
+  transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+}
 .col-1 {
   width: 7.69%
 }
