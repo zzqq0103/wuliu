@@ -3,7 +3,7 @@
   <div>
     <h2 style="text-align:center;margin-top:0">新建预约单</h2>
     <div class='div-form'>
-      <el-form :model="test2">
+      <el-form :model="test2">          
         <el-form-item label="发货方：" style="float:left;width:50%;">
           <input type="text" list="shipComp" v-model="shipComp" class='input-tishi' style="float:left;width:50%" />
           <datalist id="shipComp">
@@ -17,7 +17,28 @@
           <el-input v-model="shipTel" style="width:60%;margin-left:5%"></el-input>
         </el-form-item>
         <el-form-item label="提货地址：" style="clear:both;width:100%">
-          <el-input v-model="pickUpAdr" style="width:78%;margin-left:-2%"></el-input>
+          <div v-bind:class="{'dropdown':!isFocus, 'dropdown2':isFocus}">
+            <el-input v-model="pickUpAdr" v-bind:readonly="isReadOnly" style="width:78%;margin-left:-3%" v-bind:style="{width:inputWidth + '%'}" @focus="addressVisible=true"></el-input>
+            <div class="dropdown-content" v-bind:style="{width:dropdownWidth + '%'}" v-show="addressVisible"> 
+              <ul class='dropdown-content-select'>
+                <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
+                <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
+                <li @click="setQuyu(1)" class='dropdown-li' v-bind:class="{'selectOn':quyu}">区县</li>
+              </ul>
+              <div class='dropdown-select'>
+                <ul class='dropdown-shenfen' v-show="shenfen">
+                  <li v-for="(data,i) in this.regionList" @click="selectShenfen(1,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
+                </ul>
+                <ul class='dropdown-shi' v-show="shi">
+                  <li v-for="(data,i) in this.shiList.sub" @click="selectShi(1,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
+                </ul>
+                <ul v-show="quyu">
+                  <li v-for="(data,i) in this.quList" @click="selectQu(1,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <el-input class='addressDetail' placeholder="输入详细地址" v-show="detailVisible"></el-input>
         </el-form-item>
         <el-form-item label="货物名称：" style="float:left;width:50%">
           <el-input v-model="goodsNam" style="width:60%;margin-left:-4%"></el-input>
@@ -50,7 +71,28 @@
           <el-input v-model="receTel" style="width:60%;margin-left:5%"></el-input>
         </el-form-item>
         <el-form-item label="收货地址：" style="clear:both;width:100%">
-          <el-input v-model="receAdr" style="width:78%;margin-left:-2%"></el-input>
+          <div v-bind:class="{'dropdown':!isFocus2, 'dropdown2':isFocus2}">
+            <el-input v-model="receAdr" v-bind:readonly="isReadOnly2" style="width:78%;margin-left:-3%" v-bind:style="{width:inputWidth2 + '%'}" @focus="addressVisible2 = true"></el-input>
+            <div class="dropdown-content" v-bind:style="{width:dropdownWidth2 + '%'}" v-show="addressVisible2"> 
+              <ul class='dropdown-content-select'>
+                <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
+                <li @click="setShi(2)" class='dropdown-li' v-bind:class="{'selectOn':shi2}">城市</li>
+                <li @click="setQuyu(2)" class='dropdown-li' v-bind:class="{'selectOn':quyu2}">区县</li>
+              </ul>
+              <div class='dropdown-select'>
+                <ul class='dropdown-shenfen' v-show="shenfen2">
+                  <li v-for="(data,i) in this.regionList" @click="selectShenfen(2,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
+                </ul>
+                <ul class='dropdown-shi' v-show="shi2">
+                  <li v-for="(data,i) in this.shiList2.sub" @click="selectShi(2,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
+                </ul>
+                <ul v-show="quyu">
+                  <li v-for="(data,i) in this.quList2" @click="selectQu(2,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <el-input class='addressDetail' placeholder="输入详细地址" v-show="detailVisible2"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -73,15 +115,49 @@
   </div>
 </template>
 <script>
+import regionJson from '../../../static/region.json'
 export default {
+  created () {
+    this.regionList = regionJson
+  },
   data () {
     return {
+      /** 地址内容 */
+      shenfenSelected: '',
+      shiSelected: '',
+      quSelected: '',
+      shenfenSelected2: '',
+      shiSelected2: '',
+      quSelected2: '',
+      regionList: [],
+      shiList: [],
+      quList: [],
+      shiList2: [],
+      quList2: [],
+      /** 地址样式 */
+      addressVisible: false,
+      addressVisible2: false,
+      shenfen: false,
+      shi: false,
+      quyu: false,
+      shenfen2: false,
+      shi2: false,
+      quyu2: false,
+      inputWidth: 78,
+      inputWidth2: 78,
+      dropdownWidth: 78,
+      isFocus: false,
+      isFocus2: false,
+      detailVisible: false,
+      detailVisible2: false,
+      isReadOnly: false,
+      isReadOnly2: false,
       /** 发货人信息 */
       shipComp: '',
       shipTipList: ['单位1', '单位2', '单位33333'],
       shipNam: '',
       shipTel: '',
-      pickUpAdr: '',
+      pickUpAdr: '123',
       /** 货物信息 */
       goodsNam: '',
       goodsNums: '',
@@ -101,6 +177,124 @@ export default {
     }
   },
   methods: {
+    selectShenfen (num, name) {
+      if (num === 1) {
+        this.shenfenSelected = name
+        this.shiSelected = ''
+        this.quSelected = ''
+        this.quList = []
+        this.shiList = []
+      } else {
+        this.shenfenSelected2 = name
+        this.shiSelected2 = ''
+        this.quSelected2 = ''
+        this.quList2 = []
+        this.shiList2 = []
+      }
+      this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+      this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+    },
+    selectShi (num, name) {
+      if (num === 1) {
+        this.shiSelected = name
+        this.quSelected = ''
+        this.quList = []
+      } else {
+        this.shiSelected2 = name
+        this.quSelected2 = ''
+        this.quList2 = []
+      }
+      this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+      this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+    },
+    selectQu (num, name) {
+      if (num === 1) {
+        this.quSelected = name
+        this.addressVisible = false
+        this.inputWidth = 73
+        this.dropdownWidth = 33
+        this.isFocus = true
+        this.detailVisible = true
+        this.isReadOnly = true
+      } else {
+        this.quSelected2 = name
+        this.addressVisible2 = false
+        this.inputWidth2 = 73
+        this.dropdownWidth2 = 33
+        this.isFocus2 = true
+        this.detailVisible2 = true
+        this.isReadOnly2 = true
+      }
+      this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+      this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+    },
+    setShenfen (num) {
+      if (num === 1) {
+        this.shenfen = true
+        this.shi = false
+        this.quyu = false
+      } else {
+        this.shenfen2 = true
+        this.shi2 = false
+        this.quyu2 = false
+      }
+    },
+   /** 设置城市级 */
+    setShi (num) {
+      if (num === 1) {
+        this.shenfen = false
+        this.shi = true
+        this.quyu = false
+        if (this.shenfenSelected) {
+          regionJson.filter(item => {
+            if (item.name === this.shenfenSelected) {
+              this.shiList = item
+              return true
+            }
+          })
+        }
+      } else {
+        this.shenfen2 = false
+        this.shi2 = true
+        this.quyu2 = false
+        if (this.shenfenSelected2) {
+          regionJson.filter(item => {
+            if (item.name === this.shenfenSelected2) {
+              this.shiList2 = item
+              return true
+            }
+          })
+        }
+      }
+    },
+    /** 设置地区 */
+    setQuyu (num) {
+      if (num === 1) {
+        this.shenfen = false
+        this.shi = false
+        this.quyu = true
+        if (this.shiSelected && this.shenfenSelected) {
+          this.shiList.sub.filter(item => {
+            if (item.name === this.shiSelected) {
+              this.quList = item.sub
+              return true
+            }
+          })
+        }
+      } else {
+        this.shenfen2 = false
+        this.shi2 = false
+        this.quyu2 = true
+        if (this.shiSelected2 && this.shenfenSelected2) {
+          this.shiList2.sub.filter(item => {
+            if (item.name === this.shiSelected2) {
+              this.quList2 = item.sub
+              return true
+            }
+          })
+        }
+      }
+    },
     getShipComp () {
       console.log('testtesttesttesttest')
     },
@@ -118,6 +312,76 @@ export default {
 }
 </script>
 <style scoped>
+.dropdown {
+  width:100%;
+  margin-left:15%
+}
+
+.dropdown2{
+  display:inline-block;
+  width:40%;
+  float:left
+}
+
+.dropdown-content {
+  height:200px;
+  position: absolute;
+  background-color: #fff;
+  margin-left:-3%;
+  padding: 0;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  width:78%
+}
+
+.dropdown-select{
+  clear:both;
+  height:160px;
+  overflow-y:scroll
+}
+
+.dropdown-select ul{
+  clear:both;
+  list-style-type:none
+}
+
+.dropdown-select ul li:hover{
+    cursor: pointer;
+    background-color: #D1E5E5
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.dropdown-content-select {
+  list-style-type:none;
+}
+.dropdown-li{
+  cursor: pointer;
+  border-right: 1px solid #C0C0C0;
+  width: 33.33%;
+  margin: 0;
+  float:left;
+  box-sizing: border-box;
+  background-color: #D1E5E5;
+  text-align: center
+}
+.dropdown-shenfen li:hover{
+  cursor: pointer;
+  background-color: #D1E5E5
+}
+.addressDetail{
+  width:45%;
+  float:left;
+  margin-left:-5%
+}
+.selectOn{
+  background-color:#00d1b2;
+}
+
+.selectNo{
+  background-color: #EEF6F6
+}
+
 .div-form {
   border: 2px solid black;
   width: 60%;
@@ -147,3 +411,5 @@ export default {
   transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
 }
 </style>
+
+
