@@ -40,7 +40,7 @@
         :current-page="currentPage"
         :page-sizes="[20,50,100,200]"
         :page-size="pageSize"
-        layout="total,sizes,prev,pager,next,jumper"
+        layout="total,sizes,prev,pager,next"
         :total="rowCount"></el-pagination>
     </div>
 

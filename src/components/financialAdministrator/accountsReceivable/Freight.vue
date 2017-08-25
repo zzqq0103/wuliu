@@ -64,28 +64,28 @@
       <div v-if="this.filterForm.payType === 'nowPay'">
         <el-form :model="totalForm" ref="totalForm" :inline="true">
           <el-form-item label="现付金额合计:">
-            <el-input v-model="totalForm.nowPayTotal"></el-input>
+            <el-input v-model="totalForm.totalMoney"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <div v-else-if="this.filterForm.payType === 'cashOnDelivery'">
         <el-form :model="totalForm" ref="totalForm" :inline="true">
           <el-form-item label="到付金额合计:">
-            <el-input v-model="totalForm.cashOnDeliveryTotal"></el-input>
+            <el-input v-model="totalForm.totalMoney"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <div v-else-if="this.filterForm.payType === 'inArrears'">
         <el-form :model="totalForm" ref="totalForm" :inline="true">
           <el-form-item label="欠付金额合计:">
-            <el-input v-model="totalForm.inArrearsTotal"></el-input>
+            <el-input v-model="totalForm.totalMoney"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <div v-else-if="this.filterForm.payType === 'monthly'">
         <el-form :model="totalForm" ref="totalForm" :inline="true">
           <el-form-item label="月结金额合计:">
-            <el-input v-model="totalForm.monthlyTotal"></el-input>
+            <el-input v-model="totalForm.totalMoney"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -119,7 +119,7 @@
         :current-page="currentPage"
         :page-sizes="[20,50,100,200]"
         :page-size="pageSize"
-        layout="total,sizes,prev,pager,next,jumper"
+        layout="total,sizes,prev,pager,next"
         :total="rowCount"></el-pagination>
     </div>
     <!--列表切换显示-->
@@ -466,11 +466,8 @@
         },
         // 各种费用合计
         totalForm: {
-          transferFeeTotal: '', // 中转费合计
-          nowPayTotal: '', // 现付合计
-          cashOnDeliveryTotal: '', // 到付合计
-          inArrearsTotal: '', // 欠付合计
-          monthlyTotal: ''// 月结合计
+          transferFeeTotal: 0, // 中转费合计
+          totalMoney: 0// 月结合计
         },
         // 核销完成后提交给后台的数据
         confirmSubForm: {
@@ -765,7 +762,7 @@
       leftSelect () {
         const selectedData = this.gridOptions2.api.getSelectedRows()
         this.addChoose(selectedData)
-        console.log(this.gridOptions3.api.getAllRows())
+//        console.log(this.gridOptions3.api.getAllRows())
       },
       // 核销界面左侧表格全选切换至右侧
       leftSelectAll () {
@@ -815,7 +812,20 @@
         this.drawGrid(2)
       }
     },
-    computed: {},
+    computed: {
+      // 计算合计金额
+      calculateMoney () {
+        this.totalForm.transferFeeTotal = 0
+        this.totalForm.totalMoney = 0
+        let model = this.gridOptions.api.getModel()
+        let arr = model.rootNode.childrenAfterFilter
+        console.log(arr[0].data)
+        for (let i = 0; i < arr.length; i++) {
+          this.totalForm.transferFeeTotal += arr[i].data.changeFee
+          this.totalForm.totalMoney += arr[i].data.feeMoney
+        }
+      }
+    },
 //    beforeMount () {
 //      this.createRowData()
 //      console.log(this.gridOptions)
@@ -824,6 +834,8 @@
       this.updateGrid(1)
     },
     updated () {
+      console.log('update')
+      this.calculateMoney
     }
   }
 </script>
