@@ -58,7 +58,6 @@
           'driverreceiving': '',
           'receivingstate': '',
           'Cancelreservations': ''
-
         },
         rules: {
         },
@@ -112,7 +111,7 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><button class="del-but" @click="vehicleDel">删 除</button><button class="del-but" @click="vehicleEdit">编 辑</button></span>',
+        template: '<el-span><el-button class="del-but" @click="vehicleDel">删 除</el-button><el-button class="del-but" @click="vehicleEdit">编 辑</el-button></el-span>',
         methods: {
           vehicleDel () {
             this.params.context.componentParent.enterpriseDelVisable = true

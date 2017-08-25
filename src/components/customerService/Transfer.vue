@@ -10,12 +10,12 @@
                 <el-h5 class="appointmenttimes">预约单号：</el-h5>
                 <el-input class="appointmenttimeman"></el-input>
                 <el-h5 class="appointmenttimes">回单状态：</el-h5>
-                <el-select  placeholder="选择" class="appointmentoption" style='width:100px'>
+                <el-select v-model="appointlnfoForm.Selectsite" placeholder="选择" class="appointmentoption" style='width:100px'>
                     <el-option key="yes" label="待生成" value="yes"></el-option>
                     <el-option key="no" label="已生成" value="no"></el-option>
                 </el-select>
                 <el-h5 class="appointmenttimes">回单押款状态：</el-h5>
-                <el-select  placeholder="选择" class="appointmentoption" style='width:100px'>
+                <el-select v-model="appointlnfoForm.state" placeholder="选择" class="appointmentoption" style='width:100px'>
                     <el-option key="yes" label="已付款" value="yes"></el-option>
                     <el-option key="no" label="未付款" value="no"></el-option>
                 </el-select>
@@ -38,6 +38,14 @@
   export default {
     data () {
       return {
+        appointlnfoForm: {
+          Selectsite: '',
+          state: '',
+          receiptstatus: ''
+        },
+        rules: {
+        },
+        formLabelWidth: '150px',
         gridOptions: {
           context: {
             componentParent: this
@@ -69,7 +77,7 @@
               headerName: '件数', width: 100, field: 'number', filter: 'text', hide: false
             },
             {
-              headerName: '回单状态', field: 'value', width: 100, cellRendererFramework: 'operateComponent', hide: false
+              headerName: '回单状态', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
             },
             {
               headerName: '回单押款状态', width: 150, field: 'receiptYaKuanstate', filter: 'text', hide: false
@@ -79,20 +87,10 @@
       }
     },
     components: {
-       'ag-grid-vue': AgGridVue,
-       operateComponent: {
-       template: '<span><button class="del-but" @click="vehicleDel">删 除</button><button class="del-but" @click="vehicleEdit">编 辑</button></span>',
-    //    ' <select  placeholder="' + '选择' + '" class="appointmentoption" style="width:100px"><option key="yes" label="待生成" value="yes"></option>' +
-    //                ' <option key="no" label="已生成" value="no"></option></select>',
-      methods: {
-        vehicleDel () {
-        },
-        vehicleEdit () {
-          /* var vehicleform = this.params.context.componentParent.vehicleForm
-          vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum */
-        }
+      'ag-grid-vue': AgGridVue,
+      operateComponent: {
+        template: '<select placeholder="选择" class="appointmentoption" style="width:150px;heght:60px"><option key="yes" label="回单已签" value="yes"></option><option key="no" label="回单在途" value="no"></option><option key="no" label="回单已反" value="no"></option> </select>'
       }
-       }
     },
     methods: {
       createRowData () {
@@ -107,9 +105,6 @@
           columnlist[i].hide = !columnlist[i].hide
         }
       },
-      setting () {
-      this.colVisible = true
-      },
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
           this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
@@ -117,11 +112,11 @@
       }
     },
     beforeMount () {
-    this.createRowData()
-   },
-  mounted () {
-    this.changeColumnDefsBoolen()
-  }
+      this.createRowData()
+    },
+    mounted () {
+      this.changeColumnDefsBoolen()
+    }
   }
 </script>
 <style>

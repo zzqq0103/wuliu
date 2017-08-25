@@ -180,19 +180,34 @@ export default {
     },
     transfer: {
         list: [{
-            choose: "2",
-            ordernumber: "123432",
-            provenance: "beijing",
-            fromphone: "123879878987",
-            destination: "shanghai",
-            consignershipper: "13223434565",
-            deliveryphone: "南京",
-            receivingphone: "132456544554",
-            receiptnumber: "89箱",
-            number: "90",
-            receiptstatus: "已付款",
-            receiptYaKuanstate: "已回单"
-        }]
+                choose: "2",
+                ordernumber: "123432",
+                provenance: "beijing",
+                fromphone: "123879878987",
+                destination: "shanghai",
+                consignershipper: "13223434565",
+                deliveryphone: "南京",
+                receivingphone: "132456544554",
+                receiptnumber: "89箱",
+                number: "90",
+                // receiptstatus: "已付款",
+                receiptYaKuanstate: "已回单"
+            },
+            {
+                choose: "2",
+                ordernumber: "123432",
+                provenance: "beijing",
+                fromphone: "123879878987",
+                destination: "shanghai",
+                consignershipper: "13223434565",
+                deliveryphone: "南京",
+                receivingphone: "132456544554",
+                receiptnumber: "89箱",
+                number: "90",
+                // receiptstatus: "已付款",
+                receiptYaKuanstate: "已回单"
+            }
+        ]
     },
     //客户信息管理
     personnelInfo: {
