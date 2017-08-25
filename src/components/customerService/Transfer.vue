@@ -38,26 +38,6 @@
   export default {
     data () {
       return {
-        colVisible: false,
-        appointlnfoVisable: false,
-        appointlnfoDelVisable: false,
-        appointlnfoForm: {
-          'choose': '',
-          'ordernumber': '',
-          'provenance': '',
-          'fromphone': '',
-          'destination': '',
-          'consignershipper': '',
-          'deliveryphone': '',
-          'receivingphone': '',
-          'receiptnumber': '',
-          'number': '',
-        //   'receiptstatus': '',
-          'receiptYaKuanstate': ''
-        },
-        rules: {
-        },
-        formLabelWidth: '150px',
         gridOptions: {
           context: {
             componentParent: this
@@ -99,11 +79,19 @@
       }
     },
     components: {
-      'ag-grid-vue': AgGridVue,
+       'ag-grid-vue': AgGridVue,
        operateComponent: {
-       template: '<span><button class="del-but">删 除</button><button class="del-but" >编 辑</button></span>',
+       template: '<span><button class="del-but" @click="vehicleDel">删 除</button><button class="del-but" @click="vehicleEdit">编 辑</button></span>',
     //    ' <select  placeholder="' + '选择' + '" class="appointmentoption" style="width:100px"><option key="yes" label="待生成" value="yes"></option>' +
     //                ' <option key="no" label="已生成" value="no"></option></select>',
+      methods: {
+        vehicleDel () {
+        },
+        vehicleEdit () {
+          /* var vehicleform = this.params.context.componentParent.vehicleForm
+          vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum */
+        }
+      }
        }
     },
     methods: {
@@ -119,12 +107,21 @@
           columnlist[i].hide = !columnlist[i].hide
         }
       },
+      setting () {
+      this.colVisible = true
+      },
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
           this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
         }
       }
-    }
+    },
+    beforeMount () {
+    this.createRowData()
+   },
+  mounted () {
+    this.changeColumnDefsBoolen()
+  }
   }
 </script>
 <style>
