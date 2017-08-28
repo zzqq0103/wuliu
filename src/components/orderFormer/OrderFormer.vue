@@ -1,14 +1,14 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align:center">车辆信息管理</h2>
+      <h2 style="text-align:center">外包企业订单信息</h2>
       <p style="margin-top:1%">
         <div style="float: right">
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div>
           <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
-          <el-button @click="vehicleAdd">添加</el-button>
+          <el-button @click="ordeformerAdd">添加</el-button>
           <el-button @click="setting">设置</el-button>
         </div>
       </p>
@@ -23,50 +23,58 @@
                    :enableSorting="true"
                    :enableFilter="true"
                    :groupHeaders="true"
-                   :rowHeight=40
-                   :headerHeight=30
+                   :rowHeight="40"
+                   :headerHeight="30"
       ></ag-grid-vue>
     </div>
 
-    <el-dialog title="车辆信息:" :visible.sync="vehicleVisable">
-        <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
-          <el-form-item label="车牌号码:" :label-width="formLabelWidth">
-            <el-input v-model="vehicleForm.licePlateNum"></el-input>
+    <el-dialog title="外包企业订单列表:" :visible.sync="orderFormVisable">
+        <el-form :model="orderForm" :rules="rules" ref="orderForm">
+          <el-form-item label="序号:" :label-width="formLabelWidth">
+            <el-input v-model="orderForm.licePlateNum"></el-input>
           </el-form-item>
-          <el-form-item label="司机姓名:" :label-width="formLabelWidth">
-            <el-input v-model="vehicleForm.driverName"></el-input>
+          <el-form-item label="订单号:" :label-width="formLabelWidth">
+            <el-input v-model="orderForm.driverName"></el-input>
           </el-form-item>
-          <el-form-item label="联系电话:" :label-width="formLabelWidth">
-            <el-input v-model="vehicleForm.tel"></el-input>
+          <el-form-item label="订单状态:" :label-width="formLabelWidth">
+            <el-input v-model="orderForm.tel"></el-input>
           </el-form-item>
-          <el-form-item label="车容量:" :label-width="formLabelWidth">
-            <el-input v-model="vehicleForm.capacity"></el-input>
+          <el-form-item label="发货人:" :label-width="formLabelWidth">
+            <el-input v-model="orderForm.capacity"></el-input>
           </el-form-item>
-          <el-form-item label="车辆类型:" :label-width="formLabelWidth">
-            <el-input v-model="vehicleForm.carType"></el-input>
+          <el-form-item label="发站:" :label-width="formLabelWidth">
+            <el-input v-model="orderForm.carType"></el-input>
           </el-form-item>
-          <el-form-item label="车辆位置:" :label-width="formLabelWidth">
-            <el-input v-model="vehicleForm.carPosition"></el-input>
+          <el-form-item label="发货方联系方式:" :label-width="formLabelWidth">
+            <el-input v-model="orderForm.carPosition"></el-input>
           </el-form-item>
-          <el-form-item label="车辆接送区域:" label-width="150px">
-            <el-select v-model="vehicleForm.pickUpArea" placeholder="请选择" style="width:100%" >
-                <el-option key="ct" label="长途" value="ct"></el-option>
-                <el-option key="dt" label="短途" value="dt"></el-option>
-                <el-option key="ctdt" label="长途与短途" value="ctdt"></el-option>
-            </el-select>
+          <el-form-item label="收货人:" :label-width="formLabelWidth">
+            <el-input v-model="orderForm.carpenon"></el-input>
+          </el-form-item>
+          <el-form-item label="收货方联系方式:" :label-width="formLabelWidth">
+            <el-input v-model="orderForm.carpenoning"></el-input>
+          </el-form-item>
+          <el-form-item label="货物名称:" :label-width="formLabelWidth">
+            <el-input v-model="orderForm.description"></el-input>
+          </el-form-item>
+          <el-form-item label="数量:" :label-width="formLabelWidth">
+            <el-input v-model="orderForm.denumber"></el-input>
+          </el-form-item>
+          <el-form-item label="制单人:" :label-width="formLabelWidth">
+            <el-input v-model="orderForm.prepared"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="vehicleVisable = false">取 消</el-button>
-          <el-button type="primary" @click="vehicleVisable = false">确 定</el-button>
+          <el-button @click="orderFormVisable = false">取 消</el-button>
+          <el-button type="primary" @click="orderFormVisable = false">确 定</el-button>
         </div>
     </el-dialog>
 
-    <el-dialog title="" :visible.sync="vehicleDelVisable" size=""tiny>
+    <el-dialog title="" :visible.sync="orderFormDelVisable" size=""tiny>
       <h2 style="padding:30px">确认删除吗？</h2>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="vehicleDelVisable = false">取 消</el-button>
-        <el-button @click="vehicleDelVisable = false">确 定</el-button>
+        <el-button @click="orderFormDelVisable = false">取 消</el-button>
+        <el-button @click="orderFormDelVisable = false">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -93,16 +101,20 @@
     data () {
       return {
         colVisible: false,
-        vehicleVisable: false,
-        vehicleDelVisable: false,
-        vehicleForm: {
-          'licePlateNum': '',
-          'driverName': '',
-          'tel': '',
-          'capacity': '',
-          'carType': '',
-          'pickUpArea': '',
-          'carPosition': ''
+        orderFormVisable: false,
+        orderFormDelVisable: false,
+        orderForm: {
+          'liceNum': '',
+          'ordernumber': '',
+          'orderstatus': '',
+          'consignor': '',
+          'standing': '',
+          'Shippercontactinformation': '',
+          'consignee': '',
+          'Receivingpartycontactinformation': '',
+          'descriptionofgoods': '',
+          'quantity': '',
+          'preparedby': ''
         },
         rules: {
         },
@@ -114,43 +126,40 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '车牌号码', width: 150, field: 'licePlateNum', filter: 'text', hide: false
+              headerName: '序号', width: 60, field: 'liceNum', filter: 'text', hide: false
             },
             {
-              headerName: '司机姓名', width: 150, field: 'driverName', filter: 'text', hide: false
+              headerName: '订单号', width: 120, field: 'ordernumber', filter: 'text', hide: false
             },
             {
-              headerName: '联系电话', width: 150, field: 'tel', filter: 'text', hide: false
+              headerName: '订单状态', width: 100, field: 'orderstatus', filter: 'text', hide: false
             },
             {
-              headerName: '合同号', width: 150, field: 'contractID', filter: 'text', hide: false
+              headerName: '发货人', width: 80, field: 'consignor', filter: 'text', hide: false
             },
             {
-              headerName: '合同价格', width: 150, field: 'contractPrice', filter: 'text', hide: false
+              headerName: '发站', width: 70, field: 'standing', filter: 'text', hide: false
             },
             {
-              headerName: '车容量', width: 150, field: 'capacity', filter: 'text', hide: false
+              headerName: '发货方联系方式', width: 120, field: 'Shippercontactinformation', filter: 'text', hide: false
             },
             {
-              headerName: '吨位', width: 150, field: 'tonnage', filter: 'text', hide: false
+              headerName: '收货人', width: 80, field: 'consignee', filter: 'text', hide: false
             },
             {
-              headerName: '车辆类型', width: 150, field: 'carType', filter: 'text', hide: false
+              headerName: '收货方联系方式', width: 150, field: 'Receivingpartycontactinformation', filter: 'text', hide: false
             },
             {
-              headerName: '车辆接送区域', width: 150, field: 'pickUpArea', filter: 'text', hide: false
+              headerName: '货物名称', width: 150, field: 'descriptionofgoods', filter: 'text', hide: false
             },
             {
-              headerName: '司机状态', width: 150, field: 'receState', filter: 'text', hide: false
+              headerName: '数量', width: 60, field: 'quantity', filter: 'text', hide: false
             },
             {
-              headerName: '车辆状态', width: 150, field: 'carState', filter: 'text', hide: false
+              headerName: '制单人', width: 80, field: 'preparedby', filter: 'text', hide: false
             },
             {
-              headerName: '车辆位置', width: 150, field: 'carPosition', filter: 'text', hide: false
-            },
-            {
-              headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
+              headerName: '状态', field: 'value', width: 80, cellRendererFramework: 'operateComponent', hide: false
             }
           ]
         }
@@ -159,23 +168,24 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><button class="del-but" @click="vehicleDel">删 除</button><button class="del-but" @click="vehicleEdit">编 辑</button></span>',
+        // template:'<span></span><select><option  @click="vehicleDel" value="派送">派送</option><option  @click="vehicleDel" value="签收">签收</option></select></span>',
+        template: '<select><option class="del-but" @click="orderDel">派  送</option><option class="del-but" @click="orderEdit">签 收</option></select>',
         methods: {
-          vehicleDel () {
-            this.params.context.componentParent.vehicleDelVisable = true
+          orderDel () {
+            this.params.context.componentParent.orderformDelVisable = true
           },
-          vehicleEdit () {
+          orderEdit () {
             /* var vehicleform = this.params.context.componentParent.vehicleForm
             vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum */
-            this.params.context.componentParent.vehicleVisable = true
-            this.params.context.componentParent.vehicleForm = this.params.data
+            this.params.context.componentParent.orderFormVisable = true
+            this.params.context.componentParent.orderForm = this.params.data
           }
         }
       }
     },
     methods: {
       createRowData () {
-        this.gridOptions.rowData = testJson.vehicleInfo.list
+        this.gridOptions.rowData = testJson.orderformInfo.list
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
@@ -195,15 +205,15 @@
         }
       },
       // 增加
-      vehicleAdd () {
-        this.vehicleVisable = true
-        this.vehicleForm.licePlateNum = ''
-        this.vehicleForm.driverName = ''
-        this.vehicleForm.tel = ''
-        this.vehicleForm.capacity = ''
-        this.vehicleForm.carType = ''
-        this.vehicleForm.pickUpArea = ''
-        this.vehicleForm.carPosition = ''
+      ordeformerAdd () {
+        this.orderFormVisable = true
+        this.orderForm.licePlateNum = ''
+        this.orderForm.driverName = ''
+        this.orderForm.tel = ''
+        this.orderForm.capacity = ''
+        this.orderForm.carType = ''
+        this.orderForm.pickUpArea = ''
+        this.orderForm.carPosition = ''
       }
     },
     beforeMount () {
