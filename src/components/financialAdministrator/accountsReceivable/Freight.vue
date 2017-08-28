@@ -717,7 +717,7 @@
       },
       // 切换不同分页时
       handleCurrnetChange (val) {
-        this.gridOptions.api.paginationGoToPage(val)
+        this.gridOptions.api.paginationGoToPage(val - 1)
       },
       // 发生筛选时，重新计算分页数量
       gridfilterChange () {
@@ -743,6 +743,16 @@
       },
       // 显示切换核销界面的弹框
       verification () {
+        this.filterForm = {
+          startTime: '', // 开始时间
+          endTime: '', // 截止时间
+          startPoint: '', //  区间起点
+          endPoint: '', //  区间终点
+          shipNam: '', //  发货人
+          payType: 'nowPay', // 类型（现付，到付，欠付，月结）
+          freiVeriState: '', // 运费核销状态
+          orderId: '' // 运单号
+        }
         this.verVisible = true
       },
       // 订单详情弹框
@@ -750,11 +760,11 @@
         this.filterForm.orderId = event.data.orderId
         this.detailVisible = true
       },
-      // 核销界面左侧表格双击时间
+      // 核销界面左侧表格双击事件
       leftDoubleClick (event) {
         this.leftSelect(event.data)
       },
-      // 核销界面右侧表格双击时间
+      // 核销界面右侧表格双击事件
       rightDoubleClick (event) {
         this.rightSelect(event.data)
       },

@@ -48,7 +48,7 @@
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false" top="30%">
       <template v-for="(collist,i) in gridOptions.columnDefs">
         <div>
-          <el-checkbox v-model="collist.hide" @change="updataColumnDefs(gridOptions.columnDefs)">
+          <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
             {{collist.headerName}}
           </el-checkbox>
         </div>
@@ -273,7 +273,7 @@
         this.gridOptions.api.paginationSetPageSize(Number(val))
       },
       handleCurrnetChange (val) {
-        this.gridOptions.api.paginationGoToPage(val)
+        this.gridOptions.api.paginationGoToPage(val - 1)
       },
       gridfilterChange () {
         this.calculateGrid()
