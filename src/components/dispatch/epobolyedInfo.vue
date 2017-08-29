@@ -32,8 +32,20 @@
     <div style="clear: both;">
     </div>
 
+    <!-- 表格 -->
     <div style="margin-top:2%" v-loading="listLoading">
-      <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue" :gridOptions="gridOptions" :suppressMovableColumns="true" :enableColResize="true" :enableSorting="true" :enableFilter="true" :groupHeaders="true" :rowHeight="40" :headerHeight="30"> </ag-grid-vue>
+      <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue" 
+                  :gridOptions="gridOptions" 
+                  :suppressMovableColumns="true" 
+                  :enableColResize="true" 
+                  :enableSorting="true" 
+                  :enableFilter="true" 
+                  :groupHeaders="true" 
+                  :suppressCellSelection="true" 
+                  :rowHeight="40" 
+                  :headerHeight="30" 
+                  :rowDoubleClicked="detailDoubleClick" 
+      ></ag-grid-vue>
     </div>
 
     <div class="block" style="float:right; margin-top:30px;">
@@ -53,12 +65,18 @@
         <el-button type="primary" @click="colVisible = false">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!--订单详情弹框-->
+    <el-dialog title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
+      <order-details :orderId="orderId"></order-details>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
 import {getCurrentEpiboliedList, getQueryEpiboliedList} from '../../api/api'
+import OrderDetails from '../financialAdministrator/ShowOrderDetails'
 export default {
   data () {
     return {
@@ -88,6 +106,7 @@ export default {
         'pack': '',
         'remarks': ''
       },
+      orderId: '', // 运单号
       rules: {
       },
       formLabelWidth: '120px',
@@ -191,16 +210,20 @@ export default {
           }
         }]
       },
-      dateValue: ''
+      dateValue: '',
+      detailVisible: false // 订单详情弹框
     }
   },
   components: {
-    'ag-grid-vue': AgGridVue
+    'ag-grid-vue': AgGridVue,
+    'order-details': OrderDetails
   },
   methods: {
-    // queryList () {
-    //   this.getQueryData()
-    // },
+    // 订单详情弹框
+    detailDoubleClick (event) {
+      this.filterForm.orderId = event.data.orderId
+      this.detailVisible = true
+    },
     handleSizeChange (val) {
       this.pageSize = val
       console.log(this.pageSize)

@@ -32,12 +32,31 @@
     <div style="clear: both;">
     </div>
 
+    <!-- 表格 -->
     <div style="margin-top:2%" v-loading="listLoading">
-      <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue" :gridOptions="gridOptions" :suppressMovableColumns="true" :enableColResize="true" :enableSorting="true" :enableFilter="true" :groupHeaders="true" :rowHeight="40" :headerHeight="30"> </ag-grid-vue>
+      <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue" 
+                  :gridOptions="gridOptions" 
+                  :suppressMovableColumns="true" 
+                  :enableColResize="true" 
+                  :enableSorting="true" 
+                  :enableFilter="true" 
+                  :groupHeaders="true" 
+                  :suppressCellSelection="true" 
+                  :rowHeight="40" 
+                  :headerHeight="30" 
+                  :rowDoubleClicked="detailDoubleClick" 
+      ></ag-grid-vue>
     </div>
 
     <div class="block" style="float:right; margin-top:30px;">
-       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentpage" :page-sizes="[25, 50, 75, 100]" :page-size="25" layout="total, sizes, prev, pager, next, jumper" :total="totalpages">
+       <el-pagination 
+         @size-change="handleSizeChange"
+         @current-change="handleCurrentChange"
+         :current-page="currentpage" 
+         :page-sizes="[25, 50, 75, 100]" 
+         :page-size="25" 
+         layout="total, sizes, prev, pager, next" 
+         :total="totalpages">
        </el-pagination>
     </div>
 
@@ -53,12 +72,19 @@
         <el-button type="primary" @click="colVisible = false">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!--订单详情弹框-->
+    <el-dialog title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
+      <order-details :orderId="orderId"></order-details>
+    </el-dialog>
+    
   </div>
 </template>
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
 import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
+import OrderDetails from '../financialAdministrator/ShowOrderDetails'
 export default {
   data () {
     return {
@@ -68,6 +94,7 @@ export default {
       colVisible: false,
       vehicleVisable: false,
       vehicleDelVisable: false,
+      orderId: '', // 运单号
       tableForm: {
         'id': '',
         'deliverOrderId': '',
@@ -182,24 +209,26 @@ export default {
           }
         }]
       },
-      dateValue: ''
+      dateValue: '',
+      detailVisible: false // 订单详情弹框
     }
   },
   components: {
-    'ag-grid-vue': AgGridVue
+    'ag-grid-vue': AgGridVue,
+    OrderDetails
   },
   methods: {
-    // queryList () {
-    //   this.getQueryData()
-    // },
+    // 订单详情弹框
+    detailDoubleClick (event) {
+      console.log(event.data.orderId)
+      this.orderId = event.data.orderId
+      this.detailVisible = true
+    },
     handleSizeChange (val) {
       this.pageSize = val
-      console.log(this.pageSize)
-      this.getOrderList()
     },
     handleCurrentChange (val) {
       this.currentpage = val
-      console.log(this.currentpage)
       this.getOrderList()
     },
     handleIconClick (input) {
@@ -233,16 +262,16 @@ export default {
       }
       this.listLoading = true
       getCurrentDelivered(para).then((res) => {
-        console.log('进入getCurrentDelivered')
+        // console.log('进入getCurrentDelivered')
         // this.gridOptions.rowData = res.data.orderlists
         // 使用gridOptions中的api方法设定RowData数据
         this.gridOptions.api.setRowData(res.data.orderlists)
         this.orderlist = res.data.orderlists
         this.totalpages = res.data.totalPages
-        // console.log(this.gridOptions.rowData)
         this.listLoading = false
       })
     },
+    // 获取查询数据
     getQueryData () {
       let para = {
         queryName: this.queryName,
