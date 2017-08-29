@@ -4,18 +4,18 @@
             <h2 style="text-align:center">订单信息</h2>
             <p style="margin-top:1%;float:left" class="appointment">
                 <el-h5 class="appointmenttime">预约时间</el-h5>
-                <el-input type="text" class="appointmenttimes" placeholder="开始时间"></el-input>
+                <el-input type="date" class="appointmenttimes" placeholder="开始时间"></el-input>
                 <el-h5 class="appointmenttimes">到</el-h5>
-                <el-input type="text" class="appointmenttimes" placeholder="结束时间"></el-input>
+                <el-input type="date" class="appointmenttimes" placeholder="结束时间"></el-input>
                 <el-h5 class="appointmenttimes">始发站：</el-h5>
                 <el-select v-model="appointlnfoForm.Selectsite" placeholder="选择" class="appointmentoption col-1" style='width:80px'>
                     <el-option key="yes" label="北 京" value="yes"></el-option>
                     <el-option key="no" label="南 京" value="no"></el-option>
                 </el-select>
-                <el-h5 class="appointmenttimes">发货方：</el-h5>
-                <el-input class="appointmenttimes"></el-input>
+                <el-h5 class="appointmenttimesman">发货方：</el-h5>
+                <el-input class="appointmenttimeman"></el-input>
                 <el-h5 class="appointmenttimes">预约单号：</el-h5>
-                <el-input class="appointmenttimes"></el-input>
+                <el-input class="appointmenttimeman"></el-input>
                 <el-h5 class="appointmenttimes">预约单状态：</el-h5>
                 <el-select v-model="appointlnfoForm.state" placeholder="选择" class="appointmentoption" style='width:100px'>
                     <el-option key="yes" label="待生成" value="yes"></el-option>
@@ -58,7 +58,6 @@
           'driverreceiving': '',
           'receivingstate': '',
           'Cancelreservations': ''
-
         },
         rules: {
         },
@@ -112,7 +111,7 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><button class="del-but" @click="vehicleDel">删 除</button><button class="del-but" @click="vehicleEdit">编 辑</button></span>',
+        template: '<el-span><el-button class="del-but" @click="vehicleDel">删 除</el-button><el-button class="del-but" @click="vehicleEdit">编 辑</el-button></el-span>',
         methods: {
           vehicleDel () {
             this.params.context.componentParent.enterpriseDelVisable = true
@@ -180,8 +179,11 @@
 }
 
 .appointmenttimes {
-    width: 100px;
+    width: 145px;
     margin-left: 1%;
+}
+.appointmenttimeman{
+  width:100px;
 }
 
 .appointmentoption {
