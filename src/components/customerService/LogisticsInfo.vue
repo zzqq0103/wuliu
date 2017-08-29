@@ -47,8 +47,25 @@
                      :groupHeaders="true"
                      :suppressCellSelection="true"
                      :rowHeight=40
+
+                     :pagination="true"
+                     :paginationPageSize="10"
+                     :suppressPaginationPanel="true"
+                     :filterChanged="gridfilterChange"
         ></ag-grid-vue>
     </div>
+
+      <!--分页-->
+      <div style="text-align: right">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrnetChange"
+          :current-page="currentPage"
+          :page-sizes="[20,50,100,200]"
+          :page-size="pageSize"
+          layout="total,sizes,prev,pager,next"
+          :total="rowCount"></el-pagination>
+      </div>
 
       <!--列表切换显示-->
       <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false" top="30%">
@@ -65,7 +82,7 @@
       </el-dialog>
       <!--查找物流信息-->
       <el-dialog title="查询物流信息:" :visible.sync="selectFormVisible">
-        <el-form :label-position="top"  :model="orderForm">
+        <el-form :model="orderForm">
           <el-form-item label="订单编号">
             <el-input v-model="orderForm.oderId"></el-input>
           </el-form-item>
@@ -168,7 +185,10 @@ export default {
         rules: {},
         colVisible: false,
         selectFormVisible: false,
-        formLabelWidth: '150px'
+        formLabelWidth: '150px',
+        currentPage: 1,
+        pageSize: 20,
+        rowCount: 0
       }
     },
     components: {
@@ -207,6 +227,25 @@ export default {
           cargoPieces: '',
           cargoCondition: ''
         }
+      },
+      handleSizeChange (val) {
+        this.gridOptions.api.paginationSetPageSize(Number(val))
+      },
+      handleCurrnetChange (val) {
+        this.gridOptions.api.paginationGoToPage(val)
+      },
+      gridfilterChange () {
+        this.calculateGrid()
+      },
+      calculateGrid () {
+        this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
+        let model = this.gridOptions.api.getModel()
+        console.log(model)
+        console.log(this.gridOptions.rowData)
+        let processedRows = model.getRowCount()
+//        let totalRows = this.gridOptions.rowData.length
+//        console.log(totalRows, processedRows)
+        this.rowCount = processedRows
       }
     },
     beforeMount () {
@@ -214,6 +253,7 @@ export default {
     },
     mounted () {
       this.changeColumnDefsBoolen()
+      this.gridfilterChange()
     }
   }
 </script>

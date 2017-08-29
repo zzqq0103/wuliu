@@ -2,7 +2,7 @@
   <div class="wrapper">
     <v-head></v-head>
     <v-sidebar></v-sidebar>
-    <div class="content">
+    <div class="content" style='padding-left:0'>
       <transition name="move" mode="out-in">
         <router-view></router-view>
       </transition>

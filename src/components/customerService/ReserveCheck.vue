@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 style="text-align: center">库存信息git</h2>
+    <h2 style="text-align: center">库存信息</h2>
     <p style="margin-top: 2%"></p>
     <div style="width: 100%">
       <el-row>
@@ -59,8 +59,26 @@
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
+
+                   :pagination="true"
+                   :paginationPageSize="10"
+                   :suppressPaginationPanel="true"
+                   :filterChanged="gridfilterChange"
       ></ag-grid-vue>
     </div>
+
+    <!--分页-->
+    <div style="text-align: right">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrnetChange"
+        :current-page="currentPage"
+        :page-sizes="[20,50,100,200]"
+        :page-size="pageSize"
+        layout="total,sizes,prev,pager,next"
+        :total="rowCount"></el-pagination>
+    </div>
+
     <!--列表切换显示-->
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false" top="30%">
       <template v-for="(collist,i) in gridOptions.columnDefs">
@@ -163,6 +181,25 @@
       },
       getTimein () {
         console.log(this.inTime)
+      },
+      handleSizeChange (val) {
+        this.gridOptions.api.paginationSetPageSize(Number(val))
+      },
+      handleCurrnetChange (val) {
+        this.gridOptions.api.paginationGoToPage(val)
+      },
+      gridfilterChange () {
+        this.calculateGrid()
+      },
+      calculateGrid () {
+        this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
+        let model = this.gridOptions.api.getModel()
+        console.log(model)
+        console.log(this.gridOptions.rowData)
+        let processedRows = model.getRowCount()
+//        let totalRows = this.gridOptions.rowData.length
+//        console.log(totalRows, processedRows)
+        this.rowCount = processedRows
       }
     },
     beforeMount () {
@@ -170,6 +207,7 @@
     },
     mounted () {
       this.changeColumnDefsBoolen()
+      this.calculateGrid()
     }
   }
 </script>
