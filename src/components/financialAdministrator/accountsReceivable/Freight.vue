@@ -732,11 +732,6 @@
 //        console.log(totalRows, processedRows)
         this.rowCount = processedRows
       },
-      // 测试用的方法，没用
-      test () {
-        this.updateGrid(2)
-        console.log(this.gridOptions2.columnDefs)
-      },
       // 显示切换列可见的弹框
       setting () {
         this.colVisible = true

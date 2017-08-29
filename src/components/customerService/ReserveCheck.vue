@@ -1,3 +1,3 @@
 <template>
-    <div>查看订单</div>
+    <div>入库信息</div>
 </template>

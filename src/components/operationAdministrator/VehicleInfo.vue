@@ -17,9 +17,37 @@
     <div style="clear: both;">
     </div>
     <div style="margin-top:2%">
-      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue" :gridOptions="gridOptions" :suppressMovableColumns="true" :enableColResize="true" :enableSorting="true" :enableFilter="true" :groupHeaders="true" :rowHeight=40 :headerHeight=30></ag-grid-vue>
+      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue" 
+        :gridOptions="gridOptions" 
+        :suppressMovableColumns="true" 
+        :enableColResize="true" 
+        :enableSorting="true" 
+        :enableFilter="true" 
+        :groupHeaders="true" 
+        :suppressCellSelection="true"
+        :rowHeight=40 
+        :headerHeight=30
+        :pagination="true"
+        :paginationPageSize="10"
+        :suppressPaginationPanel="true"
+        :filterChanged="gridfilterChange">
+      </ag-grid-vue>
     </div>
 
+    <!--分页-->
+    <div style="text-align: center;margin-top:2%">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrnetChange"
+        :current-page="currentPage"
+        :page-sizes="[10,20,50,100,200]"
+        :page-size="pageSize"
+        layout="total,sizes,prev,pager,next"
+        :total="rowCount">
+      </el-pagination>
+    </div>
+
+    <!-- 编辑/添加车辆信息弹窗 -->
     <el-dialog title="车辆信息:" :visible.sync="vehicleVisable">
       <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
         <el-form-item label="车牌号码:" :label-width="formLabelWidth">
@@ -53,7 +81,7 @@
         <el-button type="primary" @click="vehicleVisable = false">确 定</el-button>
       </div>
     </el-dialog>
-
+     <!-- 删除弹窗 -->
     <el-dialog title="" :visible.sync="vehicleDelVisable" size="tiny">
       <h2 style="padding:30px">确认删除吗？</h2>
       <div slot="footer" class="dialog-footer">
@@ -62,6 +90,7 @@
       </div>
     </el-dialog>
 
+    <!-- 列表显示弹窗 -->
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
       <template v-for="(collist,i) in gridOptions.columnDefs">
         <div>
@@ -77,13 +106,30 @@
 
   </div>
 </template>
-
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import testJson from '../../../static/test/testJSON.js'
 export default {
+  created () {
+    for (var i = 0; i < 100; i++) {
+      this.vehicleList.push({
+        'licePlateNum': i,
+        'driverName': 'test' + i,
+        'tel': '电话号码' + i,
+        'contractID': '合同ID' + i,
+        'contractPrice': '合同价格' + i,
+        'capacity': '车容量' + i,
+        'tonnage': '吨位' + i,
+        'carType': '车辆类型' + i,
+        'pickUpArea': '区域' + i,
+        'receState': '司机状态' + i,
+        'carState': '车辆状态' + i,
+        'carPosition': '车辆位置' + i
+      })
+    }
+  },
   data () {
     return {
+      vehicleList: [],
       colVisible: false,
       vehicleVisable: false,
       vehicleDelVisable: false,
@@ -98,6 +144,8 @@ export default {
       },
       rules: {
       },
+      rowCount: 0,
+      pageSize: 10,
       formLabelWidth: '150px',
       gridOptions: {
         context: {
@@ -158,7 +206,7 @@ export default {
         },
         vehicleEdit () {
           /* var vehicleform = this.params.context.componentParent.vehicleForm
-          vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum */
+          vehicleform.licePlateNum = vehicleList[this.params.node.rowIndex].licePlateNum */
           this.params.context.componentParent.vehicleVisable = true
           this.params.context.componentParent.vehicleForm = this.params.data
         }
@@ -167,7 +215,7 @@ export default {
   },
   methods: {
     createRowData () {
-      this.gridOptions.rowData = testJson.vehicleInfo.list
+      this.gridOptions.rowData = this.vehicleList
     },
     onQuickFilterChanged (input) {
       this.gridOptions.api.setQuickFilter(input)
@@ -196,6 +244,20 @@ export default {
       this.vehicleForm.carType = ''
       this.vehicleForm.pickUpArea = ''
       this.vehicleForm.carPosition = ''
+    },
+    handleSizeChange (val) {
+      this.gridOptions.api.paginationSetPageSize(Number(val))
+    },
+    handleCurrnetChange (val) {
+      this.gridOptions.api.paginationGoToPage(val - 1)
+    },
+    gridfilterChange () {
+      this.calculateGrid()
+    },
+    // 设置分页组件数据总数
+    calculateGrid () {
+      this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
+      this.rowCount = this.gridOptions.api.getModel().getRowCount()
     }
   },
   beforeMount () {
@@ -203,6 +265,7 @@ export default {
   },
   mounted () {
     this.changeColumnDefsBoolen()
+    this.calculateGrid()
   }
 }
 </script>
