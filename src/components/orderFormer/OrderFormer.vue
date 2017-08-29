@@ -7,10 +7,17 @@
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div>
-          <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
+          <el-h5 class="appointmenttime">预约时间</el-h5>
+          <el-date-picker type="date" class="appointmenttimes" placeholder="开始时间" v-model="orderForm.startTime"></el-date-picker>
+          <el-h5 class="appointmenttimes">到</el-h5>
+          <el-date-picker type="date" class="appointmenttimes" placeholder="结束时间" v-model="orderForm.endTime"></el-date-picker>
+        </div>
+        </div>
+        <div  style="float:right; margin-top:1%">
+          <el-button @click="vehicleVisable = true">查询</el-button>
           <el-button @click="ordeformerAdd">添加</el-button>
           <el-button @click="setting">设置</el-button>
-        </div>
+          
       </p>
     </div>
     <div style="clear: both;">
@@ -69,6 +76,7 @@
           <el-button type="primary" @click="orderFormVisable = false">确 定</el-button>
         </div>
     </el-dialog>
+    <el-dialog title="订单详情页" :visible.sync="verVisible" size="full" :closeOnClickModal="false">5444433</el-dialog>
 
     <el-dialog title="" :visible.sync="orderFormDelVisable" size=""tiny>
       <h2 style="padding:30px">确认删除吗？</h2>
@@ -103,6 +111,7 @@
         colVisible: false,
         orderFormVisable: false,
         orderFormDelVisable: false,
+        verVisible: false,
         orderForm: {
           'liceNum': '',
           'ordernumber': '',
@@ -114,7 +123,9 @@
           'Receivingpartycontactinformation': '',
           'descriptionofgoods': '',
           'quantity': '',
-          'preparedby': ''
+          'preparedby': '',
+          endTime: '',
+          startTime: ''
         },
         rules: {
         },
@@ -158,8 +169,11 @@
             {
               headerName: '制单人', width: 80, field: 'preparedby', filter: 'text', hide: false
             },
+            // {
+            //   headerName: '状态', field: 'value', width: 80, cellRendererFramework: 'operateComponent', hide: false
+            // },
             {
-              headerName: '状态', field: 'value', width: 80, cellRendererFramework: 'operateComponent', hide: false
+              headerName: ' ', field: 'value', width: 80, cellRendererFramework: 'operateComponent', hide: false
             }
           ]
         }
@@ -169,16 +183,10 @@
       'ag-grid-vue': AgGridVue,
       operateComponent: {
         // template:'<span></span><select><option  @click="vehicleDel" value="派送">派送</option><option  @click="vehicleDel" value="签收">签收</option></select></span>',
-        template: '<select><option class="del-but" @click="orderDel">派  送</option><option class="del-but" @click="orderEdit">签 收</option></select>',
+        template: '<span><el-button class="del-but" @click="orderdetails">详 情</el-button></span>',
         methods: {
-          orderDel () {
-            this.params.context.componentParent.orderformDelVisable = true
-          },
-          orderEdit () {
-            /* var vehicleform = this.params.context.componentParent.vehicleForm
-            vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum */
-            this.params.context.componentParent.orderFormVisable = true
-            this.params.context.componentParent.orderForm = this.params.data
+          orderdetails () {
+            this.params.context.componentParent.verVisible = true
           }
         }
       }
@@ -239,4 +247,19 @@
    padding: 5px 10px;
    font-size: 10px
  }
+ .appointmenttime {
+    /* float: left; */
+    margin: 1%;
+}
+
+.appointment {
+    padding-top: 5%;
+    width: 100%;
+    font-size: 0.6em;
+}
+
+.appointmenttimes {
+    width: 145px;
+    margin-left: 1%;
+}
 </style>
