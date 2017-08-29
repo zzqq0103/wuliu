@@ -763,6 +763,12 @@
           orderId: '' // 运单号
         }
         this.verVisible = true
+        this.gridOptions2.api.selectAllFiltered()
+        this.gridOptions3.api.selectAllFiltered()
+        let data2 = this.gridOptions2.api.getSelectedRows()
+        let data3 = this.gridOptions3.api.getSelectedRows()
+        this.gridOptions2.api.updateRowData({remove: data2})
+        this.gridOptions3.api.updateRowData({remove: data3})
       },
       // 订单详情弹框
       detailDoubleClick (event) {
