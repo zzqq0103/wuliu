@@ -265,7 +265,7 @@
                 "icon": "",
                 "subs": [
                     {
-                        "index": "reserveCheck",
+                        "index": "orderInfo",
                         "title": "查看订单",
                         "icon": ""
                     },
@@ -331,7 +331,7 @@
                 "icon": "",
                 "subs": [
                     {
-                        "index": "orderInfo",
+                        "index": "reserveCheck",
                         "title": "查看库存",
                         "icon": ""
                     },
