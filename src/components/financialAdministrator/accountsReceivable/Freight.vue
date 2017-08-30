@@ -245,7 +245,7 @@
                          :suppressCellSelection="true"
                          :rowHeight=40
 
-                         :gridReady="test"
+                         :gridReady="grid3Ready"
                          :rowDoubleClicked="rightDoubleClick"
                          :animateRows="true"
                          rowSelection="multiple"
@@ -629,6 +629,7 @@
     methods: {
       // 绘制表格，包括更新列信息与行信息
       drawGrid (i) {
+        console.log(this.filterForm)
         if (i === 2) {
           this.gridOptions3.api.selectAll()
           const selectedData = this.gridOptions3.api.getSelectedRows()
@@ -740,6 +741,14 @@
 //        let totalRows = this.gridOptions.rowData.length
 //        console.log(totalRows, processedRows)
         this.rowCount = processedRows
+      },
+      grid3Ready () {
+        this.updateGrid(2)
+      },
+      // 测试用的方法，没用
+      test () {
+        this.updateGrid(2)
+        console.log(this.gridOptions2.columnDefs)
       },
       // 显示切换列可见的弹框
       setting () {
