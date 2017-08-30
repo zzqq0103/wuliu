@@ -304,6 +304,9 @@
           rowData: [],
           columnDefs: [
             {
+              headerName: '序号', width: 150, field: 'index', filter: 'text', hide: false, visible: true
+            },
+            {
               headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
@@ -358,6 +361,9 @@
           rowData: [],
           columnDefs: [
             {
+              headerName: '序号', width: 150, field: 'index', filter: 'text', hide: false, visible: true
+            },
+            {
               headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
@@ -411,6 +417,9 @@
         gridOptions3: {
           rowData: [],
           columnDefs: [
+            {
+              headerName: '序号', width: 150, field: 'index', filter: 'text', hide: false, visible: true
+            },
             {
               headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },

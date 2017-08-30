@@ -110,7 +110,7 @@
       </div>
     </el-dialog>
     <!--添加员工信息-->
-    <el-dialog title="添加员工信息:" :visible.sync="addFormVisible">
+    <el-dialog title="添加员工信息:" :visible.sync="addFormVisible" size="tiny">
       <el-form :model="staffForm" :rules="rules" ref="staffForm">
         <el-form-item label="员工姓名:" :label-width="formLabelWidth">
           <el-input v-model="staffForm.employeeNam"></el-input>
@@ -206,26 +206,16 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
-            <div>
-              <el-form-item label="运单号:">
-                <el-input v-model="filterForm.orderId"></el-input>
-              </el-form-item>
-              <el-form-item label="发货人:">
-                <el-input v-model="filterForm.shipNam"></el-input>
-              </el-form-item>
+            <div style="float: right">
+              <el-button @click="drawGrid(2)">提取库存</el-button>
+              <el-button @click="colVisible2 = true">设置</el-button>
             </div>
             <div>
-              <div style="float: right">
-                <el-button @click="drawGrid(2)">提取库存</el-button>
-                <el-button @click="colVisible2 = true">设置</el-button>
-              </div>
-              <el-form-item label="类型:">
-                <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 110px">
-                  <el-option label="现付" value="nowPay"></el-option>
-                  <el-option label="到付" value="cashOnDelivery"></el-option>
-                  <el-option label="欠付" value="inArrears"></el-option>
-                  <el-option label="月结" value="monthly"></el-option>
-                </el-select>
+              <el-form-item label="员工姓名:">
+                <el-input v-model="filterForm.employeeNam"></el-input>
+              </el-form-item>
+              <el-form-item label="工作岗位:">
+                <el-input v-model="filterForm.workPosition"></el-input>
               </el-form-item>
             </div>
           </el-form>
@@ -254,9 +244,6 @@
         </el-col>
         <el-col :span="12">
           <el-form>
-            <el-form-item>
-              <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
-            </el-form-item>
             <el-form-item>
               <el-button @click="confirmSubmit">确认核销</el-button>
               <el-button @click="colVisible3 = true">设置</el-button>
@@ -361,6 +348,14 @@
             },
             {
               headerName: '节假日天数', width: 150, field: 'holidayDays', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '操作',
+              field: 'value',
+              width: 150,
+              cellRendererFramework: 'operateComponent',
+              hide: false,
+              visible: true
             }
           ],
           context: {
@@ -502,15 +497,13 @@
           del () {
             let self = this.params.context.componentParent
             self.delFormVisible = true
-            self.personnelForm.clientCompNam = this.params.data.clientCompNam
-//            self.delFormVisible = true
-//            console.log(this.params.data.clientCompNam)
+            self.staffForm.employeeNam = this.params.data.employeeNam
           },
           edit () {
             let self = this.params.context.componentParent
             self.editFormVisible = true
-            self.personnelForm = this.params.data
-            console.log(self.personnelForm)
+            self.staffForm = this.params.data
+//            console.log(self.personnelForm)
           }
         }
       }
@@ -611,13 +604,16 @@
       addForm () {
         this.addFormVisible = true
         this.personnelForm = {
-          clientCompNam: '',
-          nam: '',
-          tel: '',
-          compAdr: '',
-          area: '',
-          salesmanId: '',
-          isTril: ''
+          employeeNam: '',
+          hireDate: '',
+          workPosition: '',
+          baseSalary: '',
+          realSalary: '',
+          totalBorrMoney: '',
+          deductMoney: '',
+          affairDays: '',
+          sickDays: '',
+          holidayDays: ''
         }
       },
       // 更改hide的值，（已放弃），添加了visible作为切换可见的条件
