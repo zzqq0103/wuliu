@@ -261,7 +261,7 @@
         "items": [
             {
                 "index": "reserveCheck",
-                "title": "查看订单",
+                "title": "订单",
                 "icon": "",
                 "subs": [
                     {
@@ -322,11 +322,6 @@
                         "index": "logisticsDetail",
                         "title": "查看物流详情信息",
                         "icon": ""
-                    },
-                    {
-                        "index": "outsourceChange",
-                        "title": "更改外包订单物流",
-                        "icon": ""
                     }
                 ]
             },
@@ -338,11 +333,6 @@
                     {
                         "index": "orderInfo",
                         "title": "查看库存",
-                        "icon": ""
-                    },
-                    {
-                        "index": "stockDetail",
-                        "title": "库存详情",
                         "icon": ""
                     },
                     {
@@ -371,6 +361,10 @@
             {
                 "index": "freighterror",
                 "title": "运费异常"
+            },
+            {
+                "index": "orderError",
+                "title": "订单异常"
             }
         ]
     },
