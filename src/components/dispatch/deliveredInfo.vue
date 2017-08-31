@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align:center">已 发 货 订 单 信 息 页</h2>
+      <h2 style="text-align:center">已 送 货 订 单 信 息 页</h2>
       <div style="margin-top:2%">
 
         <div class="block" style="float:right;">
@@ -263,7 +263,6 @@ export default {
       this.listLoading = true
       getCurrentDelivered(para).then((res) => {
         // console.log('进入getCurrentDelivered')
-        // this.gridOptions.rowData = res.data.orderlists
         // 使用gridOptions中的api方法设定RowData数据
         this.gridOptions.api.setRowData(res.data.orderlists)
         this.orderlist = res.data.orderlists
