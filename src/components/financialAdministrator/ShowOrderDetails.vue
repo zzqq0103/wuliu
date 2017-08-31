@@ -3,14 +3,14 @@
     <el-form ref="form" :model="form">
       <div style='margin-top:0.5%;display:inline-block;width:100%'>
         <span style='float:left;padding-top:0.7%' class='col-1'>订单号：</span>
-        <span style='float:left;padding-top:0.5%' class='col-1'>{{form.id}}</span>
+        <span style='float:left;padding-top:0.5%' class='col-1'>{{this.orderId}}</span>
         <span class='float:left;col-1 order-title-base'>经办客服：</span>
         <span style='float:left;padding-top:0.7%' class='col-1'>{{form.serviceNam}}</span>
       </div>
       <div style='margin-top:2%;clear:both' class='test'>
       <span class='col-11 label-title'>基本信息</span>
       <span class='col-1'>订单号</span>
-      <span class='col-1 label-content' style='color:#00d1b2'>{{form.id}}</span>
+      <span class='col-1 label-content' style='color:#00d1b2'>{{this.orderId}}</span>
       <span class='col-1'>订单时间</span>
       <span class='col-2 label-content'>{{form.orderTim}}</span>
       <span class='col-1'>订单状态</span>

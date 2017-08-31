@@ -2,16 +2,16 @@
   <div>
     <h2 style="text-align:center">详情物流信息</h2>
     <div class='logistics-title'>
-      <span style='width:7%'>订单号：</span>
-      <span class='logistics-title-con' style='padding-top:0.4%;width:12%'>{{logisticsDetail.orederID}}</span>
-      <span style='width:8%'>下单日期：</span>
-      <span class='logistics-title-con' style='padding-top:0.4%;width:18%'>{{logisticsDetail.orderTim}}</span>
-      <span style='width:7%'>经办人：</span>
-      <span class='logistics-title-con' style='width:4%'>{{logisticsDetail.serviceNam}}</span>
-      <span style='width:8%;padding-left:4%'>始发站：</span>
-      <span class='logistics-title-con' style='width:9%'>{{logisticsDetail.startStation}}</span>
-      <span class='width:8%;padding-left:4%'>到站：</span>
-      <span class='logistics-title-con' style='width:8%'>{{logisticsDetail.arrStation}}</span>
+      <span>订单号：</span>
+      <span class='logistics-title-con' style='padding-top:0.4%'>{{logisticsDetail.orederID}}</span>
+      <span style='margin-left:3%'>下单日期：</span>
+      <span class='logistics-title-con' style='padding-top:0.4%'>{{logisticsDetail.orderTim}}</span>
+      <span style='margin-left:3%'>经办人：</span>
+      <span class='logistics-title-con'>{{logisticsDetail.serviceNam}}</span>
+      <span style='margin-left:3%'>始发站：</span>
+      <span class='logistics-title-con'>{{logisticsDetail.startStation}}</span>
+      <span style='margin-left:3%'>到站：</span>
+      <span class='logistics-title-con'>{{logisticsDetail.arrStation}}</span>
     </div>
     <div class='logistics-info'>
       <template v-for="(data,i) in logisticsContent">

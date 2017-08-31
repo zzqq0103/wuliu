@@ -114,14 +114,14 @@
     <!--分页-->
     <div style="text-align: right">
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrnetChange"
-        :current-page="currentPage"
-        :page-sizes="[20,50,100,200]"
-        :page-size="pageSize"
-        layout="total,sizes,prev,pager,next"
-        :total="rowCount"></el-pagination>
-    </div>
+    @size-change="handleSizeChange"
+    @current-change="handleCurrnetChange"
+    :current-page="currentPage"
+    :page-sizes="[20,50,100,200]"
+    :page-size="pageSize"
+    layout="total,sizes,prev,pager,next"
+    :total="rowCount"></el-pagination>
+  </div>
     <!--列表切换显示-->
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false" top="30%">
       <template v-for="(collist,i) in gridOptions.columnDefs">
@@ -174,22 +174,28 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
-            <el-form-item label="运单号:">
-              <el-input v-model="filterForm.orderId"></el-input>
-            </el-form-item>
-            <el-form-item label="发货人:">
-              <el-input v-model="filterForm.shipNam"></el-input>
-            </el-form-item>
-            <el-form-item label="类型:">
-              <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 110px">
-                <el-option label="现付" value="nowPay"></el-option>
-                <el-option label="到付" value="cashOnDelivery"></el-option>
-                <el-option label="欠付" value="inArrears"></el-option>
-                <el-option label="月结" value="monthly"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-button @click="drawGrid(2)">提取库存</el-button>
-            <el-button @click="colVisible2 = true">设置</el-button>
+            <div>
+              <el-form-item label="运单号:">
+                <el-input v-model="filterForm.orderId"></el-input>
+              </el-form-item>
+              <el-form-item label="发货人:">
+                <el-input v-model="filterForm.shipNam"></el-input>
+              </el-form-item>
+            </div>
+            <div>
+              <div style="float: right">
+                <el-button @click="drawGrid(2)">提取库存</el-button>
+                <el-button @click="colVisible2 = true">设置</el-button>
+              </div>
+              <el-form-item label="类型:">
+                <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 110px">
+                  <el-option label="现付" value="nowPay"></el-option>
+                  <el-option label="到付" value="cashOnDelivery"></el-option>
+                  <el-option label="欠付" value="inArrears"></el-option>
+                  <el-option label="月结" value="monthly"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
           </el-form>
           <div style="float: right">
             <el-button @click="leftSelect"> > </el-button>
@@ -216,6 +222,9 @@
         </el-col>
         <el-col :span="12">
           <el-form>
+            <el-form-item>
+              <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
+            </el-form-item>
             <el-form-item>
               <el-button @click="confirmSubmit">确认核销</el-button>
               <el-button @click="colVisible3 = true">设置</el-button>
@@ -717,7 +726,7 @@
       },
       // 切换不同分页时
       handleCurrnetChange (val) {
-        this.gridOptions.api.paginationGoToPage(val)
+        this.gridOptions.api.paginationGoToPage(val - 1)
       },
       // 发生筛选时，重新计算分页数量
       gridfilterChange () {
@@ -732,29 +741,40 @@
 //        console.log(totalRows, processedRows)
         this.rowCount = processedRows
       },
-      // 测试用的方法，没用
-      test () {
-        this.updateGrid(2)
-        console.log(this.gridOptions2.columnDefs)
-      },
       // 显示切换列可见的弹框
       setting () {
         this.colVisible = true
       },
       // 显示切换核销界面的弹框
       verification () {
+        this.filterForm = {
+          startTime: '', // 开始时间
+          endTime: '', // 截止时间
+          startPoint: '', //  区间起点
+          endPoint: '', //  区间终点
+          shipNam: '', //  发货人
+          payType: 'nowPay', // 类型（现付，到付，欠付，月结）
+          freiVeriState: '', // 运费核销状态
+          orderId: '' // 运单号
+        }
         this.verVisible = true
+        this.gridOptions2.api.selectAllFiltered()
+        this.gridOptions3.api.selectAllFiltered()
+        let data2 = this.gridOptions2.api.getSelectedRows()
+        let data3 = this.gridOptions3.api.getSelectedRows()
+        this.gridOptions2.api.updateRowData({remove: data2})
+        this.gridOptions3.api.updateRowData({remove: data3})
       },
       // 订单详情弹框
       detailDoubleClick (event) {
         this.filterForm.orderId = event.data.orderId
         this.detailVisible = true
       },
-      // 核销界面左侧表格双击时间
+      // 核销界面左侧表格双击事件
       leftDoubleClick (event) {
         this.leftSelect(event.data)
       },
-      // 核销界面右侧表格双击时间
+      // 核销界面右侧表格双击事件
       rightDoubleClick (event) {
         this.rightSelect(event.data)
       },
@@ -815,14 +835,16 @@
     computed: {
       // 计算合计金额
       calculateMoney () {
-        this.totalForm.transferFeeTotal = 0
-        this.totalForm.totalMoney = 0
-        let model = this.gridOptions.api.getModel()
-        let arr = model.rootNode.childrenAfterFilter
-        console.log(arr[0].data)
-        for (let i = 0; i < arr.length; i++) {
-          this.totalForm.transferFeeTotal += arr[i].data.changeFee
-          this.totalForm.totalMoney += arr[i].data.feeMoney
+        if (this.verVisible === false) {
+          this.totalForm.transferFeeTotal = 0
+          this.totalForm.totalMoney = 0
+          let model = this.gridOptions.api.getModel()
+          let arr = model.rootNode.childrenAfterFilter
+          console.log(arr[0].data)
+          for (let i = 0; i < arr.length; i++) {
+            this.totalForm.transferFeeTotal += arr[i].data.changeFee
+            this.totalForm.totalMoney += arr[i].data.feeMoney
+          }
         }
       }
     },
@@ -830,9 +852,11 @@
 //      this.createRowData()
 //      console.log(this.gridOptions)
 //    },
+    // 实例挂载完成之后
     mounted () {
       this.updateGrid(1)
     },
+    // 数据发生更新时
     updated () {
       console.log('update')
       this.calculateMoney
@@ -851,5 +875,4 @@
     padding: 5px 10px;
     font-size: 10px
   }
-
 </style>
