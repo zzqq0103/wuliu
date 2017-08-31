@@ -203,6 +203,7 @@ export default {
       /** 地址样式 */
       addressVisible: false,
       addressVisible2: false,
+      cancleVisable: false,
       shenfen: false,
       shi: false,
       quyu: false,
@@ -211,7 +212,7 @@ export default {
       quyu2: false,
       isFocus: false,
       isFocus2: false,
-      idReadOnly: false,
+      isReadOnly: false,
       isReadOnly2: false,
       form: {
         id: '12345',

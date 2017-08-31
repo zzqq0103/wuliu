@@ -182,7 +182,7 @@
           </div>
     </el-dialog>
     <!--确认入库弹框，选择支付方式与填写摘要-->
-    <el-dialog title="确认核销" :visible.sync="confirmSubVisible" size="tiny" :closeOnClickModal="false">
+    <el-dialog title="确认入库" :visible.sync="confirmSubVisible" size="tiny" :closeOnClickModal="false">
       <h2>入库成功！</h2>
     </el-dialog>
     <!--警告弹窗-->
@@ -433,14 +433,16 @@
       setting () {
         this.colVisible = true
       },
-      // 显示切换核销界面的弹框
-      verification () {
-        this.verVisible = true
-      },
       // 进入订单入库界面
       detailDoubleClick (event) {
         this.confirmSubForm.loadingId = event.data.loadingId
         this.verVisible = true
+        this.gridOptions2.api.selectAll()
+        this.gridOptions3.api.selectAll()
+        let data2 = this.gridOptions2.api.getSelectedRows()
+        let data3 = this.gridOptions3.api.getSelectedRows()
+        this.gridOptions2.api.updateRowData({remove: data2})
+        this.gridOptions3.api.updateRowData({remove: data3})
       },
       // 核销界面左侧表格双击时间
       leftDoubleClick (event) {
