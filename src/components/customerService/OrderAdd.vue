@@ -30,7 +30,7 @@
         <input v-model="form.shipTel" class='input col-2'></input>
         <div class='label col-1'>发货地址:</div>
         <div class='dropdown'>
-            <input type="text" v-model="pickUpAdr" v-bind:readonly="isReadOnly" class='input col-3' @focus="addressVisible=true" placeholder="请选择地址"></input>
+            <input type="text" v-model="baseAddress" v-bind:readonly="isReadOnly" class='input col-3' @focus="addressVisible=true" placeholder="请选择地址"></input>
             <div class="dropdown-content" v-show="addressVisible"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
@@ -50,14 +50,14 @@
               </div>
             </div>
         </div>
-        <input class='input col-3' placeholder="详细地址"></input>
+        <input class='input col-3' v-model='form.pickUpAdr' placeholder="详细地址"></input>
         <div class='label col-1'>发货方:</div>
         <input v-model="form.receNam" class='input col-2'></input>
         <div class='label col-1'>联系方式:</div>
         <input v-model="form.recetel" class='input col-2'></input>
         <div class='label col-1'>收货地址:</div>
         <div class='dropdown'>
-            <input type="text" v-model="receAdr" v-bind:readonly="isReadOnly2" class='input col-3' @focus="addressVisible2=true" placeholder="请选择地址"></input>
+            <input type="text" v-model="baseAddress2" v-bind:readonly="isReadOnly2" class='input col-3' @focus="addressVisible2=true" placeholder="请选择地址"></input>
             <div class="dropdown-content" style='margin-top:7%' v-show="addressVisible2"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
@@ -77,7 +77,7 @@
               </div>
             </div>
         </div>
-        <input class='input col-3' placeholder="详细地址"></input>
+        <input class='input col-3' v-model='form.receAdr' placeholder="详细地址"></input>
         <div class='label col-1'>货物名称</div>
         <div class='label col-1'>件 数</div>
         <div class='label col-1'>重 量</div>
@@ -196,9 +196,12 @@ export default {
       quList: [],
       shiList2: [],
       quList2: [],
+      baseAddress: '',
+      baseAddress2: '',
       /** 地址样式 */
       addressVisible: false,
       addressVisible2: false,
+      cancleVisable: false,
       shenfen: false,
       shi: false,
       quyu: false,
@@ -207,7 +210,7 @@ export default {
       quyu2: false,
       isFocus: false,
       isFocus2: false,
-      idReadOnly: false,
+      isReadOnly: false,
       isReadOnly2: false,
       form: {
         id: '12345',
@@ -217,10 +220,10 @@ export default {
         serviceNam: '李四',
         shipNam: '张三',
         shipTel: '12345',
-        pickUpAdr: '北京市XXX',
+        pickUpAdr: '',
         receNam: '李四',
         receTel: '12345',
-        receAdr: '北京市XXX',
+        receAdr: '',
         goodsNam: '沙发',
         goodsNums: '5',
         goodsWeight: '120',
@@ -275,8 +278,8 @@ export default {
         this.quList2 = []
         this.shiList2 = []
       }
-      this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-      this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+      this.baseAddress2 = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+      this.baseAddress = this.shenfenSelected + this.shiSelected + this.quSelected
     },
     selectShi (num, name) {
       if (num === 1) {
@@ -288,8 +291,8 @@ export default {
         this.quSelected2 = ''
         this.quList2 = []
       }
-      this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-      this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+      this.baseAddress2 = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+      this.baseAddress = this.shenfenSelected + this.shiSelected + this.quSelected
     },
     selectQu (num, name) {
       if (num === 1) {
@@ -303,8 +306,8 @@ export default {
         this.detailVisible2 = true
         this.isReadOnly2 = true
       }
-      this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-      this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+      this.baseAddress2 = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+      this.baseAddress = this.shenfenSelected + this.shiSelected + this.quSelected
     },
     setShenfen (num) {
       if (num === 1) {
