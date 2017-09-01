@@ -99,7 +99,15 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<select placeholder="选择" class="appointmentoption" style="width:150px;heght:60px"><option key="yes" label="回单已签" value="yes"></option><option key="no" label="回单在途" value="no"></option><option key="no" label="回单已反" value="no"></option> </select>'
+        template: '<el-select v-model="appointlnfoForm.Selectsites"  placeholder="选择" class="appointmentoption col-1" style="width:130px"> <el-option key="yes" label=" 回单已签 " value="yes"></el-option><el-option key="yes" label=" 回单在途 " value="no"></el-option></el-select>',
+        // '<select placeholder="选择" class="appointmentoption" style="width:150px;heght:60px"><option key="yes" label="回单已签" value="yes"></option><option key="no" label="回单在途" value="no"></option><option key="no" label="回单已反" value="no"></option> </select>'
+        data: function () {
+          return {
+            appointlnfoForm: {
+              Selectsites: ''
+            }
+          }
+        }
       }
     },
     methods: {

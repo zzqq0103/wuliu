@@ -48,11 +48,11 @@
           </el-form-item>
 
           <el-form-item label="中转费合计：" style='float:left;width:25%'>
-            <el-input v-model="totalForm.transferFeeTotal" style='width:50%'></el-input>
+            <el-input v-model="totalForm.transferFeeTotal" readonly="readonly" style='width:50%'></el-input>
           </el-form-item>
           <el-form-item label="回单押款合计：" style='float:left;width:25%'>
-            <el-input v-model="totalForm.totalMoney" style='width:50%'></el-input>
-          </el-form-item>          
+            <el-input v-model="totalForm.totalMoney" readonly="readonly" style='width:50%'></el-input>
+          </el-form-item>
         </el-form>
     </div>
     <div style="clear: both;"></div>
