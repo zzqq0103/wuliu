@@ -18,5 +18,6 @@ Vue.use(Icon)
 Vue.prototype.$axios = axios
 new Vue({
   router,
+  // router: router,
   render: h => h(App)
 }).$mount('#app')

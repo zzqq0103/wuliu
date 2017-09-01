@@ -57,7 +57,7 @@
       },
       checkName (username) {
         console.log(username)
-        if (username === 'caiwu' || username === 'yingyun' || username === 'caiwuzongzhang' || username === 'kefu' || username === 'diaodu' || username === 'xitong' || username === 'waibao') {
+        if (username === 'caiwu' || username === 'yingyun' || username === 'caiwuzongzhang' || username === 'kefu' || username === 'diaodu' || username === 'beijing' || username === 'xitong' || username === 'waibao') {
           return true
         } else {
           return false
@@ -66,6 +66,7 @@
     }
   }
 </script>
+
 
 <style scoped>
   .login-wrap {
