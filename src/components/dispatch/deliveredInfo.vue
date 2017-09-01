@@ -94,23 +94,22 @@ export default {
       colVisible: false,
       vehicleVisable: false,
       vehicleDelVisable: false,
-      orderId: '', // 运单号
-      tableForm: {
+      orderId: '', // 装载单号
+      deliveredForm: {
         'id': '',
-        'deliverOrderId': '',
-        'orderId': '',
+        'loadId': '',
+        'loadStatus': '',
+        // 'adjustment': '',
+        'warehouse': '',
         'driverName': '',
-        'OrderDate': '',
-        'consignee': '',
-        'consigneeAddr': '',
-        'phone': '',
-        'address': '',
-        'goodsName': '',
-        'pack': '',
-        'numbers': '',
-        'weight': '',
-        'volume': '',
-        'remarks': ''
+        'driverPhone': '',
+        'deliverTime': '',
+        'deliverRemark': '',
+        'allWeight': '',
+        'allVolume': '',
+        'allNumber': '',
+        'adminId': '',
+        'adminName': ''
       },
       rules: {
       },
@@ -125,46 +124,43 @@ export default {
             headerName: '序号', width: 120, field: 'id', filter: 'text', hide: false
           },
           {
-            headerName: '装载单号', width: 120, field: 'deliverOrderId', filter: 'text', hide: false
+            headerName: '装载单号', width: 120, field: 'loadId', filter: 'text', hide: false
           },
           {
-            headerName: '订单号', width: 120, field: 'orderId', filter: 'text', hide: false
+            headerName: '装载单状态', width: 120, field: 'loadStatus', filter: 'text', hide: false
           },
+          // {
+          //   headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false
+          // },
           {
-            headerName: '开单时间', width: 120, field: 'OrderDate', filter: 'text', hide: false
+            headerName: '所属仓库', width: 120, field: 'warehouse', filter: 'text', hide: false
           },
           {
             headerName: '司机姓名', width: 120, field: 'driverName', filter: 'text', hide: false
           },
           {
-            headerName: '收货单位', width: 120, field: 'consigneeAddr', filter: 'text', hide: false
+            headerName: '司机电话', width: 120, field: 'driverPhone', filter: 'text', hide: false
           },
           {
-            headerName: '收货人姓名', width: 120, field: 'consignee', filter: 'text', hide: false
+            headerName: '送货时间', width: 120, field: 'deliverTime', filter: 'text', hide: false
           },
           {
-            headerName: '联系电话', width: 120, field: 'phone', filter: 'text', hide: false
+            headerName: '送货备注', width: 120, field: 'deliverRemark', filter: 'text', hide: false
           },
           {
-            headerName: '收货地址', width: 120, field: 'address', filter: 'text', hide: false
+            headerName: '总重量', width: 120, field: 'allWeight', filter: 'text', hide: false
           },
           {
-            headerName: '货物名称', width: 120, field: 'goodsName', filter: 'text', hide: false
+            headerName: '总体积', width: 120, field: 'allVolume', filter: 'text', hide: false
           },
           {
-            headerName: '件数', width: 120, field: 'numbers', filter: 'text', hide: false
+            headerName: '总件数', width: 120, field: 'allNumber', filter: 'text', hide: false
           },
           {
-            headerName: '重量', width: 120, field: 'weight', filter: 'text', hide: false
+            headerName: '调度管理员账号', width: 120, field: 'adminId', filter: 'text', hide: false
           },
           {
-            headerName: '体积', width: 120, field: 'volume', filter: 'text', hide: false
-          },
-          {
-            headerName: '包装', field: 'pack', width: 120, filter: 'text', hide: false
-          },
-          {
-            headerName: '备注', field: 'remarks', width: 120, filter: 'text', hide: false
+            headerName: '调度管理员姓名', field: 'adminName', width: 120, filter: 'text', hide: false
           }
         ]
       },

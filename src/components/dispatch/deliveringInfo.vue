@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align:center">待 送 货 订 单 信 息 页</h2>
+      <h2 style="text-align:center">待 送 货 装 载 单 信 息 页</h2>
       <div style="margin-top:2%">
 
         <div class="block" style="float:right;">
@@ -48,7 +48,9 @@
       ></ag-grid-vue>
     </div>
 
-    <div class="block" style="float:right; margin-top:30px;">
+    <div>
+      <!-- <el-button type="primary" style="float:left;margin-left:10px;margin-top:30px;">配载</el-button> -->
+      <div class="block" style="float:right; margin-top:30px;">
        <el-pagination 
          @size-change="handleSizeChange"
          @current-change="handleCurrentChange"
@@ -59,6 +61,8 @@
          :total="totalpages">
        </el-pagination>
     </div>
+    </div>
+    
 
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
       <template v-for="(collist,i) in gridOptions.columnDefs ">
@@ -82,10 +86,14 @@
 </template>
 
 <script>
+// 表格页
 import { AgGridVue } from 'ag-grid-vue'
+// 后台接口
 import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
+// 订单详情页
 import OrderDetails from '../financialAdministrator/ShowOrderDetails'
 export default {
+  // 数据
   data () {
     return {
       listLoading: false,
@@ -94,23 +102,22 @@ export default {
       colVisible: false,
       vehicleVisable: false,
       vehicleDelVisable: false,
-      orderId: '', // 运单号
-      tableForm: {
+      orderId: '', // 装载单号
+      deliveringForm: {
         'id': '',
-        'deliverOrderId': '',
-        'orderId': '',
+        'loadId': '',
+        'loadStatus': '',
+        'adjustment': '',
+        'warehouse': '',
         'driverName': '',
-        'OrderDate': '',
-        'consignee': '',
-        'consigneeAddr': '',
-        'phone': '',
-        'address': '',
-        'goodsName': '',
-        'pack': '',
-        'numbers': '',
-        'weight': '',
-        'volume': '',
-        'remarks': ''
+        'driverPhone': '',
+        'deliverTime': '',
+        'deliverRemark': '',
+        'allWeight': '',
+        'allVolume': '',
+        'allNumber': '',
+        'adminId': '',
+        'adminName': ''
       },
       rules: {
       },
@@ -125,46 +132,43 @@ export default {
             headerName: '序号', width: 120, field: 'id', filter: 'text', hide: false
           },
           {
-            headerName: '装载单号', width: 120, field: 'deliverOrderId', filter: 'text', hide: false
+            headerName: '装载单号', width: 120, field: 'loadId', filter: 'text', hide: false
           },
           {
-            headerName: '订单号', width: 120, field: 'orderId', filter: 'text', hide: false
+            headerName: '装载单状态', width: 120, field: 'loadStatus', filter: 'text', hide: false
           },
           {
-            headerName: '开单时间', width: 120, field: 'OrderDate', filter: 'text', hide: false
+            headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false
+          },
+          {
+            headerName: '所属仓库', width: 120, field: 'warehouse', filter: 'text', hide: false
           },
           {
             headerName: '司机姓名', width: 120, field: 'driverName', filter: 'text', hide: false
           },
           {
-            headerName: '收货单位', width: 120, field: 'consigneeAddr', filter: 'text', hide: false
+            headerName: '司机电话', width: 120, field: 'driverPhone', filter: 'text', hide: false
           },
           {
-            headerName: '收货人姓名', width: 120, field: 'consignee', filter: 'text', hide: false
+            headerName: '送货时间', width: 120, field: 'deliverTime', filter: 'text', hide: false
           },
           {
-            headerName: '联系电话', width: 120, field: 'phone', filter: 'text', hide: false
+            headerName: '送货备注', width: 120, field: 'deliverRemark', filter: 'text', hide: false
           },
           {
-            headerName: '收货地址', width: 120, field: 'address', filter: 'text', hide: false
+            headerName: '总重量', width: 120, field: 'allWeight', filter: 'text', hide: false
           },
           {
-            headerName: '货物名称', width: 120, field: 'goodsName', filter: 'text', hide: false
+            headerName: '总体积', width: 120, field: 'allVolume', filter: 'text', hide: false
           },
           {
-            headerName: '件数', width: 120, field: 'numbers', filter: 'text', hide: false
+            headerName: '总件数', width: 120, field: 'allNumber', filter: 'text', hide: false
           },
           {
-            headerName: '重量', width: 120, field: 'weight', filter: 'text', hide: false
+            headerName: '调度管理员账号', width: 120, field: 'adminId', filter: 'text', hide: false
           },
           {
-            headerName: '体积', width: 120, field: 'volume', filter: 'text', hide: false
-          },
-          {
-            headerName: '包装', field: 'pack', width: 120, filter: 'text', hide: false
-          },
-          {
-            headerName: '备注', field: 'remarks', width: 120, filter: 'text', hide: false
+            headerName: '调度管理员姓名', field: 'adminName', width: 120, filter: 'text', hide: false
           }
         ]
       },
@@ -173,9 +177,6 @@ export default {
         label: '装载单号'
       }, {
         value: 2,
-        label: '订单号'
-      }, {
-        value: 3,
         label: '司机姓名'
       }],
       selectvalue: 1,
@@ -213,10 +214,12 @@ export default {
       detailVisible: false // 订单详情弹框
     }
   },
+  // 组件
   components: {
     'ag-grid-vue': AgGridVue,
     OrderDetails
   },
+  // 方法
   methods: {
     // 订单详情弹框
     detailDoubleClick (event) {
@@ -287,7 +290,9 @@ export default {
       })
     }
   },
+  // 生命周期 挂载状态
   mounted () {
+    // 调用获取所有“已分配”装载单
     this.getOrderList()
   }
 }

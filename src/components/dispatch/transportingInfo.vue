@@ -89,28 +89,27 @@ export default {
       colVisible: false,
       vehicleVisable: false,
       vehicleDelVisable: false,
-      vehicleForm: {
+      transportForm: {
         'id': '',
-        'deliverOrderId': '',
-        'orderId': '',
-        'compOrder': '',
-        'OrderDate': '',
+        'waybillId': '',
+        'waybillStatus': '',
+        // 'adjustment': '',
+        'origin': '',
         'destination': '',
-        'consignee': '',
-        'consigneeAddr': '',
-        'phone': '',
-        'address': '',
         'driverName': '',
         'driverPhone': '',
-        'goodsName': '',
-        'pack': '',
-        'numbers': '',
-        'weight': '',
-        'volume': '',
-        'allNumbers': '',
+        'deliveryTime': '',
+        'arriveTime': '',
+        'gross': '',
+        'freight': '',
+        'transhipment': '',
+        'cashBack': '',
+        'sendCost': '',
         'allWeight': '',
         'allVolume': '',
-        'remarks': ''
+        'allNumbers': '',
+        'adminName': '',
+        'adminId': ''
       },
       orderId: '', // 运单号
       rules: {
@@ -126,49 +125,46 @@ export default {
             headerName: '序号', width: 120, field: 'id', filter: 'text', hide: false
           },
           {
-            headerName: '装载单号', width: 120, field: 'deliverOrderId', filter: 'text', hide: false
+            headerName: '装载单号', width: 120, field: 'waybillId', filter: 'text', hide: false
           },
           {
-            headerName: '订单号', width: 120, field: 'orderId', filter: 'text', hide: false
+            headerName: '装载单状态', width: 120, field: 'waybillStatus', filter: 'text', hide: false
+          },
+          // {
+          //   headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false
+          // },
+          {
+            headerName: '起始站', width: 120, field: 'origin', filter: 'text', hide: false
           },
           {
-            headerName: '子件号', width: 120, field: 'compOrder', filter: 'text', hide: false
+            headerName: '到达站', width: 120, field: 'destination', filter: 'text', hide: false
           },
           {
-            headerName: '开单时间', width: 120, field: 'OrderDate', filter: 'text', hide: false
+            headerName: '司机姓名', width: 120, field: 'driverName', filter: 'text', hide: false
           },
           {
-            headerName: '到站', width: 120, field: 'destination', filter: 'text', hide: false
+            headerName: '司机电话', width: 120, field: 'driverPhone', filter: 'text', hide: false
           },
           {
-            headerName: '收货人姓名', width: 120, field: 'consignee', filter: 'text', hide: false
+            headerName: '发车时间', width: 120, field: 'deliveryTime', filter: 'text', hide: false
           },
           {
-            headerName: '联系电话', width: 120, field: 'phone', filter: 'text', hide: false
+            headerName: '预计到达时间', width: 120, field: 'arriveTime', filter: 'text', hide: false
           },
           {
-            headerName: '收货人地址', width: 120, field: 'address', filter: 'text', hide: false
+            headerName: '大车总毛利', width: 120, field: 'gross', filter: 'text', hide: false
           },
           {
-            headerName: '长途司机姓名', width: 120, field: 'driverName', filter: 'text', hide: false
+            headerName: '总运费', width: 120, field: 'freight', filter: 'text', hide: false
           },
           {
-            headerName: '长途司机电话', width: 120, field: 'driverPhone', filter: 'text', hide: false
+            headerName: '总中转费', width: 120, field: 'transhipment', filter: 'text', hide: false
           },
           {
-            headerName: '货物名称', width: 120, field: 'goodsName', filter: 'text', hide: false
+            headerName: '总返款', width: 120, field: 'cashBack', filter: 'text', hide: false
           },
           {
-            headerName: '件数', width: 120, field: 'numbers', filter: 'text', hide: false
-          },
-          {
-            headerName: '重量', width: 120, field: 'weight', filter: 'text', hide: false
-          },
-          {
-            headerName: '体积', width: 120, field: 'volume', filter: 'text', hide: false
-          },
-          {
-            headerName: '总件数', width: 120, field: 'allNumbers', filter: 'text', hide: false
+            headerName: '总提送费', width: 120, field: 'sendCost', filter: 'text', hide: false
           },
           {
             headerName: '总重量', width: 120, field: 'allWeight', filter: 'text', hide: false
@@ -177,10 +173,13 @@ export default {
             headerName: '总体积', width: 120, field: 'allVolume', filter: 'text', hide: false
           },
           {
-            headerName: '包装', field: 'pack', width: 120, filter: 'text', hide: false
+            headerName: '总件数', width: 120, field: 'allNumbers', filter: 'text', hide: false
           },
           {
-            headerName: '备注', field: 'remarks', width: 120, filter: 'text', hide: false
+            headerName: '调度管理员姓名', field: 'adminName', width: 120, filter: 'text', hide: false
+          },
+          {
+            headerName: '调度管理员账号', field: 'adminId', width: 120, filter: 'text', hide: false
           }
         ]
       },
@@ -189,12 +188,9 @@ export default {
         label: '装载单号'
       }, {
         value: 2,
-        label: '订单号'
-      }, {
-        value: 3,
         label: '司机姓名'
       }, {
-        value: 4,
+        value: 3,
         label: '到站地点'
       }],
       selectvalue: 1,
