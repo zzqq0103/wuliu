@@ -12,7 +12,7 @@ export default new Router({
     },
     {
       path: '/home',
-      component: reslove => require(['../components/common/Home.vue'], reslove),
+      component: resolve => require(['../components/common/Home.vue'], resolve),
       children: [
         // 营运管理员
         {

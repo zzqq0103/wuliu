@@ -210,7 +210,6 @@ export default {
 .el-select-css {
   width: 50%;
 }
-
 .del-but {
   cursor: pointer;
   float: right;
