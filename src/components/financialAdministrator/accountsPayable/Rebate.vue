@@ -55,12 +55,12 @@
           <!--判断当前需要显示的label-->
           <div v-if="filterForm.payType === 'nowPay'">
             <el-form-item label="现返金额合计：" style='float:left;width:25%'>
-              <el-input v-model="totalForm.totalMoney" style='width:50%'></el-input>
+              <el-input readonly="readonly" v-model="totalForm.totalMoney" style='width:50%'></el-input>
             </el-form-item>   
           </div>
           <div v-else>
             <el-form-item label="欠返金额合计：" style='float:left;width:25%'>
-              <el-input v-model="totalForm.totalMoney" style='width:50%'></el-input>
+              <el-input readonly="readonly" v-model="totalForm.totalMoney" style='width:50%'></el-input>
             </el-form-item> 
           </div>
           <el-form-item style="float:left;width:13%;padding-left:0.6%">

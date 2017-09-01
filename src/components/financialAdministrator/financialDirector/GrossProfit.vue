@@ -4,17 +4,19 @@
       <h2 style="text-align:center">大车毛利</h2>
       <p style="margin-top:3%">
         <el-form v-model="filterForm" ref="filterForm">
-          <el-form-item label="到达时间：" prop="startTime" style='float:left;width:25%'>
+          <el-form-item label="到达时间：" prop="startTime" style='float:left;width:23%'>
             <el-date-picker type="datetime" style="width:70%" v-model="filterForm.startTim"></el-date-picker>
           </el-form-item>
           <span style='float:left;padding:0.8% 0.8%'>到</span>
-          <el-form-item prop="endTime" style='float:left;width:20%'>
-            <el-date-picker type="datetime" style="width:85%" v-model="filterForm.endTim"></el-date-picker>
+          <el-form-item prop="endTime" style='float:left;width:15%'>
+            <el-date-picker type="datetime" style="width:100%" v-model="filterForm.endTim"></el-date-picker>
           </el-form-item>
         </el-form>
+        <span style='float:left;width:10%;padding:0.5% 0.5% 0% 3%'>大车毛利合计：</span>
+        <el-input readonly="readonly" v-model="totalGrossCarProfit" style='float:left;width:10%'></el-input>
         <el-button @click="search" style='float:right'>搜索</el-button>
         <el-button @click="setting" style='float:right;margin-right:3%'>设置</el-button>
-        <el-input type="text" placeholder="请输入搜索内容" style='float:right;width:20%;margin-right:3%' @input="onQuickFilterChanged"></el-input>
+        <el-input type="text" placeholder="请输入搜索内容" style='float:right;width:15%;margin-right:3%' @input="onQuickFilterChanged"></el-input>
       </p>
     </div>
     <div style="clear: both;">
@@ -95,6 +97,7 @@ export default {
         startTim: '',
         endTim: ''
       },
+      totalGrossCarProfit: 0,
       grossProfitList: [],
       colVisible: false,
       detailVisible: false,
@@ -200,12 +203,29 @@ export default {
       this.rowCount = this.gridOptions.api.getModel().getRowCount()
     }
   },
+  computed: {
+    // 计算合计金额
+    calculateMoney () {
+      this.totalGrossCarProfit = 0
+      let model = this.gridOptions.api.getModel()
+      let arr = model.rootNode.childrenAfterFilter
+      console.log(arr[0].data)
+      for (let i = 0; i < arr.length; i++) {
+        this.totalGrossCarProfit += arr[i].data.grossCarProfit
+      }
+    }
+  },
   beforeMount () {
     this.createRowData()
   },
   mounted () {
     this.changeColumnDefsBoolen()
     this.calculateGrid()
+  },
+   // 数据发生更新时
+  updated () {
+    console.log('update')
+    this.calculateMoney
   }
 }
 </script>
