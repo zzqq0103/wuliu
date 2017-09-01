@@ -130,6 +130,10 @@ export default new Router({
           component: resolve => require(['../components/customerService/Freighterror.vue'], resolve)
         },
         {
+          path: '/orderError',
+          component: resolve => require(['../components/customerService/OrderError.vue'], resolve)
+        },
+        {
           path: '/logisticsDetail',
           component: resolve => require(['../components/customerService/LogisticsDetail.vue'], resolve)
         },
@@ -150,20 +154,8 @@ export default new Router({
           component: resolve => require(['../components/customerService/OrderInfo.vue'], resolve)
         },
         {
-          path: '/outsourceChange',
-          component: resolve => require(['../components/customerService/OutsourceChange.vue'], resolve)
-        },
-        {
           path: '/reserveCheck',
           component: resolve => require(['../components/customerService/ReserveCheck.vue'], resolve)
-        },
-        {
-          path: '/stockDetail',
-          component: resolve => require(['../components/customerService/StockDetail.vue'], resolve)
-        },
-        {
-          path: '/stockinChange',
-          component: resolve => require(['../components/customerService/StockinChange.vue'], resolve)
         },
         {
           path: '/stockinInfo',

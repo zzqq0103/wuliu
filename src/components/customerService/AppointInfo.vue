@@ -47,6 +47,7 @@
         appointlnfoForm: {
           Selectsite: '',
           state: '',
+          Selectsites: '',
           'Reservationnumber': '',
           'ordertime': '',
           'forwardingunit': '',
@@ -99,7 +100,7 @@
               headerName: '接货状态', width: 100, field: 'receivingstate', filter: 'text', hide: false
             },
             {
-              headerName: '取消预约单', width: 100, field: 'Cancelreservations', filter: 'text', hide: false
+              headerName: '取消预约单', field: 'value', width: 100, cellRendererFramework: 'receivingstate', hide: false
             },
             {
               headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
@@ -121,6 +122,16 @@
             vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum */
             this.params.context.componentParent.enterpriseVisable = true
             this.params.context.componentParent.enterpriseForm = this.params.data
+          }
+        }
+      },
+      receivingstate: {
+        template: '<el-select v-model="appointlnfoForm.Selectsites"  placeholder="选择" class="appointmentoption col-1" style="width:110px"> <el-option key="yes" label=" 是 " value="yes"></el-option><el-option key="yes" label=" 否 " value="no"></el-option></el-select>',
+        data: function () {
+          return {
+            appointlnfoForm: {
+              Selectsites: ''
+            }
           }
         }
       }
