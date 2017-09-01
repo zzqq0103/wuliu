@@ -2,20 +2,20 @@
     <div>
         <div>
             <h2 style="text-align:center">回单管理</h2>
-            <p style="margin-top:1%;float:left" class="appointment">
+            <p style="margin-top:1%;float:left" class="appointment" :model="transfer">
                 <el-h5 class="appointmenttime">开单时间</el-h5>
-                <el-input type="date" class="appointmenttimes" placeholder="开始时间"></el-input>
+                <el-date-picker type="date" class="appointmenttimes" placeholder="开始时间" v-model="transfer.startTime"></el-date-picker>
                 <el-h5 class="appointmenttimes">到</el-h5>
-                <el-input type="date" class="appointmenttimes" placeholder="结束时间"></el-input>
+                <el-date-picker type="date" class="appointmenttimes" placeholder="结束时间" v-model="transfer.endTime"></el-date-picker>
                 <el-h5 class="appointmenttimes">预约单号：</el-h5>
                 <el-input class="appointmenttimeman"></el-input>
                 <el-h5 class="appointmenttimes">回单状态：</el-h5>
-                <el-select v-model="appointlnfoForm.Selectsite" placeholder="选择" class="appointmentoption" style='width:100px'>
+                <el-select v-model="transfer.Selectsite" placeholder="选择" class="appointmentoption" style='width:100px'>
                     <el-option key="yes" label="待生成" value="yes"></el-option>
                     <el-option key="no" label="已生成" value="no"></el-option>
                 </el-select>
                 <el-h5 class="appointmenttimes">回单押款状态：</el-h5>
-                <el-select v-model="appointlnfoForm.state" placeholder="选择" class="appointmentoption" style='width:100px'>
+                <el-select v-model="transfer.state" placeholder="选择" class="appointmentoption" style='width:100px'>
                     <el-option key="yes" label="已付款" value="yes"></el-option>
                     <el-option key="no" label="未付款" value="no"></el-option>
                 </el-select>
@@ -30,6 +30,14 @@
         <div style="margin-top:2%">
             <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue" :gridOptions="gridOptions" :suppressMovableColumns="true" :enableColResize="true" :enableSorting="true" :enableFilter="true" :groupHeaders="true" :rowHeight="40" :headerHeight="30"></ag-grid-vue>
         </div>
+            <div style="clear: both;">
+        </div>
+        <div>
+          <p style="margin-top:1%;float:right;margin-right:5%;width:50%">
+                <el-button style="margin-right:6%">确认更新</el-button>
+                <el-button>全选</el-button>
+          </p>
+        </div>
     </div>
 </template>
 <script>
@@ -38,10 +46,12 @@
   export default {
     data () {
       return {
-        appointlnfoForm: {
+        transfer: {
           Selectsite: '',
           state: '',
-          receiptstatus: ''
+          // receiptstatus: '',
+          startTime: '',
+          endTime: ''
         },
         rules: {
         },
@@ -89,7 +99,15 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<select placeholder="选择" class="appointmentoption" style="width:150px;heght:60px"><option key="yes" label="回单已签" value="yes"></option><option key="no" label="回单在途" value="no"></option><option key="no" label="回单已反" value="no"></option> </select>'
+        template: '<el-select v-model="appointlnfoForm.Selectsites"  placeholder="选择" class="appointmentoption col-1" style="width:130px"> <el-option key="yes" label=" 回单已签 " value="yes"></el-option><el-option key="yes" label=" 回单在途 " value="no"></el-option></el-select>',
+        // '<select placeholder="选择" class="appointmentoption" style="width:150px;heght:60px"><option key="yes" label="回单已签" value="yes"></option><option key="no" label="回单在途" value="no"></option><option key="no" label="回单已反" value="no"></option> </select>'
+        data: function () {
+          return {
+            appointlnfoForm: {
+              Selectsites: ''
+            }
+          }
+        }
       }
     },
     methods: {

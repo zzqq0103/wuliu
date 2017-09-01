@@ -245,7 +245,7 @@
                          :suppressCellSelection="true"
                          :rowHeight=40
 
-                         :gridReady="test"
+                         :gridReady="grid3Ready"
                          :rowDoubleClicked="rightDoubleClick"
                          :animateRows="true"
                          rowSelection="multiple"
@@ -304,6 +304,9 @@
           rowData: [],
           columnDefs: [
             {
+              headerName: '序号', width: 150, field: 'index', filter: 'text', hide: false, visible: true
+            },
+            {
               headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
@@ -358,6 +361,9 @@
           rowData: [],
           columnDefs: [
             {
+              headerName: '序号', width: 150, field: 'index', filter: 'text', hide: false, visible: true
+            },
+            {
               headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
@@ -411,6 +417,9 @@
         gridOptions3: {
           rowData: [],
           columnDefs: [
+            {
+              headerName: '序号', width: 150, field: 'index', filter: 'text', hide: false, visible: true
+            },
             {
               headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },
@@ -629,6 +638,7 @@
     methods: {
       // 绘制表格，包括更新列信息与行信息
       drawGrid (i) {
+        console.log(this.filterForm)
         if (i === 2) {
           this.gridOptions3.api.selectAll()
           const selectedData = this.gridOptions3.api.getSelectedRows()
@@ -741,6 +751,9 @@
 //        console.log(totalRows, processedRows)
         this.rowCount = processedRows
       },
+      grid3Ready () {
+        this.updateGrid(2)
+      },
       // 测试用的方法，没用
       test () {
         this.updateGrid(2)
@@ -763,6 +776,12 @@
           orderId: '' // 运单号
         }
         this.verVisible = true
+        this.gridOptions2.api.selectAllFiltered()
+        this.gridOptions3.api.selectAllFiltered()
+        let data2 = this.gridOptions2.api.getSelectedRows()
+        let data3 = this.gridOptions3.api.getSelectedRows()
+        this.gridOptions2.api.updateRowData({remove: data2})
+        this.gridOptions3.api.updateRowData({remove: data3})
       },
       // 订单详情弹框
       detailDoubleClick (event) {

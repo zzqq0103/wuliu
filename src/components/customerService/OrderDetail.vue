@@ -4,7 +4,7 @@
     <el-form ref="form" :model="form">
       <div style='margin-top:0.5%;display:inline-block;width:100%'>
         <span style='float:left;padding-top:0.7%' class='col-1'>订单号：</span>
-        <span style='float:left;padding-top:0.5%' class='col-1'>{{form.id}}</span>
+        <span style='float:left;padding-top:0.9%;width:auto'>{{form.id}}</span>
         <span class='col-1 order-title-base'>经办客服：</span>
         <span style='float:left;padding-top:0.7%' class='col-1'>{{form.serviceNam}}</span>
       </div>
@@ -200,7 +200,7 @@ export default {
           }
         ],
         /** 基本信息 */
-        id: 4.5,
+        id: 'asdfghjzkxlmhn',
         orderTim: '17-09-08 10:02',
         state: '',
         billBranch: '',
