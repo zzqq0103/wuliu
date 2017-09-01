@@ -20373,5 +20373,34 @@ export default {
         auditTim: "2016-01-01T12:41:34 -08:00"
       }
     ]
+  },
+  //库存信息
+  'stockInfo': {
+    'list': [
+      {
+        "orderId": '1234',
+        "transId": '54321',
+        "inDepotTim": '2017-08-04 10:11:58',
+        "outDepotTim": '2017-08-26 10:12:09',
+        "telDeparture": '87771777',
+        "telReceiving": '99888811',
+        "cargoName": '货架',
+        "cargoPieces": '21',
+        "cargoWeight": '5T',
+        "cargoVolume": '90L'
+      },
+      {
+        "orderId": '2234',
+        "transId": '34321',
+        "inDepotTim": '2017-06-04 10:11:58',
+        "outDepotTim": '2017-10-26 10:12:09',
+        "telDeparture": '66672377',
+        "telReceiving": '09998811',
+        "cargoName": '衣服',
+        "cargoPieces": '101',
+        "cargoWeight": '9T',
+        "cargoVolume": '100L'
+      }
+    ]
   }
 };

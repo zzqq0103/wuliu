@@ -52,7 +52,7 @@
           </el-form-item>
           <el-form-item label="回单押款合计：" style='float:left;width:25%'>
             <el-input v-model="totalForm.totalMoney" readonly="readonly" style='width:50%'></el-input>
-          </el-form-item>          
+          </el-form-item>
         </el-form>
     </div>
     <div style="clear: both;"></div>
