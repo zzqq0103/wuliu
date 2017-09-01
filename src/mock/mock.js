@@ -1,8 +1,8 @@
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 import {searchByIndexOf, getListDataBySize} from '../filter/util'
-import {Orderlist, transportedList, receivedList, epibolyList} from './data/orderlist'
-let _Orderlist = Orderlist
+import {deliveredLoadedList, transportedList, receivedList, epibolyList} from './data/orderlist'
+let _Orderlist = deliveredLoadedList
 let _transportedList = transportedList
 let _receivedList = receivedList
 let _epibolyList = epibolyList
