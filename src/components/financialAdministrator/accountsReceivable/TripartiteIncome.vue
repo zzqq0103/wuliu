@@ -53,12 +53,12 @@
           </el-form-item>
 
           <el-form-item label="中转费合计：" style='float:left;width:25%'>
-            <el-input v-model="totalForm.transferFeeTotal" style='width:50%'></el-input>
+            <el-input readonly="readonly" v-model="totalForm.transferFeeTotal" style='width:50%'></el-input>
           </el-form-item>
           <!--判断当前需要显示的label-->
           <div v-if="filterForm.payType === 'nowPay'">
             <el-form-item label="现付金额合计：" style='float:left;width:25%'>
-              <el-input v-model="totalForm.totalMoney" style='width:50%'></el-input>
+              <el-input readonly="readonly" v-model="totalForm.totalMoney" style='width:50%'></el-input>
             </el-form-item>   
           </div>
           <div v-else-if="filterForm.payType ==='cashOnDelivery'">
@@ -759,6 +759,10 @@
           }
         }
       }
+    },
+    // 实例挂载完成之后
+    mounted () {
+      this.updateGrid(1)
     },
     // 数据发生更新时
     updated () {
