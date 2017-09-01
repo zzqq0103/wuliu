@@ -760,6 +760,10 @@
         }
       }
     },
+    // 实例挂载完成之后
+    mounted () {
+      this.updateGrid(1)
+    },
     // 数据发生更新时
     updated () {
       this.calculateMoney
