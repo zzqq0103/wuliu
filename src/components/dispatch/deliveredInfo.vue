@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="top">
-      <h2 style="text-align:center">已 发 货 订 单 信 息 页</h2>
+      <h2 style="text-align:center">已 发 货 装 载 单 信 息 页</h2>
       <div style="margin-top:2%">
 
         <div class="block" style="float:right;">
@@ -31,7 +31,7 @@
 
     <div style="clear: both;">
     </div>
-
+    
     <!-- 表格 -->
     <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
@@ -48,18 +48,20 @@
       ></ag-grid-vue>
     </div>
 
+    <!-- 分页插件 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentpage"
         :page-sizes="[25, 50, 75, 100]"
-        :page-size="25"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next"
         :total="totalpages">
       </el-pagination>
     </div>
 
+    <!-- 设置按钮，显示表格的属性列 -->
     <el-dialog id="shezhi" title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
       <template v-for="(collist,i) in gridOptions.columnDefs ">
         <div>
@@ -124,46 +126,43 @@
               headerName: '序号', width: 120, field: 'id', filter: 'text', hide: false
             },
             {
-              headerName: '装载单号', width: 120, field: 'deliverOrderId', filter: 'text', hide: false
+              headerName: '装载单号', width: 120, field: 'loadId', filter: 'text', hide: false
             },
             {
-              headerName: '订单号', width: 120, field: 'orderId', filter: 'text', hide: false
+              headerName: '装载单状态', width: 120, field: 'loadStatus', filter: 'text', hide: false
             },
+            // {
+            //   headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false
+            // },
             {
-              headerName: '开单时间', width: 120, field: 'OrderDate', filter: 'text', hide: false
+              headerName: '所属仓库', width: 120, field: 'warehouse', filter: 'text', hide: false
             },
             {
               headerName: '司机姓名', width: 120, field: 'driverName', filter: 'text', hide: false
             },
             {
-              headerName: '收货单位', width: 120, field: 'consigneeAddr', filter: 'text', hide: false
+              headerName: '司机电话', width: 120, field: 'driverPhone', filter: 'text', hide: false
             },
             {
-              headerName: '收货人姓名', width: 120, field: 'consignee', filter: 'text', hide: false
+              headerName: '送货时间', width: 120, field: 'deliverTime', filter: 'text', hide: false
             },
             {
-              headerName: '联系电话', width: 120, field: 'phone', filter: 'text', hide: false
+              headerName: '送货备注', width: 120, field: 'deliverRemark', filter: 'text', hide: false
             },
             {
-              headerName: '收货地址', width: 120, field: 'address', filter: 'text', hide: false
+              headerName: '总重量', width: 120, field: 'allWeight', filter: 'text', hide: false
             },
             {
-              headerName: '货物名称', width: 120, field: 'goodsName', filter: 'text', hide: false
+              headerName: '总体积', width: 120, field: 'allVolume', filter: 'text', hide: false
             },
             {
-              headerName: '件数', width: 120, field: 'numbers', filter: 'text', hide: false
+              headerName: '总件数', width: 120, field: 'allNumber', filter: 'text', hide: false
             },
             {
-              headerName: '重量', width: 120, field: 'weight', filter: 'text', hide: false
+              headerName: '调度管理员账号', width: 120, field: 'adminId', filter: 'text', hide: false
             },
             {
-              headerName: '体积', width: 120, field: 'volume', filter: 'text', hide: false
-            },
-            {
-              headerName: '包装', field: 'pack', width: 120, filter: 'text', hide: false
-            },
-            {
-              headerName: '备注', field: 'remarks', width: 120, filter: 'text', hide: false
+              headerName: '调度管理员姓名', field: 'adminName', width: 120, filter: 'text', hide: false
             }
           ]
         },
@@ -225,6 +224,7 @@
       },
       handleSizeChange (val) {
         this.pageSize = val
+        this.getOrderList()
       },
       handleCurrentChange (val) {
         this.currentpage = val
@@ -269,6 +269,7 @@
           this.totalpages = res.data.totalPages
           this.listLoading = false
         })
+        return null
       },
       // 获取查询数据
       getQueryData () {

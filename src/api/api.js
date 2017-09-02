@@ -4,9 +4,9 @@ let baseUrl = ''
 
 // -------  已 送 货 订 单 开 始 --------
 
-// 获得当前已经运送的订单接口
+// 获得当前已经运送的装载单接口
 export const getCurrentDelivered = params => {
-  return axios.get(`${baseUrl}/deliveredOrder/getlist`, {params: params})
+  return axios.get(`${baseUrl}/deliveredOrder/getLoadedlist`, {params: params})
 }
 
 // 获取查询的订单接口

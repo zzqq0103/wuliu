@@ -56,7 +56,7 @@
          @current-change="handleCurrentChange"
          :current-page="currentpage" 
          :page-sizes="[25, 50, 75, 100]" 
-         :page-size="25" 
+         :page-size="pageSize" 
          layout="total, sizes, prev, pager, next" 
          :total="totalpages">
        </el-pagination>

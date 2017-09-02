@@ -33,11 +33,12 @@ for (let i = 0; i < 100; i++) {
     // 装载单号
     loadId: Mock.mock('@string("number",5)'),
     // 装载单状态
-    loadStatus: Mock.mock({
-      'object|1': {
-        'checkFail': '已分配 已确认'
-      }
-    }),
+    // loadStatus: Mock.mock({
+    //   'object|1': {
+    //     'checkFail': '已分配 已确认'
+    //   }
+    // }),
+    loadStatus: '已分配 已确认',
     // // 调整状态
     // adjustment: Mock.mock({
     //   'object|1': {
@@ -54,7 +55,8 @@ for (let i = 0; i < 100; i++) {
     // 发货时间
     deliverTime: Mock.mock('@date()'),
     // 发货备注
-    deliverRemark: Mock.mock('@csentence(10,20)'),
+    // deliverRemark: Mock.mock('@csentence(10,20)'),
+    deliverRemark: '货物A 巴拉巴拉',
     // 总重量
     allWeight: Mock.mock('@integer(1,100)'),
     // 总体积
