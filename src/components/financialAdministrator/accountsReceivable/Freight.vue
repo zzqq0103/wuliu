@@ -103,6 +103,7 @@
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
+                   :headerHeight=40
 
                    :rowDoubleClicked="detailDoubleClick"
                    :pagination="true"
@@ -294,6 +295,7 @@
 
 <script>
   import {AgGridVue} from 'ag-grid-vue'
+  import PartialMatchFilterComponent from '../../common/PartialMatchFilterComponent'
   import testJson from '../../../../static/test/testJSON.js'
   import OrderDetails from '../ShowOrderDetails'
   export default {
@@ -304,10 +306,10 @@
           rowData: [],
           columnDefs: [
             {
-              headerName: '序号', width: 150, field: 'index', filter: 'text', hide: false, visible: true
+              headerName: '序号', width: 150, field: 'index', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
+              headerName: '运单号', width: 150, field: 'orderId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true
@@ -882,15 +884,5 @@
   }
 </script>
 <style>
-  .del-but {
-    cursor: pointer;
-    float: right;
-    margin-right: 10px;
-    border-radius: 4px;
-    background: #fff;
-    border: 1px solid rgb(191, 217, 216);
-    color: rgb(31, 61, 60);
-    padding: 5px 10px;
-    font-size: 10px
-  }
+
 </style>

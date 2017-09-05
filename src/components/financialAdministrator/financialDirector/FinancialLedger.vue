@@ -140,9 +140,9 @@
 
 
     <!--
-    --核销界面
+    --审核界面
     -->
-    <el-dialog title="运费核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+    <el-dialog title="财务总账审核" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">

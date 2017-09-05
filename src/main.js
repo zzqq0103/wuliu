@@ -8,7 +8,8 @@ import Icon from 'vue-awesome'
 import '../static/css/theme-green/index.css'     // 浅绿色主题
 import 'babel-polyfill'
 import '../node_modules/ag-grid/dist/styles/ag-grid.css'
-import '../node_modules/ag-grid/dist/styles/theme-blue.css'
+// import '../node_modules/ag-grid/dist/styles/theme-blue.css'
+import '../static/css/grid-theme.css'
 // 导入假数据
 import mock from './mock'
 mock.bootstrap()
