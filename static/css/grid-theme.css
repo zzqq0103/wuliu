@@ -170,6 +170,7 @@
   padding: 4px 2px 4px 2px;
 }
 .ag-blue .ag-header-cell-text {
+  line-height: 40px;
   padding-left: 2px;
 }
 .ag-blue .ag-header-group-cell-label {

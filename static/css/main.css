@@ -113,3 +113,19 @@ a{text-decoration: none}
 .input-css{
     width:200px;
 }
+/*表格操作列，按钮格式*/
+.del-but {
+  cursor: pointer;
+  /*float: right;*/
+  /*margin-right: 10px;*/
+  /*margin: 5px;*/
+  border-radius: 4px;
+  /*background: #fff;*/
+  border: 1px solid rgb(191, 217, 216);
+  color: #f9f9f9;
+  font-size: .9em;
+}
+
+.colVisible {
+  margin-left: 20%;
+}
