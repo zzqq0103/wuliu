@@ -3,12 +3,11 @@
     <div class="logo">物流管理系统</div>
     <div class="user-info">
 
-      
 
       <el-dropdown trigger="click" @command="handleCommand">
         <span class="el-dropdown-link">
           <img src="../../../static/img/img.jpg" class="user-logo">
-          {{username}}
+          {{username}}&nbsp{{personalForm.roleSitOrBran}}
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="personalCenter">个人中心</el-dropdown-item>
@@ -17,7 +16,7 @@
       </el-dropdown>
       <!--使用dialog进行弹框显示个人中心-->
       <el-dialog title="个人中心:" :visible.sync="personalCenterVisable" size="tiny">
-        <el-form :model="personalForm" :rules="rules" ref="personalForm">
+        <el-form :model="personalForm" :rules="rules" ref="personalForm" class="personalForm">
           <el-form-item label="角色:" :label-width="formLabelWidth">
             <el-input v-model="personalForm.role" :disabled="true"></el-input>
           </el-form-item>
@@ -76,7 +75,7 @@
   export default {
     data () {
       // 验证两次输入的密码是否一致
-      var validatePassword = (rule, value, callback) => {
+      let validatePassword = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'))
         } else {
@@ -86,7 +85,7 @@
           callback()
         }
       }
-      var validateConfirmPassword = (rule, value, callback) => {
+      let validateConfirmPassword = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'))
         } else if (value !== this.personalForm.newPassword) {
@@ -104,6 +103,7 @@
           name: '',
           email: '',
           tel: '',
+          roleSitOrBran: '北京',
           password: '',
           newPassword: '',
           confirmNewPassword: ''
@@ -123,7 +123,7 @@
             trigger: 'blur'
           }]
         },
-        formLabelWidth: '150px'
+        formLabelWidth: '25%'
       }
     },
     computed: {
@@ -202,6 +202,6 @@
   }
 
   .el-dialog .el-input {
-    width: 250px;
+    width: 80%
   }
 </style>
