@@ -15,7 +15,7 @@
     </div>
     <div style="clear: both;"></div>
     <div style="margin-top: 10px">
-      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+      <ag-grid-vue style="width: 100%;height: 450px;" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
@@ -24,6 +24,7 @@
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
+                   :headerHeight = 40
 
                    :pagination="true"
                    :paginationPageSize="10"
@@ -147,6 +148,9 @@
           rowData: null,
           columnDefs: [
             {
+              headerName: '序号', width: 100, field: 'index', suppressMenu: true, hide: false, visible: true
+            },
+            {
               headerName: '客户企业名称', width: 150, field: 'clientCompNam', filter: 'text', hide: false, visible: true
             },
             {
@@ -156,7 +160,7 @@
               headerName: '联系电话', width: 150, field: 'tel', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '企业详细地址', width: 150, field: 'compAdr', filter: 'text', hide: false, visible: true
+              headerName: '企业详细地址', width: 250, field: 'compAdr', filter: 'text', hide: false, visible: true
             },
             {
               headerName: '所属片区', width: 150, field: 'area', filter: 'text', hide: false, visible: true
@@ -171,6 +175,8 @@
               headerName: '操作',
               field: 'value',
               width: 150,
+              suppressMenu: true,
+              suppressSorting: true,
               cellRendererFramework: 'operateComponent',
               hide: false,
               visible: true
@@ -203,7 +209,7 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><el-button class="del-but" @click="del">删 除</el-button><el-button  class="del-but" @click="edit">编 辑</el-button></span>',
+        template: '<span><el-button  class="del-but" @click="edit" type="info">编 辑</el-button><el-button class="del-but" @click="del" type="danger">删 除</el-button></span>',
         methods: {
           del () {
             let self = this.params.context.componentParent
@@ -302,13 +308,13 @@
 <style>
   .del-but {
     cursor: pointer;
-    float: right;
-    margin-right: 10px;
+    /*float: right;*/
+    /*margin-right: 10px;*/
+    /*margin: 5px;*/
     border-radius: 4px;
-    background: #fff;
+    /*background: #fff;*/
     border: 1px solid rgb(191, 217, 216);
-    color: rgb(31, 61, 60);
-    padding: 5px 10px;
-    font-size: 10px
+    color: #f9f9f9;
+    font-size: .6em;
   }
 </style>
