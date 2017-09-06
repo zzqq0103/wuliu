@@ -110,6 +110,7 @@
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  
   export default {
     data () {
       return {
@@ -244,7 +245,23 @@
     // 实例组件
     components: {
       'ag-grid-vue': AgGridVue,
-      OrderDetails
+      OrderDetails,
+      operateComponent: {
+        template: '<span><el-button  class="del-but" @click="edit" type="info" size="small">编 辑</el-button><el-button class="del-but" @click="del" type="danger" size="small">删 除</el-button></span>',
+        methods: {
+          del () {
+            let self = this.params.context.componentParent
+            self.delFormVisible = true
+            self.staffForm.employeeNam = this.params.data.employeeNam
+          },
+          edit () {
+            let self = this.params.context.componentParent
+            self.editFormVisible = true
+            self.staffForm = this.params.data
+//            console.log(self.personnelForm)
+          }
+        }
+      }
     },
 
     // 实例方法

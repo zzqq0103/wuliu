@@ -55,7 +55,14 @@
           <el-button style="float:right; margin-right:10px;">导出</el-button>
         </div>
 
-       
+        <!-- 是否发车对话框 -->
+        <el-dialog title="" :visible.sync="departVisible" size="tiny" top="30%" close-on-press-escape= false modal= false close-on-click-modal = false>
+            <h2 style="padding:30px">确认发车吗？</h2>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="departVisible = false">取 消</el-button>
+                <el-button @click="departVisible = false" type="danger">确 定</el-button>
+            </div>
+        </el-dialog>
           
 
       </div>
@@ -149,6 +156,7 @@
         },
         rules: {}, //
         formLabelWidth: '120px',
+        departVisible: false, // 发车弹窗的真值属性
         // Ag-grid 表格组件的data
         gridOptions: {
           context: {
@@ -224,6 +232,9 @@
             },
             {
               headerName: '备注', field: 'remarks', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '操作', field: 'remarks', width: 60, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true, cellRendererFramework: 'operateComponent', pinned: 'right'
             }
           ]
         },
@@ -274,9 +285,18 @@
     // 实例组件
     components: {
       'ag-grid-vue': AgGridVue,
-      OrderDetails
+      OrderDetails,
+      operateComponent: {
+        template: '<span style="margin-left:5px;"><el-button  class="del-but" @click="depart" type="info" size="small">发车</el-button></span>',
+        methods: {
+          // 点击发车按钮，进行操作
+          depart () {
+            let self = this.params.context.componentParent
+            self.departVisible = true
+          }
+        }
+      }
     },
-
     // 实例方法
     methods: {
       // 订单详情弹框
