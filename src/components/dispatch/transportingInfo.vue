@@ -47,10 +47,16 @@
         <el-button v-popover:popover1>设置</el-button>
         </div>
 
-        <!-- 导出 -->
+        
         <div>
+          <!-- 导出 -->
+          <el-button style="float:right; margin-right:10px;">新增装载单</el-button>
+          <!-- 新增装载单 -->
           <el-button style="float:right; margin-right:10px;">导出</el-button>
         </div>
+
+       
+          
 
       </div>
     </div>
