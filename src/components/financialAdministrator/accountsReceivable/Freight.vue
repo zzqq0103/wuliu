@@ -70,8 +70,8 @@
           </template>
           <template>
             <div class="colVisible">
-              <el-button @click="visibleChoice(1,grid1)" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2,grid1)" size="small">全不选</el-button>
+              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
             </div>
           </template>
         </el-popover>
@@ -178,7 +178,7 @@
               <div style="float: right">
                 <el-button @click="drawGrid(2)">提取库存</el-button>
                 <!--<el-button @click="colVisible2 = true">设置</el-button>-->
-                <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+                <el-popover ref="popover2" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
                   <template v-for="(collist,i) in gridOptions2.columnDefs">
                     <div class="colVisible">
                       <el-checkbox v-model="collist.visible"
@@ -189,12 +189,12 @@
                   </template>
                   <template>
                     <div class="colVisible">
-                      <el-button @click="visibleChoice(1,grid2)" size="small">全选</el-button>
-                      <el-button @click="visibleChoice(2,grid2)" size="small">全不选</el-button>
+                      <el-button @click="visibleChoice(1,'grid2')" size="small">全选</el-button>
+                      <el-button @click="visibleChoice(2,'grid2')" size="small">全不选</el-button>
                     </div>
                   </template>
                 </el-popover>
-                <el-button v-popover:popover1>设置</el-button>
+                <el-button v-popover:popover2>设置</el-button>
               </div>
               <el-form-item label="类型:">
                 <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px">
@@ -238,7 +238,7 @@
             <el-form-item>
               <el-button @click="confirmSubmit">确认核销</el-button>
               <!--<el-button @click="colVisible3 = true">设置</el-button>-->
-              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+              <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
                 <template v-for="(collist,i) in gridOptions3.columnDefs">
                   <div class="colVisible">
                     <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)">
@@ -248,12 +248,12 @@
                 </template>
                 <template>
                   <div class="colVisible">
-                    <el-button @click="visibleChoice(1,grid3)" size="small">全选</el-button>
-                    <el-button @click="visibleChoice(2,grid3)" size="small">全不选</el-button>
+                    <el-button @click="visibleChoice(1,'grid3')" size="small">全选</el-button>
+                    <el-button @click="visibleChoice(2,'grid3')" size="small">全不选</el-button>
                   </div>
                 </template>
               </el-popover>
-              <el-button v-popover:popover1>设置</el-button>
+              <el-button v-popover:popover3>设置</el-button>
             </el-form-item>
           </el-form>
           <el-button @click="rightSelect"> < </el-button>
