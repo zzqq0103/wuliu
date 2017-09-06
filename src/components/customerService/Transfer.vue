@@ -43,6 +43,7 @@
 <script>
   import {AgGridVue} from 'ag-grid-vue'
   import testJson from '../../../static/test/testJSON.js'
+  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   export default {
     data () {
       return {
@@ -63,34 +64,34 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '序号', width: 70, field: 'choose', filter: 'text', hide: false
+              headerName: '序号', width: 70, field: 'choose', filterFramework: PartialMatchFilterComponent, hide: false
             },
             {
-              headerName: '订单编号', width: 120, field: 'ordernumber', filter: 'text', hide: false
+              headerName: '订单编号', width: 120, field: 'ordernumber', filterFramework: PartialMatchFilterComponent, hide: false
             },
             {
-              headerName: '始发地', width: 100, field: 'provenance', filter: 'text', hide: false
+              headerName: '始发地', width: 100, field: 'provenance', filterFramework: PartialMatchFilterComponent, hide: false
             },
             {
-              headerName: '始发电话', width: 120, field: 'fromphone', filter: 'text', hide: false
+              headerName: '始发电话', width: 120, field: 'fromphone', filterFramework: PartialMatchFilterComponent, hide: false
             },
             {
-              headerName: '目的地', width: 100, field: 'destination', filter: 'text', hide: false
+              headerName: '目的地', width: 100, field: 'destination', filterFramework: PartialMatchFilterComponent, hide: false
             },
             {
-              headerName: '收货电话', width: 120, field: 'receivingphone', filter: 'text', hide: false
+              headerName: '收货电话', width: 120, field: 'receivingphone', filterFramework: PartialMatchFilterComponent, hide: false
             },
             {
-              headerName: '回单数量', width: 100, field: 'receiptnumber', filter: 'text', hide: false
+              headerName: '回单数量', width: 100, field: 'receiptnumber', filterFramework: PartialMatchFilterComponent, hide: false
             },
             {
-              headerName: '件数', width: 100, field: 'number', filter: 'text', hide: false
+              headerName: '件数', width: 100, field: 'number', filterFramework: PartialMatchFilterComponent, hide: false
             },
             {
-              headerName: '回单状态', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
+              headerName: '回单状态', field: 'value', width: 150, suppressMenu: true, cellRendererFramework: 'operateComponent', hide: false
             },
             {
-              headerName: '回单押款状态', width: 150, field: 'receiptYaKuanstate', filter: 'text', hide: false
+              headerName: '回单押款状态', width: 150, field: 'receiptYaKuanstate', filterFramework: PartialMatchFilterComponent, hide: false
             }
           ]
         }
