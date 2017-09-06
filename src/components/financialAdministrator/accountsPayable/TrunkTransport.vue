@@ -125,7 +125,8 @@
     <!--
     --核销界面
     -->
-    <el-dialog title="干线运输费核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+    <el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+      <h2 style='text-align:center;margin-top:-2%'>干线运输费核销</h2>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
@@ -144,6 +145,7 @@
               </div>
               <el-form-item>
                 <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
+              </el-form-item>
               </el-form-item>
             </div>
           </el-form>
@@ -843,3 +845,56 @@
     font-size: 10px
   }
 </style>
+
+<!--//发出请求-->
+<!--filterForm: {-->
+<!--startTime: '', // 开始时间-->
+<!--endTime: '', // 截止时间-->
+<!--startPoint: '', //  区间起点-->
+<!--endPoint: '', //  区间终点-->
+<!--shipNam: '', //  发货人-->
+<!--payType: 'nowPay', // 类型（现付，到付，欠付，月结）-->
+<!--freiVeriState: '', // 运费核销状态-->
+<!--orderId: '' // 运单号-->
+<!--},-->
+<!--//获得响应 filterForm1和filterForm2是不同的获得响应事件q-->
+<!--filterForm1：{-->
+<!--orderState 运单状态-->
+<!--orderId 运单号-->
+<!--billBranch 开单网点-->
+<!--orderTim 开单日期-->
+<!--startStation 发站-->
+<!--arrStation 到站-->
+<!--shipNam 发货人-->
+<!--receNam 收货人-->
+<!--shipTim 发车时间-->
+<!--contractId 合同号-->
+<!--licePlateNum 车牌号-->
+<!--driverNam 司机姓名-->
+<!--driverTel 司机电话-->
+<!--receTel 收货人联系方式-->
+<!--goodsNam 品名-->
+<!--goodsNums 件数-->
+<!--serviceNam 制单人-->
+<!--companyNam 中转路线-->
+<!--changeFee 中转日期-->
+<!--sendMode 送货方式-->
+<!--payType 付款方式-->
+<!--feeMoney 付款金额-->
+<!--oilMoney 油卡金额-->
+<!--goodsWeight 重量-->
+<!--goodsVolume 体积-->
+<!--}-->
+<!--filterForm2：{-->
+<!--orderState 运单状态-->
+<!--orderId 运单号-->
+<!--orderTim 下单时间-->
+<!--shipTim 发车时间-->
+<!--contractId 合同号-->
+<!--licePlateNum 车牌号-->
+<!--driverNam 司机姓名-->
+<!--payType 付款方式-->
+<!--feeMoney 付款金额-->
+<!--totalFreight 总运费-->
+<!--veriState 核销状态-->
+<!--}-->

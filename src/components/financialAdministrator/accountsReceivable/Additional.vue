@@ -140,7 +140,8 @@
     <!--
     --核销界面
     -->
-    <el-dialog title="运费核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+    <el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+      <h2 style='text-align:center;margin-top:-2%'>附加费核销</h2>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
@@ -313,8 +314,7 @@
             },
             {
               headerName: '中转费', width: 150, field: 'changeFee', filter: 'text', hide: false, visible: true
-            },
-            {}
+            }
           ],
           context: {
             componentParent: this
@@ -380,7 +380,8 @@
                 },
                 {
                   headerName: '支付方式', width: 150, field: 'payMode', filter: 'text', hide: false, visible: true
-                }
+                },
+                {}
               ]
             }
           ],
@@ -808,3 +809,50 @@
     font-size: 10px
   }
 </style>
+
+<!--//用户请求-->
+<!--filterForm1: {-->
+<!--startTime: '', // 开始时间-->
+<!--endTime: '', // 截止时间-->
+<!--startPoint: '', //  区间起点-->
+<!--endPoint: '', //  区间终点-->
+<!--payType: 'nowPay', // 类型（现付，到付，欠付，月结）-->
+<!--feeType: '' // 费用类型-->
+<!--},-->
+<!--filterForm2{-->
+<!--shipNam: '', //  发货人-->
+<!--freiVeriState: '', // 运费核销状态-->
+<!--orderId: '', // 运单号-->
+<!--}-->
+<!--//用户获得响应-->
+<!--表1(新货入库)-->
+<!--{-->
+<!--headerName: '运单号',  'orderId', filter: 'text', hide: -->
+<!--{-->
+<!--headerName: '运单状态', 'orderState', filter: 'text', -->
+<!--{-->
+<!--headerName: '开单网点', 'billBranch', filter: 'text',-->
+<!--{-->
+<!--headerName: '开单日期',  'orderTim', filter: 'text', -->
+<!--{-->
+<!--headerName: '发站', 'startStation', filter: 'text',-->
+<!--{-->
+<!--headerName: '到站',  'arrStation', filter: 'text', -->
+<!--{-->
+<!--headerName: '发货人',  'shipNam',-->
+<!--{-->
+<!--: '发货人联系方式',  'shipTel', -->
+<!--{-->
+<!--: '收货人',  'receNam', -->
+<!--{-->
+<!--: '收货人联系方式', 'receTel',-->
+<!--{-->
+<!--: '品名',  'goodsNam', -->
+<!--{-->
+<!--: '件数',  'goodsNums', -->
+<!--{-->
+<!--: '制单人',  'serviceNam', -->
+<!--{-->
+<!--: '中转路线',  'companyNam',-->
+<!--{-->
+ <!--'中转费', 'changeFee', -->
