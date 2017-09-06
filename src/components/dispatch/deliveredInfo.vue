@@ -20,7 +20,24 @@
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-          <el-button @click="setting" style="padding: 10px 15px 9px 15px !important;">设置</el-button>
+
+          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+
+        <el-button v-popover:popover>设置</el-button>
         </div>
 
         <div>
@@ -44,11 +61,16 @@
                    :suppressCellSelection="true"
                    :rowHeight="40"
                    :headerHeight="30"
+
+                   :pagination="true"
+                   :paginationPageSize="10"
+                   :suppressPaginationPanel="true"
+                   :filterChanged="gridfilterChange"
                    :rowDoubleClicked="detailDoubleClick"
       ></ag-grid-vue>
     </div>
 
-    <!-- 分页插件 -->
+    <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
       <el-pagination
         @size-change="handleSizeChange"
@@ -60,20 +82,6 @@
         :total="totalpages">
       </el-pagination>
     </div>
-
-    <!-- 设置按钮，显示表格的属性列 -->
-    <el-dialog id="shezhi" title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
-      <template v-for="(collist,i) in gridOptions.columnDefs ">
-        <div>
-          <el-checkbox v-model="collist.hide" @change="updataColumnDefs(gridOptions.columnDefs)">
-            {{collist.headerName}}
-          </el-checkbox>
-        </div>
-      </template>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="colVisible = false">确 定</el-button>
-      </div>
-    </el-dialog>
 
     <!--订单详情弹框-->
     <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
@@ -87,6 +95,7 @@
   import {AgGridVue} from 'ag-grid-vue'
   import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
+  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   export default {
     data () {
       return {
@@ -123,46 +132,52 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '序号', width: 120, field: 'id', filter: 'text', hide: false
+              headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '装载单号', width: 120, field: 'loadId', filter: 'text', hide: false
+              headerName: '装载单号', width: 120, field: 'deliverOrderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '装载单状态', width: 120, field: 'loadStatus', filter: 'text', hide: false
+              headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             // {
             //   headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false
             // },
             {
-              headerName: '所属仓库', width: 120, field: 'warehouse', filter: 'text', hide: false
+              headerName: '开单时间', width: 120, field: 'OrderDate', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '司机姓名', width: 120, field: 'driverName', filter: 'text', hide: false
+              headerName: '司机姓名', width: 120, field: 'driverName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '司机电话', width: 120, field: 'driverPhone', filter: 'text', hide: false
+              headerName: '收货单位', width: 120, field: 'consigneeAddr', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '送货时间', width: 120, field: 'deliverTime', filter: 'text', hide: false
+              headerName: '收货人姓名', width: 120, field: 'consignee', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '送货备注', width: 120, field: 'deliverRemark', filter: 'text', hide: false
+              headerName: '联系电话', width: 120, field: 'phone', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '总重量', width: 120, field: 'allWeight', filter: 'text', hide: false
+              headerName: '收货地址', width: 120, field: 'address', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '总体积', width: 120, field: 'allVolume', filter: 'text', hide: false
+              headerName: '货物名称', width: 120, field: 'goodsName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '总件数', width: 120, field: 'allNumber', filter: 'text', hide: false
+              headerName: '件数', width: 120, field: 'numbers', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '调度管理员账号', width: 120, field: 'adminId', filter: 'text', hide: false
+              headerName: '重量', width: 120, field: 'weight', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '调度管理员姓名', field: 'adminName', width: 120, filter: 'text', hide: false
+              headerName: '体积', width: 120, field: 'volume', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '包装', field: 'pack', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '备注', field: 'remarks', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             }
           ]
         },
