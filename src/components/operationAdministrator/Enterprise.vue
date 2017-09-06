@@ -27,7 +27,6 @@
         </el-popover>
         <el-button v-popover:popover1>设置</el-button>
       </div>
-
       </p>
     </div>
     <div style="clear: both;">

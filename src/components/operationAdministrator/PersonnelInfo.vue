@@ -170,25 +170,60 @@
               headerName: '序号', width: 100, field: 'index', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '客户企业名称', width: 150, field: 'clientCompNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '客户企业名称',
+              width: 150,
+              field: 'clientCompNam',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '联系人姓名', width: 150, field: 'nam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '联系人姓名',
+              width: 150,
+              field: 'nam',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '联系电话', width: 150, field: 'tel', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '联系电话',
+              width: 150,
+              field: 'tel',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '企业详细地址', width: 250, field: 'compAdr', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '企业详细地址',
+              width: 250,
+              field: 'compAdr',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '所属片区', width: 150, field: 'area', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '所属片区',
+              width: 150,
+              field: 'area',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '业务员ID', width: 150, field: 'salesmanId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '业务员ID',
+              width: 150,
+              field: 'salesmanId',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '是否三方', width: 150, field: 'isTril', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '是否三方',
+              width: 150,
+              field: 'isTril',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
               headerName: '操作',
