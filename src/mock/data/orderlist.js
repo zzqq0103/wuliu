@@ -31,21 +31,24 @@ for (let i = 0; i < 100; i++) {
     // 序号
     id: Mock.mock('@increment(1)'),
     // 装载单号
-    loadId: Mock.mock('@string("number",5)'),
+    loadOrderId: Mock.mock('@string("number",5)'),
     // 装载单状态
-    // loadStatus: Mock.mock({
+    // loadOrderStatus: Mock.mock({
     //   'object|1': {
     //     'checkFail': '已分配 已确认'
     //   }
     // }),
-    loadStatus: '已分配 已确认',
+    // 装载单状态
+    loadOrderStatus: '已分配 已确认',
     // // 调整状态
-    // adjustment: Mock.mock({
+    // adjustmentStatus: Mock.mock({
     //   'object|1': {
     //     'adjusted': ' 已调整',
     //     'unAdjust': '未调整'
     //   }
     // }),
+    // 调整状态
+    adjustmentStatus: '已调整',
     // 所属仓库
     warehouse: Mock.mock('@string("number",5)'),
     // 司机姓名
@@ -56,17 +59,19 @@ for (let i = 0; i < 100; i++) {
     deliverTime: Mock.mock('@date()'),
     // 发货备注
     // deliverRemark: Mock.mock('@csentence(10,20)'),
-    deliverRemark: '货物A 巴拉巴拉',
+    deliveRemarks: '货物A 巴啦啦巴啦啦巴啦啦巴啦啦',
     // 总重量
-    allWeight: Mock.mock('@integer(1,100)'),
+    allWeights: Mock.mock('@integer(1,100)'),
     // 总体积
-    allVolume: Mock.mock('@integer(1,100)'),
+    allVolumes: Mock.mock('@integer(1,100)'),
     // 总件数
-    allNumber: Mock.mock('@integer(1,50)'),
+    allNumbers: Mock.mock('@integer(1,50)'),
     // 调度管理员ID
-    adminId: Mock.mock('@string("number",5)'),
+    dispatcherId: Mock.mock('@string("number",5)'),
     // 调度管理员姓名
-    adminName: Mock.mock('@cname()')
+    dispatcherName: Mock.mock('@cname()'),
+    // 备注
+    remarks: Mock.mock('@csentence()')
   }))
   // “已收货”订单数据
   receivedList.push(Mock.mock({
@@ -214,21 +219,24 @@ for (let i = 0; i < 100; i++) {
     // 序号
     id: Mock.mock('@increment(1)'),
     // 装载单号
-    loadId: Mock.mock('@string("number",5)'),
+    loadOrderId: Mock.mock('@string("number",5)'),
     // 装载单状态
-    loadStatus: Mock.mock({
-      'object|1': {
-        'checkFail': '已分配 确认失败',
-        'unCheck': '已分配 未确认'
-      }
-    }),
+    // loadOrderStatus: Mock.mock({
+    //   'object|1': {
+    //     'checkFail': '已分配 已确认'
+    //   }
+    // }),
+    // 装载单状态
+    loadOrderStatus: '已分配 已确认',
+    // // 调整状态
+    // adjustmentStatus: Mock.mock({
+    //   'object|1': {
+    //     'adjusted': ' 已调整',
+    //     'unAdjust': '未调整'
+    //   }
+    // }),
     // 调整状态
-    adjustment: Mock.mock({
-      'object|1': {
-        'adjusted': ' 已调整',
-        'unAdjust': '未调整'
-      }
-    }),
+    adjustmentStatus: '已调整',
     // 所属仓库
     warehouse: Mock.mock('@string("number",5)'),
     // 司机姓名
@@ -238,17 +246,20 @@ for (let i = 0; i < 100; i++) {
     // 发货时间
     deliverTime: Mock.mock('@date()'),
     // 发货备注
-    deliverRemark: Mock.mock('@csentence(10,20)'),
+    // deliverRemark: Mock.mock('@csentence(10,20)'),
+    deliveRemarks: '货物A 巴啦啦巴啦啦巴啦啦巴啦啦',
     // 总重量
-    allWeight: Mock.mock('@integer(1,100)'),
+    allWeights: Mock.mock('@integer(1,100)'),
     // 总体积
-    allVolume: Mock.mock('@integer(1,100)'),
+    allVolumes: Mock.mock('@integer(1,100)'),
     // 总件数
-    allNumber: Mock.mock('@integer(1,50)'),
+    allNumbers: Mock.mock('@integer(1,50)'),
     // 调度管理员ID
-    adminId: Mock.mock('@string("number",5)'),
+    dispatcherId: Mock.mock('@string("number",5)'),
     // 调度管理员姓名
-    adminName: Mock.mock('@cname()')
+    dispatcherName: Mock.mock('@cname()'),
+    // 备注
+    remarks: Mock.mock('@csentence()')
   }))
   // “待接货”订单数据
   receivingList.push(Mock.mock({
