@@ -13,7 +13,7 @@
         <el-button @click="drawGrid(1)">提取</el-button>
         <el-button>打印</el-button>
         <el-button>导出</el-button>
-        <el-button @click="verification">开始核销</el-button> 
+        <el-button @click="verification">开始核销</el-button>
       </div>
       <!--第一行左侧按钮-->
       <div>
@@ -137,7 +137,7 @@
           </el-checkbox>
         </div>
       </template>
-      <div slot="footer" class="dialog-footer">
+'     <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="colVisible = false">确 定</el-button>
       </div>
     </el-dialog>
@@ -288,7 +288,6 @@
         <el-button @click="errorVisible = false">取 消</el-button>
       </div>
     </el-dialog>
-
     <!--订单详情弹框-->
     <el-dialog title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
       <order-details :orderId="filterForm.orderId"></order-details>

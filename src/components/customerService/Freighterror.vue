@@ -3,32 +3,32 @@
     <div>
       <h2 style="text-align:center">运费异常</h2>
       <p style="margin-top:1%">
-        <div style="float: right">
-          <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
-        </div>
-        <div>
-          <el-button @click="setAddVisable">添加</el-button>
-          <el-button @click="setting">设置</el-button>
-        </div>
+      <div style="float: right">
+        <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
+      </div>
+      <div>
+        <el-button @click="setAddVisable">添加</el-button>
+        <el-button @click="setting">设置</el-button>
+      </div>
       </p>
     </div>
     <div style="clear: both;">
     </div>
     <div style="margin-top:2%">
-      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue" 
-        :gridOptions="gridOptions" 
-        :suppressMovableColumns="true" 
-        :enableColResize="true" 
-        :enableSorting="true" 
-        :enableFilter="true" 
-        :groupHeaders="true" 
-        :suppressCellSelection="true"
-        :rowHeight=40 
-        :headerHeight=30
-        :pagination="true"
-        :paginationPageSize="10"
-        :suppressPaginationPanel="true"
-        :filterChanged="gridfilterChange">
+      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+                   :gridOptions="gridOptions"
+                   :suppressMovableColumns="true"
+                   :enableColResize="true"
+                   :enableSorting="true"
+                   :enableFilter="true"
+                   :groupHeaders="true"
+                   :suppressCellSelection="true"
+                   :rowHeight=40
+                   :headerHeight=30
+                   :pagination="true"
+                   :paginationPageSize="10"
+                   :suppressPaginationPanel="true"
+                   :filterChanged="gridfilterChange">
       </ag-grid-vue>
     </div>
 
@@ -75,7 +75,7 @@
         <el-button type="primary" @click="addEdit">确 定</el-button>
       </div>
     </el-dialog>
-     <!-- 删除弹窗 -->
+    <!-- 删除弹窗 -->
     <el-dialog title="" :visible.sync="delVisable" size="tiny">
       <h2 style="padding:30px">确认删除吗？</h2>
       <div slot="footer" class="dialog-footer">
@@ -106,165 +106,165 @@
   </div>
 </template>
 <script>
-import { AgGridVue } from 'ag-grid-vue'
-export default {
-  created () {
-    for (var i = 0; i < 50; i++) {
-      this.unActList.push({
-        'orderID': i,
-        'unActExpense': '异动支出' + i,
-        'unActIncome': '异动收入' + i,
-        'unActTim': '异动时间' + i,
-        'unActDes': '异动说明' + i,
-        'serviceNam': '处理客服' + i
-      })
-    }
-  },
-  data () {
-    return {
-      unActList: [],
-      colVisible: false,
-      addEditVisable: false,
-      delVisable: false,
-      successVisable: false,
-      unActForm: {
-        'orderID': '',
-        'unActExpense': '',
-        'unActIncome': '',
-        'unActTim': '',
-        'unActDes': '',
-        'serviceNam': ''
-      },
-      rules: {
-      },
-      rowCount: 0,
-      pageSize: 10,
-      formLabelWidth: '20%',
-      gridOptions: {
-        context: {
-          componentParent: this
-        },
-        rowData: null,
-        columnDefs: [
-          {
-            headerName: '订单ID', width: 150, field: 'orderID', filter: 'text', hide: false
-          },
-          {
-            headerName: '异动支出', width: 150, field: 'unActExpense', filter: 'text', hide: false
-          },
-          {
-            headerName: '异动收入', width: 150, field: 'unActIncome', filter: 'text', hide: false
-          },
-          {
-            headerName: '异动时间', width: 150, field: 'unActTim', filter: 'text', hide: false
-          },
-          {
-            headerName: '异动描述', width: 150, field: 'unActDes', filter: 'text', hide: false
-          },
-          {
-            headerName: '客服名称', width: 150, field: 'serviceNam', filter: 'text', hide: false
-          },
-          {
-            headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
-          }
-        ]
+  import { AgGridVue } from 'ag-grid-vue'
+
+  export default {
+    created () {
+      for (var i = 0; i < 50; i++) {
+        this.unActList.push({
+          'orderID': i,
+          'unActExpense': '异动支出' + i,
+          'unActIncome': '异动收入' + i,
+          'unActTim': '异动时间' + i,
+          'unActDes': '异动说明' + i,
+          'serviceNam': '处理客服' + i
+        })
       }
-    }
-  },
-  components: {
-    'ag-grid-vue': AgGridVue,
-    operateComponent: {
-      template: '<span><button class="del-but" @click="setDelVisable">删 除</button><button class="del-but" @click="setEditVisable">编 辑</button></span>',
-      methods: {
-        setDelVisable () {
-          this.params.context.componentParent.delVisable = true
+    },
+    data () {
+      return {
+        unActList: [],
+        colVisible: false,
+        addEditVisable: false,
+        delVisable: false,
+        successVisable: false,
+        unActForm: {
+          'orderID': '',
+          'unActExpense': '',
+          'unActIncome': '',
+          'unActTim': '',
+          'unActDes': '',
+          'serviceNam': ''
         },
-        setEditVisable () {
-          /* var vehicleform = this.params.context.componentParent.vehicleForm
-          vehicleform.licePlateNum = vehicleList[this.params.node.rowIndex].licePlateNum */
-          this.params.context.componentParent.addEditVisable = true
-          this.params.context.componentParent.unActForm = this.params.data
+        rules: {},
+        rowCount: 0,
+        pageSize: 10,
+        formLabelWidth: '20%',
+        gridOptions: {
+          context: {
+            componentParent: this
+          },
+          rowData: null,
+          columnDefs: [
+            {
+              headerName: '订单ID', width: 150, field: 'orderID', filter: 'text', hide: false
+            },
+            {
+              headerName: '异动支出', width: 150, field: 'unActExpense', filter: 'text', hide: false
+            },
+            {
+              headerName: '异动收入', width: 150, field: 'unActIncome', filter: 'text', hide: false
+            },
+            {
+              headerName: '异动时间', width: 150, field: 'unActTim', filter: 'text', hide: false
+            },
+            {
+              headerName: '异动描述', width: 150, field: 'unActDes', filter: 'text', hide: false
+            },
+            {
+              headerName: '客服名称', width: 150, field: 'serviceNam', filter: 'text', hide: false
+            },
+            {
+              headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
+            }
+          ]
         }
       }
-    }
-  },
-  methods: {
-    createRowData () {
-      this.gridOptions.rowData = this.unActList
     },
-    onQuickFilterChanged (input) {
-      this.gridOptions.api.setQuickFilter(input)
-    },
-    changeColumnDefsBoolen () {
-      var columnlist = this.gridOptions.columnDefs
-      for (let i = 0; i < columnlist.length; i++) {
-        columnlist[i].hide = !columnlist[i].hide
+    components: {
+      'ag-grid-vue': AgGridVue,
+      operateComponent: {
+        template: '<span><button class="del-but" @click="setDelVisable">删 除</button><button class="del-but" @click="setEditVisable">编 辑</button></span>',
+        methods: {
+          setDelVisable () {
+            this.params.context.componentParent.delVisable = true
+          },
+          setEditVisable () {
+            /* var vehicleform = this.params.context.componentParent.vehicleForm
+            vehicleform.licePlateNum = vehicleList[this.params.node.rowIndex].licePlateNum */
+            this.params.context.componentParent.addEditVisable = true
+            this.params.context.componentParent.unActForm = this.params.data
+          }
+        }
       }
     },
-    setting () {
-      this.colVisible = true
-    },
-    updataColumnDefs (collist) {
-      for (let i = 0; i < collist.length; i++) {
-        this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+    methods: {
+      createRowData () {
+        this.gridOptions.rowData = this.unActList
+      },
+      onQuickFilterChanged (input) {
+        this.gridOptions.api.setQuickFilter(input)
+      },
+      changeColumnDefsBoolen () {
+        var columnlist = this.gridOptions.columnDefs
+        for (let i = 0; i < columnlist.length; i++) {
+          columnlist[i].hide = !columnlist[i].hide
+        }
+      },
+      setting () {
+        this.colVisible = true
+      },
+      updataColumnDefs (collist) {
+        for (let i = 0; i < collist.length; i++) {
+          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+        }
+      },
+      // 设置增加弹窗
+      setAddVisable () {
+        this.addEditVisable = true
+        this.unActForm.orderID = ''
+        this.unActForm.unActExpense = ''
+        this.unActForm.unActIncome = ''
+        // this.unActForm.unActTim = ''
+        this.unActForm.unActDes = ''
+        this.unActForm.serviceNam = ''
+      },
+      // 编辑/增加异动信息
+      addEdit () {
+        setTimeout(() => { this.addEditVisable = false }, 600)
+      },
+      // 删除异动信息
+      del () {
+        this.delVisable = false
+      },
+      handleSizeChange (val) {
+        this.gridOptions.api.paginationSetPageSize(Number(val))
+      },
+      handleCurrnetChange (val) {
+        this.gridOptions.api.paginationGoToPage(val - 1)
+      },
+      gridfilterChange () {
+        this.calculateGrid()
+      },
+      // 设置分页组件数据总数
+      calculateGrid () {
+        this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
+        this.rowCount = this.gridOptions.api.getModel().getRowCount()
       }
     },
-    // 设置增加弹窗
-    setAddVisable () {
-      this.addEditVisable = true
-      this.unActForm.orderID = ''
-      this.unActForm.unActExpense = ''
-      this.unActForm.unActIncome = ''
-      // this.unActForm.unActTim = ''
-      this.unActForm.unActDes = ''
-      this.unActForm.serviceNam = ''
+    beforeMount () {
+      this.createRowData()
     },
-    // 编辑/增加异动信息
-    addEdit () {
-      setTimeout(() => { this.addEditVisable = false }, 600)
-    },
-    // 删除异动信息
-    del () {
-      this.delVisable = false
-    },
-    handleSizeChange (val) {
-      this.gridOptions.api.paginationSetPageSize(Number(val))
-    },
-    handleCurrnetChange (val) {
-      this.gridOptions.api.paginationGoToPage(val - 1)
-    },
-    gridfilterChange () {
+    mounted () {
+      this.changeColumnDefsBoolen()
       this.calculateGrid()
-    },
-    // 设置分页组件数据总数
-    calculateGrid () {
-      this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
-      this.rowCount = this.gridOptions.api.getModel().getRowCount()
     }
-  },
-  beforeMount () {
-    this.createRowData()
-  },
-  mounted () {
-    this.changeColumnDefsBoolen()
-    this.calculateGrid()
   }
-}
 </script>
 <style>
-.el-select-css {
-  width: 50%;
-}
+  .el-select-css {
+    width: 50%;
+  }
 
-.del-but {
-  cursor: pointer;
-  float: right;
-  margin-right: 10px;
-  border-radius: 4px;
-  background: #fff;
-  border: 1px solid rgb(191, 217, 216);
-  color: rgb(31, 61, 60);
-  padding: 5px 10px;
-  font-size: 10px
-}
+  .del-but {
+    cursor: pointer;
+    float: right;
+    margin-right: 10px;
+    border-radius: 4px;
+    background: #fff;
+    border: 1px solid rgb(191, 217, 216);
+    color: rgb(31, 61, 60);
+    padding: 5px 10px;
+    font-size: 10px
+  }
 </style>

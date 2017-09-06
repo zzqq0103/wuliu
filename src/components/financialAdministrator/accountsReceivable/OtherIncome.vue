@@ -145,8 +145,8 @@
             </div>
           </el-form>
           <div style="float: right">
-            <el-button @click="leftSelect"> > </el-button>
-            <el-button @click="leftSelectAll"> >> </el-button>
+            <el-button @click="leftSelect"> ></el-button>
+            <el-button @click="leftSelectAll"> >></el-button>
           </div>
           <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged2" style="width: 200px"></el-input>
           <!--未核销处表格-->
@@ -177,8 +177,8 @@
               <el-button @click="colVisible3 = true">设置</el-button>
             </el-form-item>
           </el-form>
-          <el-button @click="rightSelect"> < </el-button>
-          <el-button @click="rightSelectAll"> << </el-button>
+          <el-button @click="rightSelect"> <</el-button>
+          <el-button @click="rightSelectAll"> <<</el-button>
           <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
           <!--待核销处表格-->
           <div style="margin-top: 10px">
@@ -241,9 +241,10 @@
 </template>
 
 <script>
-  import {AgGridVue} from 'ag-grid-vue'
+  import { AgGridVue } from 'ag-grid-vue'
   import testJson from '../../../../static/test/testJSON.js'
   import OrderDetails from '../ShowOrderDetails'
+
   export default {
     data () {
       return {
