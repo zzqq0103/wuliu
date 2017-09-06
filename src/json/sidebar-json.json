@@ -235,6 +235,11 @@
                         "index": "transportingInfo",
                         "title": "待运输",
                         "icon": ""
+                    },
+                    {
+                        "index": "transportDirect",
+                        "title": "长途直送",
+                        "icon": ""
                     }
                 ]
             },

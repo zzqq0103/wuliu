@@ -166,7 +166,6 @@ export default new Router({
           component: resolve => require(['../components/customerService/Transfer.vue'], resolve)
         },
         // 调度管理员的path路径开始
-
         // 1、已送货
         {
           path: '/deliveredInfo',
@@ -196,6 +195,11 @@ export default new Router({
         {
           path: '/transportingInfo',
           component: resolve => require(['../components/dispatch/transportingInfo.vue'], resolve)
+        },
+        // 长途直送运输
+        {
+          path: '/transportDirect',
+          component: resolve => require(['../components/dispatch/transportDirect.vue'], resolve)
         },
         // 7、已中转
         {

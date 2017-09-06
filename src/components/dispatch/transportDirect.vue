@@ -3,7 +3,7 @@
   <div>
     <div id="top">
       <!-- 标题 -->
-      <h2 style="text-align:center">已 长 途 运 输 装 载 单 信 息 页</h2>
+      <h2 style="text-align:center">长 途 直 送 装 载 单 信 息 页</h2>
 
       <!-- 操作栏 -->
       <div style="margin-top:2%">
