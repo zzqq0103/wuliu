@@ -27,7 +27,22 @@
       </p>
       <p style="margin-top:1%;float:right;margin-right:5%">
         <el-button>查找</el-button>
-        <el-button @click="setting">设置</el-button>
+        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+        <el-button v-popover:popover1>设置</el-button>
         <el-button>导出</el-button>
       </p>
     </div>
@@ -100,6 +115,7 @@
 <script>
   import { AgGridVue } from 'ag-grid-vue'
   import testJson from '../../../static/test/testJSON.js'
+  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
 
   export default {
     data () {
@@ -169,40 +185,102 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '预约单号', width: 100, field: 'Reservationnumber', filter: 'text', hide: false
+              headerName: '预约单号',
+              width: 100,
+              field: 'Reservationnumber',
+              suppressMenu: true,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '下单时间', width: 120, field: 'ordertime', filter: 'text', hide: false
+              headerName: '下单时间',
+              width: 120,
+              field: 'ordertime',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '发货单位', width: 120, field: 'forwardingunit', filter: 'text', hide: false
+              headerName: '发货单位',
+              width: 120,
+              field: 'forwardingunit',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '发货人', width: 80, field: 'consignershipper', filter: 'text', hide: false
+              headerName: '发货人',
+              width: 80,
+              field: 'consignershipper',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '发货电话', width: 150, field: 'deliveryphone', filter: 'text', hide: false
+              headerName: '发货电话',
+              width: 150,
+              field: 'deliveryphone',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '收货单位', width: 150, field: 'consignee', filter: 'text', hide: false
+              headerName: '收货单位',
+              width: 150,
+              field: 'consignee',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '收货人', width: 80, field: 'consigneeman', filter: 'text', hide: false
+              headerName: '收货人',
+              width: 80,
+              field: 'consigneeman',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '收货电话', width: 100, field: 'Receivingphone', filter: 'text', hide: false
+              headerName: '收货电话',
+              width: 100,
+              field: 'Receivingphone',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '接货司机', width: 100, field: 'driverreceiving', filter: 'text', hide: false
+              headerName: '接货司机',
+              width: 100,
+              field: 'driverreceiving',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '接货状态', width: 100, field: 'receivingstate', filter: 'text', hide: false
+              headerName: '接货状态',
+              width: 100,
+              field: 'receivingstate',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '取消预约单', field: 'value', width: 100, cellRendererFramework: 'receivingstate', hide: false
+              headerName: '取消预约单',
+              field: 'value',
+              width: 100,
+              suppressMenu: true,
+              cellRendererFramework: 'receivingstate',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '操作', field: 'value', width: 80, cellRendererFramework: 'operateComponent', hide: false
+              headerName: '操作',
+              field: 'value',
+              width: 80,
+              suppressMenu: true,
+              cellRendererFramework: 'operateComponent',
+              hide: false,
+              visible: true
             }
           ]
         }
@@ -249,14 +327,19 @@
           columnlist[i].hide = !columnlist[i].hide
         }
       },
-      setting () {
-        this.colVisible = true
-      },
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
-          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
         }
       },
+//      setting () {
+//        this.colVisible = true
+//      },
+//      updataColumnDefs (collist) {
+//        for (let i = 0; i < collist.length; i++) {
+//          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+//        }
+//      },
       // 增加
       enterpriseAdd () {
         this.enterpriseVisable = true
@@ -267,6 +350,18 @@
         this.enterpriseForm.carType = ''
         this.enterpriseForm.pickUpArea = ''
         this.enterpriseForm.carPosition = ''
+      },
+      visibleChoice (i) {
+        if (i === 1) {
+          for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+            this.gridOptions.columnDefs[j].visible = true
+          }
+        } else if (i === 2) {
+          for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+            this.gridOptions.columnDefs[j].visible = false
+          }
+        }
+        this.updataColumnDefs(this.gridOptions.columnDefs)
       }
     },
     beforeMount () {

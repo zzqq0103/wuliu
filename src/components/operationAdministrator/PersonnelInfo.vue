@@ -10,10 +10,10 @@
       <div>
         <el-button @click="addForm">添加</el-button>
         <!--<el-button @click="setting">设置</el-button>-->
-        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
             <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
+              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
                 {{collist.headerName}}
               </el-checkbox>
             </div>
@@ -170,25 +170,60 @@
               headerName: '序号', width: 100, field: 'index', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '客户企业名称', width: 150, field: 'clientCompNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '客户企业名称',
+              width: 150,
+              field: 'clientCompNam',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '联系人姓名', width: 150, field: 'nam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '联系人姓名',
+              width: 150,
+              field: 'nam',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '联系电话', width: 150, field: 'tel', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '联系电话',
+              width: 150,
+              field: 'tel',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '企业详细地址', width: 250, field: 'compAdr', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '企业详细地址',
+              width: 250,
+              field: 'compAdr',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '所属片区', width: 150, field: 'area', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '所属片区',
+              width: 150,
+              field: 'area',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '业务员ID', width: 150, field: 'salesmanId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '业务员ID',
+              width: 150,
+              field: 'salesmanId',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '是否三方', width: 150, field: 'isTril', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '是否三方',
+              width: 150,
+              field: 'isTril',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
               headerName: '操作',
