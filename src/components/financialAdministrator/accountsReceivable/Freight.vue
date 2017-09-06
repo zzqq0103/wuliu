@@ -60,10 +60,11 @@
       </div>
       <div style="float: right">
         <!--<el-button @click="setting">设置</el-button>-->
-        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
             <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)">
+              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)"
+                           style="float: left;width: 180px">
                 {{collist.headerName}}
               </el-checkbox>
             </div>
@@ -178,11 +179,12 @@
               <div style="float: right">
                 <el-button @click="drawGrid(2)">提取库存</el-button>
                 <!--<el-button @click="colVisible2 = true">设置</el-button>-->
-                <el-popover ref="popover2" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+                <el-popover ref="popover2" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                   <template v-for="(collist,i) in gridOptions2.columnDefs">
                     <div class="colVisible">
                       <el-checkbox v-model="collist.visible"
-                                   @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)">
+                                   @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)"
+                                   style="float: left;width: 180px">
                         {{collist.headerName}}
                       </el-checkbox>
                     </div>
@@ -238,10 +240,11 @@
             <el-form-item>
               <el-button @click="confirmSubmit">确认核销</el-button>
               <!--<el-button @click="colVisible3 = true">设置</el-button>-->
-              <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+              <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                 <template v-for="(collist,i) in gridOptions3.columnDefs">
                   <div class="colVisible">
-                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)">
+                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)"
+                                 style="float: left;width: 180px">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
@@ -910,7 +913,13 @@
               start.setDate(1)
               picker.$emit('pick', [start, end])
             }
-          }]
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
+          }
         }
       }
     },
