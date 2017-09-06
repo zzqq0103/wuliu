@@ -3,7 +3,7 @@
   <div>
     <div id="top">
       <!-- 标题 -->
-      <h2 style="text-align:center">已 中 转 装 载 单 信 息 页</h2>
+      <h2 style="text-align:center">已 中 转 订 单 信 息 页</h2>
 
       <!-- 操作栏 -->
       <div style="margin-top:2%">
@@ -22,7 +22,7 @@
         <!-- 查询 & 设置 -->
         <div style="float:left;">
 
-          <el-input placeholder="请输入查询数据" icon="search" v-model="queryName" :on-icon-click="handleIconClick" style="width:170px;"></el-input>
+          <el-input placeholder="请输入查询数据" icon="search" v-on:keyup.enter="getQueryData" v-model="queryName" :on-icon-click="handleIconClick" style="width:170px;"></el-input>
           <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>

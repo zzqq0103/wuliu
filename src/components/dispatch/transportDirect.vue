@@ -3,7 +3,7 @@
   <div>
     <div id="top">
       <!-- 标题 -->
-      <h2 style="text-align:center">待 中 转 订 单 信 息 页</h2>
+      <h2 style="text-align:center">长 途 直 送 装 载 单 信 息 页</h2>
 
       <!-- 操作栏 -->
       <div style="margin-top:2%">
@@ -22,7 +22,7 @@
         <!-- 查询 & 设置 -->
         <div style="float:left;">
 
-          <el-input placeholder="请输入查询数据" icon="search" v-model="queryName" :on-icon-click="handleIconClick" style="width:170px;"></el-input>
+          <el-input placeholder="请输入查询数据" icon="search" v-model="queryName" :on-icon-click="handleIconClick" style="width:145px;"></el-input>
           <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
@@ -105,7 +105,7 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {getCurrentEpiboliedList, getQueryEpiboliedList} from '../../api/api'
+  import {getCurrentTransportedData, getQueryTransOrderList} from '../../api/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
@@ -120,22 +120,25 @@
         orderId: '', // 运单号
         tableForm: {
           'id': '',
-          'orderId': '',
-          'orderDate': '',
-          'destinaiton': '',
-          'transitOpen': '',
-          'transitCompany': '',
-          'contractSpend': '',
-          'contractPrice': '',
-          'ectocyster': '',
-          'ectocystPhone': '',
-          'senderName': '',
-          'receiverName': '',
-          'goodsName': '',
-          'pack': '',
-          'numbers': '',
-          'weight': '',
-          'volume': '',
+          'loadOrderId': '',
+          'loadOrderStatus': '',
+          'adjustmentStatus': '',
+          'startStation': '',
+          'endStation': '',
+          'driverName': '',
+          'driverPhone': '',
+          'departTime': '',
+          'arriveTime': '',
+          'gross': '',
+          'freight': '',
+          'transhipment': '',
+          'refund': '',
+          'sendFee': '',
+          'allWeights': '',
+          'allVolumes': '',
+          'allNumbers': '',
+          'dispatcherName': '',
+          'dispatcherId': '',
           'remarks': ''
         },
         rules: {}, //
@@ -151,7 +154,7 @@
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '装载单号', width: 120, field: 'loadOrderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             // {
             //   headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -160,49 +163,58 @@
             //   headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false, filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             // },
             {
-              headerName: '开单时间', width: 120, field: 'orderDate', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '装载单状态', width: 120, field: 'loadOrderStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '到站点', width: 120, field: 'destinaiton', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调整状态', width: 120, field: 'adjustmentStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '中转起始点', width: 120, field: 'transitOpen', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '起始站', width: 120, field: 'startStation', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '中转外包公司', width: 120, field: 'transitCompany', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '到达站', width: 120, field: 'endStation', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '中转花费', width: 120, field: 'contractSpend', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车司机姓名', width: 120, field: 'driverName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '合同价格', width: 120, field: 'contractPrice', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车司机电话', width: 120, field: 'driverPhone', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '外包企业联系人', width: 120, field: 'ectocyster', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '发车时间', width: 120, field: 'departTime', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '外包企业联系电话', width: 120, field: 'ectocystPhone', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '到达时间', width: 120, field: 'arriveTime', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '发货人姓名', width: 120, field: 'senderName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车总毛利', width: 120, field: 'gross', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '收货人姓名', width: 120, field: 'receiverName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总运费', width: 120, field: 'freight', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '货物名称', width: 120, field: 'goodsName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总中转费', width: 120, field: 'transhipment', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '包装', field: 'pack', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总返款', width: 120, field: 'refund', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '件数', field: 'numbers', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总提送费', width: 120, field: 'sendFee', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '重量', field: 'weight', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总重量', width: 120, field: 'allWeights', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '体积', field: 'volume', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总体积', width: 120, field: 'allVolumes', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '总件数', width: 120, field: 'allNumbers', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '调度管理员编号', width: 120, field: 'dispatcherId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '调度管理员姓名', field: 'dispatcherName', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '备注', field: 'remarks', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -212,16 +224,10 @@
         // 查询的参数
         queryItemOptions: [{
           value: 1,
-          label: '订单号'
+          label: '装载单号'
         }, {
           value: 2,
-          label: '发货人姓名'
-        }, {
-          value: 3,
-          label: '收货人姓名'
-        }, {
-          value: 4,
-          label: '中转外包公司'
+          label: '司机姓名'
         }],
         selectvalue: 1, // 查询的参数，(装载单号、订单号、司机)
         orderlist: [], // 订单列表
@@ -330,7 +336,7 @@
           pageSize: this.pageSize
         }
         this.listLoading = true
-        getCurrentEpiboliedList(para).then((res) => {
+        getCurrentTransportedData(para).then((res) => {
           // console.log('进入getCurrentDelivered')
           // this.gridOptions.rowData = res.data.orderlists
           // 使用gridOptions中的api方法设定RowData数据
@@ -349,7 +355,7 @@
           pageSize: this.pageSize
         }
         this.listLoading = true
-        getQueryEpiboliedList(para).then(res => {
+        getQueryTransOrderList(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
