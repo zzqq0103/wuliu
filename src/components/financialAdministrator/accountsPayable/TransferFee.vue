@@ -18,8 +18,8 @@
           </template>
           <template>
             <div class="colVisible">
-              <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
             </div>
           </template>
         </el-popover>
@@ -64,7 +64,7 @@
 
     <!--表格-->
     <div style="margin-top: 10px">
-      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+      <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
@@ -157,17 +157,18 @@
               <div style="float: right">
                 <el-button @click="drawGrid(2)">提取库存</el-button>
                 <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
-                  <template v-for="(collist,i) in gridOptions.columnDefs">
+                  <template v-for="(collist,i) in gridOptions2.columnDefs">
                     <div class="colVisible">
-                      <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
+                      <el-checkbox v-model="collist.visible"
+                                   @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)">
                         {{collist.headerName}}
                       </el-checkbox>
                     </div>
                   </template>
                   <template>
                     <div class="colVisible">
-                      <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-                      <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+                      <el-button @click="visibleChoice(1,'grid2')" size="small">全选</el-button>
+                      <el-button @click="visibleChoice(2,'grid2')" size="small">全不选</el-button>
                     </div>
                   </template>
                 </el-popover>
@@ -187,7 +188,7 @@
           <!--未核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
-                         :gridOptions="gridOptions"
+                         :gridOptions="gridOptions2"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
                          :enableSorting="true"
@@ -197,10 +198,9 @@
                          :rowHeight=40
                          :headerHeight=40
 
-                         :pagination="true"
-                         :paginationPageSize="10"
-                         :suppressPaginationPanel="true"
-                         :filterChanged="gridfilterChange"
+                         :rowDoubleClicked="leftDoubleClick"
+                         :animateRows="true"
+                         rowSelection="multiple"
             ></ag-grid-vue>
           </div>
         </el-col>
@@ -212,17 +212,17 @@
             <el-form-item>
               <el-button @click="confirmSubmit">确认核销</el-button>
               <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
-                <template v-for="(collist,i) in gridOptions.columnDefs">
+                <template v-for="(collist,i) in gridOptions3.columnDefs">
                   <div class="colVisible">
-                    <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
+                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
                 </template>
                 <template>
                   <div class="colVisible">
-                    <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-                    <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+                    <el-button @click="visibleChoice(1,'grid3')" size="small">全选</el-button>
+                    <el-button @click="visibleChoice(2,'grid3')" size="small">全不选</el-button>
                   </div>
                 </template>
               </el-popover>
@@ -235,7 +235,7 @@
           <!--待核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
-                         :gridOptions="gridOptions"
+                         :gridOptions="gridOptions3"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
                          :enableSorting="true"
@@ -245,10 +245,10 @@
                          :rowHeight=40
                          :headerHeight=40
 
-                         :pagination="true"
-                         :paginationPageSize="10"
-                         :suppressPaginationPanel="true"
-                         :filterChanged="gridfilterChange"
+                         :gridReady="grid3Ready"
+                         :rowDoubleClicked="rightDoubleClick"
+                         :animateRows="true"
+                         rowSelection="multiple"
             ></ag-grid-vue>
           </div>
         </el-col>
@@ -377,24 +377,6 @@
             },
             {
               headerName: '体积 ', width: 150, field: 'goodsVolume', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            {
-              headerName: '中转费', width: 150, field: 'totalChanFee ', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            {
-              headerName: '核销状态', width: 150, field: 'veriState', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            {
-              headerName: '核销人', width: 150, field: 'veriNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            {
-              headerName: '核销日期', width: 150, field: 'veriTim', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            {
-              headerName: '核销站点', width: 150, field: 'veriSite', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            {
-              headerName: '支付方式', width: 150, field: 'payMode', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '中转费', width: 150, field: 'totalChanFee ', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -643,16 +625,19 @@
         }
       },
       // 更新列数据
+// 更新列数据
       updateGrid (i) {
         if (i === 1) {
           this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
         } else if (i === 2) {
-          console.log(this.gridOptions2.columnDefs)
+          console.log(this.filterForm)
           this.gridOptions2.api.setColumnDefs(this.gridOptions2.columnDefs)
           this.gridOptions3.api.setColumnDefs(this.gridOptions3.columnDefs)
         }
-
 //        console.log(this.gridOptions.columnDefs)
+      },
+      grid3Ready () {
+        this.updateGrid(2)
       },
       // 切换列的可见性，三个表格，三个参数j
       updateColumnDefsVisible (j, collist) {
@@ -670,6 +655,30 @@
           }
         }
       },
+      visibleChoice (i, gridnum) {
+        let gridCol
+        let num
+        if (gridnum === 'grid1') {
+          gridCol = this.gridOptions
+          num = 1
+        } else if (gridnum === 'grid2') {
+          gridCol = this.gridOptions2
+          num = 2
+        } else if (gridnum === 'grid3') {
+          gridCol = this.gridOptions3
+          num = 3
+        }
+        if (i === 1) {
+          for (let j = 0; j < gridCol.columnDefs.length; j++) {
+            gridCol.columnDefs[j].visible = true
+          }
+        } else if (i === 2) {
+          for (let j = 0; j < gridCol.columnDefs.length; j++) {
+            gridCol.columnDefs[j].visible = false
+          }
+        }
+        this.updateColumnDefsVisible(num, gridCol.columnDefs)
+      },
       // 三个表格的快速匹配
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
@@ -680,14 +689,6 @@
       onQuickFilterChanged3 (input) {
         this.gridOptions3.api.setQuickFilter(input)
       },
-      // 更改hide的值，（已放弃），添加了visible作为切换可见的条件
-//      changeColumnDefsBoolen () {
-//        const columnlist = this.gridOptions.columnDefs
-//        for (let i = 0; i < columnlist.length; i++) {
-//          columnlist[i].hide = !columnlist[i].hide
-//        }
-//      },
-
       // 分页的操作
       // 每页显示数量改变时
       handleSizeChange (val) {
@@ -799,18 +800,6 @@
         console.log(this.confirmSubForm)
         this.confirmSubVisible = false
         this.drawGrid(2)
-      },
-      visibleChoice (i) {
-        if (i === 1) {
-          for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
-            this.gridOptions.columnDefs[j].visible = true
-          }
-        } else if (i === 2) {
-          for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
-            this.gridOptions.columnDefs[j].visible = false
-          }
-        }
-        this.updataColumnDefs(this.gridOptions.columnDefs)
       },
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
