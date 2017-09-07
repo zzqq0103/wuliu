@@ -49,7 +49,7 @@
 
 <script>
  // 引入表格组件
-import {AgGridVue} from 'ag-grid-vue'
+// import {AgGridVue} from 'ag-grid-vue'
  // 引入订单详情列表
  import {OrderDetail} from '../financialAdministrator/ShowOrderDetails'
 // 引入外部筛选函数组件系统
