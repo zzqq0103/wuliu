@@ -2,13 +2,21 @@
   <div>
     <h2 style="text-align:center;margin-top:0">新建预约单</h2>
     <div class='div-form'>
-      <el-form :model="test2">
+      <el-form >          
         <el-form-item label="发货方：" style="float:left;width:50%;">
           <input type="text" list="shipComp" v-model="shipComp" class='input-tishi' style="float:left;width:50%"/>
           <datalist id="shipComp">
             <option v-for="item in shipTipList" :value="item" :key="item"/>
           </datalist>
         </el-form-item>
+
+        <el-form-item label="目的站：" style="float:left;width:50%">
+          <input type="text" list="arrStation" v-model="arrStation" class='input-tishi' style="float:left;width:50%" />
+          <datalist id="arrStation">
+            <option v-for="item in arrStationList" :value="item" :key="item" />
+          </datalist>
+        </el-form-item>
+
         <el-form-item label="联系人：" style="float:left;width:50%">
           <el-input v-model="shipNam" style="width:60%"></el-input>
         </el-form-item>
@@ -16,10 +24,9 @@
           <el-input v-model="shipTel" style="width:60%;margin-left:5%"></el-input>
         </el-form-item>
         <el-form-item label="提货地址：" style="clear:both;width:100%">
-          <div v-bind:class="{'dropdown':!isFocus, 'dropdown2':isFocus}">
-            <el-input v-model="pickUpAdr" v-bind:readonly="isReadOnly" style="width:78%;margin-left:-3%"
-                      v-bind:style="{width:inputWidth + '%'}" @focus="addressVisible=true"></el-input>
-            <div class="dropdown-content" v-bind:style="{width:dropdownWidth + '%'}" v-show="addressVisible">
+          <div id='focus1' class="dropdown2" style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(1)" @blur="addressVisible=false">
+            <el-input v-model="pickUpAdr" placeholder="请选择提货地址"  readonly="readonly"style="width:400px;margin-left:-3%;width:73%" ></el-input>
+            <div class="dropdown-content" style='width:33%' v-show="addressVisible"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
                 <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
@@ -44,7 +51,7 @@
               </div>
             </div>
           </div>
-          <el-input class='addressDetail' placeholder="输入详细地址" v-show="detailVisible"></el-input>
+          <el-input class='addressDetail' placeholder="输入详细提货地址"></el-input>
         </el-form-item>
         <el-form-item label="货物名称：" style="float:left;width:50%">
           <el-input v-model="goodsNam" style="width:60%;margin-left:-4%"></el-input>
@@ -77,10 +84,9 @@
           <el-input v-model="receTel" style="width:60%;margin-left:5%"></el-input>
         </el-form-item>
         <el-form-item label="收货地址：" style="clear:both;width:100%">
-          <div v-bind:class="{'dropdown':!isFocus2, 'dropdown2':isFocus2}">
-            <el-input v-model="receAdr" v-bind:readonly="isReadOnly2" style="width:78%;margin-left:-3%"
-                      v-bind:style="{width:inputWidth2 + '%'}" @focus="addressVisible2 = true"></el-input>
-            <div class="dropdown-content" v-bind:style="{width:dropdownWidth2 + '%'}" v-show="addressVisible2">
+          <div id='focus2' class='dropdown2' style='outline:none' contenteditable="true" tabindex="0"  @click="getFocus(2)" @blur="addressVisible2=false">
+            <el-input v-model="receAdr" placeholder="请选择收货地址" readonly="readonly" style="width:78%;margin-left:-3%;width:73%"></el-input>
+            <div class="dropdown-content" style='width:33%' v-show="addressVisible2"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
                 <li @click="setShi(2)" class='dropdown-li' v-bind:class="{'selectOn':shi2}">城市</li>
@@ -97,15 +103,13 @@
                       :key='data.name'>{{data.name}}
                   </li>
                 </ul>
-                <ul v-show="quyu">
-                  <li v-for="(data,i) in this.quList2" @click="selectQu(2,data.name)" style='text-align:center'
-                      :key='data.name'>{{data.name}}
-                  </li>
+                <ul v-show="quyu2">
+                  <li v-for="(data,i) in this.quList2" @click="selectQu(2,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
                 </ul>
               </div>
             </div>
           </div>
-          <el-input class='addressDetail' placeholder="输入详细地址" v-show="detailVisible2"></el-input>
+          <el-input class='addressDetail' placeholder="输入详细收货地址"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -191,6 +195,15 @@
       }
     },
     methods: {
+      getFocus (num) {
+        if (num === 1) {
+          this.addressVisible = true
+          document.getElementById('focus1').focus()
+        } else {
+          this.addressVisible2 = true
+          document.getElementById('focus2').focus()
+        }
+      },
       selectShenfen (num, name) {
         if (num === 1) {
           this.shenfenSelected = name

@@ -2,36 +2,60 @@
   <div>
     <h2 style="text-align:center">网点开单</h2>
     <el-form ref="form" :model="form">
-      <div style='margin-top:2%;display:inline-block'>
-        <span style='float:left;padding-top:0.7%' class='col-1'>订单号：</span>
-        <span style='float:left;padding-top:1%' class='col-1'>{{form.id}}</span>
-        <span class='order-title-base'>开单网点：</span>
-        <el-select v-model="form.billBranch" placeholder="请选择" class='col-1' style='float:left'>
-          <el-option key="yes" label="是" value="yes"></el-option>
-          <el-option key="no" label="否" value="no"></el-option>
-        </el-select>
-        <span class='order-title-base'>始发站：</span>
+      <div style='margin-top:2%;display:inline-block;width:100%'>
+        <span style='float:left;padding-top:0.7%;width:5%'>日期：</span>
+        <span style='float:left;padding-top:0.9%;width:13%'>{{timeNow}}</span>
+        <span class='order-title-base' style='width:7%'>始发站：</span>
         <el-select v-model="form.startStation" placeholder="请选择" class='col-1' style='float:left'>
-          <el-option key="yes" label="是" value="yes"></el-option>
-          <el-option key="no" label="否" value="no"></el-option>
+          <el-option key="beijing" label="北京" value="beijing"></el-option>
+          <el-option key="nanjing" label="南京" value="nanjing"></el-option>
         </el-select>
-        <span class='order-title-base'>目的站：</span>
-        <el-select v-model="form.arrStation" placeholder="请选择" class='col-1' style='float:left'>
-          <el-option key="yes" label="是" value="yes"></el-option>
-          <el-option key="no" label="否" value="no"></el-option>
-        </el-select>
-        <span class='col-1 order-title-base'>经办人：</span>
-        <span style='float:left;padding-top:0.7%' class='col-1'>{{form.serviceNam}}</span>
+        <span class='order-title-base' style='width:7%'>目的地：</span>
+        <el-form-item style="float:left;width:10%">
+          <input type="text" list="arrStation" v-model="form.arrStation" class='input-tishi' style="float:left;width:100%" />
+          <datalist id="arrStation">
+            <option v-for="item in initForm.arrStationList" :value="item" :key="item" />
+          </datalist>
+        </el-form-item>
+        <span style='float:left;padding:0.7% 0 0 2%;width:7%'>订单号：</span>
+        <span style='float:left;padding-top:0.9%;width:15%'>{{initForm.orderId}}</span>
       </div>
       <div style='margin-top:2%;clear:both'>
-        <span class='label col-1'>发货方:</span>
-        <input v-model="form.shipNam" class='input col-2'></input>
-        <div class='label col-1'>联系方式:</div>
-        <input v-model="form.shipTel" class='input col-2'></input>
-        <div class='label col-1'>发货地址:</div>
+        <span class='label col-1'>发货方</span>
+        <!--
+        <div id='focus_fahuo' class='dropdown' style='outline:none'  tabindex="0" @click="getFocus(3)" @blur="fahuoShow=false">
+            <input type="text" 上  class='input col-4'  placeholder="请输入发货方名称"></input>
+            <div class="dropdown-content" v-show="fahuoShow" style='width:38%'> 
+              <div class='dropdown-select'>
+                <ul class='dropdown-fahuo'>
+                  <li v-bind:key="data" v-for="(data,i) in this.fahuoList"  v-on:dblclick="clickFahuo(data)"  style='text-align:center;font-size:100%;padding:1% 0 1% 0'>{{data}}</li>
+                </ul>
+              </div>
+            </div>
+        </div>
+        -->
         <div class='dropdown'>
-            <input type="text" v-model="baseAddress" v-bind:readonly="isReadOnly" class='input col-3' @focus="addressVisible=true" placeholder="请选择地址"></input>
-            <div class="dropdown-content" v-show="addressVisible"> 
+            <input type="text" 上  class='input col-4' v-model='fahuoKeyword' @keyup="getSearchFahuo()"  placeholder="请输入发货方名称"></input>
+            <div class="dropdown-content" v-show="fahuoShow" style='width:38%'> 
+              <div class='dropdown-select'>
+                <ul class='dropdown-fahuo'>
+                  <li v-bind:key="data" v-for="(data,i) in this.fahuoList"  v-on:dblclick="clickFahuo(data)"  style='text-align:center;font-size:100%;padding:1% 0 1% 0'>{{data}}</li>
+                </ul>
+              </div>
+            </div>
+        </div>
+        <span class='label col-1'>收货方</span>
+        <input class='input col-4' style='height:38px' v-model="form.receNam"></input>
+        <span class='label col-1'>电话</span>
+        <input class='input col-4' style='height:38px' v-model="form.shipTel"></input>
+        <span class='label col-1'>电话</span>
+        <input class='input col-4' style='height:38px' v-model="form.receTel"></input>
+        <!-- <span class='label col-1'>地址</span>
+        <input class='input col-4' style='height:38px'></input> -->
+        <div class='label col-1'>提货地址:</div>
+        <div id='focus_fahuoAd' class='dropdown' style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(1)" @blur="addressVisible=false">
+            <input type="text" v-model="form.baseAddressFa" v-bind:readonly="isReadOnly" class='input col-2' @focus="addressVisible=true" placeholder="请选择发货地址"></input>
+            <div class="dropdown-content2" v-show="addressVisible"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
                 <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
@@ -50,15 +74,11 @@
               </div>
             </div>
         </div>
-        <input class='input col-3' v-model='form.pickUpAdr' placeholder="详细地址"></input>
-        <div class='label col-1'>发货方:</div>
-        <input v-model="form.receNam" class='input col-2'></input>
-        <div class='label col-1'>联系方式:</div>
-        <input v-model="form.recetel" class='input col-2'></input>
-        <div class='label col-1'>收货地址:</div>
-        <div class='dropdown'>
-            <input type="text" v-model="baseAddress2" v-bind:readonly="isReadOnly2" class='input col-3' @focus="addressVisible2=true" placeholder="请选择地址"></input>
-            <div class="dropdown-content" style='margin-top:7%' v-show="addressVisible2"> 
+        <input class='input col-2' v-model='form.pickUpAdr' placeholder="输入详细提货地址"></input>
+        <span class='label col-1'>收货地址</span>
+        <div id='focus_shouhuoAd' class="dropdown2" style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(2)" @blur="addressVisible2=false">
+            <input type="text" v-model="form.baseAddressShou" v-bind:readonly="isReadOnly" class='input col-2' @focus="addressVisible2=true" placeholder="请选择提货地址"></input>
+            <div class="dropdown-content2" style='width:19%;margin-left:58.2%;margin-top:7.6%' v-show="addressVisible2"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
                 <li @click="setShi(2)" class='dropdown-li' v-bind:class="{'selectOn':shi2}">城市</li>
@@ -76,100 +96,86 @@
                 </ul>
               </div>
             </div>
-        </div>
-        <input class='input col-3' v-model='form.receAdr' placeholder="详细地址"></input>
-        <div class='label col-1'>货物名称</div>
-        <div class='label col-1'>件 数</div>
-        <div class='label col-1'>重 量</div>
-        <div class='label col-1'>体 积</div>
-        <div class='label col-1'>包 装</div>
-        <div class='label col-2'>是否等通知放货</div>
-        <div class='label col-2'>订单类型：</div>
-        <div class='label col-4'>
-          <el-radio-group v-model="form.orderType">
-            <el-radio label="普件"></el-radio>
-            <el-radio label="加急件"></el-radio>
-          </el-radio-group>
-        </div>
-        <input v-model="form.goodsNam" class='input col-1'></input>
-        <input v-model="form.goodsNums" class='input col-1'></input>
-        <input v-model="form.goodsWeight" class='input col-1'></input>
-        <input v-model="form.goodsVolumn" class='input col-1'></input>
-        <el-select v-model="form.package" placeholder="请选择" class='col-1 select'>
-          <el-option v-for="item in selectItem" :label="item.desc" :value="item.id" :key="item.id">
-          </el-option>
+          </div>
+        <input class='input col-2' placeholder="输入详细收货地址" v-model="form.receAdr"></input>
+        <span class='label label-mo col-1'>货物名称</span>
+        <span class='label label-mo col-1'>包装</span>
+        <span class='label col-1 label-mo'>件数</span>
+        <span class='label col-1 label-mo'>重量</span>
+        <span class='label col-1 label-mo'>体积</span>
+        <span class='label col-1 label-mo'>运输方式</span>
+        <span class='label col-1 label-mo'>交货方式</span>
+        <label class='label col-1 label-mo'>是否控货</label>
+        <label class='label2 col-2' style="height:29px">回单</label>
+        <label class='label2 col-1' style="height:29px">回单份数</label>
+        <label class='label2 col-1' style="height:29px">回单押款</label>
+        <input class='input col-1 input-mid' v-model="form.goodsNam"></input>
+        <el-select placeholder="" class='col-1 select' v-model="form.package">
+          <el-option key="zhixiang" label="纸箱" value="zhixiang"></el-option>
+          <el-option key="muxiang" label="木箱" value="muxiang"></el-option>
+          <el-option key="mukuang" label="木框" value="mukuang"></el-option>
+          <el-option key="bianzhidai" label="编织袋" value="bianzhidai"></el-option>
+          <el-option key="dai" label="袋" value="dai"></el-option>
+          <el-option key="mo" label="膜" value="mo"></el-option>
+          <el-option key="tong" label="桶" value="tong"></el-option>
+          <el-option key="no" label="无" value="no"></el-option>
         </el-select>
-        <el-select v-model="form.isFang" placeholder="请选择" class='col-2 select'>
+        <input class='input col-1 input-mid' v-model="form.goodsNums"></input>
+        <input class='input col-1 input-mid' v-model="form.goodsWeight"></input>
+        <input class='input col-1 input-mid' v-model="form.goodsVolumn"></input>
+        <el-select placeholder="" class='col-1 select input-mid' v-model="form.orderType">
+          <el-option key="zhixiang" label="普件" value="pujian"></el-option>
+          <el-option key="muxiang" label="加急件" value="jiajijian"></el-option>
+        </el-select>
+        <el-select placeholder="" class='col-1 select input-mid' v-model="form.sendMode">
+          <el-option key="zhixiang" label="自提" value="ziti"></el-option>
+          <el-option key="muxiang" label="送货上门" value="songhuo"></el-option>
+        </el-select>
+        <el-select placeholder="" class='col-1 select input-mid' v-model="form.isListenToRele">
           <el-option key="yes" label="是" value="yes"></el-option>
           <el-option key="no" label="否" value="no"></el-option>
         </el-select>
-        <div class='label col-2'>送货方式</div>
-        <div class='label col-4'>
-          <el-radio-group v-model="form.sendMode">
-            <el-radio label="自提"></el-radio>
-            <el-radio label="送货上门"></el-radio>
-          </el-radio-group>
-        </div>
-        <div class='label col-1 label-title'>运费</div>
-        <div class='label col-1'>基础运费</div>
-        <input class='input col-1' v-model="form.baseFee"></input>
-        <div class='label col-1'>包装费</div>
-        <input class='input col-1' v-model="form.packFee"></input>
-        <div class='label col-1'>送货费</div>
-        <input class='input col-1' v-model="form.sendFee"></input>
-        <div class='label col-1'>卸货费</div>
-        <input class='input col-1' v-model="form.landingFee"></input>
-        <div class='label col-1'>提货费</div>
-        <input class='input col-1' v-model="form.pickUpFee"></input>
-        <div class='label col-1'>合计</div>
-        <input class='input col-1' v-model="form.totalFee"></input>
-        <div class='label col-1 label-title'>附加费</div>
-        <div class='label col-1'>货款金额</div>
-        <input class='input col-1' v-model="form.goodsPayment"></input>
-        <div class='label col-2'>货款代收手续费</div>
-        <input class='input col-2' v-model="form.procedureFee"></input>
-        <div class='label col-1'>保额</div>
-        <input class='input col-2' v-model="form.coverage"></input>
-        <div class='label col-1'>保险费</div>
-        <input class='input col-2' v-model="form.insurance"></input>
-        <div class='label col-1 label-title'>回单押款</div>
-        <div class='label col-1'>回单份数</div>
-        <input class='input col-2' v-model="form.receNums"></input>
-        <div class='label col-1'>回单押款</div>
-        <input class='input col-2' v-model="form.receMoney"></input>
-        <div class='label col-1 label-title'>返款</div>
-        <div class='label col-1'>返款方式</div>
-        <div class='label col-2'>
-          <el-radio-group v-model="form.orderType">
-            <el-radio label="现 返"></el-radio>
-            <el-radio label="欠 返"></el-radio>
-          </el-radio-group>
-        </div>
-        <div class='label col-1'>返款金额</div>
-        <input class='input col-1' v-model="form.refuMoney"></input>
-        <div class='label col-1 label-title'>总付金额</div>
-        <input class='input col-4' v-model="form.totalFreight"></input>
-        <div class='label col-1'>现付金额</div>
-        <input class='input col-1' v-model="form.feeMoney[0]"></input>
-        <div class='label col-1'>到付金额</div>
-        <input class='input col-1' v-model="form.feeMoney[1]"></input>
-        <div class='label col-1'>欠付金额</div>
-        <input class='input col-1' v-model="form.feeMoney[2]"></input>
-        <div class='label col-1'>月结金额</div>
-        <input class='input col-1' v-model="form.feeMoney[3]"></input>
-        <div class='label col-1'>备注：</div>
-        <input class='input col-12' v-model="form.orderNote"></input>
+        <input type="text" list="receList" v-model="form.receNums" class='input-tishi col-1 select input-mid'/>
+        <datalist id="receList">
+          <option v-for="item in receList" :value="item" :key="item" />
+        </datalist>
+        <input class='input col-1' v-model="form.receMoney"></input>
+        <span class='label col-1 label-mo'>运费</span>
+        <span class='label col-1 label-mo'>提货费</span>
+        <span class='label col-1 label-mo'>送货费</span>
+        <span class='label col-1 label-mo'>包装费</span>
+        <span class='label col-1 label-mo'>卸货费</span>
+        <span class='label col-1 label-mo'>保价费</span>
+        <span class='label col-1 label-mo'>代收费</span>
+        <label class='label col-1 label-mo'>其它费用</label>
+        <label class='label2 col-2' style="height:29px">返款</label>
+        <label class='label2 col-1' style="height:29px">金额</label>
+        <label class='label2 col-1' style="height:29px">支付方式</label>
+        <input class='input col-1 input-mid' v-model="form.baseFee"></input>
+        <input class='input col-1 input-mid' v-model="form.pickUpFee"></input>
+        <input class='input col-1 input-mid' v-model="form.sendFee"></input>
+        <input class='input col-1 input-mid' v-model="form.packFee"></input>
+        <input class='input col-1 input-mid' v-model="form.landingFee"></input>
+        <input class='input col-1 input-mid' v-model="form.insurance" @click="coverageVisible = true" v-bind:readonly="true"></input>
+        <input class='input col-1 input-mid'></input>
+        <input class='input col-1 input-mid'></input>
+        <input class='input col-1 input-mid' v-model="form.refuMoney"></input>
+        <input class='input col-1 input-mid'></input>
+        <span class='label col-1 input-mid'>费用合计</span>
+        <input class='input col-2'></input>
       </div>
     </el-form>
-    <div style='text-align:center'>
-      <el-button style='margin-top:2%'>保存</el-button>
-      <el-button style='margin-left:10%' @click="cancleVisable=true">取消</el-button>
-    </div>
-    <el-dialog title="" :visible.sync="cancleVisable" size="" tiny>
-      <h2 style="padding:30px">确定取消吗？</h2>
+    <!-- 输入保额弹窗 -->
+    <el-dialog :visible.sync="coverageVisible" size="tiny">
+      <el-form :rules="rules" v-model='form' style='text-align:center;verticle-align:center'>
+        <span style='float:left;padding:2% 0% 0% 5%'>保额：</span>
+        <el-form-item>
+          <el-input style='width:60%'  v-model='form.coverage'></el-input>
+        </el-form-item>
+      </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancleOrder">取 消</el-button>
-        <el-button @click="submitOrder">确 定</el-button>
+        <el-button @click="coverageVisible = false">取 消</el-button>
+        <el-button type="primary" @click="setInsurance">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -184,6 +190,25 @@ export default {
   },
   data: function () {
     return {
+      receList: [1, 2, 3],
+      coverageVisible: false, // 保额输入弹窗
+      fahuoRelated: {
+        baseAddressFa: '北京北京海淀区',
+        baseAddressShou: '江苏无锡惠山区',
+        shipNam: '张三',
+        shipTel: '12345',
+        pickUpAdr: '1234566',
+        receNam: '李四',
+        receTel: '12345',
+        receAdr: '654321',
+        goodsNam: '沙发',
+        goodsNums: '5',
+        goodsWeight: '120',
+        goodsVolumn: '120',
+        package: '纸箱'
+      },
+      fahuoList: [],
+      fahuoShow: false,
       /** 地址内容 */
       shenfenSelected: '',
       shiSelected: '',
@@ -196,8 +221,6 @@ export default {
       quList: [],
       shiList2: [],
       quList2: [],
-      baseAddress: '',
-      baseAddress2: '',
       /** 地址样式 */
       addressVisible: false,
       addressVisible2: false,
@@ -212,27 +235,32 @@ export default {
       isFocus2: false,
       isReadOnly: false,
       isReadOnly2: false,
+      initForm: {
+        arrStationList: ['目的站1', '目的站2', '目的站3', '目的站4', '目的站5', '目的站6'],
+        orderId: '121212'
+      },
       form: {
         id: '12345',
         billBranch: '',
         startStation: '',
         arrStation: '',
-        serviceNam: '李四',
-        shipNam: '张三',
-        shipTel: '12345',
+        serviceNam: '',
+        shipNam: '',
+        shipTel: '',
         pickUpAdr: '',
-        receNam: '李四',
-        receTel: '12345',
+        receNam: '',
+        receTel: '',
         receAdr: '',
-        goodsNam: '沙发',
-        goodsNums: '5',
-        goodsWeight: '120',
-        goodsVolumn: '120',
+        goodsNam: '',
+        goodsNums: '',
+        goodsWeight: '',
+        goodsVolumn: '',
         package: '',
-        isFang: '',
+        isListenToRele: '',
         orderType: '',
+        tranMode: '',
         sendMode: '',
-        baseFee: '100',
+        baseFee: '',
         packFee: '',
         sendFee: '',
         pickUpFee: '',
@@ -248,16 +276,79 @@ export default {
         refuMoney: '',
         totalFreight: '',
         feeMoney: [100.2, 200.3, 333.2, 100.00],
-        orderNote: ''
-      },
-      selectItem: [
-        { desc: '泡沫', id: 'pm' },
-        { desc: '塑料', id: 'sl' },
-        { desc: '纸箱', id: 'zx' }
-      ]
+        orderNote: '',
+        baseAddressFa: '',
+        baseAddressShou: ''
+      }
+    }
+  },
+  computed: {
+    timeNow: function () {
+      let date = new Date()
+      let seperator1 = '-'
+      let seperator2 = ':'
+      let month = date.getMonth() + 1
+      let strDate = date.getDate()
+      if (month >= 1 && month <= 9) {
+        month = '0' + month
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate
+      }
+      let currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate +
+              ' ' + date.getHours() + seperator2 + date.getMinutes() +
+              seperator2 + date.getSeconds()
+      return currentdate
     }
   },
   methods: {
+    test () {
+      alert('sds')
+    },
+    // 实时搜索发货方列表
+    getSearchFahuo () {
+      if (this.fahuoKeyword !== '') {
+        this.fahuoShow = true
+        this.fahuoList = ['发货方1', '发货方2', '发货方3', '发货方4']
+      } else if (this.fahuoKeyword === '') {
+        this.fahuoShow = false
+      }
+    },
+    // 根据保额设置保价费
+    setInsurance () {
+      this.form.insurance = this.form.coverage * 0.005
+      this.coverageVisible = false
+    },
+    // 双击发货方列表补充数据
+    clickFahuo (data) {
+      this.form.shipNam = data
+      this.fahuoShow = false
+      this.form.shipNam = data
+      this.form.shipTel = this.fahuoRelated.shipTel
+      this.form.pickUpAdr = this.fahuoRelated.pickUpAdr
+      this.form.receNam = this.fahuoRelated.receNam
+      this.form.receTel = this.fahuoRelated.receTel
+      this.form.receAdr = this.fahuoRelated.receAdr
+      this.form.goodsNam = this.fahuoRelated.goodsNam
+      this.form.goodsNums = this.fahuoRelated.goodsNums
+      this.form.goodsWeight = this.fahuoRelated.goodsWeight
+      this.form.goodsVolumn = this.fahuoRelated.goodsVolumn
+      this.form.package = this.fahuoRelated.package
+      this.form.baseAddressFa = this.fahuoRelated.baseAddressFa
+      this.form.baseAddressShou = this.fahuoRelated.baseAddressShou
+    },
+    getFocus (num) {
+      if (num === 1) {
+        this.addressVisible = true
+        document.getElementById('focus_fahuoAd').focus()
+      } else if (num === 2) {
+        this.addressVisible2 = true
+        document.getElementById('focus_shouhuoAd').focus()
+      } else {
+        /* document.getElementById('focus_fahuo').focus()
+        this.fahuoShow = true */
+      }
+    },
     cancleOrder () {
       this.cancleVisable = false
     },
@@ -278,8 +369,8 @@ export default {
         this.quList2 = []
         this.shiList2 = []
       }
-      this.baseAddress2 = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-      this.baseAddress = this.shenfenSelected + this.shiSelected + this.quSelected
+      this.form.baseAddressShou = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+      this.form.baseAddressFa = this.shenfenSelected + this.shiSelected + this.quSelected
     },
     selectShi (num, name) {
       if (num === 1) {
@@ -291,23 +382,21 @@ export default {
         this.quSelected2 = ''
         this.quList2 = []
       }
-      this.baseAddress2 = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-      this.baseAddress = this.shenfenSelected + this.shiSelected + this.quSelected
+      this.form.baseAddressShou = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+      this.form.baseAddressFa = this.shenfenSelected + this.shiSelected + this.quSelected
     },
     selectQu (num, name) {
       if (num === 1) {
         this.quSelected = name
         this.addressVisible = false
-        this.detailVisible = true
         this.isReadOnly = true
       } else {
         this.quSelected2 = name
         this.addressVisible2 = false
-        this.detailVisible2 = true
         this.isReadOnly2 = true
       }
-      this.baseAddress2 = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-      this.baseAddress = this.shenfenSelected + this.shiSelected + this.quSelected
+      this.form.baseAddressShou = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+      this.form.baseAddressFa = this.shenfenSelected + this.shiSelected + this.quSelected
     },
     setShenfen (num) {
       if (num === 1) {
@@ -380,25 +469,72 @@ export default {
 }
 </script>
 <style scoped>
+.el-scrollbar__bar.is-vertical {
+    width: 6px;
+    top: 2px;
+}
+.el-scrollbar__bar {
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    z-index: 1;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 120ms ease-out;
+}
+.el-scrollbar__bar.is-vertical > div {
+    width: 100%;
+}
+.el-scrollbar__thumb {
+    position: relative;
+    display: block;
+    width: 0;
+    height: 0;
+    cursor: pointer;
+    border-radius: inherit;
+    background-color: rgba(151, 168, 190, .3);
+    transition: .3s background-color;
+}
 .dropdown{
-
 }
 .dropdown-content {
+  /*
   height:200px;
   position: absolute;
   background-color: #fff;
-  margin-left:-3%;
   padding: 0;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 10px 8px 16px 0px rgba(0, 0, 0, 0.5);
   z-index: 1;
   width:22%;
-  margin-left:52%;
-  margin-top:3.5%
+  margin-left:9.7%;
+  margin-top:3.5% */
+    position: absolute;
+    margin-left:9.7%;
+    margin-top:3.5%;
+    width:20%;
+    z-index: 1001;
+    border: 1px solid rgb(209, 229, 229);
+    border-radius: 2px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+    box-sizing: border-box;
+}
+
+.dropdown-content2 {
+  height:200px;
+  position: absolute;
+  background-color: #fff;
+  padding: 0;
+  box-shadow: 10px 8px 16px 0px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  width:19.5%;
+  margin-left:9.7%;
+  margin-top:9% 
 }
 
 .dropdown-select{
   clear:both;
-  height:160px;
+  max-height:160px;
   overflow-y:scroll
 }
 
@@ -435,11 +571,12 @@ export default {
   cursor: pointer;
   background-color: #D1E5E5
 }
-.addressDetail{
-  width:45%;
-  float:left;
-  margin-left:-5%
+
+.dropdown-fahuo li:hover{
+  cursor: pointer;
+  background-color: #D1E5E5
 }
+
 .selectOn{
   background-color:#00d1b2;
 }
@@ -464,7 +601,6 @@ export default {
   appearance: none;
   background-color: #fff;
   background-image: none;
-  border-radius: 4px;
   border: 1px solid rgb(191, 217, 216);
   box-sizing: border-box;
   color: rgb(31, 61, 60);
@@ -476,34 +612,38 @@ export default {
   padding: 3px 10px;
   transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
 }
+
+.input-mid {
+  text-align: center
+}
 .col-1 {
-  width: 7.69%
+  width: 10%
 }
 
 .col-2 {
-  width: 15.38%
+  width: 20%
 }
 
 .col-3 {
-  width: 23.07%
+  width: 30%
 }
 
 .col-4 {
-  width: 30.76%
+  width: 40%
 }
 
 .col-6 {
-  width: 46.14%
+  width: 60%
 }
 
-.col-12 {
-  width: 92.28%
+.col-10 {
+  width: 100%
 }
 
 .order-title-base {
   float: left;
   padding-top: 0.7%;
-  margin-left: 5%
+  margin-left: 2%
 }
 
 .label {
@@ -512,15 +652,17 @@ export default {
   box-sizing: border-box;
   color: rgb(31, 61, 60);
   float: left;
-  font-size: 95%;
-  padding: 0.8% 0;
+  font-size: 105%;
+  padding: 0.9% 0;
   height: 38px;
   outline: 0;
   text-align: center;
-  overflow: hidden;
-  appearance: none;
-  -moz-appearance: none;
-  -webkit-appearance: none;
+  overflow: hidden
+}
+
+.label-mo {
+  height:58px;
+  padding: 1.3% 0;
 }
 
 .input {
@@ -536,14 +678,28 @@ export default {
   transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
 }
 
+.label2 {
+  background-color: #fff;
+  border: 1px solid #000000;
+  box-sizing: border-box;
+  float: left;
+  text-align: center;
+  font-size: inherit;
+  height: 38px;
+  line-height: 1;
+  outline: 0;
+  padding: 0.5% 10px;
+  transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+}
+
 .select {
   float: left;
   border: 1px solid;
   box-sizing: border-box;
   height: 38px;
+  font: inherit;
   margin-bottom: -12px;
-  font-size: inherit;
-  text-align: center
+  font-size: inherit
 }
 
 .label-title {

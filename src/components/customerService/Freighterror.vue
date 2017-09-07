@@ -3,13 +3,12 @@
     <div>
       <h2 style="text-align:center">运费异常</h2>
       <p style="margin-top:1%">
-      <div style="float: right">
-        <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
-      </div>
-      <div>
-        <el-button @click="setAddVisable">添加</el-button>
-        <el-button @click="setting">设置</el-button>
-      </div>
+        <div style="float: right">
+          <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
+        </div>
+        <div>
+          <el-button @click="setting">设置</el-button>
+        </div>
       </p>
     </div>
     <div style="clear: both;">
@@ -174,7 +173,7 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><button class="del-but" @click="setDelVisable">删 除</button><button class="del-but" @click="setEditVisable">编 辑</button></span>',
+        template: '<button class="del-but" @click="setDelVisable">删 除</button>',
         methods: {
           setDelVisable () {
             this.params.context.componentParent.delVisable = true
@@ -255,16 +254,15 @@
   .el-select-css {
     width: 50%;
   }
-
-  .del-but {
-    cursor: pointer;
-    float: right;
-    margin-right: 10px;
-    border-radius: 4px;
-    background: #fff;
-    border: 1px solid rgb(191, 217, 216);
-    color: rgb(31, 61, 60);
-    padding: 5px 10px;
-    font-size: 10px
-  }
+.del-but {
+  cursor: pointer;
+  float: left;
+  margin-left: 30%;
+  border-radius: 4px;
+  background: #fff;
+  border: 1px solid rgb(191, 217, 216);
+  color: rgb(31, 61, 60);
+  padding: 5px 10px;
+  font-size: 10px
+}
 </style>
