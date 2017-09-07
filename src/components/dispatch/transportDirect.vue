@@ -3,7 +3,7 @@
   <div>
     <div id="top">
       <!-- 标题 -->
-      <h2 style="text-align:center">已 发 货 装 载 单 信 息 页</h2>
+      <h2 style="text-align:center">长 途 直 送 装 载 单 信 息 页</h2>
 
       <!-- 操作栏 -->
       <div style="margin-top:2%">
@@ -80,9 +80,6 @@
       ></ag-grid-vue>
     </div>
 
-    <!-- 装载单详细列表信息 -->
-    <dispatched> </dispatched>
-
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
       <el-pagination
@@ -108,13 +105,11 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
+  import {getCurrentTransportedData, getQueryTransOrderList} from '../../api/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
-  // 引入装载单页面的 （dispatched.vue）页面
-  import dispatched from './dispatched'
   export default {
     data () {
       return {
@@ -123,22 +118,27 @@
         currentpage: 1, // 当前页数
         colVisible: false, // 设置弹窗的显示boolean值
         orderId: '', // 运单号
-        dispatchVisible: false, // 设置装载单列表的订单信息的boolean值
         tableForm: {
           'id': '',
           'loadOrderId': '',
           'loadOrderStatus': '',
           'adjustmentStatus': '',
-          'warehouse': '',
+          'startStation': '',
+          'endStation': '',
           'driverName': '',
           'driverPhone': '',
-          'deliverTime': '',
-          'deliveRemarks': '',
+          'departTime': '',
+          'arriveTime': '',
+          'gross': '',
+          'freight': '',
+          'transhipment': '',
+          'refund': '',
+          'sendFee': '',
           'allWeights': '',
           'allVolumes': '',
           'allNumbers': '',
-          'dispatcherId': '',
           'dispatcherName': '',
+          'dispatcherId': '',
           'remarks': ''
         },
         rules: {}, //
@@ -169,19 +169,37 @@
               headerName: '调整状态', width: 120, field: 'adjustmentStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '所属仓库', width: 120, field: 'warehouse', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '起始站', width: 120, field: 'startStation', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '司机姓名', width: 120, field: 'driverName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '到达站', width: 120, field: 'endStation', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '司机电话', width: 120, field: 'driverPhone', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车司机姓名', width: 120, field: 'driverName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '送货时间', width: 120, field: 'deliverTime', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车司机电话', width: 120, field: 'driverPhone', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '送货备注', width: 120, field: 'deliveRemarks', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '发车时间', width: 120, field: 'departTime', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '到达时间', width: 120, field: 'arriveTime', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '大车总毛利', width: 120, field: 'gross', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '总运费', width: 120, field: 'freight', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '总中转费', width: 120, field: 'transhipment', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '总返款', width: 120, field: 'refund', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '总提送费', width: 120, field: 'sendFee', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '总重量', width: 120, field: 'allWeights', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -250,17 +268,16 @@
     // 实例组件
     components: {
       'ag-grid-vue': AgGridVue,
-      OrderDetails,
-      dispatched
+      OrderDetails
     },
 
     // 实例方法
     methods: {
       // 订单详情弹框
       detailDoubleClick (event) {
-        // console.log(event.data.orderId)
+        console.log(event.data.orderId)
         this.orderId = event.data.orderId
-        this.dispatchVisible = true
+        this.detailVisible = true
       },
       // 改变每页显示的个数
       handleSizeChange (val) {
@@ -319,7 +336,7 @@
           pageSize: this.pageSize
         }
         this.listLoading = true
-        getCurrentDelivered(para).then((res) => {
+        getCurrentTransportedData(para).then((res) => {
           // console.log('进入getCurrentDelivered')
           // this.gridOptions.rowData = res.data.orderlists
           // 使用gridOptions中的api方法设定RowData数据
@@ -338,7 +355,7 @@
           pageSize: this.pageSize
         }
         this.listLoading = true
-        getQueryOrderList(para).then(res => {
+        getQueryTransOrderList(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
