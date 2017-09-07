@@ -8,7 +8,22 @@
       <!--第一行右侧按钮-->
       <div style="float: right">
         <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
-        <el-button @click="setting">设置</el-button>
+        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+        <el-button v-popover:popover1>设置</el-button>
         <el-button>导出</el-button>
       </div>
       <!--第一行左侧按钮-->
@@ -49,7 +64,7 @@
 
     <!--表格-->
     <div style="margin-top: 10px">
-      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+      <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
@@ -58,8 +73,8 @@
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
+                   :headerHeight=40
 
-                   :rowDoubleClicked="detailDoubleClick"
                    :pagination="true"
                    :paginationPageSize="10"
                    :suppressPaginationPanel="true"
@@ -125,7 +140,8 @@
     <!--
     --核销界面
     -->
-    <el-dialog title="干线运输费核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+    <el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+      <h2 style='text-align:center;margin-top:-2%'>干线运输费核销</h2>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
@@ -140,10 +156,27 @@
             <div>
               <div style="float: right">
                 <el-button @click="drawGrid(2)">提取库存</el-button>
-                <el-button @click="colVisible2 = true">设置</el-button>
+                <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+                  <template v-for="(collist,i) in gridOptions2.columnDefs">
+                    <div class="colVisible">
+                      <el-checkbox v-model="collist.visible"
+                                   @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)">
+                        {{collist.headerName}}
+                      </el-checkbox>
+                    </div>
+                  </template>
+                  <template>
+                    <div class="colVisible">
+                      <el-button @click="visibleChoice(1,'grid2')" size="small">全选</el-button>
+                      <el-button @click="visibleChoice(2,'grid2')" size="small">全不选</el-button>
+                    </div>
+                  </template>
+                </el-popover>
+                <el-button v-popover:popover1>设置</el-button>
               </div>
               <el-form-item>
                 <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
+              </el-form-item>
               </el-form-item>
             </div>
           </el-form>
@@ -154,7 +187,7 @@
           <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged2" style="width: 200px"></el-input>
           <!--未核销处表格-->
           <div style="margin-top: 10px">
-            <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions2"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
@@ -163,6 +196,7 @@
                          :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
+                         :headerHeight=40
 
                          :rowDoubleClicked="leftDoubleClick"
                          :animateRows="true"
@@ -177,7 +211,23 @@
             </el-form-item>
             <el-form-item>
               <el-button @click="confirmSubmit">确认核销</el-button>
-              <el-button @click="colVisible3 = true">设置</el-button>
+              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+                <template v-for="(collist,i) in gridOptions3.columnDefs">
+                  <div class="colVisible">
+                    <el-checkbox v-model="collist.visible"
+                                 @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)">
+                      {{collist.headerName}}
+                    </el-checkbox>
+                  </div>
+                </template>
+                <template>
+                  <div class="colVisible">
+                    <el-button @click="visibleChoice(1,'grid3')" size="small">全选</el-button>
+                    <el-button @click="visibleChoice(2,'grid3')" size="small">全不选</el-button>
+                  </div>
+                </template>
+              </el-popover>
+              <el-button v-popover:popover1>设置</el-button>
             </el-form-item>
           </el-form>
           <el-button @click="rightSelect"> < </el-button>
@@ -185,7 +235,7 @@
           <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
           <!--待核销处表格-->
           <div style="margin-top: 10px">
-            <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions3"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
@@ -194,8 +244,9 @@
                          :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
+                         :headerHeight=40
 
-                         :gridReady="test"
+                         :gridReady="grid3Ready"
                          :rowDoubleClicked="rightDoubleClick"
                          :animateRows="true"
                          rowSelection="multiple"
@@ -250,6 +301,7 @@
   import {AgGridVue} from 'ag-grid-vue'
   import testJson from '../../../../static/test/testJSON.js'
   import OrderDetails from '../ShowOrderDetails'
+  import PartialMatchFilterComponent from '../../common/PartialMatchFilterComponent'
   export default {
     data () {
       return {
@@ -258,81 +310,101 @@
           rowData: [],
           columnDefs: [
             {
-              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true
+              headerName: '序号', width: 100, field: 'index', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
+              headerName: '运单状态', width: 150, field: 'orderState', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '开单网点', width: 150, field: 'billBranch', filter: 'text', hide: false, visible: true
+              headerName: '运单号', width: 150, field: 'orderId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '开单日期', width: 150, field: 'orderTim', filter: 'text', hide: false, visible: true
+              headerName: '开单网点', width: 150, field: 'billBranch', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '发站', width: 150, field: 'startStation', filter: 'text', hide: false, visible: true
+              headerName: '开单日期', width: 150, field: 'orderTim', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '到站', width: 150, field: 'arrStation', filter: 'text', hide: false, visible: true
+              headerName: '发站', width: 150, field: 'startStation', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true
+              headerName: '到站', width: 150, field: 'arrStation', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true
+              headerName: '发货人', width: 150, field: 'shipNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '发车时间', width: 150, field: 'shipTim', filter: 'text', hide: false, visible: true
+              headerName: '收货人', width: 150, field: 'receNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '合同号', width: 150, field: 'contractId', filter: 'text', hide: false, visible: true
+              headerName: '发车时间', width: 150, field: 'shipTim', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true
+              headerName: '合同号', width: 150, field: 'contractId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '司机姓名', width: 150, field: 'driverNam', filter: 'text', hide: false, visible: true
+              headerName: '车牌号', width: 150, field: 'licePlateNum', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '司机电话', width: 150, field: 'driverTel', filter: 'text', hide: false, visible: true
+              headerName: '司机姓名', width: 150, field: 'driverNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '收货人联系方式', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true
+              headerName: '司机电话', width: 150, field: 'driverTel', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '品名', width: 150, field: 'goodsNam', filter: 'text', hide: false, visible: true
+              headerName: '收货人联系方式', width: 150, field: 'receTel', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '件数', width: 150, field: 'goodsNums', filter: 'text', hide: false, visible: true
+              headerName: '品名', width: 150, field: 'goodsNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true
+              headerName: '件数', width: 150, field: 'goodsNums', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '中转路线', width: 150, field: 'companyNam', filter: 'text', hide: false, visible: true
+              headerName: '制单人', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '中转日期', width: 150, field: 'changeFee', filter: 'text', hide: false, visible: true
+              headerName: '中转路线', width: 150, field: 'companyNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '送货方式', width: 150, field: 'sendMode', filter: 'text', hide: false, visible: true
+              headerName: '中转日期', width: 150, field: 'changeFee', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '付款方式', width: 150, field: 'payType', filter: 'text', hide: false, visible: true
+              headerName: '送货方式', width: 150, field: 'sendMode', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '付款金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+              headerName: '付款方式', width: 150, field: 'payType', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '油卡金额', width: 150, field: 'oilMoney', filter: 'text', hide: false, visible: true
+              headerName: '付款金额', width: 150, field: 'feeMoney', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '重量', width: 150, field: 'goodsWeight', filter: 'text', hide: false, visible: true
+              headerName: '油卡金额', width: 150, field: 'oilMoney', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '体积 ', width: 150, field: 'goodsVolume', filter: 'text', hide: false, visible: true
+              headerName: '重量', width: 150, field: 'goodsWeight', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
-            {}
+            {
+              headerName: '体积 ', width: 150, field: 'goodsVolume', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '中转费', width: 150, field: 'totalChanFee ', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '核销状态', width: 150, field: 'veriState', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '核销人', width: 150, field: 'veriNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '核销日期', width: 150, field: 'veriTim', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '核销站点', width: 150, field: 'veriSite', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '支付方式', width: 150, field: 'payMode', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            }
           ],
           context: {
             componentParent: this
@@ -342,37 +414,40 @@
           rowData: [],
           columnDefs: [
             {
-              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true
+              headerName: '序号', width: 100, field: 'index', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
+              headerName: '运单状态', width: 150, field: 'orderState', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '下单时间', width: 150, field: 'orderTim', filter: 'text', hide: false, visible: true
+              headerName: '运单号', width: 150, field: 'orderId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '发车时间', width: 150, field: 'shipTim', filter: 'text', hide: false, visible: true
+              headerName: '下单时间', width: 150, field: 'orderTim', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '合同号', width: 150, field: 'contractId', filter: 'text', hide: false, visible: true
+              headerName: '发车时间', width: 150, field: 'shipTim', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true
+              headerName: '合同号', width: 150, field: 'contractId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '司机姓名', width: 150, field: 'driverNam', filter: 'text', hide: false, visible: true
+              headerName: '车牌号', width: 150, field: 'licePlateNum', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '付款方式', width: 150, field: 'payType', filter: 'text', hide: false, visible: true
+              headerName: '司机姓名', width: 150, field: 'driverNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '付款金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+              headerName: '付款方式', width: 150, field: 'payType', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '总运费', width: 150, field: 'totalFreight', filter: 'text', hide: false, visible: true
+              headerName: '付款金额', width: 150, field: 'feeMoney', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '核销状态', width: 150, field: 'veriState', filter: 'text', hide: false, visible: true
+              headerName: '总运费', width: 150, field: 'totalFreight', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '核销状态', width: 150, field: 'veriState', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             }
           ],
           context: {
@@ -383,37 +458,40 @@
           rowData: [],
           columnDefs: [
             {
-              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true
+              headerName: '序号', width: 100, field: 'index', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
+              headerName: '运单状态', width: 150, field: 'orderState', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '下单时间', width: 150, field: 'orderTim', filter: 'text', hide: false, visible: true
+              headerName: '运单号', width: 150, field: 'orderId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '发车时间', width: 150, field: 'shipTim', filter: 'text', hide: false, visible: true
+              headerName: '下单时间', width: 150, field: 'orderTim', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '合同号', width: 150, field: 'contractId', filter: 'text', hide: false, visible: true
+              headerName: '发车时间', width: 150, field: 'shipTim', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true
+              headerName: '合同号', width: 150, field: 'contractId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '司机姓名', width: 150, field: 'driverNam', filter: 'text', hide: false, visible: true
+              headerName: '车牌号', width: 150, field: 'licePlateNum', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '付款方式', width: 150, field: 'payType', filter: 'text', hide: false, visible: true
+              headerName: '司机姓名', width: 150, field: 'driverNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '付款金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
+              headerName: '付款方式', width: 150, field: 'payType', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '总运费', width: 150, field: 'totalFreight', filter: 'text', hide: false, visible: true
+              headerName: '付款金额', width: 150, field: 'feeMoney', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '核销状态', width: 150, field: 'veriState', filter: 'text', hide: false, visible: true
+              headerName: '总运费', width: 150, field: 'totalFreight', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '核销状态', width: 150, field: 'veriState', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             }
           ],
           context: {
@@ -611,34 +689,8 @@
       // 更新列数据
       updateGrid (i) {
         if (i === 1) {
-          const payType = this.filterForm.payType
-          const lenth = (this.gridOptions.columnDefs.length - 1)
-          if (payType === 'nowPay') {
-            this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.nowPay
-          } else if (payType === 'cashOnDelivery') {
-            this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.cashOnDelivery
-          } else if (payType === 'inArrears') {
-            this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.inArrears
-          } else if (payType === 'monthly') {
-            this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.monthly
-          }
           this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
         } else if (i === 2) {
-          const payType = this.filterForm.payType
-          const lenth = (this.gridOptions2.columnDefs.length - 1)
-          if (payType === 'nowPay') {
-            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.nowPay
-            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.nowPay
-          } else if (payType === 'cashOnDelivery') {
-            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.cashOnDelivery
-            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.cashOnDelivery
-          } else if (payType === 'inArrears') {
-            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.inArrears
-            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.inArrears
-          } else if (payType === 'monthly') {
-            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.monthly
-            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.monthly
-          }
           this.gridOptions2.api.setColumnDefs(this.gridOptions2.columnDefs)
           this.gridOptions3.api.setColumnDefs(this.gridOptions3.columnDefs)
         }
@@ -797,6 +849,36 @@
         } else {
           this.oilShow = false
         }
+      },
+      visibleChoice (i, gridnum) {
+        let gridCol
+        let num
+        if (gridnum === 'grid1') {
+          gridCol = this.gridOptions
+          num = 1
+        } else if (gridnum === 'grid2') {
+          gridCol = this.gridOptions2
+          num = 2
+        } else if (gridnum === 'grid3') {
+          gridCol = this.gridOptions3
+          num = 3
+        }
+        if (i === 1) {
+          for (let j = 0; j < gridCol.columnDefs.length; j++) {
+            gridCol.columnDefs[j].visible = true
+          }
+        } else if (i === 2) {
+          for (let j = 0; j < gridCol.columnDefs.length; j++) {
+            gridCol.columnDefs[j].visible = false
+          }
+        }
+        this.updateColumnDefsVisible(num, gridCol.columnDefs)
+      },
+      updataColumnDefs (collist) {
+        for (let i = 0; i < collist.length; i++) {
+          console.log(this.gridOptions.columnDefs[i].visible)
+          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
+        }
       }
     },
     computed: {
@@ -843,3 +925,56 @@
     font-size: 10px
   }
 </style>
+
+<!--//发出请求-->
+<!--filterForm: {-->
+<!--startTime: '', // 开始时间-->
+<!--endTime: '', // 截止时间-->
+<!--startPoint: '', //  区间起点-->
+<!--endPoint: '', //  区间终点-->
+<!--shipNam: '', //  发货人-->
+<!--payType: 'nowPay', // 类型（现付，到付，欠付，月结）-->
+<!--freiVeriState: '', // 运费核销状态-->
+<!--orderId: '' // 运单号-->
+<!--},-->
+<!--//获得响应 filterForm1和filterForm2是不同的获得响应事件q-->
+<!--filterForm1：{-->
+<!--orderState 运单状态-->
+<!--orderId 运单号-->
+<!--billBranch 开单网点-->
+<!--orderTim 开单日期-->
+<!--startStation 发站-->
+<!--arrStation 到站-->
+<!--shipNam 发货人-->
+<!--receNam 收货人-->
+<!--shipTim 发车时间-->
+<!--contractId 合同号-->
+<!--licePlateNum 车牌号-->
+<!--driverNam 司机姓名-->
+<!--driverTel 司机电话-->
+<!--receTel 收货人联系方式-->
+<!--goodsNam 品名-->
+<!--goodsNums 件数-->
+<!--serviceNam 制单人-->
+<!--companyNam 中转路线-->
+<!--changeFee 中转日期-->
+<!--sendMode 送货方式-->
+<!--payType 付款方式-->
+<!--feeMoney 付款金额-->
+<!--oilMoney 油卡金额-->
+<!--goodsWeight 重量-->
+<!--goodsVolume 体积-->
+<!--}-->
+<!--filterForm2：{-->
+<!--orderState 运单状态-->
+<!--orderId 运单号-->
+<!--orderTim 下单时间-->
+<!--shipTim 发车时间-->
+<!--contractId 合同号-->
+<!--licePlateNum 车牌号-->
+<!--driverNam 司机姓名-->
+<!--payType 付款方式-->
+<!--feeMoney 付款金额-->
+<!--totalFreight 总运费-->
+<!--veriState 核销状态-->
+<!--}-->

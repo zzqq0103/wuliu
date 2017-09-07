@@ -276,7 +276,7 @@ export default {
 }
 </script>
 <style>
-.del-but {
+/* .del-but {
   cursor: pointer;
   float:left;
   margin-left:26%;
@@ -287,5 +287,5 @@ export default {
   color: rgb(31, 61, 60);
   padding: 5px 10px;
   font-size: 10px
-}
+} */
 </style>

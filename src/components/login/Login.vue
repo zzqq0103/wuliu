@@ -18,7 +18,6 @@
   </div>
 </template>
 
-
 <script>
   export default {
     data: function () {
@@ -66,7 +65,6 @@
     }
   }
 </script>
-
 
 <style scoped>
   .login-wrap {

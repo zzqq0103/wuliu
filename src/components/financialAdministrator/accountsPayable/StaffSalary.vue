@@ -7,16 +7,32 @@
     <div>
       <div style="float: right">
         <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
-        <el-button @click="setting">设置</el-button>
+        <!--<el-button @click="setting">设置</el-button>-->
+        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)" style="float: left;width: 180px">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+        <el-button v-popover:popover1>设置</el-button>
         <el-button>导出</el-button>
       </div>
       <div>
         <el-form ref="filterForm" :model="filterForm" :inline="true">
           <el-form-item label="员工姓名:">
-            <el-input v-model="filterForm.employeeNam"></el-input>
+            <el-input v-model="filterForm.employeeNam" style="width: 100px"></el-input>
           </el-form-item>
           <el-form-item label="工作岗位:">
-            <el-input v-model="filterForm.workPosition"></el-input>
+            <el-input v-model="filterForm.workPosition" style="width: 100px"></el-input>
           </el-form-item>
           <el-button @click="drawGrid(1)">提取</el-button>
           <el-button @click="addForm">添加员工</el-button>
@@ -26,7 +42,7 @@
       <div>
         <el-form style="float: left" :model="totalForm" ref="totalForm" :inline="true">
           <el-form-item label="实发工资合计:">
-            <el-input v-model="totalForm.realSalaryTotal"></el-input>
+            <el-input v-model="totalForm.realSalaryTotal" style="width: 100px" readonly="true"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -37,7 +53,7 @@
     <div style="clear: both;"></div>
     <!--表格开始-->
     <div style="margin-top: 10px">
-      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+      <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
@@ -46,6 +62,7 @@
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
+                   :headerHeight=40
 
                    :pagination="true"
                    :paginationPageSize="10"
@@ -112,36 +129,66 @@
     <!--添加员工信息-->
     <el-dialog title="添加员工信息:" :visible.sync="addFormVisible" size="tiny">
       <el-form :model="staffForm" :rules="rules" ref="staffForm">
-        <el-form-item label="员工姓名:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.employeeNam"></el-input>
-        </el-form-item>
-        <el-form-item label="入职时间:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.hireDate"></el-input>
-        </el-form-item>
-        <el-form-item label="工作岗位:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.workPosition"></el-input>
-        </el-form-item>
-        <el-form-item label="基本工资:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.baseSalary"></el-input>
-        </el-form-item>
-        <el-form-item label="实发工资:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.realSalary"></el-input>
-        </el-form-item>
-        <el-form-item label="借款总额:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.totalBorrMoney"></el-input>
-        </el-form-item>
-        <el-form-item label="扣款总额:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.deductMoney"></el-input>
-        </el-form-item>
-        <el-form-item label="事假天数:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.affairDays"></el-input>
-        </el-form-item>
-        <el-form-item label="病假天数:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.sickDays"></el-input>
-        </el-form-item>
-        <el-form-item label="节假日天数:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.holidayDays"></el-input>
-        </el-form-item>
+        <el-row :gutter="5">
+          <el-col :span="10">
+            <el-form-item label="员工姓名:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.employeeNam" style="width: 80%"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="工作岗位:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.workPosition" style="width: 100%"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="5">
+          <el-col :span="20">
+            <el-form-item label="入职时间:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.hireDate" style="width: 80%"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="5">
+          <el-col :span="10">
+            <el-form-item label="基本工资:" :label-width="formLabelWidth" style="float: right">
+              <el-input v-model="staffForm.baseSalary" style="width: 60%" maxlength="6"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="实发工资:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.realSalary" style="width: 60%" maxlength="6"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="5">
+          <el-col :span="10">
+            <el-form-item label="借款总额:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.totalBorrMoney" style="width: 60%" maxlength="6"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="扣款总额:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.deductMoney" style="width: 60%" maxlength="6"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="5">
+          <el-col :span="8">
+            <el-form-item label="事假天数:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.affairDays" style="width: 50%" maxlength="2"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="病假天数:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.sickDays" style="width: 50%" maxlength="2"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="节假日天数:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.holidayDays" style="width: 50%" maxlength="2"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="vehicleVisable = false">取 消</el-button>
@@ -152,36 +199,66 @@
     <!--编辑员工信息-->
     <el-dialog title="编辑:" :visible.sync="editFormVisible" size="tiny" :closeOnClickModal="false">
       <el-form :model="staffForm" :rules="rules" ref="staffForm">
-        <el-form-item label="员工姓名:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.employeeNam"></el-input>
-        </el-form-item>
-        <el-form-item label="入职时间:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.hireDate"></el-input>
-        </el-form-item>
-        <el-form-item label="工作岗位:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.workPosition"></el-input>
-        </el-form-item>
-        <el-form-item label="基本工资:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.baseSalary"></el-input>
-        </el-form-item>
-        <el-form-item label="实发工资:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.realSalary"></el-input>
-        </el-form-item>
-        <el-form-item label="借款总额:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.totalBorrMoney"></el-input>
-        </el-form-item>
-        <el-form-item label="扣款总额:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.deductMoney"></el-input>
-        </el-form-item>
-        <el-form-item label="事假天数:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.affairDays"></el-input>
-        </el-form-item>
-        <el-form-item label="病假天数:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.sickDays"></el-input>
-        </el-form-item>
-        <el-form-item label="节假日天数:" :label-width="formLabelWidth">
-          <el-input v-model="staffForm.holidayDays"></el-input>
-        </el-form-item>
+        <el-row :gutter="5">
+          <el-col :span="10">
+            <el-form-item label="员工姓名:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.employeeNam" style="width: 80%"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="工作岗位:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.workPosition" style="width: 100%"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="5">
+          <el-col :span="20">
+            <el-form-item label="入职时间:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.hireDate" style="width: 80%"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="5">
+          <el-col :span="10">
+            <el-form-item label="基本工资:" :label-width="formLabelWidth" style="float: right">
+              <el-input v-model="staffForm.baseSalary" style="width: 60%" maxlength="6"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="实发工资:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.realSalary" style="width: 60%" maxlength="6"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="5">
+          <el-col :span="10">
+            <el-form-item label="借款总额:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.totalBorrMoney" style="width: 60%" maxlength="6"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="扣款总额:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.deductMoney" style="width: 60%" maxlength="6"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="5">
+          <el-col :span="8">
+            <el-form-item label="事假天数:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.affairDays" style="width: 50%" maxlength="2"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="病假天数:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.sickDays" style="width: 50%" maxlength="2"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="节假日天数:" :label-width="formLabelWidth">
+              <el-input v-model="staffForm.holidayDays" style="width: 50%" maxlength="2"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="editFormVisible = false">取 消</el-button>
@@ -194,7 +271,7 @@
       <h2 style="padding:30px">确认删除 {{staffForm.employeeNam}} 吗？</h2>
       <div slot="footer" class="dialog-footer">
         <el-button @click="delFormVisible = false">取 消</el-button>
-        <el-button @click="delFormVisible = false">确 定</el-button>
+        <el-button @click="delFormVisible = false" type="danger">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -202,20 +279,37 @@
     <!--
 --核销界面
 -->
-    <el-dialog title="运费核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+    <el-dialog title="人员支出核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
             <div style="float: right">
               <el-button @click="drawGrid(2)">提取库存</el-button>
-              <el-button @click="colVisible2 = true">设置</el-button>
+              <!--<el-button @click="colVisible2 = true">设置</el-button>-->
+              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+                <template v-for="(collist,i) in gridOptions2.columnDefs">
+                  <div class="colVisible">
+                    <el-checkbox v-model="collist.visible"
+                                 @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)" style="float: left;width: 180px">
+                      {{collist.headerName}}
+                    </el-checkbox>
+                  </div>
+                </template>
+                <template>
+                  <div class="colVisible">
+                    <el-button @click="visibleChoice(1,'grid2')" size="small">全选</el-button>
+                    <el-button @click="visibleChoice(2,'grid2')" size="small">全不选</el-button>
+                  </div>
+                </template>
+              </el-popover>
+              <el-button v-popover:popover1>设置</el-button>
             </div>
             <div>
               <el-form-item label="员工姓名:">
-                <el-input v-model="filterForm.employeeNam"></el-input>
+                <el-input v-model="filterForm.employeeNam" style="width: 100px"></el-input>
               </el-form-item>
               <el-form-item label="工作岗位:">
-                <el-input v-model="filterForm.workPosition"></el-input>
+                <el-input v-model="filterForm.workPosition" style="width: 100px"></el-input>
               </el-form-item>
             </div>
           </el-form>
@@ -226,7 +320,7 @@
           <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged2" style="width: 200px"></el-input>
           <!--未核销处表格-->
           <div style="margin-top: 10px">
-            <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions2"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
@@ -235,6 +329,7 @@
                          :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
+                         :headerHeight=40
 
                          :rowDoubleClicked="leftDoubleClick"
                          :animateRows="true"
@@ -246,7 +341,23 @@
           <el-form>
             <el-form-item>
               <el-button @click="confirmSubmit">确认核销</el-button>
-              <el-button @click="colVisible3 = true">设置</el-button>
+              <!--<el-button @click="colVisible3 = true">设置</el-button>-->
+              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+                <template v-for="(collist,i) in gridOptions3.columnDefs">
+                  <div class="colVisible">
+                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)"style="float: left;width: 180px">
+                      {{collist.headerName}}
+                    </el-checkbox>
+                  </div>
+                </template>
+                <template>
+                  <div class="colVisible">
+                    <el-button @click="visibleChoice(1,'grid3')" size="small">全选</el-button>
+                    <el-button @click="visibleChoice(2,'grid3')" size="small">全不选</el-button>
+                  </div>
+                </template>
+              </el-popover>
+              <el-button v-popover:popover1>设置</el-button>
             </el-form-item>
           </el-form>
           <el-button @click="rightSelect"> < </el-button>
@@ -254,7 +365,7 @@
           <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
           <!--待核销处表格-->
           <div style="margin-top: 10px">
-            <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions3"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
@@ -263,6 +374,7 @@
                          :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
+                         :headerHeight=40
 
                          :gridReady="grid3Ready"
                          :rowDoubleClicked="rightDoubleClick"
@@ -280,7 +392,7 @@
     <el-dialog title="确认核销" :visible.sync="confirmSubVisible" size="tiny" :closeOnClickModal="false">
       <el-form :model="confirmSubForm" ref="confirmSubForm" labelWidth="80px">
         <el-form-item label="支付方式">
-          <el-select v-model="confirmSubForm.payMode" placeholder="支付方式" style="width: 110px">
+          <el-select v-model="confirmSubForm.payMode" placeholder="支付方式" style="width: 80px">
             <el-option label="微信" value="WeChat"></el-option>
             <el-option label="支付宝" value="Alipay"></el-option>
             <el-option label="转账" value="transfer "></el-option>
@@ -288,7 +400,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="摘要:">
-          <el-input v-model="confirmSubForm.digest"></el-input>
+          <el-input v-model="confirmSubForm.digest" style="width: 200px"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -308,6 +420,7 @@
 
 <script>
   import {AgGridVue} from 'ag-grid-vue'
+  import PartialMatchFilterComponent from '../../common/PartialMatchFilterComponent'
   import testJson from '../../../../static/test/testJSON.js'
 
   export default {
@@ -317,45 +430,134 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '序号', width: 150, field: 'index', filter: 'text', hide: false, visible: true
+              headerName: '序号',
+              width: 60,
+              field: 'index',
+              suppressMenu: true,
+              hide: false,
+              visible: true
+            },
+
+            {
+              headerName: '员工姓名',
+              width: 100,
+              field: 'employeeNam',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '员工姓名', width: 150, field: 'employeeNam', filter: 'text', hide: false, visible: true
+              headerName: '入职时间',
+              width: 200,
+              field: 'hireDate',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '入职时间', width: 150, field: 'hireDate', filter: 'text', hide: false, visible: true
+              headerName: '工作岗位',
+              width: 150,
+              field: 'workPosition',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '工作岗位', width: 150, field: 'workPosition', filter: 'text', hide: false, visible: true
+              headerName: '基本工资',
+              width: 100,
+              field: 'baseSalary',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '基本工资', width: 150, field: 'baseSalary', filter: 'text', hide: false, visible: true
+              headerName: '实发工资',
+              width: 100,
+              field: 'realSalary',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '实发工资', width: 150, field: 'realSalary', filter: 'text', hide: false, visible: true
+              headerName: '借款总额',
+              width: 100,
+              field: 'totalBorrMoney',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '借款总额', width: 150, field: 'totalBorrMoney', filter: 'text', hide: false, visible: true
+              headerName: '扣款总额',
+              width: 100,
+              field: 'deductMoney',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '扣款总额', width: 150, field: 'deductMoney', filter: 'text', hide: false, visible: true
+              headerName: '事假天数',
+              width: 100,
+              field: 'affairDays',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '事假天数', width: 150, field: 'affairDays', filter: 'text', hide: false, visible: true
+              headerName: '病假天数',
+              width: 100,
+              field: 'sickDays',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '病假天数', width: 150, field: 'sickDays', filter: 'text', hide: false, visible: true
+              headerName: '节假日天数',
+              width: 100,
+              field: 'holidayDays',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '节假日天数', width: 150, field: 'holidayDays', filter: 'text', hide: false, visible: true
+              headerName: '核销状态',
+              width: 100,
+              field: 'veriState',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销人',
+              width: 100,
+              field: 'veriNam',
+              filterFramework: PartialMatchFilterComponent,
+              hide: true,
+              visible: false
+            },
+            {
+              headerName: '核销日期',
+              width: 200,
+              field: 'veriTim',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '支付方式',
+              width: 100,
+              field: 'payMode',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
               headerName: '操作',
               field: 'value',
-              width: 150,
+              width: 120,
               cellRendererFramework: 'operateComponent',
               hide: false,
-              visible: true
+              visible: true,
+              pinned: 'right'
             }
           ],
           context: {
@@ -366,37 +568,93 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '序号', width: 150, field: 'index', filter: 'text', hide: false, visible: true
+              headerName: '序号',
+              width: 60,
+              field: 'index',
+              suppressMenu: true,
+              hide: false,
+              visible: true
+            },
+
+            {
+              headerName: '员工姓名',
+              width: 100,
+              field: 'employeeNam',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '员工姓名', width: 150, field: 'employeeNam', filter: 'text', hide: false, visible: true
+              headerName: '入职时间',
+              width: 200,
+              field: 'hireDate',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '入职时间', width: 150, field: 'hireDate', filter: 'text', hide: false, visible: true
+              headerName: '工作岗位',
+              width: 150,
+              field: 'workPosition',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '工作岗位', width: 150, field: 'workPosition', filter: 'text', hide: false, visible: true
+              headerName: '基本工资',
+              width: 100,
+              field: 'baseSalary',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '基本工资', width: 150, field: 'baseSalary', filter: 'text', hide: false, visible: true
+              headerName: '实发工资',
+              width: 100,
+              field: 'realSalary',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '实发工资', width: 150, field: 'realSalary', filter: 'text', hide: false, visible: true
+              headerName: '借款总额',
+              width: 100,
+              field: 'totalBorrMoney',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '借款总额', width: 150, field: 'totalBorrMoney', filter: 'text', hide: false, visible: true
+              headerName: '扣款总额',
+              width: 100,
+              field: 'deductMoney',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '扣款总额', width: 150, field: 'deductMoney', filter: 'text', hide: false, visible: true
+              headerName: '事假天数',
+              width: 100,
+              field: 'affairDays',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '事假天数', width: 150, field: 'affairDays', filter: 'text', hide: false, visible: true
+              headerName: '病假天数',
+              width: 100,
+              field: 'sickDays',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '病假天数', width: 150, field: 'sickDays', filter: 'text', hide: false, visible: true
-            },
-            {
-              headerName: '节假日天数', width: 150, field: 'holidayDays', filter: 'text', hide: false, visible: true
+              headerName: '节假日天数',
+              width: 100,
+              field: 'holidayDays',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             }
           ],
           context: {
@@ -407,37 +665,93 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '序号', width: 150, field: 'index', filter: 'text', hide: false, visible: true
+              headerName: '序号',
+              width: 60,
+              field: 'index',
+              suppressMenu: true,
+              hide: false,
+              visible: true
+            },
+
+            {
+              headerName: '员工姓名',
+              width: 100,
+              field: 'employeeNam',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '员工姓名', width: 150, field: 'employeeNam', filter: 'text', hide: false, visible: true
+              headerName: '入职时间',
+              width: 200,
+              field: 'hireDate',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '入职时间', width: 150, field: 'hireDate', filter: 'text', hide: false, visible: true
+              headerName: '工作岗位',
+              width: 150,
+              field: 'workPosition',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '工作岗位', width: 150, field: 'workPosition', filter: 'text', hide: false, visible: true
+              headerName: '基本工资',
+              width: 100,
+              field: 'baseSalary',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '基本工资', width: 150, field: 'baseSalary', filter: 'text', hide: false, visible: true
+              headerName: '实发工资',
+              width: 100,
+              field: 'realSalary',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '实发工资', width: 150, field: 'realSalary', filter: 'text', hide: false, visible: true
+              headerName: '借款总额',
+              width: 100,
+              field: 'totalBorrMoney',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '借款总额', width: 150, field: 'totalBorrMoney', filter: 'text', hide: false, visible: true
+              headerName: '扣款总额',
+              width: 100,
+              field: 'deductMoney',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '扣款总额', width: 150, field: 'deductMoney', filter: 'text', hide: false, visible: true
+              headerName: '事假天数',
+              width: 100,
+              field: 'affairDays',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '事假天数', width: 150, field: 'affairDays', filter: 'text', hide: false, visible: true
+              headerName: '病假天数',
+              width: 100,
+              field: 'sickDays',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '病假天数', width: 150, field: 'sickDays', filter: 'text', hide: false, visible: true
-            },
-            {
-              headerName: '节假日天数', width: 150, field: 'holidayDays', filter: 'text', hide: false, visible: true
+              headerName: '节假日天数',
+              width: 100,
+              field: 'holidayDays',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             }
           ],
           context: {
@@ -475,7 +789,7 @@
         addFormVisible: false,
         delFormVisible: false,
         editFormVisible: false,
-        formLabelWidth: '150px',
+        formLabelWidth: '90px',
         // dialog的可见性
         colVisible: false, // 切换列可见性的弹窗
         colVisible2: false,
@@ -492,7 +806,7 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><el-button class="del-but" @click="del">删 除</el-button><el-button  class="del-but" @click="edit">编 辑</el-button></span>',
+        template: '<span><el-button  class="del-but" @click="edit" type="info" size="small">编 辑</el-button><el-button class="del-but" @click="del" type="danger" size="small">删 除</el-button></span>',
         methods: {
           del () {
             let self = this.params.context.componentParent
@@ -602,8 +916,7 @@
       },
       // 添加员工信息
       addForm () {
-        this.addFormVisible = true
-        this.personnelForm = {
+        this.staffForm = {
           employeeNam: '',
           hireDate: '',
           workPosition: '',
@@ -615,6 +928,7 @@
           sickDays: '',
           holidayDays: ''
         }
+        this.addFormVisible = true
       },
       // 更改hide的值，（已放弃），添加了visible作为切换可见的条件
 //      changeColumnDefsBoolen () {
@@ -737,6 +1051,31 @@
         console.log(this.confirmSubForm)
         this.confirmSubVisible = false
         this.drawGrid(2)
+      },
+      // 切换列可见性，i=1或者2，1全选或者2全不选，gridnum表示三个表格
+      visibleChoice (i, gridnum) {
+        let gridCol
+        let num
+        if (gridnum === 'grid1') {
+          gridCol = this.gridOptions
+          num = 1
+        } else if (gridnum === 'grid2') {
+          gridCol = this.gridOptions2
+          num = 2
+        } else if (gridnum === 'grid3') {
+          gridCol = this.gridOptions3
+          num = 3
+        }
+        if (i === 1) {
+          for (let j = 0; j < gridCol.columnDefs.length; j++) {
+            gridCol.columnDefs[j].visible = true
+          }
+        } else if (i === 2) {
+          for (let j = 0; j < gridCol.columnDefs.length; j++) {
+            gridCol.columnDefs[j].visible = false
+          }
+        }
+        this.updateColumnDefsVisible(num, gridCol.columnDefs)
       }
     },
     computed: {
@@ -769,15 +1108,5 @@
   }
 </script>
 <style>
-  .del-but {
-    cursor: pointer;
-    float: right;
-    margin-right: 10px;
-    border-radius: 4px;
-    background: #fff;
-    border: 1px solid rgb(191, 217, 216);
-    color: rgb(31, 61, 60);
-    padding: 5px 10px;
-    font-size: 10px
-  }
+
 </style>

@@ -188,7 +188,7 @@
     "logitstiAdmin": {
         "items": [
             {
-                "icon": "",
+                "icon": "deliver",
                 "index": "deliver",
                 "title": "短途送货管理",
                 "subs": [
@@ -205,7 +205,7 @@
                 ]
             },
             {
-                "icon": "",
+                "icon": "receive",
                 "index": "receive",
                 "title": "短途接货管理",
                 "subs": [
@@ -222,7 +222,7 @@
                 ]
             },
             {
-                "icon": "",
+                "icon": "car",
                 "index": "long-distance",
                 "title": "长途运输管理",
                 "subs": [
@@ -235,12 +235,17 @@
                         "index": "transportingInfo",
                         "title": "待运输",
                         "icon": ""
+                    },
+                    {
+                        "index": "transportDirect",
+                        "title": "长途直送",
+                        "icon": ""
                     }
                 ]
             },
             {
-                "icon": "",
-                "index": "transfer",
+                "icon": "epobolyed",
+                "index": "2",
                 "title": "中转外包管理",
                 "subs": [
                     {
@@ -260,9 +265,9 @@
     "customerService": {
         "items": [
             {
-                "index": "reserveCheck",
+                "index": "1",
                 "title": "订单",
-                "icon": "",
+                "icon": "order",
                 "subs": [
                     {
                         "index": "orderInfo",
@@ -289,7 +294,7 @@
             {
                 "index": "appointInfo",
                 "title": "预约单",
-                "icon": "",
+                "icon": "appointInfo",
                 "subs": [
                     {
                         "index": "appointInfo",
@@ -311,7 +316,7 @@
             {
                 "index": "logisticsInfo",
                 "title": "物流信息",
-                "icon": "",
+                "icon": "car",
                 "subs": [
                      {
                         "index": "logisticsInfo",
@@ -326,9 +331,9 @@
                 ]
             },
             {
-                "index": "orderInfo",
+                "index": "2",
                 "title": "库存",
-                "icon": "",
+                "icon": "reserveCheck",
                 "subs": [
                     {
                         "index": "reserveCheck",
@@ -356,15 +361,18 @@
             },
             {
                 "index": "transfer",
-                "title": "回单管理"
+                "title": "回单管理",
+                "icon": "transfer"
             },
             {
-                "index": "freighterror",
-                "title": "运费异常"
+                "index": "freightError",
+                "title": "运费异常",
+                "icon":"freightError"
             },
             {
                 "index": "orderError",
-                "title": "订单异常"
+                "title": "订单异常",
+                "icon":"orderError"
             }
         ]
     },
@@ -372,11 +380,13 @@
       "items": [
         {
           "index": "register",
-          "title": "账号注册"
+          "title": "账号注册",
+          "icon":"register"
         },
         {
           "index": "authorityManagement",
-          "title": "删除权限"
+          "title": "删除权限",
+          "icon":"authorityManagement"
         }
       ]
     },
@@ -384,9 +394,9 @@
       "items":[
         {
           "index":"orderform",
-          "title":"订单查询"
+          "title":"订单查询",
+          "icon":"order"
         }
       ]
-
     }
 }
