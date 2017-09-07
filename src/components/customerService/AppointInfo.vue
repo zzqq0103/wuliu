@@ -266,7 +266,7 @@
             },
             {
               headerName: '取消预约单',
-              field: 'value',
+              field: 'abrogate',
               width: 100,
               suppressMenu: true,
               cellRendererFramework: 'receivingstate',
