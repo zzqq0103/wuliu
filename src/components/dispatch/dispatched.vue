@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- 对话框 -->
-        <el-dialog title="装载单信息" :visible.sync="" >
+        <el-dialog title="装载单信息" :visible.sync="dispatchVisible" >
             <el-form :model="form">
                 <el-form-item label="活动名称" :label-width="formLabelWidth">
                     <el-input v-model="form.name" auto-complete="off"></el-input>
@@ -27,31 +27,27 @@
 import { AgGridVue } from 'ag-grid-vue'
 // 引入axios后台接口
 //   import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
-// 引入外部 “订单详情接口"
-import OrderDetails from '../financialAdministrator/ShowOrderDetails'
-// 引入外部筛选函数组件系统
-import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
 export default {
-    // 数据模型
-    data() {
+  // 数据模型
+  data () {
 
-    },
+  },
+  props: ['dispatchVisible', 'loadId'],
     // 引用的组件
-    components: {
+  components: {
 
-    },
-    // 方法
-    methods: {
+  },
+  // 方法
+  methods: {
 
-    },
-    // 计算属性
-    computed() {
+  },
+  // 计算属性
+  computed () {
+  },
+  // 监视器
+  watch () {
 
-    },
-    // 监视器
-    watch() {
-
-    }
+  }
 }
 </script>
 
