@@ -24,7 +24,7 @@
 
 <script>
 // 引入表格组件
-import { AgGridVue } from 'ag-grid-vue'
+// import {AgGridVue} from 'ag-grid-vue'
 // 引入axios后台接口
 //   import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
 export default {
