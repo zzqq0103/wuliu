@@ -12,7 +12,7 @@ export default {
   bootstrap () {
     let mock = new MockAdapter(axios)
     // 获取到已送货订单列表
-    mock.onGet('/deliveredOrder/getlist').reply(config => {
+    mock.onGet('/deliveredOrder/getLoadedlist').reply(config => {
       let { page, pageSize } = config.params
       let mockList = getListDataBySize(_Orderlist, pageSize, page)
       let pages = _Orderlist.length
