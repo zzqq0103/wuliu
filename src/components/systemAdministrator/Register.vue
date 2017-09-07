@@ -28,8 +28,8 @@
           if (!Number.isInteger(value)) {
             callback(new Error('请输入数字值'))
           } else {
-            if (value < 18) {
-              callback(new Error('必须年满18岁'))
+            if (value.toString().length !== 11) {
+              callback(new Error('请输入十一位手机号'))
             } else {
               callback()
             }
@@ -76,14 +76,14 @@
     },
     methods: {
       submitForm (formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!')
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
+//        this.$refs[formName].validate((valid) => {
+//          if (valid) {
+//            alert('submit!')
+//          } else {
+//            console.log('error submit!!')
+//            return false
+//          }
+//        })
       }
     }
   }
