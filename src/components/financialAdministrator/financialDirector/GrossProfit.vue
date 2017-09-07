@@ -4,12 +4,16 @@
       <h2 style="text-align:center">大车毛利</h2>
       <p style="margin-top:3%">
         <el-form v-model="filterForm" ref="filterForm">
-          <el-form-item label="到达时间：" prop="startTime" style='float:left;width:23%'>
-            <el-date-picker type="datetime" style="width:70%" v-model="filterForm.startTim"></el-date-picker>
+
+         <span style='float:left;padding:0.6% 1% 0% 0%'>到达时间：</span>
+          <el-form-item  prop="startTime" style='float:left;width:13%'>
+              <el-date-picker type="datetime" placeholder="选择开始日期" v-model="filterForm.startTim"
+                              style="width:100%"></el-date-picker>
           </el-form-item>
-          <span style='float:left;padding:0.8% 0.8%'>到</span>
-          <el-form-item prop="endTime" style='float:left;width:15%'>
-            <el-date-picker type="datetime" style="width:100%" v-model="filterForm.endTim"></el-date-picker>
+          <span style='float:left;padding:0.8% 0.8%'>--</span>
+          <el-form-item prop="endTime" style='float:left;width:13%'>
+              <el-date-picker type="datetime" placeholder="选择结束日期" v-model="filterForm.endTim"
+                              style="width:100%"></el-date-picker>
           </el-form-item>
         </el-form>
         <span style='float:left;width:10%;padding:0.5% 0.5% 0% 3%'>大车毛利合计：</span>

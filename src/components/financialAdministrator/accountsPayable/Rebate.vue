@@ -6,49 +6,52 @@
     <!--表格筛选区域-->
     <div style='margin-top:2%;font-size:15px'>
         <el-form :model="filterForm" ref="filterForm">
-          <el-form-item label="预约时间：" prop="startTime" style='float:left;width:20%'>
-              <el-date-picker type="datetime" placeholder="1" v-model="filterForm.startTime"
-                              style="width:65%"></el-date-picker>
+         <span style='float:left;padding:0.6% 1% 0% 0%'>订单时间：</span>
+          <el-form-item  prop="startTime" style='float:left;width:13%'>
+              <el-date-picker type="datetime" placeholder="选择开始日期" v-model="filterForm.startTime"
+                              style="width:100%"></el-date-picker>
           </el-form-item>
           <span style='float:left;padding:0.8% 0.8%'>--</span>
-          <el-form-item prop="endTime" style='float:left;width:14%'>
-              <el-date-picker type="datetime" placeholder="2" v-model="filterForm.endTime"
-                              style="width:90%"></el-date-picker>
+          <el-form-item prop="endTime" style='float:left;width:13%'>
+              <el-date-picker type="datetime" placeholder="选择结束日期" v-model="filterForm.endTime"
+                              style="width:100%"></el-date-picker>
           </el-form-item>
-
-          <el-form-item label="区间：" style='float:left;width:12%'>
-            <el-select placeholder="起点" style="width:60%" v-model="filterForm.startPoint">
+           <span style='float:left;padding:0.6% 1% 0% 1%'>区间：</span>
+          <el-form-item style='float:left;width:7%'>
+            <el-select placeholder="起点" style="width:100%" v-model="filterForm.startPoint">
               <el-option label="北京" value="beijing"></el-option>
               <el-option label="南京" value="nanjing"></el-option>
               <el-option label="全部" value="all"></el-option>
             </el-select>
           </el-form-item>
           <span style='float:left;padding:0.8% 0.8%'>--</span>
+          <el-form-item style='float:left;width:7%'>
+            <el-select placeholder="终点" style="width:100%" v-model="filterForm.endPoint">
+              <el-option label="北京" value="beijing"></el-option>
+              <el-option label="南京" value="nanjing"></el-option>
+              <el-option label="全部" value="all"></el-option>
+            </el-select>
+          </el-form-item>
+          <span style='float:left;padding:0.6% 1% 0% 1%'>类型：</span>
           <el-form-item style='float:left;width:8%'>
-            <el-select placeholder="终点" style="width:90%" v-model="filterForm.endPoint">
-              <el-option label="北京" value="beijing"></el-option>
-              <el-option label="南京" value="nanjing"></el-option>
-              <el-option label="全部" value="all"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="类型:" style='float:left;width:13%'>
-            <el-select v-model="filterForm.payType" placeholder="类型" style="width: 65%">
+            <el-select v-model="filterForm.payType" placeholder="类型" style="width: 100%">
               <el-option label="现返" value="nowPay"></el-option>
               <el-option label="欠返" value="inArrears"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item style="width:5%;float:left;padding-left:2%">
-            <el-button @click="drawGrid(1)">提取</el-button>
-          </el-form-item>
-          <el-form-item style="width:5%;float:left;padding-left:1%">
-            <el-button @click="setting">导出</el-button>
-          </el-form-item>
-          <el-form-item style="float:left;width:5%;padding-left:1%">
-            <el-button @click="setting">设置</el-button>
-          </el-form-item>
-          <el-form-item style="float:left;width:5%;padding-left:1%">
+          <el-form-item style="float:right;width:5%;padding-right:3%">
             <el-button @click="verification">开始核销</el-button>
           </el-form-item>
+          <el-form-item style="width:5%;float:right;padding-right:1%">
+            <el-button @click="setting">导出</el-button>
+          </el-form-item>
+          <el-form-item style="float:right;width:5%;padding-right:1%">
+            <el-button @click="setting">设置</el-button>
+          </el-form-item>
+          <el-form-item style="width:5%;float:right;padding-right:1%">
+            <el-button @click="drawGrid(1)">提取</el-button>
+          </el-form-item>
+          
           <el-form-item label="中转费合计：" style='float:left;width:25%'>
             <el-input v-model="totalForm.transferFeeTotal" style='width:50%'></el-input>
           </el-form-item>
@@ -143,23 +146,33 @@
       <h2 style='text-align:center;margin-top:-2%'>返款核销</h2>
       <el-form :model="filterForm" ref="filterForm" style='margin-top:2%'>
         <div style='clear:float;width:100%'>
-          <el-form-item label="类型:" style='float:left;width:13%'>
-            <el-select v-model="filterForm.payType" placeholder="类型" style="width: 65%">
+
+          <span style='float:left;padding:0.6% 1% 0% 0%'>订单时间：</span>
+          <el-form-item  prop="startTime" style='float:left;width:13%'>
+              <el-date-picker type="datetime" placeholder="选择开始日期" v-model="filterForm.startTime"
+                              style="width:100%"></el-date-picker>
+          </el-form-item>
+          <span style='float:left;padding:0.8% 0.8%'>--</span>
+          <el-form-item prop="endTime" style='float:left;width:13%'>
+              <el-date-picker type="datetime" placeholder="选择结束日期" v-model="filterForm.endTime"
+                              style="width:100%"></el-date-picker>
+          </el-form-item>
+
+          <span style='float:left;padding:0.6% 1% 0% 3%'>类型：</span>
+          <el-form-item style='float:left;width:7%'>
+            <el-select v-model="filterForm.payType" placeholder="类型" style="width: 100%">
               <el-option label="现返" value="nowPay"></el-option>
               <el-option label="欠返" value="inArrears"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item style="float:left;width:5%;padding-left:2%">
-            <el-button>导出</el-button>
+          <el-form-item style="float:right;width:5%;padding-right:3%">
+            <el-button  @click="verVisible = false">取消</el-button>
           </el-form-item>
-          <el-form-item style="float:left;width:5%;padding-left:2%">
-            <el-button @click="drawGrid(2)">提取</el-button>
-          </el-form-item>
-          <el-form-item style="float:left;width:7%;padding-left:2%">
+          <el-form-item style="float:right;width:7%;padding-right:2%">
             <el-button @click="confirmSubmit">确认核销</el-button>
           </el-form-item>
-          <el-form-item style="float:left;width:5%;padding-left:2%">
-            <el-button  @click="verVisible = false">取消</el-button>
+          <el-form-item style="float:right;width:5%;padding-right:2%">
+            <el-button @click="drawGrid(2)">提取</el-button>
           </el-form-item>
         </div>
         <el-form-item style="float:left;width:18.5%;clear:left">
@@ -191,7 +204,7 @@
                         :groupHeaders="true"
                         :suppressCellSelection="true"
                         :rowHeight=40
-
+                        :gridReady="grid2Ready"
                         :rowDoubleClicked="leftDoubleClick"
                         :animateRows="true"
                         rowSelection="multiple"/>
@@ -562,6 +575,9 @@
             this.gridOptions3.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
           }
         }
+      },
+      grid2Ready () {
+        this.updateGrid(2)
       },
       // 三个表格的快速匹配
       onQuickFilterChanged (input) {

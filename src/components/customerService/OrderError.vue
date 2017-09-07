@@ -3,11 +3,10 @@
     <div>
       <h2 style="text-align:center">订单异常处理</h2>
       <p style="margin-top:1%">
-        <div style="float: right;margin-right:16%">
+        <div style="float: right;margin-right:20%">
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div style="margin-left:12%">
-          <el-button @click="setAddVisable">添加</el-button>
           <el-button @click="setting">设置</el-button>
         </div>
       </p>
@@ -15,7 +14,7 @@
     <div style="clear: both;">
     </div>
     <div style="margin-top:2%">
-      <ag-grid-vue style="width: 72%;margin-left:12%;height: 350px" class="ag-blue" 
+      <ag-grid-vue style="width: 68%;margin-left:12%;height: 350px" class="ag-blue" 
         :gridOptions="gridOptions" 
         :suppressMovableColumns="true" 
         :enableColResize="true" 
@@ -138,7 +137,7 @@ export default {
             headerName: '订单位置更改', width: 200, field: 'currPosition', filter: 'text', hide: false
           },
           {
-            headerName: '操作', field: 'value', width: 240, cellRendererFramework: 'operateComponent', hide: false
+            headerName: '操作', field: 'value', width: 200, cellRendererFramework: 'operateComponent', hide: false
           }
         ]
       }
@@ -147,7 +146,7 @@ export default {
   components: {
     'ag-grid-vue': AgGridVue,
     operateComponent: {
-      template: '<span><button class="del-but" @click="setDelVisable">删 除</button><button class="del-but" @click="setEditVisable">编 辑</button></span>',
+      template: '<button class="del-but" @click="setDelVisable">删 除</button>',
       methods: {
         setDelVisable () {
           this.params.context.componentParent.delVisable = true
@@ -182,13 +181,6 @@ export default {
       for (let i = 0; i < collist.length; i++) {
         this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
       }
-    },
-    // 设置增加弹窗
-    setAddVisable () {
-      this.addEditVisable = true
-      this.orderErrorForm.orderId = ''
-      this.orderErrorForm.orderLogiState = ''
-      this.orderErrorForm.currPosition = ''
     },
     // 编辑/增加异动信息
     addEdit () {
@@ -225,8 +217,8 @@ export default {
 <style>
 .del-but {
   cursor: pointer;
-  float: right;
-  margin-right: 16%;
+  float: left;
+  margin-left: 35%;
   margin-top: 2%;
   border-radius: 4px;
   background: #fff;

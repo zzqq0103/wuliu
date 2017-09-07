@@ -80,6 +80,9 @@
       ></ag-grid-vue>
     </div>
 
+    <!-- 装载单详细列表信息 -->
+    <dispatched> </dispatched>
+
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
       <el-pagination
@@ -110,6 +113,8 @@
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  // 引入装载单页面的 （dispatched.vue）页面
+  import dispatched from './dispatched'
   export default {
     data () {
       return {
@@ -118,6 +123,7 @@
         currentpage: 1, // 当前页数
         colVisible: false, // 设置弹窗的显示boolean值
         orderId: '', // 运单号
+        dispatchVisible: false, // 设置装载单列表的订单信息的boolean值
         tableForm: {
           'id': '',
           'loadOrderId': '',
@@ -244,16 +250,17 @@
     // 实例组件
     components: {
       'ag-grid-vue': AgGridVue,
-      OrderDetails
+      OrderDetails,
+      dispatched
     },
 
     // 实例方法
     methods: {
       // 订单详情弹框
       detailDoubleClick (event) {
-        console.log(event.data.orderId)
+        // console.log(event.data.orderId)
         this.orderId = event.data.orderId
-        this.detailVisible = true
+        this.dispatchVisible = true
       },
       // 改变每页显示的个数
       handleSizeChange (val) {
