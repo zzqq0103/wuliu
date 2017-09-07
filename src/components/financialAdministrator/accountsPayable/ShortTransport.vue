@@ -19,15 +19,18 @@
       <div>
         <el-form :model="filterForm" ref="filterForm" :inline="true">
           <el-form-item label="订单时间:">
-            <el-form-item prop="startTime">
-              <el-date-picker type="datetime" placeholder="选择开始日期" v-model="filterForm.startTime"
-                              style="width: 150px"></el-date-picker>
-            </el-form-item>
-            <span>--&nbsp</span>
-            <el-form-item prop="endTime">
-              <el-date-picker type="datetime" placeholder="选择结束日期" v-model="filterForm.endTime"
-                              style="width: 150px"></el-date-picker>
-            </el-form-item>
+            <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+                            :picker-options="pickerOptions" range-separator='/' style="width: 200px">
+            </el-date-picker>
+            <!--<el-form-item prop="startTime">-->
+            <!--<el-date-picker type="datetime" placeholder="选择开始日期" v-model="filterForm.startTime"-->
+            <!--style="width: 150px"></el-date-picker>-->
+            <!--</el-form-item>-->
+            <!--<span>&#45;&#45;&nbsp</span>-->
+            <!--<el-form-item prop="endTime">-->
+            <!--<el-date-picker type="datetime" placeholder="选择结束日期" v-model="filterForm.endTime"-->
+            <!--style="width: 150px"></el-date-picker>-->
+            <!--</el-form-item>-->
           </el-form-item>
           <el-form-item label="区间:">
             <el-select v-model="filterForm.startPoint" placeholder="起点" style="width: 100px">
@@ -123,7 +126,7 @@
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
-                   :headerHeight =40
+                   :headerHeight=40
 
                    :rowDoubleClicked="detailDoubleClick"
                    :pagination="true"
@@ -207,11 +210,12 @@
               <div style="float: right">
                 <el-button @click="drawGrid(2)">提取库存</el-button>
                 <!--<el-button @click="colVisible2 = true">设置</el-button>-->
-                <el-popover ref="popover2" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+                <el-popover ref="popover2" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                   <template v-for="(collist,i) in gridOptions2.columnDefs">
                     <div class="colVisible">
                       <el-checkbox v-model="collist.visible"
-                                   @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)">
+                                   @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)"
+                                   style="float: left; width: 180px">
                         {{collist.headerName}}
                       </el-checkbox>
                     </div>
@@ -251,6 +255,7 @@
                          :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
+                         :headerHeight=40
 
                          :rowDoubleClicked="leftDoubleClick"
                          :animateRows="true"
@@ -266,10 +271,11 @@
             <el-form-item>
               <el-button @click="confirmSubmit">确认核销</el-button>
               <!--<el-button @click="colVisible3 = true">设置</el-button>-->
-              <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+              <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                 <template v-for="(collist,i) in gridOptions3.columnDefs">
                   <div class="colVisible">
-                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)">
+                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)"
+                                 style="float: left; width: 180px">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
@@ -298,6 +304,7 @@
                          :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
+                         :headerHeight=40
 
                          :gridReady="test"
                          :rowDoubleClicked="rightDoubleClick"
@@ -355,6 +362,63 @@
   export default {
     data () {
       return {
+        pickerOptions: {
+          shortcuts: [{
+            text: '上周',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfWeek = now.getDay()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * (nowDayOfWeek + 6))
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfWeek)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '上个月',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfMonth = now.getDate()
+              const nowMonth = now.getMonth()
+              start.setDate(1)
+              start.setMonth(nowMonth - 1)
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfMonth)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '去年',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowYear = now.getFullYear()
+              start.setYear(nowYear - 1)
+              start.setMonth(0)
+              start.setDate(1)
+              end.setYear(nowYear - 1)
+              end.setMonth(11)
+              end.setDate(31)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '今年',
+            onClick (picker) {
+              const start = new Date()
+              const end = new Date()
+              start.setMonth(0)
+              start.setDate(1)
+              picker.$emit('pick', [start, end])
+            }
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
+          }
+        },
         // 定义三个表格数据
         gridOptions: {
           rowData: [],
@@ -368,14 +432,14 @@
               visible: true
             },
             {
-              headerName: '运单状态', width: 150, field: 'orderState', suppressMenu: true, hide: false, visible: true
+              headerName: '运单状态', width: 100, field: 'orderState', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '开单网点', width: 150, field: 'billBranch', suppressMenu: true, hide: false, visible: true
+              headerName: '开单网点', width: 100, field: 'billBranch', suppressMenu: true, hide: false, visible: true
             },
             {
               headerName: '开单日期',
-              width: 150,
+              width: 200,
               field: 'orderTim',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -383,7 +447,7 @@
             },
             {
               headerName: '发站',
-              width: 150,
+              width: 100,
               field: 'startStation',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -391,7 +455,7 @@
             },
             {
               headerName: '到站',
-              width: 150,
+              width: 100,
               field: 'arrStation',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -399,7 +463,7 @@
             },
             {
               headerName: '发货人',
-              width: 150,
+              width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -415,7 +479,7 @@
             },
             {
               headerName: '收货人',
-              width: 150,
+              width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -439,7 +503,7 @@
             },
             {
               headerName: '件数',
-              width: 150,
+              width: 60,
               field: 'goodsNums',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -447,7 +511,7 @@
             },
             {
               headerName: '制单人',
-              width: 150,
+              width: 100,
               field: 'serviceNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -463,7 +527,7 @@
             },
             {
               headerName: '中转费',
-              width: 150,
+              width: 100,
               field: 'changeFee',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -471,7 +535,7 @@
             },
             {
               headerName: '中转日期',
-              width: 150,
+              width: 200,
               field: 'changeTim',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -479,7 +543,7 @@
             },
             {
               headerName: '付款方式',
-              width: 150,
+              width: 100,
               field: 'payType',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -527,7 +591,7 @@
             },
             {
               headerName: '送货人',
-              width: 150,
+              width: 100,
               field: 'sendDriverNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -535,7 +599,7 @@
             },
             {
               headerName: '送货日期',
-              width: 150,
+              width: 200,
               field: 'sendTim',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -551,7 +615,7 @@
             },
             {
               headerName: '调度员',
-              width: 150,
+              width: 100,
               field: 'dispatNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -559,7 +623,7 @@
             },
             {
               headerName: '重量',
-              width: 150,
+              width: 100,
               field: 'goodsWeight',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -567,7 +631,7 @@
             },
             {
               headerName: '体积',
-              width: 150,
+              width: 100,
               field: 'goodsVolumn',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -575,7 +639,7 @@
             },
             {
               headerName: '取货地址',
-              width: 150,
+              width: 200,
               field: 'pickUpAdr',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -583,7 +647,7 @@
             },
             {
               headerName: '收货地址',
-              width: 150,
+              width: 200,
               field: 'receAdr',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -591,7 +655,7 @@
             },
             {
               headerName: '送货费',
-              width: 150,
+              width: 100,
               field: 'sendFee',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -599,7 +663,7 @@
             },
             {
               headerName: '核销状态',
-              width: 150,
+              width: 80,
               field: 'sendFeeVeriStat',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -607,7 +671,7 @@
             },
             {
               headerName: '核销人',
-              width: 150,
+              width: 100,
               field: 'sendFeeVeriNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -615,7 +679,7 @@
             },
             {
               headerName: '核销日期',
-              width: 150,
+              width: 200,
               field: 'sendFeeVeriDate',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -623,7 +687,7 @@
             },
             {
               headerName: '核销网点',
-              width: 150,
+              width: 100,
               field: 'sendFeeVeriBran',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -631,60 +695,60 @@
             },
             {
               headerName: '支付方式',
-              width: 150,
+              width: 100,
               field: 'sendFeePayMod',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
-            },
-            {
-              headerName: '送货费',
-              width: 150,
-              field: 'feeMoney',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '核销状态',
-              width: 150,
-              field: 'veriState',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '核销人',
-              width: 150,
-              field: 'veriNam',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '核销日期',
-              width: 150,
-              field: 'veriTim',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '核销网点',
-              width: 150,
-              field: 'veriSite',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '支付方式',
-              width: 150,
-              field: 'payMode',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
             }
+//            {
+//              headerName: '送货费',
+//              width: 150,
+//              field: 'feeMoney',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '核销状态',
+//              width: 150,
+//              field: 'veriState',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '核销人',
+//              width: 150,
+//              field: 'veriNam',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '核销日期',
+//              width: 150,
+//              field: 'veriTim',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '核销网点',
+//              width: 150,
+//              field: 'veriSite',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '支付方式',
+//              width: 150,
+//              field: 'payMode',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            }
           ],
           context: {
             componentParent: this
@@ -702,14 +766,14 @@
               visible: true
             },
             {
-              headerName: '运单状态', width: 150, field: 'orderState', suppressMenu: true, hide: false, visible: true
+              headerName: '运单状态', width: 100, field: 'orderState', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '开单网点', width: 150, field: 'billBranch', suppressMenu: true, hide: false, visible: true
+              headerName: '开单网点', width: 100, field: 'billBranch', suppressMenu: true, hide: false, visible: true
             },
             {
               headerName: '开单日期',
-              width: 150,
+              width: 200,
               field: 'orderTim',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -717,7 +781,7 @@
             },
             {
               headerName: '发站',
-              width: 150,
+              width: 100,
               field: 'startStation',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -725,7 +789,7 @@
             },
             {
               headerName: '到站',
-              width: 150,
+              width: 100,
               field: 'arrStation',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -733,7 +797,7 @@
             },
             {
               headerName: '发货人',
-              width: 150,
+              width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -749,7 +813,7 @@
             },
             {
               headerName: '收货人',
-              width: 150,
+              width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -773,7 +837,7 @@
             },
             {
               headerName: '件数',
-              width: 150,
+              width: 60,
               field: 'goodsNums',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -781,7 +845,7 @@
             },
             {
               headerName: '制单人',
-              width: 150,
+              width: 100,
               field: 'serviceNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -797,7 +861,7 @@
             },
             {
               headerName: '中转费',
-              width: 150,
+              width: 100,
               field: 'changeFee',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -805,7 +869,7 @@
             },
             {
               headerName: '中转日期',
-              width: 150,
+              width: 200,
               field: 'changeTim',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -813,7 +877,7 @@
             },
             {
               headerName: '付款方式',
-              width: 150,
+              width: 100,
               field: 'payType',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -861,7 +925,7 @@
             },
             {
               headerName: '送货人',
-              width: 150,
+              width: 100,
               field: 'sendDriverNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -869,7 +933,7 @@
             },
             {
               headerName: '送货日期',
-              width: 150,
+              width: 200,
               field: 'sendTim',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -885,7 +949,7 @@
             },
             {
               headerName: '调度员',
-              width: 150,
+              width: 100,
               field: 'dispatNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -893,7 +957,7 @@
             },
             {
               headerName: '重量',
-              width: 150,
+              width: 100,
               field: 'goodsWeight',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -901,7 +965,7 @@
             },
             {
               headerName: '体积',
-              width: 150,
+              width: 100,
               field: 'goodsVolumn',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -909,7 +973,7 @@
             },
             {
               headerName: '取货地址',
-              width: 150,
+              width: 200,
               field: 'pickUpAdr',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -917,7 +981,7 @@
             },
             {
               headerName: '收货地址',
-              width: 150,
+              width: 200,
               field: 'receAdr',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -925,7 +989,7 @@
             },
             {
               headerName: '送货费',
-              width: 150,
+              width: 100,
               field: 'sendFee',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -933,7 +997,7 @@
             },
             {
               headerName: '核销状态',
-              width: 150,
+              width: 80,
               field: 'sendFeeVeriStat',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -941,7 +1005,7 @@
             },
             {
               headerName: '核销人',
-              width: 150,
+              width: 100,
               field: 'sendFeeVeriNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -949,7 +1013,7 @@
             },
             {
               headerName: '核销日期',
-              width: 150,
+              width: 200,
               field: 'sendFeeVeriDate',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -957,7 +1021,7 @@
             },
             {
               headerName: '核销网点',
-              width: 150,
+              width: 100,
               field: 'sendFeeVeriBran',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -965,12 +1029,60 @@
             },
             {
               headerName: '支付方式',
-              width: 150,
+              width: 100,
               field: 'sendFeePayMod',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             }
+//            {
+//              headerName: '送货费',
+//              width: 150,
+//              field: 'feeMoney',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '核销状态',
+//              width: 150,
+//              field: 'veriState',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '核销人',
+//              width: 150,
+//              field: 'veriNam',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '核销日期',
+//              width: 150,
+//              field: 'veriTim',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '核销网点',
+//              width: 150,
+//              field: 'veriSite',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '支付方式',
+//              width: 150,
+//              field: 'payMode',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            }
           ],
           context: {
             componentParent: this
@@ -988,14 +1100,14 @@
               visible: true
             },
             {
-              headerName: '运单状态', width: 150, field: 'orderState', suppressMenu: true, hide: false, visible: true
+              headerName: '运单状态', width: 100, field: 'orderState', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '开单网点', width: 150, field: 'billBranch', suppressMenu: true, hide: false, visible: true
+              headerName: '开单网点', width: 100, field: 'billBranch', suppressMenu: true, hide: false, visible: true
             },
             {
               headerName: '开单日期',
-              width: 150,
+              width: 200,
               field: 'orderTim',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1003,7 +1115,7 @@
             },
             {
               headerName: '发站',
-              width: 150,
+              width: 100,
               field: 'startStation',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1011,7 +1123,7 @@
             },
             {
               headerName: '到站',
-              width: 150,
+              width: 100,
               field: 'arrStation',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1019,7 +1131,7 @@
             },
             {
               headerName: '发货人',
-              width: 150,
+              width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1035,7 +1147,7 @@
             },
             {
               headerName: '收货人',
-              width: 150,
+              width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1059,7 +1171,7 @@
             },
             {
               headerName: '件数',
-              width: 150,
+              width: 60,
               field: 'goodsNums',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1067,7 +1179,7 @@
             },
             {
               headerName: '制单人',
-              width: 150,
+              width: 100,
               field: 'serviceNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1083,7 +1195,7 @@
             },
             {
               headerName: '中转费',
-              width: 150,
+              width: 100,
               field: 'changeFee',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1091,7 +1203,7 @@
             },
             {
               headerName: '中转日期',
-              width: 150,
+              width: 200,
               field: 'changeTim',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1099,7 +1211,7 @@
             },
             {
               headerName: '付款方式',
-              width: 150,
+              width: 100,
               field: 'payType',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1147,7 +1259,7 @@
             },
             {
               headerName: '送货人',
-              width: 150,
+              width: 100,
               field: 'sendDriverNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1155,7 +1267,7 @@
             },
             {
               headerName: '送货日期',
-              width: 150,
+              width: 200,
               field: 'sendTim',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1171,7 +1283,7 @@
             },
             {
               headerName: '调度员',
-              width: 150,
+              width: 100,
               field: 'dispatNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1179,7 +1291,7 @@
             },
             {
               headerName: '重量',
-              width: 150,
+              width: 100,
               field: 'goodsWeight',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1187,7 +1299,7 @@
             },
             {
               headerName: '体积',
-              width: 150,
+              width: 100,
               field: 'goodsVolumn',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1195,7 +1307,7 @@
             },
             {
               headerName: '取货地址',
-              width: 150,
+              width: 200,
               field: 'pickUpAdr',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1203,7 +1315,7 @@
             },
             {
               headerName: '收货地址',
-              width: 150,
+              width: 200,
               field: 'receAdr',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1211,7 +1323,7 @@
             },
             {
               headerName: '送货费',
-              width: 150,
+              width: 100,
               field: 'sendFee',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1219,7 +1331,7 @@
             },
             {
               headerName: '核销状态',
-              width: 150,
+              width: 80,
               field: 'sendFeeVeriStat',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1227,7 +1339,7 @@
             },
             {
               headerName: '核销人',
-              width: 150,
+              width: 100,
               field: 'sendFeeVeriNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1235,7 +1347,7 @@
             },
             {
               headerName: '核销日期',
-              width: 150,
+              width: 200,
               field: 'sendFeeVeriDate',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1243,7 +1355,7 @@
             },
             {
               headerName: '核销网点',
-              width: 150,
+              width: 100,
               field: 'sendFeeVeriBran',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
@@ -1251,12 +1363,60 @@
             },
             {
               headerName: '支付方式',
-              width: 150,
+              width: 100,
               field: 'sendFeePayMod',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             }
+//            {
+//              headerName: '送货费',
+//              width: 150,
+//              field: 'feeMoney',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '核销状态',
+//              width: 150,
+//              field: 'veriState',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '核销人',
+//              width: 150,
+//              field: 'veriNam',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '核销日期',
+//              width: 150,
+//              field: 'veriTim',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '核销网点',
+//              width: 150,
+//              field: 'veriSite',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            },
+//            {
+//              headerName: '支付方式',
+//              width: 150,
+//              field: 'payMode',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false,
+//              visible: true
+//            }
           ],
           context: {
             componentParent: this
