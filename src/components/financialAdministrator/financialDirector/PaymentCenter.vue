@@ -15,15 +15,9 @@
       <div>
         <el-form :model="filterForm" ref="filterForm" :inline="true">
           <el-form-item label="订单时间:">
-            <el-form-item prop="startTime">
-              <el-date-picker type="date" placeholder="选择开始日期" v-model="filterForm.startTime"
-                              style="width: 150px"></el-date-picker>
-            </el-form-item>
-            <span>--&nbsp</span>
-            <el-form-item prop="endTime">
-              <el-date-picker type="date" placeholder="选择结束日期" v-model="filterForm.endTime"
-                              style="width: 150px"></el-date-picker>
-            </el-form-item>
+            <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+                            :picker-options="pickerOptions" range-separator='/' style="width: 200px">
+            </el-date-picker>
           </el-form-item>
           <el-form-item label="区间:">
             <el-select v-model="filterForm.startPoint" placeholder="起点" style="width: 100px">
@@ -378,6 +372,64 @@
               headerName: '审核日期', width: 150, field: 'auditTim', filter: 'text', hide: false, visible: true
             }
           ]
+        },
+        // 日期选择器条件
+        pickerOptions: {
+          shortcuts: [{
+            text: '上周',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfWeek = now.getDay()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * (nowDayOfWeek + 6))
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfWeek)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '上个月',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfMonth = now.getDate()
+              const nowMonth = now.getMonth()
+              start.setDate(1)
+              start.setMonth(nowMonth - 1)
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfMonth)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '去年',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowYear = now.getFullYear()
+              start.setYear(nowYear - 1)
+              start.setMonth(0)
+              start.setDate(1)
+              end.setYear(nowYear - 1)
+              end.setMonth(11)
+              end.setDate(31)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '今年',
+            onClick (picker) {
+              const start = new Date()
+              const end = new Date()
+              start.setMonth(0)
+              start.setDate(1)
+              picker.$emit('pick', [start, end])
+            }
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
+          }
         },
         // 定义筛选条件
         filterForm: {
