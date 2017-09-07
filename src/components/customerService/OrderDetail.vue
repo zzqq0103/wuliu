@@ -1,13 +1,9 @@
 <template>
   <div>
     <h2 style="text-align:center;margin-top:-2%">订 单 详 情</h2>
+    <el-input style='width:20%' placeholder="请输入订单号" v-model="orderId"></el-input>
+    <el-button onclick="searchOrder">搜索</el-button>
     <el-form ref="form" :model="form">
-      <div style='margin-top:0.5%;display:inline-block;width:100%'>
-        <span style='float:left;padding-top:0.7%' class='col-1'>订单号：</span>
-        <span style='float:left;padding-top:0.9%;width:auto'>{{form.id}}</span>
-        <span class='col-1 order-title-base'>经办客服：</span>
-        <span style='float:left;padding-top:0.7%' class='col-1'>{{form.serviceNam}}</span>
-      </div>
       <div style='margin-top:2%;clear:both' class='test'>
         <span class='col-11 label-title'>基本信息</span>
         <span class='col-1'>订单号</span>
@@ -51,7 +47,9 @@
         <span class='col-1'>预约单号</span>
         <span class='col-1 label-content'>{{form.reserveId}}</span>
         <span class='col-2'>订单物流状态</span>
-        <span class='col-7 label-content'>{{form.orderLogiState}}</span>
+        <span class='col-5 label-content'>{{form.orderLogiState}}</span>
+        <span class='col-1'>经办客服</span>
+        <span class='col-1 label-content'>{{form.serviceNam}}</span>
         <span class='col-11 label-title'>费用信息</span>
         <!--<span v-for="(data,i) in datalist2" :key='data' :class="i==1? 'col-2':'col-1'">{{data}}</span> -->
         <span class='col-1' v-for="(data,i) in datalist2" :key='data'>{{data}}</span>
@@ -112,7 +110,7 @@
         <span class='col-1 label-content'>{{form.salesmanNam}}</span>
         <span class='col-1'>三方备注</span>
         <span class='col-4 label-content'>{{form.trilNote}}</span>
-        <span class='col-11 label-title'>异动信息</span>
+        <span class='col-11 label-title'>运费异常信息</span>
         <span class='col-1'>异动收入</span>
         <span class='col-1 label-content'>{{form.unActIncome}}</span>
         <span class='col-1'>异动支出</span>
@@ -121,6 +119,11 @@
         <span class='col-2 label-content'>{{form.unActTim}}</span>
         <span class='col-1'>异动说明</span>
         <span class='col-3 label-content'>{{form.unActDes}}</span>
+        <span class='col-11 label-title'>订单异常信息</span>
+        <span class='col-2'>物流状态更改</span>
+        <span class='col-4 label-content'>{{form.logisticsChange}}</span>
+        <span class='col-2'>订单位置更改</span>
+        <span class='col-3 label-content'>{{form.posChange}}</span>
         <span class='col-11 label-title'>其它信息</span>
         <span class='col-1'>审核状态</span>
         <span class='col-1 label-content'>{{form.auditState}}</span>
@@ -145,6 +148,7 @@ export default {
       datalist2: ['总运费', '基础运费', '包装费', '提货费', '送货费', '卸货费', '实提货费', '实送货费', '中转费', '货款', '手续费'],
       datalist3: ['保险费', '保额', '回单份数', '回单押款金额', '返款金额', '总付金额', '现付金额', '到付金额', '欠付金额', '月结金额'],
       datalist4: ['装载单号', '运输司机', '联系电话', '子件号', '货物物流信息', '发车时间', '到达时间'],
+      orderId: '',
       formlist: {
         a: 100,
         b: 200,
@@ -255,7 +259,9 @@ export default {
         receNums: '',
         receMoney: '',
         refuMoney: '',
-        feeMoney: [100, 200, 300, 400]
+        feeMoney: [100, 200, 300, 400],
+        logisticsChange: '',
+        posChange: ''
       },
       selectItem: [
         { desc: '泡沫', id: 'pm' },
@@ -265,6 +271,8 @@ export default {
     }
   },
   methods: {
+    searchOrder () {
+    }
   }
 }
 </script>
@@ -291,6 +299,10 @@ export default {
 
 .col-4 {
   width: 36.36%
+}
+
+.col-5 {
+  width: 45.45%
 }
 
 .col-6 {

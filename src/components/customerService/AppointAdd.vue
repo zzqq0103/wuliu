@@ -3,13 +3,21 @@
   <div>
     <h2 style="text-align:center;margin-top:0">新建预约单</h2>
     <div class='div-form'>
-      <el-form :model="test2">          
+      <el-form >          
         <el-form-item label="发货方：" style="float:left;width:50%;">
           <input type="text" list="shipComp" v-model="shipComp" class='input-tishi' style="float:left;width:50%" />
           <datalist id="shipComp">
             <option v-for="item in shipTipList" :value="item" :key="item" />
           </datalist>
         </el-form-item>
+
+        <el-form-item label="目的站：" style="float:left;width:50%">
+          <input type="text" list="arrStation" v-model="arrStation" class='input-tishi' style="float:left;width:50%" />
+          <datalist id="arrStation">
+            <option v-for="item in arrStationList" :value="item" :key="item" />
+          </datalist>
+        </el-form-item>
+
         <el-form-item label="联系人：" style="float:left;width:50%">
           <el-input v-model="shipNam" style="width:60%"></el-input>
         </el-form-item>
@@ -17,9 +25,9 @@
           <el-input v-model="shipTel" style="width:60%;margin-left:5%"></el-input>
         </el-form-item>
         <el-form-item label="提货地址：" style="clear:both;width:100%">
-          <div v-bind:class="{'dropdown':!isFocus, 'dropdown2':isFocus}">
-            <el-input v-model="pickUpAdr" v-bind:readonly="isReadOnly" style="width:78%;margin-left:-3%" v-bind:style="{width:inputWidth + '%'}" @focus="addressVisible=true"></el-input>
-            <div class="dropdown-content" v-bind:style="{width:dropdownWidth + '%'}" v-show="addressVisible"> 
+          <div id='focus1' class="dropdown2" style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(1)" @blur="addressVisible=false">
+            <el-input v-model="pickUpAdr" placeholder="请选择提货地址"  readonly="readonly"style="width:400px;margin-left:-3%;width:73%" ></el-input>
+            <div class="dropdown-content" style='width:33%' v-show="addressVisible"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
                 <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
@@ -38,7 +46,7 @@
               </div>
             </div>
           </div>
-          <el-input class='addressDetail' placeholder="输入详细地址" v-show="detailVisible"></el-input>
+          <el-input class='addressDetail' placeholder="输入详细提货地址" v-show="detailVisible"></el-input>
         </el-form-item>
         <el-form-item label="货物名称：" style="float:left;width:50%">
           <el-input v-model="goodsNam" style="width:60%;margin-left:-4%"></el-input>
@@ -71,9 +79,9 @@
           <el-input v-model="receTel" style="width:60%;margin-left:5%"></el-input>
         </el-form-item>
         <el-form-item label="收货地址：" style="clear:both;width:100%">
-          <div v-bind:class="{'dropdown':!isFocus2, 'dropdown2':isFocus2}">
-            <el-input v-model="receAdr" v-bind:readonly="isReadOnly2" style="width:78%;margin-left:-3%" v-bind:style="{width:inputWidth2 + '%'}" @focus="addressVisible2 = true"></el-input>
-            <div class="dropdown-content" v-bind:style="{width:dropdownWidth2 + '%'}" v-show="addressVisible2"> 
+          <div id='focus2' class='dropdown2' style='outline:none' contenteditable="true" tabindex="0"  @click="getFocus(2)" @blur="addressVisible2=false">
+            <el-input v-model="receAdr" placeholder="请选择收货地址" readonly="readonly" style="width:78%;margin-left:-3%;width:73%" @focus="addressVisible2 = true"></el-input>
+            <div class="dropdown-content" style='width:33%' v-show="addressVisible2"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
                 <li @click="setShi(2)" class='dropdown-li' v-bind:class="{'selectOn':shi2}">城市</li>
@@ -86,13 +94,13 @@
                 <ul class='dropdown-shi' v-show="shi2">
                   <li v-for="(data,i) in this.shiList2.sub" @click="selectShi(2,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
                 </ul>
-                <ul v-show="quyu">
+                <ul v-show="quyu2">
                   <li v-for="(data,i) in this.quList2" @click="selectQu(2,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
                 </ul>
               </div>
             </div>
           </div>
-          <el-input class='addressDetail' placeholder="输入详细地址" v-show="detailVisible2"></el-input>
+          <el-input class='addressDetail' placeholder="输入详细收货地址" v-show="detailVisible2"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -137,19 +145,14 @@ export default {
       /** 地址样式 */
       addressVisible: false,
       addressVisible2: false,
-      shenfen: false,
+      shenfen: true,
       shi: false,
       quyu: false,
-      shenfen2: false,
+      shenfen2: true,
       shi2: false,
       quyu2: false,
-      inputWidth: 78,
-      inputWidth2: 78,
-      dropdownWidth: 78,
-      isFocus: false,
-      isFocus2: false,
-      detailVisible: false,
-      detailVisible2: false,
+      detailVisible: true,
+      detailVisible2: true,
       isReadOnly: false,
       isReadOnly2: false,
       /** 发货人信息 */
@@ -157,7 +160,7 @@ export default {
       shipTipList: ['单位1', '单位2', '单位33333'],
       shipNam: '',
       shipTel: '',
-      pickUpAdr: '123',
+      pickUpAdr: '',
       /** 货物信息 */
       goodsNam: '',
       goodsNums: '',
@@ -173,10 +176,21 @@ export default {
       receAdr: '',
       /** 其它 */
       cancleVisable: false,
-      submitVisable: false
+      submitVisable: false,
+      arrStation: '',
+      arrStationList: ['目的地1', '目的地2', '目的地3']
     }
   },
   methods: {
+    getFocus (num) {
+      if (num === 1) {
+        this.addressVisible = true
+        document.getElementById('focus1').focus()
+      } else {
+        this.addressVisible2 = true
+        document.getElementById('focus2').focus()
+      }
+    },
     selectShenfen (num, name) {
       if (num === 1) {
         this.shenfenSelected = name
@@ -210,18 +224,10 @@ export default {
     selectQu (num, name) {
       if (num === 1) {
         this.quSelected = name
-        this.addressVisible = false
-        this.inputWidth = 73
-        this.dropdownWidth = 33
-        this.isFocus = true
         this.detailVisible = true
         this.isReadOnly = true
       } else {
         this.quSelected2 = name
-        this.addressVisible2 = false
-        this.inputWidth2 = 73
-        this.dropdownWidth2 = 33
-        this.isFocus2 = true
         this.detailVisible2 = true
         this.isReadOnly2 = true
       }
@@ -277,6 +283,8 @@ export default {
           this.shiList.sub.filter(item => {
             if (item.name === this.shiSelected) {
               this.quList = item.sub
+              console.log('quList: ')
+              console.log(this.quList)
               return true
             }
           })
@@ -289,6 +297,8 @@ export default {
           this.shiList2.sub.filter(item => {
             if (item.name === this.shiSelected2) {
               this.quList2 = item.sub
+              console.log('quList2: ')
+              console.log(this.quList2)
               return true
             }
           })

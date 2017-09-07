@@ -6,38 +6,40 @@
     <!--表格筛选区域-->
     <div style='margin-top:2%;font-size:15px'>
         <el-form :model="filterForm1" ref="filterForm1">
-          <el-form-item label="发车时间：" prop="startTime" style='float:left;width:25%'>
+          <span style='float:left;padding:0.6% 1% 0% 0%'>发车时间：</span>
+          <el-form-item prop="startTime" style='float:left;width:13%'>
               <el-date-picker type="datetime" placeholder="1" v-model="filterForm1.departTimStart"
-                              style="width:65%"></el-date-picker>
+                              style="width:100%"></el-date-picker>
           </el-form-item>
-          <span style='float:left;padding:0.8% 0.8%'>到</span>
-          <el-form-item prop="endTime" style='float:left;width:20%'>
+          <span style='float:left;padding:0.8% 1% 0% 1%'>到</span>
+          <el-form-item prop="endTime" style='float:left;width:13%'>
               <el-date-picker type="datetime" placeholder="2" v-model="filterForm1.departTimEnd"
-                              style="width:85%"></el-date-picker>
+                              style="width:100%"></el-date-picker>
           </el-form-item>
-          <el-form-item label="装载单号：" style="float:left;width:23%;margin-left:3%">
+          <!-- <el-form-item label="装载单号：" style="float:left;width:23%;margin-left:3%">
             <el-input v-model="filterForm1.loadingId" style="width:60%"></el-input>
-          </el-form-item>
-          <el-form-item label="仓库位置：" style="float:left;width:20%;margin-left:3%">
-            <el-select placeholder="请选择" v-model="filterForm1.stockPos" style='width:60%'>
+          </el-form-item> -->
+          <span style='float:left;padding:0.6% 1% 0% 3%'>仓库位置：</span>
+          <el-form-item style="float:left;width:10%">
+            <el-select placeholder="请选择" v-model="filterForm1.stockPos" style='width:100%'>
               <el-option label="南京" value="nanjing"></el-option>
               <el-option label="北京" value="beijing"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="司机姓名：" style="float:left;width:25%">
+          <!-- <el-form-item label="司机姓名：" style="float:left;width:25%">
             <el-input v-model="filterForm1.driverNam" style="width:65%"></el-input>
-          </el-form-item>
-          <el-form-item style="float:right;width:15%;margin-right:3%">
-            <el-input  placeholder="输入内容进行搜索" @input="onQuickFilterChanged" style="width:100%"></el-input>
-          </el-form-item>
-          <el-form-item style="float:right;width:5%;margin-right:4%">
+          </el-form-item> -->
+          <el-form-item style="float:right;width:5%">
             <el-button @click="setting">设置</el-button>
           </el-form-item>
-          <el-form-item style="float:right;width:5%;margin-right:4%">
+          <el-form-item style="float:right;width:5%;margin-right:1%">
             <el-button>导出</el-button>
           </el-form-item>
-          <el-form-item style="float:right;width:5%;margin-right:4%">
+          <el-form-item style="float:right;width:5%;margin-right:1%">
             <el-button @click="drawGrid(1)">提取</el-button>
+          </el-form-item>
+          <el-form-item style="float:right;width:15%;margin-right:2%">
+            <el-input  placeholder="输入内容进行搜索" @input="onQuickFilterChanged" style="width:100%"></el-input>
           </el-form-item>
         </el-form>
     </div>
@@ -123,9 +125,6 @@
         </el-form-item>
         <el-form-item label="收货方：" style="float:left;width:23%">
           <el-input v-model="filterForm1.receNam" style="width:65%"></el-input>
-        </el-form-item>
-        <el-form-item style="float:right;width:5%;margin-right:3%">
-          <el-button>导出</el-button>
         </el-form-item>
         <el-form-item style="float:right;width:5%;margin-right:3%">
           <el-button @click="drawGrid(2)">提取</el-button>

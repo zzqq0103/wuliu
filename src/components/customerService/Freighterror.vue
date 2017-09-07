@@ -7,7 +7,6 @@
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div>
-          <el-button @click="setAddVisable">添加</el-button>
           <el-button @click="setting">设置</el-button>
         </div>
       </p>
@@ -159,7 +158,7 @@ export default {
             headerName: '异动时间', width: 150, field: 'unActTim', filter: 'text', hide: false
           },
           {
-            headerName: '异动描述', width: 150, field: 'unActDes', filter: 'text', hide: false
+            headerName: '异动描述', width: 290, field: 'unActDes', filter: 'text', hide: false
           },
           {
             headerName: '客服名称', width: 150, field: 'serviceNam', filter: 'text', hide: false
@@ -174,7 +173,7 @@ export default {
   components: {
     'ag-grid-vue': AgGridVue,
     operateComponent: {
-      template: '<span><button class="del-but" @click="setDelVisable">删 除</button><button class="del-but" @click="setEditVisable">编 辑</button></span>',
+      template: '<button class="del-but" @click="setDelVisable">删 除</button>',
       methods: {
         setDelVisable () {
           this.params.context.componentParent.delVisable = true
@@ -208,16 +207,6 @@ export default {
       for (let i = 0; i < collist.length; i++) {
         this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
       }
-    },
-    // 设置增加弹窗
-    setAddVisable () {
-      this.addEditVisable = true
-      this.unActForm.orderID = ''
-      this.unActForm.unActExpense = ''
-      this.unActForm.unActIncome = ''
-      // this.unActForm.unActTim = ''
-      this.unActForm.unActDes = ''
-      this.unActForm.serviceNam = ''
     },
     // 编辑/增加异动信息
     addEdit () {
@@ -258,8 +247,8 @@ export default {
 
 .del-but {
   cursor: pointer;
-  float: right;
-  margin-right: 10px;
+  float: left;
+  margin-left: 30%;
   border-radius: 4px;
   background: #fff;
   border: 1px solid rgb(191, 217, 216);

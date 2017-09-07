@@ -46,6 +46,47 @@
       </el-pagination>
     </div>
 
+    <!-- 添加异常信息弹窗 -->
+    <el-dialog title="增加异常信息:" :visible.sync="errorEditVisable">
+      <el-form :rules="rules" v-model='errorForm' ref="orderErrorForm">
+        <el-form-item label="订单ID：" :label-width="formLabelWidth">
+          <el-label v-model='errorForm.orderId' style='width:80%'>{{errorForm.orderId}}</el-label>
+        </el-form-item>
+        <el-form-item label="异常类型：" :label-width="formLabelWidth">
+          <el-select  placeholder="请选择"  v-model='errorForm.errorType' @click='test()' class='col-1' style='float:left'>
+            <el-option key="yes" label="订单异常" value="order"></el-option>
+            <el-option key="no" label="运费异常" value="money"></el-option>
+          </el-select>
+        </el-form-item>
+        <div v-if="this.errorForm.errorType === 'order'">
+          <el-form-item label="订单当前位置：" :label-width="formLabelWidth">
+            <el-input style='width:80%'  v-model='errorForm.currPosition'></el-input>
+          </el-form-item>
+          <el-form-item label="订单物流状态：" :label-width="formLabelWidth">
+            <el-input  style='width:80%' v-model='errorForm.orderLogiState'></el-input>
+          </el-form-item>
+        </div>
+        <div v-else-if="this.errorForm.errorType === 'money'">
+          <el-form-item label="异动支出：" :label-width="formLabelWidth">
+            <el-input style='width:35%' v-model='errorForm.unActExpense'></el-input>
+          </el-form-item>
+          <el-form-item label="异动收入：" :label-width="formLabelWidth">
+            <el-input style='width:35%' v-model='errorForm.unActIncome'></el-input>
+          </el-form-item>
+          <el-form-item label="异动时间：" :label-width="formLabelWidth">
+            <el-date-picker type="date" placeholder="选择日期" v-model='errorForm.unActTim' style="width: 35%"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="异动原因：" :label-width="formLabelWidth">
+            <el-input style='width:80%' v-model='errorForm.unActDes'></el-input>
+          </el-form-item>
+        </div>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="errorEditVisable = false">取 消</el-button>
+        <el-button type="primary" @click="submitError">确 定</el-button>
+      </div>
+    </el-dialog>
+
     <!-- 列表显示弹窗 -->
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
       <template v-for="(collist,i) in gridOptions.columnDefs">
@@ -90,7 +131,22 @@ export default {
       orderList: [],
       colVisible: false,
       detailVisible: false,
+      errorEditVisable: false,
+      orderVisable: false,
+      moneyVisable: true,
       currentPage: 1,
+      errorType: '',
+      errorForm: {
+        'errorType': 'order',
+        'orderId': '',
+        'unActExpense': '',
+        'unActIncome': '',
+        'unActTim': '',
+        'unActDes': '',
+        'serviceNam': '',
+        'orderLogiState': '',
+        'currPosition': ''
+      },
       rules: {
       },
       rowCount: 0,
@@ -128,6 +184,9 @@ export default {
           },
           {
             headerName: '重量', field: 'goodsWeight', width: 150, filter: 'text', hide: false
+          },
+          {
+            headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
           }
         ]
       }
@@ -135,9 +194,34 @@ export default {
   },
   components: {
     OrderDetails,
-    'ag-grid-vue': AgGridVue
+    'ag-grid-vue': AgGridVue,
+    operateComponent: {
+      template: '<button class="del-but" @click="addError">增加异常</button>',
+      methods: {
+        addError () {
+          let self = this.params.context.componentParent
+          self.errorEditVisable = true
+          self.errorForm = {
+            'errorType': 'order',
+            'orderId': '',
+            'unActExpense': '',
+            'unActIncome': '',
+            'unActTim': '',
+            'unActDes': '',
+            'serviceNam': '',
+            'orderLogiState': '',
+            'currPosition': ''
+          }
+          self.errorForm.orderId = this.params.data.orderId
+        }
+      }
+    }
   },
   methods: {
+    submitError () {
+      console.log(this.errorForm)
+      this.errorEditVisable = false
+    },
     // 订单详情弹框
     detailDoubleClick (event) {
       this.orderList.orderId = event.data.orderId
@@ -191,3 +275,17 @@ export default {
   }
 }
 </script>
+<style>
+.del-but {
+  cursor: pointer;
+  float:left;
+  margin-left:26%;
+  margin-top:2%;
+  border-radius: 4px;
+  background: #fff;
+  border: 1px solid rgb(191, 217, 216);
+  color: rgb(31, 61, 60);
+  padding: 5px 10px;
+  font-size: 10px
+}
+</style>
