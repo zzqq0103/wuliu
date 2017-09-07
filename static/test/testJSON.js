@@ -20468,5 +20468,30 @@ export default {
         'cargoVolume': '100L'
       }
     ]
-  }
+  },
+  //订单信息
+  'oderInfo': {
+    'list': [
+      {
+        "oderId": '1234',
+        "departure": '北京',
+        "telDeparture": '123456',
+        "destination": '苏州',
+        "telReceiving": '654321',
+        "cargoName": '轮胎',
+        "cargoPieces": '13',
+        "cargoCondition": '运送中'
+      },
+      {
+        "oderId": '5678',
+        "departure": '南京',
+        "telDeparture": '654321',
+        "destination": '北京',
+        "telReceiving": '123456',
+        "cargoName": '货架',
+        "cargoPieces": '21',
+        "cargoCondition": '运送中'
+      }
+    ]
+  },
 }
