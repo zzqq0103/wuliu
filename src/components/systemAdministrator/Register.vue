@@ -91,7 +91,7 @@
 
 <style>
   .register {
-    margin-top: 3%;
+    margin-top: 6%;
     font-size: large;
     height: 40px;
     width: 215px;
