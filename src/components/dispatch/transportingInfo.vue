@@ -63,7 +63,6 @@
                 <el-button @click="departVisible = false" type="danger">确 定</el-button>
             </div>
         </el-dialog>
-          
 
       </div>
     </div>
@@ -89,9 +88,12 @@
                    :paginationPageSize="10"
                    :suppressPaginationPanel="true"
                    :filterChanged="gridfilterChange"
-                   :rowDoubleClicked="detailDoubleClick"
+                   :rowDoubleClicked="changeDialogVisible"
       ></ag-grid-vue>
     </div>
+    
+    <!-- 待长途装载单订单对话框  -->
+    <deliver-order-list :dialogVisible="dialogVisible" :text="text"></deliver-order-list>
 
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
@@ -106,11 +108,6 @@
       </el-pagination>
     </div>
 
-    <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
-    <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
-      <order-details :orderId="orderId"></order-details>
-    </el-dialog>
-
   </div>
 </template>
 
@@ -123,14 +120,18 @@
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  // 引入dispatchLoaderInfo 组件页面
+  import DeliverOrderList from './deliverOrderList'
+  
   export default {
     data () {
       return {
+        text: '待长途装载单订单列表',
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
         colVisible: false, // 设置弹窗的显示boolean值
-        orderId: '', // 运单号
+        loadOrderId: '', // 装载单
         tableForm: {
           'id': '',
           'loadOrderId': '',
@@ -234,7 +235,7 @@
               headerName: '备注', field: 'remarks', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '操作', field: 'remarks', width: 60, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true, cellRendererFramework: 'operateComponent', pinned: 'right'
+              headerName: '操作', field: 'operator', width: 60, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true, cellRendererFramework: 'operateComponent', pinned: 'right'
             }
           ]
         },
@@ -279,13 +280,14 @@
           }]
         },
         dateValue: '', // 日期值
-        detailVisible: false // 订单详情弹框
+        dialogVisible: false
       }
     },
     // 实例组件
     components: {
       'ag-grid-vue': AgGridVue,
       OrderDetails,
+      DeliverOrderList,
       operateComponent: {
         template: '<span style="margin-left:5px;"><el-button  class="del-but" @click="depart" type="info" size="small">发车</el-button></span>',
         methods: {
@@ -300,10 +302,10 @@
     // 实例方法
     methods: {
       // 订单详情弹框
-      detailDoubleClick (event) {
-        console.log(event.data.orderId)
-        this.orderId = event.data.orderId
-        this.detailVisible = true
+      changeDialogVisible (event) {
+        this.loadOrderId = event.data.loadOrderId
+        console.log(event.data.loadOrderId)
+        this.dialogVisible = true
       },
       // 改变每页显示的个数
       handleSizeChange (val) {
