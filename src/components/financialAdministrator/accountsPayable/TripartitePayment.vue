@@ -11,7 +11,7 @@
         <el-button @click="setting">设置</el-button>
         <el-button>导出</el-button> -->
         <el-button @click="drawGrid(1)">提取</el-button>
-        <el-button>打印</el-button>
+        <!--<el-button>打印</el-button>-->
         <el-button>导出</el-button>
         <el-button @click="verification">开始核销</el-button>
       </div>
@@ -60,7 +60,7 @@
       <div>
         <el-form style="float: left" :model="totalForm" ref="totalForm" :inline="true">
           <el-form-item label="中转费合计:">
-            <el-input v-model="totalForm.transferFeeTotal"></el-input>
+            <el-input v-model="totalForm.transferFeeTotal" style="width: 100px" readonly="true"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -87,7 +87,7 @@
       <div v-if="this.filterForm.payType === 'nowPay'">
         <el-form :model="totalForm" ref="totalForm" :inline="true">
           <el-form-item label="现付金额合计:">
-            <el-input v-model="totalForm.totalMoney"></el-input>
+            <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
           </el-form-item>
         </el-form>
       </div>

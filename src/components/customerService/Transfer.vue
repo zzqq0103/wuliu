@@ -4,11 +4,14 @@
       <h2 style="text-align:center">回单管理</h2>
       <p style="margin-top:1%;float:left" class="appointment" :model="transfer">
         <el-h5 class="appointmenttime">开单时间</el-h5>
-        <el-date-picker type="datetime" class="appointmenttimes" placeholder="开始时间"
-                        v-model="transfer.startTime"></el-date-picker>
-        <el-h5 class="appointmenttimes">到</el-h5>
-        <el-date-picker type="datetime" class="appointmenttimes" placeholder="结束时间"
-                        v-model="transfer.endTime"></el-date-picker>
+        <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+                        :picker-options="pickerOptions" range-separator='/' style="width: 200px">
+        </el-date-picker>
+        <!--<el-date-picker type="datetime" class="appointmenttimes" placeholder="开始时间"-->
+                        <!--v-model="transfer.startTime"></el-date-picker>-->
+        <!--<el-h5 class="appointmenttimes">到</el-h5>-->
+        <!--<el-date-picker type="datetime" class="appointmenttimes" placeholder="结束时间"-->
+                        <!--v-model="transfer.endTime"></el-date-picker>-->
         <el-h5 class="appointmenttimes">预约单号：</el-h5>
         <el-input class="appointmenttimeman"></el-input>
         <el-h5 class="appointmenttimes">回单状态：</el-h5>
@@ -68,8 +71,8 @@
         </el-pagination>
       </div>
       <!--<p style="margin-top:1%;float:right;margin-right:5%;width:50%">-->
-        <!--<el-button style="margin-right:6%">确 认 更 新</el-button>-->
-        <!--&lt;!&ndash;<el-button>全选</el-button>&ndash;&gt;-->
+      <!--<el-button style="margin-right:6%">确 认 更 新</el-button>-->
+      <!--&lt;!&ndash;<el-button>全选</el-button>&ndash;&gt;-->
       <!--</p>-->
     </div>
   </div>
@@ -82,6 +85,9 @@
   export default {
     data () {
       return {
+        filterForm: {
+          'startTime': ''
+        },
         orderformerVisable: false,
         orderformerForm: {
           'Selectsites': '',
@@ -166,6 +172,63 @@
               hide: false
             }
           ]
+        },
+        pickerOptions: {
+          shortcuts: [{
+            text: '上周',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfWeek = now.getDay()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * (nowDayOfWeek + 6))
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfWeek)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '上个月',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfMonth = now.getDate()
+              const nowMonth = now.getMonth()
+              start.setDate(1)
+              start.setMonth(nowMonth - 1)
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfMonth)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '去年',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowYear = now.getFullYear()
+              start.setYear(nowYear - 1)
+              start.setMonth(0)
+              start.setDate(1)
+              end.setYear(nowYear - 1)
+              end.setMonth(11)
+              end.setDate(31)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '今年',
+            onClick (picker) {
+              const start = new Date()
+              const end = new Date()
+              start.setMonth(0)
+              start.setDate(1)
+              picker.$emit('pick', [start, end])
+            }
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
+          }
         }
       }
     },
