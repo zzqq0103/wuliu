@@ -3,7 +3,7 @@
     <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
       <el-form-item label="角 色">
         <el-select v-model="ruleForm2.selectvalue" :placeholder="ruleForm2.queryItemOptions[0].label">
-          <el-option span="14" v-for="item in ruleForm2.queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
+          <el-option span="14" v-for="item in ruleForm2.queryItemOptions" :key="item.value" :label="item.label" :value="item.value" style="width: 300px">
           </el-option>
         </el-select>
       </el-form-item>
@@ -16,7 +16,7 @@
       <el-form-item label="密 码" prop="pass">
         <el-input v-model="ruleForm2.pass" auto-complete="off" style="width: 300px"></el-input>
       </el-form-item>
-      <el-form-item label="确认密码" prop="checkPass">
+      <el-form-item label="确 认 密 码" prop="checkPass">
         <el-input v-model="ruleForm2.checkPass" auto-complete="off" style="width: 300px"></el-input>
       </el-form-item>
       <el-form-item label="站点 / 网点" prop="station">
@@ -146,6 +146,6 @@
     margin-top: 2%;
     font-size: large;
     height: 40px;
-    width: 525px;
+    width: 300px;
   }
 </style>
