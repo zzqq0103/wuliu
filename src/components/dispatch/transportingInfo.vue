@@ -93,7 +93,7 @@
     </div>
 
     <!-- 待长途装载单订单对话框  -->
-    <deliver-order-list :dialogVisible="dialogVisible" :text="text"></deliver-order-list>
+    <deliver-order-list :dialogVisible="dialogVisible" :title="titleText" :loaderId="loadOrderId"></deliver-order-list>
 
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">

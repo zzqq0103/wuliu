@@ -76,7 +76,7 @@
                    :paginationPageSize="10"
                    :suppressPaginationPanel="true"
                    :filterChanged="gridfilterChange"
-                   :rowDoubleClicked="detailDoubleClick"
+                   :rowDoubleClicked="changeDialogVisible"
       ></ag-grid-vue>
     </div>
 
@@ -124,6 +124,7 @@
     data () {
       return {
         titleText: '已送货装载单订单列表',
+        dialogVisible: false,
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
@@ -258,16 +259,16 @@
       'ag-grid-vue': AgGridVue,
       OrderDetails,
       dispatched,
-      deliverOrderList
+      DeliverOrderList
     },
 
     // 实例方法
     methods: {
-      // 订单详情弹框
-      detailDoubleClick (event) {
-        // console.log(event.data.orderId)
-        this.orderId = event.data.orderId
-        this.dispatchVisible = true
+      // 装载单订单列表弹框
+      changeDialogVisible (event) {
+        this.loadOrderId = event.data.loadOrderId
+        console.log(event.data.loadOrderId)
+        this.dialogVisible = true
       },
       // 改变每页显示的个数
       handleSizeChange (val) {
