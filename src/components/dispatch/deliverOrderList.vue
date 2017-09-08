@@ -1,7 +1,7 @@
 <template>
     <!-- 所有的组件必须要有一个div给包裹住 -->
     <div>
-        <el-dialog title='装载单订单列表' :visible.sync="dialogVisible" size="full">
+        <el-dialog title='title' :visible.sync="dialogVisible" size="full">
             <!-- 表格 -->
                 <ag-grid-vue style="width: 100%;height: 70%" class="ag-blue"
                    :gridOptions="gridOptions"
@@ -37,7 +37,7 @@ export default {
       detailVisible: false // 订单详情弹框
     }
   },
-  props: ['text', 'dialogVisible'],
+  props: ['title', 'dialogVisible'],
     // 引用的组件
   components: {
     AgGridVue

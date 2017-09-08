@@ -47,7 +47,7 @@
         <el-button v-popover:popover1>设置</el-button>
         </div>
 
-        
+
         <div>
           <!-- 导出 -->
           <el-button style="float:right; margin-right:10px;">新增装载单</el-button>
@@ -70,7 +70,7 @@
     <!-- 清除浮动 -->
     <div style="clear: both;">
     </div>
-    
+
     <!-- 表格 -->
     <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
@@ -91,7 +91,7 @@
                    :rowDoubleClicked="changeDialogVisible"
       ></ag-grid-vue>
     </div>
-    
+
     <!-- 待长途装载单订单对话框  -->
     <deliver-order-list :dialogVisible="dialogVisible" :text="text"></deliver-order-list>
 
@@ -122,11 +122,13 @@
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   // 引入dispatchLoaderInfo 组件页面
   import DeliverOrderList from './deliverOrderList'
-  
+  // 引入装载单页面的 （dispatched.vue）页面
+  import dispatched from './dispatched'
+
   export default {
     data () {
       return {
-        text: '待长途装载单订单列表',
+        titleText: '待长途装载单订单列表',
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
@@ -288,6 +290,7 @@
       'ag-grid-vue': AgGridVue,
       OrderDetails,
       DeliverOrderList,
+      dispatched,
       operateComponent: {
         template: '<span style="margin-left:5px;"><el-button  class="del-but" @click="depart" type="info" size="small">发车</el-button></span>',
         methods: {

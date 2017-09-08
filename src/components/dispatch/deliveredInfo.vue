@@ -58,7 +58,7 @@
     <!-- 清除浮动 -->
     <div style="clear: both;">
     </div>
-    
+
     <!-- 表格 -->
     <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
@@ -82,6 +82,9 @@
 
     <!-- 装载单详细列表信息 -->
     <dispatched> </dispatched>
+
+    <!-- 装载单页面订单列表 -->
+    <detail-order-list :title="titleText"></detail-order-list>
 
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
@@ -115,9 +118,12 @@
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   // 引入装载单页面的 （dispatched.vue）页面
   import dispatched from './dispatched'
+  // 引入装载单订单页面 （deliverOrderList.vue) 页面
+  import DeliverOrderList from './deliverOrderList'
   export default {
     data () {
       return {
+        titleText: '已送货装载单订单列表',
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
@@ -251,7 +257,8 @@
     components: {
       'ag-grid-vue': AgGridVue,
       OrderDetails,
-      dispatched
+      dispatched,
+      deliverOrderList
     },
 
     // 实例方法
