@@ -71,11 +71,6 @@
                    :suppressCellSelection="true"
                    :rowHeight="40"
                    :headerHeight="40"
-
-                   :pagination="true"
-                   :paginationPageSize="10"
-                   :suppressPaginationPanel="true"
-                   :filterChanged="gridfilterChange"
                    :rowDoubleClicked="changeDialogVisible"
       ></ag-grid-vue>
     </div>
@@ -84,7 +79,7 @@
     <dispatched> </dispatched>
 
     <!-- 装载单页面订单列表 -->
-    <detail-order-list :title="titleText"></detail-order-list>
+    <deliver-order-list :title="titleText"></deliver-order-list>
 
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">

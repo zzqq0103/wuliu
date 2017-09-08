@@ -1,5 +1,5 @@
 <template>
-<!-- 组件必须头元素被一个div容器包括 -->
+  <!-- 组件必须头元素被一个div容器包括 -->
   <div>
     <div id="top">
       <!-- 标题 -->
@@ -22,7 +22,8 @@
         <!-- 查询 & 设置 -->
         <div style="float:left;">
 
-          <el-input placeholder="请输入查询数据" icon="search" v-model="queryName" :on-icon-click="handleIconClick" style="width:145px;"></el-input>
+          <el-input placeholder="请输入查询数据" icon="search" v-model="queryName" :on-icon-click="handleIconClick"
+                    style="width:145px;"></el-input>
           <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
@@ -30,38 +31,38 @@
 
           <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
-          <template v-for="(collist,i) in gridOptions.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
-                {{collist.headerName}}
-              </el-checkbox>
-            </div>
-          </template>
-          <template>
-            <div class="colVisible">
-              <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
-            </div>
-          </template>
-        </el-popover>
-        <el-button v-popover:popover1>设置</el-button>
+            <template v-for="(collist,i) in gridOptions.columnDefs">
+              <div class="colVisible">
+                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
+                  {{collist.headerName}}
+                </el-checkbox>
+              </div>
+            </template>
+            <template>
+              <div class="colVisible">
+                <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+              </div>
+            </template>
+          </el-popover>
+          <el-button v-popover:popover1>设置</el-button>
         </div>
 
 
         <div>
           <!-- 导出 -->
-          <el-button style="float:right; margin-right:10px;">新增装载单</el-button>
+          <el-button style="float:right; margin-right:10px;" @click="createLoaderList">新增装载单</el-button>
           <!-- 新增装载单 -->
           <el-button style="float:right; margin-right:10px;">导出</el-button>
         </div>
 
         <!-- 是否发车对话框 -->
-        <el-dialog title="" :visible.sync="departVisible" size="tiny" top="30%" close-on-press-escape= false modal= false close-on-click-modal = false>
-            <h2 style="padding:30px">确认发车吗？</h2>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="departVisible = false">取 消</el-button>
-                <el-button @click="departVisible = false" type="danger">确 定</el-button>
-            </div>
+        <el-dialog title="" :visible.sync="departVisible" size="tiny" top="30%">
+          <h2 style="padding:30px">确认发车吗？</h2>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="departVisible = false">取 消</el-button>
+            <el-button @click="departVisible = false" type="danger">确 定</el-button>
+          </div>
         </el-dialog>
 
       </div>
@@ -72,7 +73,7 @@
     </div>
 
     <!-- 表格 -->
-    <div id="middle" style="margin-top:2%" v-loading="listLoading">
+    <div id="middle" style="margin-top:2%;" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
@@ -83,17 +84,15 @@
                    :suppressCellSelection="true"
                    :rowHeight="40"
                    :headerHeight="40"
-
-                   :pagination="true"
-                   :paginationPageSize="10"
-                   :suppressPaginationPanel="true"
-                   :filterChanged="gridfilterChange"
                    :rowDoubleClicked="changeDialogVisible"
       ></ag-grid-vue>
     </div>
 
     <!-- 待长途装载单订单对话框  -->
-    <deliver-order-list :dialogVisible="dialogVisible" :title="titleText" :loaderId="loadOrderId"></deliver-order-list>
+    <el-dialog :title="titleText" :visible.sync="dialogVisible" size="full" :modalfalse :modal-append-to-body=false>
+      <deliver-order-list :loaderId="loadOrderId" :flag="flag"></deliver-order-list>
+    </el-dialog>
+
 
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
@@ -124,13 +123,14 @@
   import DeliverOrderList from './deliverOrderList'
   // 引入装载单页面的 （dispatched.vue）页面
   import dispatched from './dispatched'
-
   export default {
     data () {
       return {
         titleText: '待长途装载单订单列表',
+        dialogVisible: false, // 装载单订单列表弹窗的显示真值
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
+        flag: false, // flag = true 表示是新增装载单
         currentpage: 1, // 当前页数
         colVisible: false, // 设置弹窗的显示boolean值
         loadOrderId: '', // 装载单
@@ -171,7 +171,13 @@
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '装载单号', width: 120, field: 'loadOrderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '装载单号',
+              width: 120,
+              field: 'loadOrderId',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             // {
             //   headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -180,64 +186,186 @@
             //   headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false, filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             // },
             {
-              headerName: '装载单状态', width: 120, field: 'loadOrderStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '装载单状态',
+              width: 120,
+              field: 'loadOrderStatus',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '调整状态', width: 120, field: 'adjustmentStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调整状态',
+              width: 120,
+              field: 'adjustmentStatus',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '起始站', width: 120, field: 'startStation', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '起始站',
+              width: 120,
+              field: 'startStation',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '到达站', width: 120, field: 'endStation', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '到达站',
+              width: 120,
+              field: 'endStation',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '大车司机姓名', width: 120, field: 'driverName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车司机姓名',
+              width: 120,
+              field: 'driverName',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '大车司机电话', width: 120, field: 'driverPhone', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车司机电话',
+              width: 120,
+              field: 'driverPhone',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '发车时间', width: 120, field: 'departTime', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '发车时间',
+              width: 120,
+              field: 'departTime',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '到达时间', width: 120, field: 'arriveTime', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '到达时间',
+              width: 120,
+              field: 'arriveTime',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '大车总毛利', width: 120, field: 'gross', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车总毛利',
+              width: 120,
+              field: 'gross',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '总运费', width: 120, field: 'freight', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总运费',
+              width: 120,
+              field: 'freight',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '总中转费', width: 120, field: 'transhipment', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总中转费',
+              width: 120,
+              field: 'transhipment',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '总返款', width: 120, field: 'refund', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总返款',
+              width: 120,
+              field: 'refund',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '总提送费', width: 120, field: 'sendFee', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总提送费',
+              width: 120,
+              field: 'sendFee',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '总重量', width: 120, field: 'allWeights', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总重量',
+              width: 120,
+              field: 'allWeights',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '总体积', width: 120, field: 'allVolumes', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总体积',
+              width: 120,
+              field: 'allVolumes',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '总件数', width: 120, field: 'allNumbers', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总件数',
+              width: 120,
+              field: 'allNumbers',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '调度管理员编号', width: 120, field: 'dispatcherId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调度管理员编号',
+              width: 120,
+              field: 'dispatcherId',
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '调度管理员姓名', field: 'dispatcherName', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调度管理员姓名',
+              field: 'dispatcherName',
+              width: 120,
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '备注', field: 'remarks', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '备注',
+              field: 'remarks',
+              width: 120,
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '操作', field: 'operator', width: 60, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true, cellRendererFramework: 'operateComponent', pinned: 'right'
+              headerName: '操作',
+              field: 'operator',
+              width: 60,
+              filter: 'text',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true,
+              cellRendererFramework: 'operateComponent',
+              pinned: 'right'
             }
           ]
         },
@@ -281,8 +409,7 @@
             }
           }]
         },
-        dateValue: '', // 日期值
-        dialogVisible: false
+        dateValue: '' // 日期值
       }
     },
     // 实例组件
@@ -297,6 +424,7 @@
           // 点击发车按钮，进行操作
           depart () {
             let self = this.params.context.componentParent
+            console.log(self)
             self.departVisible = true
           }
         }
@@ -304,11 +432,14 @@
     },
     // 实例方法
     methods: {
-      // 订单详情弹框
+      // 装载单订单列表弹框
       changeDialogVisible (event) {
         this.loadOrderId = event.data.loadOrderId
-        console.log(event.data.loadOrderId)
         this.dialogVisible = true
+      },
+      // 新增装载单
+      createLoaderList () {
+        this.flag = true
       },
       // 改变每页显示的个数
       handleSizeChange (val) {
@@ -400,11 +531,13 @@
     }
   }
 </script>
+
 <style scoped>
 
   .el-select-css {
     width: 50%;
   }
+
   .del-but {
     cursor: pointer;
     float: right;
