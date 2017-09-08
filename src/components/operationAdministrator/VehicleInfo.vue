@@ -10,14 +10,30 @@
         <div>
           <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
           <el-button @click="vehicleAdd">添加</el-button>
-          <el-button @click="setting">设置</el-button>
+          <!-- <el-button @click="setting">设置</el-button> -->
+          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+        <el-button v-popover:popover1>设置</el-button>
         </div>
       </p>
     </div>
     <div style="clear: both;">
     </div>
     <div style="margin-top:2%">
-      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue" 
+      <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue" 
         :gridOptions="gridOptions" 
         :suppressMovableColumns="true" 
         :enableColResize="true" 
@@ -26,7 +42,7 @@
         :groupHeaders="true" 
         :suppressCellSelection="true"
         :rowHeight=40 
-        :headerHeight=30
+        :headerHeight=40
         :pagination="true"
         :paginationPageSize="10"
         :suppressPaginationPanel="true"
@@ -83,10 +99,10 @@
     </el-dialog>
      <!-- 删除弹窗 -->
     <el-dialog title="" :visible.sync="vehicleDelVisable" size="tiny">
-      <h2 style="padding:30px">确认删除吗？</h2>
+      <h2 style="text-align:center">确认删除车牌号为<{{vehicleForm.licePlateNum}}>的车吗？</h2>
       <div slot="footer" class="dialog-footer">
         <el-button @click="vehicleDelVisable = false">取 消</el-button>
-        <el-button @click="vehicleDelVisable = false">确 定</el-button>
+        <el-button @click="vehicleDelVisable = false" type="primary">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -154,43 +170,43 @@ export default {
         rowData: null,
         columnDefs: [
           {
-            headerName: '车牌号码', width: 150, field: 'licePlateNum', filter: 'text', hide: false
+            headerName: '车牌号码', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '司机姓名', width: 150, field: 'driverName', filter: 'text', hide: false
+            headerName: '司机姓名', width: 150, field: 'driverName', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '联系电话', width: 150, field: 'tel', filter: 'text', hide: false
+            headerName: '联系电话', width: 150, field: 'tel', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '合同号', width: 150, field: 'contractID', filter: 'text', hide: false
+            headerName: '合同号', width: 150, field: 'contractID', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '合同价格', width: 150, field: 'contractPrice', filter: 'text', hide: false
+            headerName: '合同价格', width: 150, field: 'contractPrice', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '车容量', width: 150, field: 'capacity', filter: 'text', hide: false
+            headerName: '车容量', width: 150, field: 'capacity', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '吨位', width: 150, field: 'tonnage', filter: 'text', hide: false
+            headerName: '吨位', width: 150, field: 'tonnage', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '车辆类型', width: 150, field: 'carType', filter: 'text', hide: false
+            headerName: '车辆类型', width: 150, field: 'carType', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '车辆接送区域', width: 150, field: 'pickUpArea', filter: 'text', hide: false
+            headerName: '车辆接送区域', width: 150, field: 'pickUpArea', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '司机状态', width: 150, field: 'receState', filter: 'text', hide: false
+            headerName: '司机状态', width: 150, field: 'receState', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '车辆状态', width: 150, field: 'carState', filter: 'text', hide: false
+            headerName: '车辆状态', width: 150, field: 'carState', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '车辆位置', width: 150, field: 'carPosition', filter: 'text', hide: false
+            headerName: '车辆位置', width: 150, field: 'carPosition', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
+            headerName: '操作', field: 'value', width: 150, suppressMenu: true, cellRendererFramework: 'operateComponent', hide: false, visible: true
           }
         ]
       }
@@ -199,10 +215,11 @@ export default {
   components: {
     'ag-grid-vue': AgGridVue,
     operateComponent: {
-      template: '<span><button class="del-but" @click="vehicleDel">删 除</button><button class="del-but" @click="vehicleEdit">编 辑</button></span>',
+      template: '<span><el-button class="del-but" style="margin-left:10%" type="danger" size="small" @click="vehicleDel">删 除</el-button><el-button class="del-but" type="info" size="small" @click="vehicleEdit">编 辑</el-button></span>',
       methods: {
         vehicleDel () {
           this.params.context.componentParent.vehicleDelVisable = true
+          this.params.context.componentParent.vehicleForm.licePlateNum = this.params.data.licePlateNum
         },
         vehicleEdit () {
           /* var vehicleform = this.params.context.componentParent.vehicleForm
@@ -220,18 +237,24 @@ export default {
     onQuickFilterChanged (input) {
       this.gridOptions.api.setQuickFilter(input)
     },
-    changeColumnDefsBoolen () {
-      var columnlist = this.gridOptions.columnDefs
-      for (let i = 0; i < columnlist.length; i++) {
-        columnlist[i].hide = !columnlist[i].hide
-      }
-    },
     setting () {
       this.colVisible = true
     },
+    visibleChoice (i) {
+      if (i === 1) {
+        for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+          this.gridOptions.columnDefs[j].visible = true
+        }
+      } else if (i === 2) {
+        for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+          this.gridOptions.columnDefs[j].visible = false
+        }
+      }
+      this.updataColumnDefs(this.gridOptions.columnDefs)
+    },
     updataColumnDefs (collist) {
       for (let i = 0; i < collist.length; i++) {
-        this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+        this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
       }
     },
     // 增加
@@ -264,16 +287,15 @@ export default {
     this.createRowData()
   },
   mounted () {
-    this.changeColumnDefsBoolen()
     this.calculateGrid()
   }
 }
 </script>
-<style>
+<style scoped>
 .el-select-css {
   width: 50%;
 }
-.del-but {
+/* .del-but {
   cursor: pointer;
   float: right;
   margin-right: 10px;
@@ -283,5 +305,5 @@ export default {
   color: rgb(31, 61, 60);
   padding: 5px 10px;
   font-size: 10px
-}
+} */
 </style>

@@ -6,7 +6,7 @@
     <!--表格筛选区域-->
     <div style='margin-top:2%;font-size:15px'>
         <el-form :model="filterForm1" ref="filterForm1">
-          <span style='float:left;padding:0.6% 1% 0% 0%'>发车时间：</span>
+          <!--<span style='float:left;padding:0.6% 1% 0% 0%'>发车时间：</span>
           <el-form-item prop="startTime" style='float:left;width:13%'>
               <el-date-picker type="datetime" placeholder="1" v-model="filterForm1.departTimStart"
                               style="width:100%"></el-date-picker>
@@ -15,10 +15,11 @@
           <el-form-item prop="endTime" style='float:left;width:13%'>
               <el-date-picker type="datetime" placeholder="2" v-model="filterForm1.departTimEnd"
                               style="width:100%"></el-date-picker>
-          </el-form-item>
-          <!-- <el-form-item label="装载单号：" style="float:left;width:23%;margin-left:3%">
-            <el-input v-model="filterForm1.loadingId" style="width:60%"></el-input>
-          </el-form-item> -->
+          </el-form-item>-->
+          <span style='float:left;padding:0.6% 1% 0% 0%'>订单时间：</span>
+          <el-date-picker v-model="filterForm1.departTimEnd" type="daterange" placeholder="选择日期范围"
+                            :picker-options="pickerOptions" range-separator='/' style='float:left;width:16%'>
+          </el-date-picker>
           <span style='float:left;padding:0.6% 1% 0% 3%'>仓库位置：</span>
           <el-form-item style="float:left;width:10%">
             <el-select placeholder="请选择" v-model="filterForm1.stockPos" style='width:100%'>
@@ -29,8 +30,25 @@
           <!-- <el-form-item label="司机姓名：" style="float:left;width:25%">
             <el-input v-model="filterForm1.driverNam" style="width:65%"></el-input>
           </el-form-item> -->
+
+          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+            <template v-for="(collist,i) in gridOptions.columnDefs">
+              <div class="colVisible">
+                <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)"
+                              style="float: left;width: 180px">
+                  {{collist.headerName}}
+                </el-checkbox>
+              </div>
+            </template>
+            <template>
+              <div class="colVisible">
+                <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+                <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
+              </div>
+            </template>
+          </el-popover>
           <el-form-item style="float:right;width:5%">
-            <el-button @click="setting">设置</el-button>
+            <el-button v-popover:popover1>设置</el-button>
           </el-form-item>
           <el-form-item style="float:right;width:5%;margin-right:1%">
             <el-button>导出</el-button>
@@ -46,7 +64,7 @@
     <div style="clear: both;"></div>
     <!--表格-->
     <div style="margin-top: 10px">
-      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+      <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
@@ -55,6 +73,7 @@
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
+                   :headerHeight=40
 
                    :rowDoubleClicked="detailDoubleClick"
                    :pagination="true"
@@ -132,8 +151,25 @@
         <el-form-item style="float:left;width:18.5%;clear:left">
             <el-input placeholder="输入内容进行搜索" @input="onQuickFilterChanged2" style="width:100%"></el-input>
         </el-form-item>
+
+        <el-popover ref="popover2" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+          <template v-for="(collist,i) in gridOptions2.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)"
+                            style="float: left;width: 180px">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1,'grid2')" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2,'grid2')" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
         <el-form-item style="float:left;width:5%;margin-left:4%">
-          <el-button @click="colVisible2 = true">设置</el-button>
+          <el-button v-popover:popover2>设置</el-button>
         </el-form-item>
         <el-form-item style="float:left;width:25%;margin-left:15%">
             <el-button @click="leftSelect"> > </el-button>
@@ -141,15 +177,33 @@
             <el-button @click="rightSelect"> < </el-button>
             <el-button @click="rightSelectAll"> << </el-button>
         </el-form-item>
+
+
+        <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+          <template v-for="(collist,i) in gridOptions3.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)"
+                            style="float: left;width: 180px">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1,'grid3')" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2,'grid3')" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
         <el-form-item style="float:right;width:5%;margin-right:3%">
-          <el-button @click="colVisible3 = true">设置</el-button>
+          <el-button v-popover:popover3>设置</el-button>
         </el-form-item>
         <el-form-item style="float:right;width:18.5%;margin-right:4%">
             <el-input placeholder="输入内容进行搜索" @input="onQuickFilterChanged3" style="width:100%"></el-input>
         </el-form-item>
       </el-form>
       <div style="margin-top: 10px;float:left;width:100%">
-            <ag-grid-vue style="width:48%;height: 350px;display:inline-block;" class="ag-blue"
+            <ag-grid-vue style="width:48%;height: 550px;display:inline-block;" class="ag-blue"
                         :gridOptions="gridOptions2"
                         :suppressMovableColumns="true"
                         :enableColResize="true"
@@ -158,11 +212,11 @@
                         :groupHeaders="true"
                         :suppressCellSelection="true"
                         :rowHeight=40
-
+                        :headerHeight=40
                         :rowDoubleClicked="leftDoubleClick"
                         :animateRows="true"
                         rowSelection="multiple"/>
-            <ag-grid-vue style="display:inline-block;width:48%;margin-left:3%;height: 350px" class="ag-blue"
+            <ag-grid-vue style="display:inline-block;width:48%;margin-left:3%;height: 550px" class="ag-blue"
                         :gridOptions="gridOptions3"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
@@ -171,6 +225,7 @@
                          :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
+                         :headerHeight=40
                          :rowDoubleClicked="rightDoubleClick"
                          :animateRows="true"
                          rowSelection="multiple"/>
@@ -202,6 +257,7 @@
 <script>
   import {AgGridVue} from 'ag-grid-vue'
   import OrderDetails from '../financialAdministrator/ShowOrderDetails.vue'
+  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   export default {
     created () {
       for (let i = 0; i < 100; i++) {
@@ -236,25 +292,25 @@
           rowData: [],
           columnDefs: [
             {
-              headerName: '装载单号', width: 150, field: 'loadingId', filter: 'text', hide: false, visible: true
+              headerName: '装载单号', width: 150, field: 'loadingId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '司机', width: 150, field: 'driverNam', filter: 'text', hide: false, visible: true
+              headerName: '司机', width: 150, field: 'driverNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true
+              headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '起始站', width: 150, field: 'startPoint', filter: 'text', hide: false, visible: true
+              headerName: '起始站', width: 150, field: 'startPoint', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '终点站', width: 150, field: 'endPoint', filter: 'text', hide: false, visible: true
+              headerName: '终点站', width: 150, field: 'endPoint', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '发车时间', width: 150, field: 'departTim', filter: 'text', hide: false, visible: true
+              headerName: '发车时间', width: 150, field: 'departTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '到达时间', width: 150, field: 'arrTim', filter: 'text', hide: false, visible: true
+              headerName: '到达时间', width: 150, field: 'arrTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             }
           ],
           context: {
@@ -365,6 +421,31 @@
       'ag-grid-vue': AgGridVue
     },
     methods: {
+       // 切换列可见性，i=1或者2，1全选或者2全不选，gridnum表示三个表格
+      visibleChoice (i, gridnum) {
+        let gridCol
+        let num
+        if (gridnum === 'grid1') {
+          gridCol = this.gridOptions
+          num = 1
+        } else if (gridnum === 'grid2') {
+          gridCol = this.gridOptions2
+          num = 2
+        } else if (gridnum === 'grid3') {
+          gridCol = this.gridOptions3
+          num = 3
+        }
+        if (i === 1) {
+          for (let j = 0; j < gridCol.columnDefs.length; j++) {
+            gridCol.columnDefs[j].visible = true
+          }
+        } else if (i === 2) {
+          for (let j = 0; j < gridCol.columnDefs.length; j++) {
+            gridCol.columnDefs[j].visible = false
+          }
+        }
+        this.updateColumnDefsVisible(num, gridCol.columnDefs)
+      },
       // 绘制表格，包括更新列信息与行信息
       drawGrid (i) {
         if (i === 2) {
@@ -516,16 +597,4 @@
   }
 </script>
 <style>
-  .del-but {
-    cursor: pointer;
-    float: right;
-    margin-right: 10px;
-    border-radius: 4px;
-    background: #fff;
-    border: 1px solid rgb(191, 217, 216);
-    color: rgb(31, 61, 60);
-    padding: 5px 10px;
-    font-size: 10px
-  }
-
 </style>
