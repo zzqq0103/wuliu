@@ -1,26 +1,26 @@
 <template>
-  <el-col span="7" offset="7" style="margin-top: 4%">
+  <el-col span="14" offset="6" style="margin-top: 3%">
     <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="角色">
+      <el-form-item label="角 色">
         <el-select v-model="ruleForm2.selectvalue" :placeholder="ruleForm2.queryItemOptions[0].label">
-          <el-option v-for="item in ruleForm2.queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
+          <el-option span="14" v-for="item in ruleForm2.queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="姓名" prop="name">
-        <el-input v-model="ruleForm2.name" placeholder="输入姓名"></el-input>
+      <el-form-item label="姓 名" prop="name">
+        <el-input v-model="ruleForm2.name" placeholder="输入姓名" style="width: 300px"></el-input>
       </el-form-item>
-      <el-form-item label="账号" prop="phone">
-        <el-input v-model.number="ruleForm2.phone" placeholder="输入手机号"></el-input>
+      <el-form-item label="账 号" prop="phone">
+        <el-input v-model.number="ruleForm2.phone" placeholder="输入手机号" style="width: 300px"></el-input>
       </el-form-item>
       <el-form-item label="密 码" prop="pass">
-        <el-input v-model="ruleForm2.pass" auto-complete="off"></el-input>
+        <el-input v-model="ruleForm2.pass" auto-complete="off" style="width: 300px"></el-input>
       </el-form-item>
       <el-form-item label="确认密码" prop="checkPass">
-        <el-input v-model="ruleForm2.checkPass" auto-complete="off"></el-input>
+        <el-input v-model="ruleForm2.checkPass" auto-complete="off" style="width: 300px"></el-input>
       </el-form-item>
-      <el-form-item label="站点/网点" prop="station">
-        <el-input v-model="ruleForm2.station" placeholder="输入所属站点/网点"></el-input>
+      <el-form-item label="站点 / 网点" prop="station">
+        <el-input v-model="ruleForm2.station" placeholder="输入所属 站点/网点" style="width: 300px"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm2')" class="register">注 册</el-button>
@@ -75,7 +75,7 @@
       }
       var checkStation = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('站点/网点不能为空'))
+          return callback(new Error('站点 / 网点 不能为空'))
         }
         callback()
       }
@@ -143,9 +143,9 @@
 
 <style>
   .register {
-    margin-top: 6%;
+    margin-top: 2%;
     font-size: large;
     height: 40px;
-    width: 215px;
+    width: 525px;
   }
 </style>
