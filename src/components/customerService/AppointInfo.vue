@@ -46,6 +46,25 @@
         <el-button>导出</el-button>
       </p>
     </div>
+    <el-dialog title="预约单状态:" :visible.sync="appointlnfoVisable">
+      <el-form :model="appointlnfoForm" :rules="rules" ref="appointlnfoForm">
+        <el-form-item label="是否预约单:" :label-width="formLabelWidth">
+          <!--<el-input v-model="orderformerForm.licePlateNum"></el-input>-->
+          <el-select v-model="appointlnfoForm.Selectsites" placeholder="选择" class="appointmentoption col-1"
+                     style="width:150px;heght:60px">
+            <el-option key="yes" label="是" value="yes"></el-option>
+            <el-option key="no" label="否" value=""></el-option>
+          </el-select>
+        </el-form-item>
+        <!--<el-form-item label="物流:" :label-width="formLabelWidth">-->
+        <!--<el-input v-model="orderformerForm.logistics" style="width:150px;heght:60px"></el-input>-->
+        <!--</el-form-item>-->
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="appointlnfoVisable = false">取 消</el-button>
+        <el-button type="primary" @click="appointlnfoVisable = false">确 定</el-button>
+      </div>
+    </el-dialog>
     <el-dialog title="" :visible.sync="detailsVisable" size="full" :closeOnClickModal="false" top="30%">
       <template>
         <div>
@@ -90,14 +109,25 @@
     <div style="margin-top:2%">
       <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue" :gridOptions="gridOptions"
                    :suppressMovableColumns="true" :enableColResize="true" :enableSorting="true" :enableFilter="true"
-                   :groupHeaders="true" :rowHeight="40" :headerHeight="30">
+                   :groupHeaders="true" :rowHeight="40" :headerHeight="40">
       </ag-grid-vue>
     </div>
-    <div>
-      <p style="margin-top:1%;float:right;margin-right:5%;width:50%">
-        <el-button style="margin-right:6%">提 交 更 改</el-button>
-      </p>
+    <div style="text-align: center;margin-top:2%">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrnetChange"
+        :current-page="currentPage"
+        :page-sizes="[10,20,50,100,200]"
+        :page-size="pageSize"
+        layout="total,sizes,prev,pager,next"
+        :total="rowCount">
+      </el-pagination>
     </div>
+    <!--<div>-->
+    <!--<p style="margin-top:1%;float:right;margin-right:5%;width:50%">-->
+    <!--<el-button style="margin-right:6%">提 交 更 改</el-button>-->
+    <!--</p>-->
+    <!--</div>-->
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
       <template v-for="(collist,i) in gridOptions.columnDefs">
         <div>
@@ -304,12 +334,10 @@
         }
       },
       receivingstate: {
-        template: '<el-select v-model="appointlnfoForm.Selectsites"  placeholder="选择" class="appointmentoption col-1" style="width:110px"> <el-option key="yes" label=" 是 " value="yes"></el-option><el-option key="yes" label=" 否 " value="no"></el-option></el-select>',
-        data: function () {
-          return {
-            appointlnfoForm: {
-              Selectsites: ''
-            }
+        template: '<span><el-button class="del-but" @click="edit">编 辑</el-button></span>',
+        methods: {
+          edit () {
+            this.params.context.componentParent.appointlnfoVisable = true
           }
         }
       }
@@ -373,19 +401,6 @@
   }
 </script>
 <style>
-  .del-but {
-    cursor: pointer;
-    /*float: inherit;*/
-    margin-right: 10px;
-    border-radius: 4px;
-    background: #fff;
-    border: 1px solid rgb(191, 217, 216);
-    color: rgb(31, 61, 60);
-    padding: 5px 10px;
-    font-size: 10px;
-    text-align: center;
-  }
-
   .appointmenttime {
     float: left;
     margin: 1%;
@@ -471,5 +486,9 @@
 
   .ag-blue .ag-cell-focus {
     border: 0px solid #217346;
+  }
+
+  .el-dialog--small {
+    width: 30%;
   }
 </style>

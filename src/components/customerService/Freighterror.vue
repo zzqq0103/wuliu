@@ -14,7 +14,7 @@
     <div style="clear: both;">
     </div>
     <div style="margin-top:2%">
-      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+      <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
@@ -23,7 +23,7 @@
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
-                   :headerHeight=30
+                   :headerHeight=40
                    :pagination="true"
                    :paginationPageSize="10"
                    :suppressPaginationPanel="true"
@@ -173,7 +173,7 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<button class="del-but" @click="setDelVisable">删 除</button>',
+        template: '<el-button class="del-but" style="margin-left:25%"  size="small" type="info" @click="setDelVisable">删 除</el-button>',
         methods: {
           setDelVisable () {
             this.params.context.componentParent.delVisable = true
@@ -254,15 +254,4 @@
   .el-select-css {
     width: 50%;
   }
-.del-but {
-  cursor: pointer;
-  float: left;
-  margin-left: 30%;
-  border-radius: 4px;
-  background: #fff;
-  border: 1px solid rgb(191, 217, 216);
-  color: rgb(31, 61, 60);
-  padding: 5px 10px;
-  font-size: 10px
-}
 </style>

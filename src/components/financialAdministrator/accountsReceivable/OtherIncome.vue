@@ -8,7 +8,22 @@
       <!--第一行右侧按钮-->
       <div style="float: right">
         <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
-        <el-button @click="setting">设置</el-button>
+        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+        <el-button v-popover:popover1>设置</el-button>
         <el-button>导出</el-button>
       </div>
       <!--第一行左侧按钮-->
@@ -141,7 +156,23 @@
             <div>
               <div style="float: right">
                 <el-button @click="drawGrid(2)">提取库存</el-button>
-                <el-button @click="colVisible2 = true">设置</el-button>
+                <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+                  <template v-for="(collist,i) in gridOptions2.columnDefs">
+                    <div class="colVisible">
+                      <el-checkbox v-model="collist.visible"
+                                   @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)">
+                        {{collist.headerName}}
+                      </el-checkbox>
+                    </div>
+                  </template>
+                  <template>
+                    <div class="colVisible">
+                      <el-button @click="visibleChoice(1,'grid2')" size="small">全选</el-button>
+                      <el-button @click="visibleChoice(2,'grid2')" size="small">全不选</el-button>
+                    </div>
+                  </template>
+                </el-popover>
+                <el-button v-popover:popover1>设置</el-button>
               </div>
               <el-form-item>
                 <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
@@ -156,7 +187,7 @@
           <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged2" style="width: 200px"></el-input>
           <!--未核销处表格-->
           <div style="margin-top: 10px">
-            <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions2"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
@@ -167,10 +198,9 @@
                          :rowHeight=40
                          :headerHeight=40
 
-                         :pagination="true"
-                         :paginationPageSize="10"
-                         :suppressPaginationPanel="true"
-                         :filterChanged="gridfilterChange"
+                         :rowDoubleClicked="leftDoubleClick"
+                         :animateRows="true"
+                         rowSelection="multiple"
             ></ag-grid-vue>
           </div>
         </el-col>
@@ -181,7 +211,22 @@
             </el-form-item>
             <el-form-item>
               <el-button @click="confirmSubmit">确认核销</el-button>
-              <el-button @click="colVisible3 = true">设置</el-button>
+              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+                <template v-for="(collist,i) in gridOptions3.columnDefs">
+                  <div class="colVisible">
+                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)">
+                      {{collist.headerName}}
+                    </el-checkbox>
+                  </div>
+                </template>
+                <template>
+                  <div class="colVisible">
+                    <el-button @click="visibleChoice(1,'grid3')" size="small">全选</el-button>
+                    <el-button @click="visibleChoice(2,'grid3')" size="small">全不选</el-button>
+                  </div>
+                </template>
+              </el-popover>
+              <el-button v-popover:popover1>设置</el-button>
             </el-form-item>
           </el-form>
           <el-button @click="rightSelect"> < </el-button>
@@ -189,7 +234,7 @@
           <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
           <!--待核销处表格-->
           <div style="margin-top: 10px">
-            <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions3"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
@@ -200,10 +245,10 @@
                          :rowHeight=40
                          :headerHeight=40
 
-                         :pagination="true"
-                         :paginationPageSize="10"
-                         :suppressPaginationPanel="true"
-                         :filterChanged="gridfilterChange"
+                         :gridReady="grid3Ready"
+                         :rowDoubleClicked="rightDoubleClick"
+                         :animateRows="true"
+                         rowSelection="multiple"
             ></ag-grid-vue>
           </div>
         </el-col>
@@ -436,75 +481,6 @@
               }
             ]
           }
-//          cashOnDelivery: {
-//            headerName: '到付',
-//            children: [
-//              {
-//                headerName: '到付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '核销状态', width: 150, field: 'veriState', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '核销人', width: 150, field: 'veriNam', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '核销日期', width: 150, field: 'veriTim', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '核销网点', width: 150, field: 'veriSite', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '支付方式', width: 150, field: 'payMode', filter: 'text', hide: false, visible: true
-//              }
-//            ]
-//          },
-//          inArrears: {
-//            headerName: '欠付',
-//            children: [
-//              {
-//                headerName: '欠付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '核销状态', width: 150, field: 'veriState', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '核销人', width: 150, field: 'veriNam', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '核销日期', width: 150, field: 'veriTim', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '核销网点', width: 150, field: 'veriSite', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '支付方式', width: 150, field: 'payMode', filter: 'text', hide: false, visible: true
-//              }
-//            ]
-//          },
-//          monthly: {
-//            headerName: '月结',
-//            children: [
-//              {
-//                headerName: '月结金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '核销状态', width: 150, field: 'veriState', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '核销人', width: 150, field: 'veriNam', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '核销日期', width: 150, field: 'veriTim', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '核销网点', width: 150, field: 'veriSite', filter: 'text', hide: false, visible: true
-//              },
-//              {
-//                headerName: '支付方式', width: 150, field: 'payMode', filter: 'text', hide: false, visible: true
-//              }
-//            ]
-//          }
         },
         additionalColumnDefs2: {
           nowPay: {
@@ -576,30 +552,19 @@
         }
       },
       // 更新列数据
+// 更新列数据
       updateGrid (i) {
         if (i === 1) {
           this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
         } else if (i === 2) {
-          const payType = this.filterForm.payType
-          const lenth = (this.gridOptions2.columnDefs.length - 1)
-          if (payType === 'nowPay') {
-            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.nowPay
-            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.nowPay
-          } else if (payType === 'cashOnDelivery') {
-            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.cashOnDelivery
-            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.cashOnDelivery
-          } else if (payType === 'inArrears') {
-            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.inArrears
-            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.inArrears
-          } else if (payType === 'monthly') {
-            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.monthly
-            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.monthly
-          }
+          console.log(this.filterForm)
           this.gridOptions2.api.setColumnDefs(this.gridOptions2.columnDefs)
           this.gridOptions3.api.setColumnDefs(this.gridOptions3.columnDefs)
         }
-
 //        console.log(this.gridOptions.columnDefs)
+      },
+      grid3Ready () {
+        this.updateGrid(2)
       },
       // 切换列的可见性，三个表格，三个参数j
       updateColumnDefsVisible (j, collist) {
@@ -617,6 +582,30 @@
           }
         }
       },
+      visibleChoice (i, gridnum) {
+        let gridCol
+        let num
+        if (gridnum === 'grid1') {
+          gridCol = this.gridOptions
+          num = 1
+        } else if (gridnum === 'grid2') {
+          gridCol = this.gridOptions2
+          num = 2
+        } else if (gridnum === 'grid3') {
+          gridCol = this.gridOptions3
+          num = 3
+        }
+        if (i === 1) {
+          for (let j = 0; j < gridCol.columnDefs.length; j++) {
+            gridCol.columnDefs[j].visible = true
+          }
+        } else if (i === 2) {
+          for (let j = 0; j < gridCol.columnDefs.length; j++) {
+            gridCol.columnDefs[j].visible = false
+          }
+        }
+        this.updateColumnDefsVisible(num, gridCol.columnDefs)
+      },
       // 三个表格的快速匹配
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
@@ -627,14 +616,6 @@
       onQuickFilterChanged3 (input) {
         this.gridOptions3.api.setQuickFilter(input)
       },
-      // 更改hide的值，（已放弃），添加了visible作为切换可见的条件
-//      changeColumnDefsBoolen () {
-//        const columnlist = this.gridOptions.columnDefs
-//        for (let i = 0; i < columnlist.length; i++) {
-//          columnlist[i].hide = !columnlist[i].hide
-//        }
-//      },
-
       // 分页的操作
       // 每页显示数量改变时
       handleSizeChange (val) {
@@ -657,10 +638,10 @@
 //        console.log(totalRows, processedRows)
         this.rowCount = processedRows
       },
-       // 显示切换列可见的弹框
-//      setting () {
-//        this.colVisible = true
-//      },
+      // 显示切换列可见的弹框
+      setting () {
+        this.colVisible = true
+      },
       // 显示切换核销界面的弹框
       verification () {
         this.filterForm = {
@@ -746,6 +727,12 @@
         console.log(this.confirmSubForm)
         this.confirmSubVisible = false
         this.drawGrid(2)
+      },
+      updataColumnDefs (collist) {
+        for (let i = 0; i < collist.length; i++) {
+          console.log(this.gridOptions.columnDefs[i].visible)
+          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
+        }
       }
     },
     computed: {

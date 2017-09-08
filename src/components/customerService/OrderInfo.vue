@@ -24,7 +24,7 @@
         :groupHeaders="true" 
         :suppressCellSelection="true"
         :rowHeight=40 
-        :headerHeight=30
+        :headerHeight=40
         :pagination="true"
         :paginationPageSize="10"
         :suppressPaginationPanel="true"
@@ -196,7 +196,7 @@ export default {
     OrderDetails,
     'ag-grid-vue': AgGridVue,
     operateComponent: {
-      template: '<button class="del-but" @click="addError">增加异常</button>',
+      template: '<el-button class="del-but" type="info" style="margin-left:25%" size="small" @click="addError">增加异常</el-button>',
       methods: {
         addError () {
           let self = this.params.context.componentParent

@@ -40,8 +40,19 @@
                    :enableFilter="true"
                    :groupHeaders="true"
                    :rowHeight="40"
-                   :headerHeight="30"
+                   :headerHeight="40"
       ></ag-grid-vue>
+    </div>
+    <div style="text-align: center;margin-top:2%">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrnetChange"
+        :current-page="currentPage"
+        :page-sizes="[10,20,50,100,200]"
+        :page-size="pageSize"
+        layout="total,sizes,prev,pager,next"
+        :total="rowCount">
+      </el-pagination>
     </div>
 
     <el-dialog title="外包企业信息:" :visible.sync="enterpriseVisable">
@@ -280,5 +291,9 @@
     color: rgb(31, 61, 60);
     padding: 5px 10px;
     font-size: 10px
+  }
+
+  .ag-blue .ag-cell-focus {
+    border: 0px solid #217346;
   }
 </style>
