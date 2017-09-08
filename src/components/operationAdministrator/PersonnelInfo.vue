@@ -233,7 +233,8 @@
               suppressSorting: true,
               cellRendererFramework: 'operateComponent',
               hide: false,
-              visible: true
+              visible: true,
+              pinned: 'right'
             }
           ],
           context: {
