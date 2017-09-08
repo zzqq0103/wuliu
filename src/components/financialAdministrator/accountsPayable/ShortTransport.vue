@@ -13,7 +13,24 @@
         <el-button @click="drawGrid(1)">提取</el-button>
         <!--<el-button>打印</el-button>-->
         <el-button>导出</el-button>
-        <el-button @click="verification">开始核销</el-button>
+        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions1.columnDefs)"
+                           style="float: left; width: 180px">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+        <el-button v-popover:popover1>设置</el-button>
+        <!--<el-button @click="verification">开始核销</el-button>-->
       </div>
       <!--第一行左侧按钮-->
       <div>
@@ -65,23 +82,8 @@
         </el-form>
       </div>
       <div style="float: right">
-        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-          <template v-for="(collist,i) in gridOptions.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions1.columnDefs)"
-                           style="float: left; width: 180px">
-                {{collist.headerName}}
-              </el-checkbox>
-            </div>
-          </template>
-          <template>
-            <div class="colVisible">
-              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
-            </div>
-          </template>
-        </el-popover>
-        <el-button v-popover:popover1>设置</el-button>
+        <!--<el-button v-popover:popover1>设置</el-button>-->
+        <el-button @click="verification">开始核销</el-button>
       </div>
       <!--判断当前需要显示的label-->
       <div v-if="this.filterForm.payType === 'nowPay'">
