@@ -58,7 +58,7 @@
     <!-- 清除浮动 -->
     <div style="clear: both;">
     </div>
-    
+
     <!-- 表格 -->
     <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
@@ -110,7 +110,7 @@
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
-  
+
   export default {
     data () {
       return {

@@ -47,7 +47,7 @@
         <el-button v-popover:popover1>设置</el-button>
         </div>
 
-        
+
         <div>
           <!-- 导出 -->
           <el-button style="float:right; margin-right:10px;">新增装载单</el-button>
@@ -63,7 +63,7 @@
                 <el-button @click="departVisible = false" type="danger">确 定</el-button>
             </div>
         </el-dialog>
-          
+
 
       </div>
     </div>
@@ -71,7 +71,7 @@
     <!-- 清除浮动 -->
     <div style="clear: both;">
     </div>
-    
+
     <!-- 表格 -->
     <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"

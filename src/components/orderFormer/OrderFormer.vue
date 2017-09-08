@@ -8,16 +8,34 @@
       </div>
       <div>
         <el-h5 class="appointmenttime">预约时间</el-h5>
-        <el-date-picker type="datetime" class="appointmenttimes" placeholder="开始时间"
-                        v-model="orderForm.startTime"></el-date-picker>
-        <el-h5 class="appointmenttimes">到</el-h5>
-        <el-date-picker type="datetime" class="appointmenttimes" placeholder="结束时间"
-                        v-model="orderForm.endTime"></el-date-picker>
+        <el-date-picker v-model="orderformerForm.startTime" type="daterange" placeholder="选择日期范围"
+                        :picker-options="pickerOptions" range-separator='/' style="width: 200px">
+        </el-date-picker>
+        <!--<el-date-picker type="datetime" class="appointmenttimes" placeholder="开始时间"-->
+        <!--v-model="orderForm.startTime"></el-date-picker>-->
+        <!--<el-h5 class="appointmenttimes">到</el-h5>-->
+        <!--<el-date-picker type="datetime" class="appointmenttimes" placeholder="结束时间"-->
+        <!--v-model="orderForm.endTime"></el-date-picker>-->
         <el-button @click="vehicleVisable = true" style="float:right; margin-right:2%">查询</el-button>
       </div>
       <div style="float:right; margin-top:1%">
         <el-button @click="">导出</el-button>
-        <el-button @click="setting">设置</el-button>
+        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+        <el-button v-popover:popover1>设置</el-button>
       </div>
       </p>
     </div>
@@ -31,15 +49,35 @@
                    :enableSorting="true"
                    :enableFilter="true"
                    :groupHeaders="true"
-                   :rowHeight="40"
-                   :headerHeight="30"
+                   :rowHeight=40
+                   :headerHeight=40
       ></ag-grid-vue>
     </div>
-    <div>
-      <p style="margin-top:1%;float:right;margin-right:5%;width:50%">
-        <el-button style="margin-right:6%">提 交 更 改</el-button>
-      </p>
-    </div>
+    <el-dialog title="外包企业信息:" :visible.sync="orderformerVisable">
+      <el-form :model="orderformerForm" :rules="rules" ref="orderformerForm">
+        <el-form-item label="物流状态:" :label-width="formLabelWidth">
+          <!--<el-input v-model="orderformerForm.licePlateNum"></el-input>-->
+          <el-select v-model="orderformerForm.Selectsites" placeholder="选择" class="appointmentoption col-1"
+                     style="width:150px;heght:60px">
+            <el-option key="yes" label="回单已签" value="yes"></el-option>
+            <el-option key="no" label="回单在途" value=""></el-option>
+            <el-option key="no" label="回单已反" value="no"></el-option>
+          </el-select>
+        </el-form-item>
+        <!--<el-form-item label="物流:" :label-width="formLabelWidth">-->
+        <!--<el-input v-model="orderformerForm.logistics" style="width:150px;heght:60px"></el-input>-->
+        <!--</el-form-item>-->
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="orderformerVisable = false">取 消</el-button>
+        <el-button type="primary" @click="orderformerVisable = false">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!--<div>-->
+    <!--<p style="margin-top:1%;float:right;margin-right:5%;width:50%">-->
+    <!--<el-button style="margin-right:6%">提 交 更 改</el-button>-->
+    <!--</p>-->
+    <!--</div>-->
     <el-dialog title="外包企业订单列表:" :visible.sync="orderFormVisable">
       <el-form :model="orderForm" :rules="rules" ref="orderForm">
         <el-form-item label="序号:" :label-width="formLabelWidth">
@@ -183,10 +221,73 @@
 <script>
   import { AgGridVue } from 'ag-grid-vue'
   import testJson from '../../../static/test/testJSON.js'
+  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
 
   export default {
     data: function () {
       return {
+        pickerOptions: {
+          shortcuts: [{
+            text: '上周',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfWeek = now.getDay()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * (nowDayOfWeek + 6))
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfWeek)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '上个月',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfMonth = now.getDate()
+              const nowMonth = now.getMonth()
+              start.setDate(1)
+              start.setMonth(nowMonth - 1)
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfMonth)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '去年',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowYear = now.getFullYear()
+              start.setYear(nowYear - 1)
+              start.setMonth(0)
+              start.setDate(1)
+              end.setYear(nowYear - 1)
+              end.setMonth(11)
+              end.setDate(31)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '今年',
+            onClick (picker) {
+              const start = new Date()
+              const end = new Date()
+              start.setMonth(0)
+              start.setDate(1)
+              picker.$emit('pick', [start, end])
+            }
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
+          }
+        },
+        orderformerVisable: false,
+        orderformerForm: {
+          'Selectsites': '',
+          'startTime': ''
+        },
         colVisible: false,
         orderFormVisable: false,
         orderFormDelVisable: false,
@@ -334,43 +435,110 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '序号', width: 60, field: 'liceNum', filter: 'text', hide: false
+              headerName: '序号',
+              width: 60,
+              field: 'liceNum',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '订单号', width: 120, field: 'ordernumber', filter: 'text', hide: false
+              headerName: '订单号',
+              width: 120,
+              field: 'ordernumber',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '订单状态', width: 100, field: 'orderstatus', filter: 'text', hide: false
+              headerName: '订单状态',
+              width: 100,
+              field: 'orderstatus',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '发货人', width: 80, field: 'consignor', filter: 'text', hide: false
+              headerName: '发货人',
+              width: 80,
+              field: 'consignor',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '发站', width: 70, field: 'standing', filter: 'text', hide: false
+              headerName: '发站',
+              width: 70,
+              field: 'standing',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '发货方联系方式', width: 120, field: 'Shippercontactinformation', filter: 'text', hide: false
+              headerName: '发货方联系方式',
+              width: 150,
+              field: 'Shippercontactinformation',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '收货人', width: 80, field: 'consignee', filter: 'text', hide: false
+              headerName: '收货人',
+              width: 80,
+              field: 'consignee',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '收货方联系方式', width: 150, field: 'Receivingpartycontactinformation', filter: 'text', hide: false
+              headerName: '收货方联系方式',
+              width: 150,
+              field: 'Receivingpartycontactinformation',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '货物名称', width: 120, field: 'descriptionofgoods', filter: 'text', hide: false
+              headerName: '货物名称',
+              width: 120,
+              field: 'descriptionofgoods',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '数量', width: 60, field: 'quantity', filter: 'text', hide: false
+              headerName: '数量',
+              width: 60,
+              field: 'quantity',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '制单人', width: 80, field: 'preparedby', filter: 'text', hide: false
+              headerName: '制单人',
+              width: 80,
+              field: 'preparedby',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '状态', field: 'value', width: 80, cellRendererFramework: 'condition', hide: false
+              headerName: '状态',
+              field: 'value',
+              width: 80,
+              cellRendererFramework: 'condition',
+              suppressMenu: true,
+              hide: false,
+              visible: true
             },
             {
-              headerName: ' ', field: 'value', width: 80, cellRendererFramework: 'operateComponent', hide: false
+              headerName: ' ',
+              field: 'values',
+              width: 80,
+              cellRendererFramework: 'operateComponent',
+              suppressMenu: true,
+              hide: false,
+              visible: true
             }
           ]
         }
@@ -388,13 +556,17 @@
         }
       },
       condition: {
-        template: '<el-select v-model="appointlnfoForm.Selectsites"  placeholder="选择" class="appointmentoption col-1" style="width:80px"> <el-option key="yes" label=" 已签 " value="yes"></el-option><el-option key="yes" label=" 在途 " value="no"></el-option></el-select>',
-        // '<select placeholder="选择" class="appointmentoption" style="width:150px;heght:60px"><option key="yes" label="回单已签" value="yes"></option><option key="no" label="回单在途" value="no"></option><option key="no" label="回单已反" value="no"></option> </select>'
-        data: function () {
-          return {
-            appointlnfoForm: {
-              Selectsites: ''
-            }
+        template: '<span><el-button class="del-but" @click="edit">编 辑</el-button></span>',
+//        template: '<el-select v-model="appointlnfoForm.Selectsites"  placeholder="选择" class="appointmentoption col-1" style="width:80px"> <el-option key="yes" label=" 已签 " value="yes"></el-option><el-option key="yes" label=" 在途 " value="no"></el-option></el-select>',
+        // '<select placeholder="选择" class="appointmentoption" style="width:150px;heght:60px"><option key="yes" label="回单已签" value="yes"></option><option key="no" label="回单在途" value="no"></option><option key="no" label="回单已反" value="no"></option> </select>'//          return {
+//            appointlnfoForm: {
+//              Selectsites: ''
+//            }
+//          }
+//        }
+        methods: {
+          edit () {
+            this.params.context.componentParent.orderformerVisable = true
           }
         }
       }
@@ -417,9 +589,14 @@
       },
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
-          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
         }
       },
+//      updataColumnDefs (collist) {
+//        for (let i = 0; i < collist.length; i++) {
+//          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+//        }
+//      },
       // 增加
       ordeformerAdd () {
         this.orderFormVisable = true
@@ -430,6 +607,18 @@
         this.orderForm.carType = ''
         this.orderForm.pickUpArea = ''
         this.orderForm.carPosition = ''
+      },
+      visibleChoice (i) {
+        if (i === 1) {
+          for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+            this.gridOptions.columnDefs[j].visible = true
+          }
+        } else if (i === 2) {
+          for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+            this.gridOptions.columnDefs[j].visible = false
+          }
+        }
+        this.updataColumnDefs(this.gridOptions.columnDefs)
       }
     },
     beforeMount () {
@@ -564,5 +753,13 @@
     appearance: none;
     -moz-appearance: none;
     -webkit-appearance: none;
+  }
+
+  .el-dialog--small {
+    width: 30%;
+  }
+
+  .ag-blue .ag-cell-focus {
+    border: 0px solid #217346;
   }
 </style>
