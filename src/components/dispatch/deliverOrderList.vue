@@ -386,11 +386,10 @@
           // console.log('进入getCurrentDelivered')
           // this.gridOptions.rowData = res.data.orderlists
           // 使用gridOptions中的api方法设定RowData数据
-          console.log(res.data.orderlists)
-//          this.gridOptions.rowData = res.data.orderlists
+          // this.gridOptions.rowData = res.data.orderlists
           this.gridOptions_left.api.setRowData(res.data.orderlists)
           this.gridOptions_right.api.setRowData(res.data.orderlists)
-//          this.orderlist = res.data.orderlists
+          this.gridOptions_new.api.setRowData(null)
         }).catch((err) => {
           console.log(err)
         })

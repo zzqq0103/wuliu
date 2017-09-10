@@ -1,7 +1,7 @@
 <template>
   <!-- 组件必须头元素被一个div容器包括 -->
   <div>
-    <div id="top">
+    <div>
       <!-- 标题 -->
       <h2 style="text-align:center">待 长 途 运 输 装 载 单 信 息 页</h2>
 
@@ -67,8 +67,6 @@
 
       </div>
     </div>
-
-    <!-- 清除浮动 -->
     <div style="clear: both;">
     </div>
 
@@ -89,7 +87,7 @@
     </div>
 
     <!-- 待长途装载单订单对话框  -->
-    <el-dialog :title="titleText" :visible.sync="dialogVisible" size="full" :modalfalse :modal-append-to-body=false>
+    <el-dialog :title="titleText" :visible.sync="dialogVisible" size="full" :modal=false :modal-append-to-body=false>
       <deliver-order-list :loaderId="loadOrderId" :flag="flag"></deliver-order-list>
     </el-dialog>
 
@@ -179,12 +177,6 @@
               hide: false,
               visible: true
             },
-            // {
-            //   headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            // },
-            // {
-            //   headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false, filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            // },
             {
               headerName: '装载单状态',
               width: 120,
@@ -436,10 +428,12 @@
       changeDialogVisible (event) {
         this.loadOrderId = event.data.loadOrderId
         this.dialogVisible = true
+        this.flag = false
       },
       // 新增装载单
       createLoaderList () {
         this.flag = true
+        this.dialogVisible = true
       },
       // 改变每页显示的个数
       handleSizeChange (val) {
