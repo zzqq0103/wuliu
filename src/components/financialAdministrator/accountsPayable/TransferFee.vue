@@ -30,30 +30,31 @@
       <div>
         <el-form :model="filterForm" ref="filterForm" :inline="true">
           <el-form-item label="订单时间:">
-            <el-form-item prop="startTime">
-              <el-date-picker type="date" placeholder="选择开始日期" v-model="filterForm.startTime"
-                              style="width: 150px"></el-date-picker>
-            </el-form-item>
-            <span>--&nbsp</span>
-            <el-form-item prop="endTime">
-              <el-date-picker type="date" placeholder="选择结束日期" v-model="filterForm.endTime"
-                              style="width: 150px"></el-date-picker>
-            </el-form-item>
+            <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+                            :picker-options="pickerOptions" range-separator='/' style="width: 200px">
+            </el-date-picker>
           </el-form-item>
           <el-form-item label="区间:">
-            <el-select v-model="filterForm.startPoint" placeholder="起点" style="width: 100px">
+            <el-select v-model="filterForm.startPoint" placeholder="起点" style="width: 80px">
               <el-option label="北京" value="beijing"></el-option>
               <el-option label="南京" value="nanjing"></el-option>
               <el-option label="全部" value="all"></el-option>
             </el-select>
             <span>--&nbsp</span>
-            <el-select v-model="filterForm.endPoint" placeholder="终点" style="width: 100px">
+            <el-select v-model="filterForm.endPoint" placeholder="终点" style="width: 80px">
               <el-option label="北京" value="beijing"></el-option>
               <el-option label="南京" value="nanjing"></el-option>
               <el-option label="全部" value="all"></el-option>
             </el-select>
           </el-form-item>
           <el-button @click="drawGrid(1)">提取</el-button>
+        </el-form>
+      </div>
+      <div style="float: left">
+        <el-form :model="totalForm" ref="totalForm" :inline="true">
+          <el-form-item label="中转费合计:">
+            <el-input v-model="totalForm.transferFeeTotal" style="width: 100px" readonly="true"></el-input>
+          </el-form-item>
         </el-form>
       </div>
       <div style="float: right">
@@ -75,6 +76,7 @@
                    :rowHeight=40
                    :headerHeight=40
 
+                   :rowDoubleClicked="detailDoubleClick"
                    :pagination="true"
                    :paginationPageSize="10"
                    :suppressPaginationPanel="true"
@@ -147,10 +149,10 @@
           <el-form :model="filterForm" ref="filterForm" :inline="true">
             <div>
               <el-form-item label="运单号:">
-                <el-input v-model="filterForm.orderId"></el-input>
+                <el-input v-model="filterForm.orderId" style="width: 150px"></el-input>
               </el-form-item>
               <el-form-item label="发货人:">
-                <el-input v-model="filterForm.shipNam"></el-input>
+                <el-input v-model="filterForm.shipNam" style="width: 80px"></el-input>
               </el-form-item>
             </div>
             <div>
@@ -288,7 +290,7 @@
     </el-dialog>
 
     <!--订单详情弹框-->
-    <el-dialog title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
+    <el-dialog title="订单详情:" :visible.sync="detailVisible" :closeOnClickModal="false">
       <order-details :orderId="filterForm.orderId"></order-details>
     </el-dialog>
   </div>
@@ -296,9 +298,9 @@
 
 <script>
   import {AgGridVue} from 'ag-grid-vue'
+  import PartialMatchFilterComponent from '../../common/PartialMatchFilterComponent'
   import testJson from '../../../../static/test/testJSON.js'
   import OrderDetails from '../ShowOrderDetails'
-  import PartialMatchFilterComponent from '../../common/PartialMatchFilterComponent'
   export default {
     data () {
       return {
@@ -595,7 +597,64 @@
         detailVisible: false, // 订单详情弹框
         currentPage: 1, // 分页当前页面
         pageSize: 20, // 每页显示的数据
-        rowCount: 0 // 总数据量（如果有筛选，则是筛选后的）
+        rowCount: 0, // 总数据量（如果有筛选，则是筛选后的）
+        pickerOptions: {
+          shortcuts: [{
+            text: '上周',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfWeek = now.getDay()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * (nowDayOfWeek + 6))
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfWeek)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '上个月',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfMonth = now.getDate()
+              const nowMonth = now.getMonth()
+              start.setDate(1)
+              start.setMonth(nowMonth - 1)
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfMonth)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '去年',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowYear = now.getFullYear()
+              start.setYear(nowYear - 1)
+              start.setMonth(0)
+              start.setDate(1)
+              end.setYear(nowYear - 1)
+              end.setMonth(11)
+              end.setDate(31)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '今年',
+            onClick (picker) {
+              const start = new Date()
+              const end = new Date()
+              start.setMonth(0)
+              start.setDate(1)
+              picker.$emit('pick', [start, end])
+            }
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
+          }
+        }
       }
     },
     components: {
@@ -839,20 +898,6 @@
     }
   }
 </script>
-<style>
-  .del-but {
-    cursor: pointer;
-    float: right;
-    margin-right: 10px;
-    border-radius: 4px;
-    background: #fff;
-    border: 1px solid rgb(191, 217, 216);
-    color: rgb(31, 61, 60);
-    padding: 5px 10px;
-    font-size: 10px
-  }
-</style>
-
 
 <!--//发出请求-->
 <!--filterForm: {-->

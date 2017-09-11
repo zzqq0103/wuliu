@@ -30,15 +30,9 @@
       <div>
         <el-form :model="filterForm" ref="filterForm" :inline="true">
           <el-form-item label="订单时间:">
-            <el-form-item prop="startTime">
-              <el-date-picker type="date" placeholder="选择开始日期" v-model="filterForm.startTime"
-                              style="width: 150px"></el-date-picker>
-            </el-form-item>
-            <span>--&nbsp</span>
-            <el-form-item prop="endTime">
-              <el-date-picker type="date" placeholder="选择结束日期" v-model="filterForm.endTime"
-                              style="width: 150px"></el-date-picker>
-            </el-form-item>
+            <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+                            :picker-options="pickerOptions" range-separator='/' style="width: 200px">
+            </el-date-picker>
           </el-form-item>
           <el-form-item label="区间:">
             <el-select v-model="filterForm.startPoint" placeholder="起点" style="width: 100px">
@@ -54,6 +48,20 @@
             </el-select>
           </el-form-item>
           <el-button @click="drawGrid(1)">提取</el-button>
+        </el-form>
+      </div>
+      <div style="float: left">
+        <el-form :model="totalForm" ref="totalForm" :inline="true">
+          <el-form-item label="中转费合计:">
+            <el-input v-model="totalForm.transferFeeTotal" style="width: 100px" readonly="true"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div style="float: left">
+        <el-form :model="totalForm" ref="totalForm" :inline="true">
+          <el-form-item label="运费异动增款:">
+            <el-input v-model="totalForm.UActIncome" style="width: 100px" readonly="true"></el-input>
+          </el-form-item>
         </el-form>
       </div>
       <div style="float: right">
@@ -75,6 +83,7 @@
                    :rowHeight=40
                    :headerHeight=40
 
+                   :rowDoubleClicked="detailDoubleClick"
                    :pagination="true"
                    :paginationPageSize="10"
                    :suppressPaginationPanel="true"
@@ -111,7 +120,7 @@
       <template v-for="(collist,i) in gridOptions2.columnDefs">
         <div v-if="collist.children">
         </div>
-        <div v-else>
+        <div v-else>不
           <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)">
             {{collist.headerName}}
           </el-checkbox>
@@ -147,13 +156,13 @@
           <el-form :model="filterForm" ref="filterForm" :inline="true">
             <div>
               <el-form-item label="运单号:">
-                <el-input v-model="filterForm.orderId"></el-input>
+                <el-input v-model="filterForm.orderId" style="width: 150px"></el-input>
               </el-form-item>
               <el-form-item label="发货人:">
-                <el-input v-model="filterForm.shipNam"></el-input>
+                <el-input v-model="filterForm.shipNam" style="width: 100px"></el-input>
               </el-form-item>
             </div>
-            <div>
+            <div  style=" height: 59.33px">
               <div style="float: right">
                 <el-button @click="drawGrid(2)">提取库存</el-button>
                 <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
@@ -174,12 +183,9 @@
                 </el-popover>
                 <el-button v-popover:popover1>设置</el-button>
               </div>
-              <el-form-item>
-                <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
-              </el-form-item>
-              </el-form-item>
             </div>
           </el-form>
+          <div style="clear: both"></div>
           <div style="float: right">
             <el-button @click="leftSelect"> > </el-button>
             <el-button @click="leftSelectAll"> >> </el-button>
@@ -288,7 +294,7 @@
     </el-dialog>
 
     <!--订单详情弹框-->
-    <el-dialog title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
+    <el-dialog title="订单详情:" :visible.sync="detailVisible" :closeOnClickModal="false">
       <order-details :orderId="filterForm.orderId"></order-details>
     </el-dialog>
   </div>
@@ -359,6 +365,24 @@
             },
             {
               headerName: '异动原因', width: 150, field: 'unActDes', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '运费异动增款', width: 150, field: 'unActIncome', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '核销状态', width: 150, field: 'veriState', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '核销人', width: 150, field: 'veriNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '核销时间', width: 150, field: 'veriTim', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '核销站点', width: 150, field: 'veriSite', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '支付方式', width: 150, field: 'payMode', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             }
           ],
           context: {
@@ -390,7 +414,7 @@
               headerName: '制单人', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '运费异动减款', width: 150, field: 'unActExpense', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '运费异动减款', width: 150, field: 'unActIncome', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '运费方式', width: 150, field: 'typeFee', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -449,7 +473,8 @@
         // 各种费用合计
         totalForm: {
           transferFeeTotal: 0, // 中转费合计
-          totalMoney: 0// 月结合计
+          totalMoney: 0, // 月结合计
+          UActIncome: 0 // 运费异动增款
         },
         // 核销完成后提交给后台的数据
         confirmSubForm: {
@@ -522,7 +547,64 @@
         detailVisible: false, // 订单详情弹框
         currentPage: 1, // 分页当前页面
         pageSize: 20, // 每页显示的数据
-        rowCount: 0 // 总数据量（如果有筛选，则是筛选后的）
+        rowCount: 0, // 总数据量（如果有筛选，则是筛选后的）
+        pickerOptions: {
+          shortcuts: [{
+            text: '上周',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfWeek = now.getDay()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * (nowDayOfWeek + 6))
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfWeek)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '上个月',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfMonth = now.getDate()
+              const nowMonth = now.getMonth()
+              start.setDate(1)
+              start.setMonth(nowMonth - 1)
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfMonth)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '去年',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowYear = now.getFullYear()
+              start.setYear(nowYear - 1)
+              start.setMonth(0)
+              start.setDate(1)
+              end.setYear(nowYear - 1)
+              end.setMonth(11)
+              end.setDate(31)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '今年',
+            onClick (picker) {
+              const start = new Date()
+              const end = new Date()
+              start.setMonth(0)
+              start.setDate(1)
+              picker.$emit('pick', [start, end])
+            }
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
+          }
+        }
       }
     },
     components: {
@@ -741,12 +823,15 @@
         if (this.verVisible === false) {
           this.totalForm.transferFeeTotal = 0
           this.totalForm.totalMoney = 0
+          this.totalForm.unActIncome = 0
           let model = this.gridOptions.api.getModel()
           let arr = model.rootNode.childrenAfterFilter
-          console.log(arr[0].data)
+//          console.log(arr[0].data)
           for (let i = 0; i < arr.length; i++) {
             this.totalForm.transferFeeTotal += arr[i].data.changeFee
             this.totalForm.totalMoney += arr[i].data.feeMoney
+            this.totalForm.UActIncome += arr[i].data.unActIncome
+            //            数据库需对数字做判空处理
           }
         }
       }
@@ -761,7 +846,7 @@
     },
     // 数据发生更新时
     updated () {
-      console.log('update')
+//      console.log('update')
       this.calculateMoney
     }
   }
