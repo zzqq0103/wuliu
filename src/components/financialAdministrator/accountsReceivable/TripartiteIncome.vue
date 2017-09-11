@@ -386,7 +386,7 @@
     <!--
     --核销界面
     -->
-    <el-dialog title="运费核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+    <el-dialog title="三方收入核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
