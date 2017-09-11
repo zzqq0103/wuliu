@@ -1,37 +1,43 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align:center">外包企业信息管理</h2>
+      <h2 style="text-align:center">外包企业线路信息管理</h2>
       <div style="margin-top:1%">
         <div style="float: right">
           <!--<el-row>订单号</el-row> -->
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div>
-          <el-button @click="addForm">添加</el-button>
+          <el-form v-model="filterForm" ref="filterForm" inline="true">
+            <el-form-item label="外包企业名称">
+              <el-input v-model="filterForm.companyName"></el-input>
+            </el-form-item>
+            <el-button @click="">提取</el-button>
+            <el-button @click="addForm" style="margin-left: 50px">添加</el-button>
+            <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+              <template v-for="(collist,i) in gridOptions.columnDefs">
+                <div class="colVisible">
+                  <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
+                    {{collist.headerName}}
+                  </el-checkbox>
+                </div>
+              </template>
+              <template>
+                <div class="colVisible">
+                  <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                  <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+                </div>
+              </template>
+            </el-popover>
+            <el-button v-popover:popover1>设置</el-button>
+          </el-form>
           <!--<el-button @click="setting">设置</el-button>-->
-          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
-            <template v-for="(collist,i) in gridOptions.columnDefs">
-              <div class="colVisible">
-                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
-                  {{collist.headerName}}
-                </el-checkbox>
-              </div>
-            </template>
-            <template>
-              <div class="colVisible">
-                <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-                <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
-              </div>
-            </template>
-          </el-popover>
-          <el-button v-popover:popover1>设置</el-button>
         </div>
       </div>
     </div>
     <div style="clear: both;">
     </div>
-    <div style="margin-top:2%">
+    <div>
       <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
@@ -63,11 +69,20 @@
         <el-form-item label="中转起始点:" :label-width="formLabelWidth">
           <el-input v-model="enterpriseForm.changeStart"></el-input>
         </el-form-item>
+        <el-form-item label="中转目的地:" :label-width="formLabelWidth">
+          <el-input v-model="enterpriseForm.changeEnd"></el-input>
+        </el-form-item>
         <el-form-item label="中转企业联系人:" :label-width="formLabelWidth">
           <el-input v-model="enterpriseForm.changeName"></el-input>
         </el-form-item>
         <el-form-item label="联系方式:" :label-width="formLabelWidth">
           <el-input v-model="enterpriseForm.id"></el-input>
+        </el-form-item>
+        <el-form-item label="合同号:" :label-width="formLabelWidth">
+          <el-input v-model="enterpriseForm.contractId"></el-input>
+        </el-form-item>
+        <el-form-item label="合同价格:" :label-width="formLabelWidth">
+          <el-input v-model="enterpriseForm.contractPrice"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -114,9 +129,14 @@
         enterpriseForm: {
           'companyname': '', // 外包公司名称
           'changeStart': '', // 中转起始地
+          'changeEnd': '', // 中转目的地
           'changeName': '', // 中转企业联系人
-          'id': '' // 联系方式
-
+          'id': '', // 联系方式
+          'contractId': '', // 合同号
+          'contractPrice': '' // 合同价格
+        },
+        filterForm: {
+          'companyName': ''
         },
         rules: {},
         formLabelWidth: '150px',
@@ -135,12 +155,25 @@
               visible: true
             },
             {
-              headerName: '公司名称', width: 150, field: 'companyName', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '公司名称',
+              width: 150,
+              field: 'companyName',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
               headerName: '中转起始点',
               width: 120,
               field: 'changeStart',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '中转目的地',
+              width: 120,
+              field: 'changeEnd',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -157,6 +190,22 @@
               headerName: '联系方式',
               width: 150,
               field: 'id',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '合同号',
+              width: 120,
+              field: 'contractId',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '合同号',
+              width: 120,
+              field: 'contractPrice',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -204,20 +253,6 @@
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
       },
-//      changeColumnDefsBoolen () {
-//        var columnlist = this.gridOptions.columnDefs
-//        for (let i = 0; i < columnlist.length; i++) {
-//          columnlist[i].hide = !columnlist[i].hide
-//        }
-//      },
-//      setting () {
-//        this.colVisible = true
-//      },
-//      updataColumnDefs (collist) {
-//        for (let i = 0; i < collist.length; i++) {
-//          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
-//        }
-//      },
       // 增加
       addForm () {
         this.enterpriseVisable = true
@@ -251,11 +286,4 @@
   }
 </script>
 <style>
-  .el-select-css {
-    width: 50%;
-  }
-
-  .ag-blue .ag-cell-focus {
-    border: 0px solid #217346;
-  }
 </style>

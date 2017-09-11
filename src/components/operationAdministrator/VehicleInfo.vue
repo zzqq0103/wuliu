@@ -3,7 +3,7 @@
   <div>
     <div>
       <h2 style="text-align:center">车辆信息管理</h2>
-      <p style="margin-top:1%">
+      <div style="margin-top:1%">
         <div style="float: right">
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
@@ -28,20 +28,20 @@
         </el-popover>
         <el-button v-popover:popover1>设置</el-button>
         </div>
-      </p>
+      </div>
     </div>
     <div style="clear: both;">
     </div>
     <div style="margin-top:2%">
-      <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue" 
-        :gridOptions="gridOptions" 
-        :suppressMovableColumns="true" 
-        :enableColResize="true" 
-        :enableSorting="true" 
-        :enableFilter="true" 
-        :groupHeaders="true" 
+      <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
+        :gridOptions="gridOptions"
+        :suppressMovableColumns="true"
+        :enableColResize="true"
+        :enableSorting="true"
+        :enableFilter="true"
+        :groupHeaders="true"
         :suppressCellSelection="true"
-        :rowHeight=40 
+        :rowHeight=40
         :headerHeight=40
         :pagination="true"
         :paginationPageSize="10"
@@ -295,15 +295,4 @@ export default {
 .el-select-css {
   width: 50%;
 }
-/* .del-but {
-  cursor: pointer;
-  float: right;
-  margin-right: 10px;
-  border-radius: 4px;
-  background: #fff;
-  border: 1px solid rgb(191, 217, 216);
-  color: rgb(31, 61, 60);
-  padding: 5px 10px;
-  font-size: 10px
-} */
 </style>
