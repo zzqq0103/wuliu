@@ -11,9 +11,26 @@
         <el-button @click="setting">设置</el-button>
         <el-button>导出</el-button> -->
         <el-button @click="drawGrid(1)">提取</el-button>
-        <el-button>打印</el-button>
+        <!--<el-button>打印</el-button>-->
         <el-button>导出</el-button>
-        <el-button @click="verification">开始核销</el-button>
+        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions1.columnDefs)"
+                           style="float: left; width: 180px">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+        <el-button v-popover:popover1>设置</el-button>
+        <!--<el-button @click="verification">开始核销</el-button>-->
       </div>
       <!--第一行左侧按钮-->
       <div>
@@ -60,41 +77,26 @@
       <div>
         <el-form style="float: left" :model="totalForm" ref="totalForm" :inline="true">
           <el-form-item label="中转费合计:">
-            <el-input v-model="totalForm.transferFeeTotal"></el-input>
+            <el-input v-model="totalForm.transferFeeTotal" style="width: 100px" readonly="true"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <div style="float: right">
-        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-          <template v-for="(collist,i) in gridOptions.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions1.columnDefs)"
-                           style="float: left; width: 180px">
-                {{collist.headerName}}
-              </el-checkbox>
-            </div>
-          </template>
-          <template>
-            <div class="colVisible">
-              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
-            </div>
-          </template>
-        </el-popover>
-        <el-button v-popover:popover1>设置</el-button>
+        <!--<el-button v-popover:popover1>设置</el-button>-->
+        <el-button @click="verification">开始核销</el-button>
       </div>
       <!--判断当前需要显示的label-->
       <div v-if="this.filterForm.payType === 'nowPay'">
         <el-form :model="totalForm" ref="totalForm" :inline="true">
           <el-form-item label="现付金额合计:">
-            <el-input v-model="totalForm.totalMoney"></el-input>
+            <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <div v-else-if="this.filterForm.payType === 'cashOnDelivery'">
         <el-form :model="totalForm" ref="totalForm" :inline="true">
-          <el-form-item label="到付金额合计:">
-            <el-input v-model="totalForm.totalMoney"></el-input>
+          <el-form-item label="运费异动减款合计:">
+            <el-input v-model="totalForm.unActExpense"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -301,6 +303,7 @@
                          :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
+                         :headerHeight=40
 
                          :gridReady="test"
                          :rowDoubleClicked="rightDoubleClick"
@@ -1327,7 +1330,7 @@
           console.log(arr[0].data)
           for (let i = 0; i < arr.length; i++) {
             this.totalForm.transferFeeTotal += arr[i].data.changeFee
-            this.totalForm.totalMoney += arr[i].data.feeMoney
+            this.totalForm.totalMoney += arr[i].data.unActExpense
           }
         }
       }

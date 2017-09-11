@@ -38,7 +38,7 @@
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight="40"
-                   :headerHeight="30"
+                   :headerHeight="40"
       ></ag-grid-vue>
     </div>
 
@@ -168,8 +168,13 @@
       'ag-grid-vue': AgGridVue,
       OrderDetails,
       operateComponent: {
-        template: '<span><button class="del-but" @click="vehicleDel">删 除</button></span>',
+        template: '<span><el-button type="danger" class="del-but" @click="vehicleDel">删 除</el-button></span>',
         methods: {
+          del () {
+            let self = this.params.context.componentParent
+            self.delFormVisible = true
+            self.staffForm.employeeNam = this.params.data.employeeNam
+          },
           vehicleDel () {
             this.params.context.componentParent.vehicleDelVisable = true
           }
@@ -249,17 +254,5 @@
 <style>
   .el-select-css {
     width: 50%;
-  }
-
-  .del-but {
-    cursor: pointer;
-    float: right;
-    margin-right: 40px;
-    border-radius: 4px;
-    background: #fff;
-    border: 1px solid rgb(191, 217, 216);
-    color: rgb(31, 61, 60);
-    padding: 5px 10px;
-    font-size: 10px
   }
 </style>
