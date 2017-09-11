@@ -153,7 +153,7 @@ export default {
             headerName: '订单位置更改', width: 200, field: 'currPosition', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '操作', field: 'value', width: 200, cellRendererFramework: 'operateComponent', hide: false, visible: true
+            headerName: '操作', field: 'value', width: 200, cellRendererFramework: 'operateComponent', hide: false, visible: true, pinned: 'right', suppressMenu: true, suppressSorting: true
           }
         ]
       }

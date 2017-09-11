@@ -64,28 +64,28 @@
     </div>
 
     <!-- 编辑/添加车辆信息弹窗 -->
-    <el-dialog title="车辆信息:" :visible.sync="vehicleVisable">
+    <el-dialog title="车辆信息:" :visible.sync="vehicleVisable" size="tiny">
       <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
         <el-form-item label="车牌号码:" :label-width="formLabelWidth">
-          <el-input v-model="vehicleForm.licePlateNum"></el-input>
+          <el-input v-model="vehicleForm.licePlateNum"  style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="司机姓名:" :label-width="formLabelWidth">
-          <el-input v-model="vehicleForm.driverName"></el-input>
+          <el-input v-model="vehicleForm.driverName"  style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="联系电话:" :label-width="formLabelWidth">
-          <el-input v-model="vehicleForm.tel"></el-input>
+          <el-input v-model="vehicleForm.tel"  style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="车容量:" :label-width="formLabelWidth">
-          <el-input v-model="vehicleForm.capacity"></el-input>
+          <el-input v-model="vehicleForm.capacity"  style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="车辆类型:" :label-width="formLabelWidth">
-          <el-input v-model="vehicleForm.carType"></el-input>
+          <el-input v-model="vehicleForm.carType"  style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="车辆位置:" :label-width="formLabelWidth">
-          <el-input v-model="vehicleForm.carPosition"></el-input>
+          <el-input v-model="vehicleForm.carPosition"  style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="车辆接送区域:" label-width="150px">
-          <el-select v-model="vehicleForm.pickUpArea" placeholder="请选择" style="width:100%">
+          <el-select v-model="vehicleForm.pickUpArea" placeholder="请选择"  style="width: 80%">
             <el-option key="ct" label="长途" value="ct"></el-option>
             <el-option key="dt" label="短途" value="dt"></el-option>
             <el-option key="ctdt" label="长途与短途" value="ctdt"></el-option>
@@ -206,7 +206,7 @@ export default {
             headerName: '车辆位置', width: 150, field: 'carPosition', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '操作', field: 'value', width: 150, suppressMenu: true, cellRendererFramework: 'operateComponent', hide: false, visible: true
+            headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false, visible: true, suppressMenu: true, suppressSorting: true, pinned: 'right'
           }
         ]
       }
@@ -215,7 +215,7 @@ export default {
   components: {
     'ag-grid-vue': AgGridVue,
     operateComponent: {
-      template: '<span><el-button class="del-but" style="margin-left:10%" type="danger" size="small" @click="vehicleDel">删 除</el-button><el-button class="del-but" type="info" size="small" @click="vehicleEdit">编 辑</el-button></span>',
+      template: '<span><el-button class="del-but" type="info" size="small" @click="vehicleEdit">编 辑</el-button><el-button class="del-but" style="margin-left:10%" type="danger" size="small" @click="vehicleDel">删 除</el-button></span>',
       methods: {
         vehicleDel () {
           this.params.context.componentParent.vehicleDelVisable = true
