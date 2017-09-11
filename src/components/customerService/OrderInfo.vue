@@ -8,7 +8,22 @@
         </div>
         <div>
           <el-button @click="toOrderAdd">添加</el-button>
-          <el-button @click="setting">设置</el-button>
+          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+        <el-button v-popover:popover1>设置</el-button>
         </div>
       </p>
     </div>
@@ -110,6 +125,7 @@
 <script>
 import { AgGridVue } from 'ag-grid-vue'
 import OrderDetails from '../financialAdministrator/ShowOrderDetails.vue'
+import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
 export default {
   created () {
     for (var i = 0; i < 50; i++) {
@@ -159,34 +175,34 @@ export default {
         rowData: null,
         columnDefs: [
           {
-            headerName: '订单ID', width: 150, field: 'orderId', filter: 'text', hide: false
+            headerName: '订单ID', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '发货单位', width: 150, field: 'shipComp', filter: 'text', hide: false
+            headerName: '发货单位', width: 150, field: 'shipComp', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false
+            headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '收货单位', width: 150, field: 'receComp', filter: 'text', hide: false
+            headerName: '收货单位', width: 150, field: 'receComp', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false
+            headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '货物名称', field: 'goodsNam', width: 150, filter: 'text', hide: false
+            headerName: '货物名称', field: 'goodsNam', width: 150, filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '件数', field: 'goodsNums', width: 150, filter: 'text', hide: false
+            headerName: '件数', field: 'goodsNums', width: 150, filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '体积', field: 'goodsVolume', width: 150, filter: 'text', hide: false
+            headerName: '体积', field: 'goodsVolume', width: 150, filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '重量', field: 'goodsWeight', width: 150, filter: 'text', hide: false
+            headerName: '重量', field: 'goodsWeight', width: 150, filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
+            headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false, visible: true, pinned: 'right', suppressMenu: true, suppressSorting: true
           }
         ]
       }
@@ -218,6 +234,18 @@ export default {
     }
   },
   methods: {
+    visibleChoice (i) {
+      if (i === 1) {
+        for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+          this.gridOptions.columnDefs[j].visible = true
+        }
+      } else if (i === 2) {
+        for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+          this.gridOptions.columnDefs[j].visible = false
+        }
+      }
+      this.updataColumnDefs(this.gridOptions.columnDefs)
+    },
     submitError () {
       console.log(this.errorForm)
       this.errorEditVisable = false
@@ -244,7 +272,7 @@ export default {
     },
     updataColumnDefs (collist) {
       for (let i = 0; i < collist.length; i++) {
-        this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+        this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
       }
     },
     // 跳转到网点开单页面
@@ -270,12 +298,12 @@ export default {
     this.createRowData()
   },
   mounted () {
-    this.changeColumnDefsBoolen()
     this.calculateGrid()
+    // this.changeColumnDefsBoolen()
   }
 }
 </script>
-<style>
+<style scoped>
 /* .del-but {
   cursor: pointer;
   float:left;

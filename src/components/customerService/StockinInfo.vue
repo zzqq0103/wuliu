@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="text-align: center;margin-top:-2%">
+    <div style="text-align: center;margin：10px">
       <h2>入库信息</h2>
     </div>
     <!--表格筛选区域-->
@@ -18,7 +18,7 @@
           </el-form-item>-->
           <span style='float:left;padding:0.6% 1% 0% 0%'>订单时间：</span>
           <el-date-picker v-model="filterForm1.departTimEnd" type="daterange" placeholder="选择日期范围"
-                            :picker-options="pickerOptions" range-separator='/' style='float:left;width:16%'>
+                            :picker-options="pickerOptions" range-separator='/' style='float:left;width:200px'>
           </el-date-picker>
           <span style='float:left;padding:0.6% 1% 0% 3%'>仓库位置：</span>
           <el-form-item style="float:left;width:10%">
@@ -133,7 +133,7 @@
       </div>
     </el-dialog>
     <!-- 入库界面 -->
-    <el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+    <!--<el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
       <h2 style='text-align:center;margin-top:-2%'>入库更新</h2>
       <el-form :model="filterForm2" ref="filterForm2" style='margin-top:2%'>
         <el-form-item label="订单号：" style="float:left;width:23%">
@@ -234,7 +234,132 @@
             <el-button @click="confirmSubmit" >确认入库</el-button>
             <el-button style='margin-left:10%' @click="verVisible = false">取消</el-button>
           </div>
+    </el-dialog> -->
+
+
+            <!--
+    --入库界面
+    -->
+    <el-dialog title="订单入库" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form :model="filterForm2" ref="filterForm" :inline="true">
+            <div>
+              <el-form-item label="订单时间">
+                <el-date-picker v-model="filterForm2.startTime" type="daterange" placeholder="选择日期范围"
+                                  :picker-options="pickerOptions" style='width:200px' range-separator='/'>
+                </el-date-picker>
+              </el-form-item>
+            </div>
+            <div>
+              <div style="float: right">
+                <el-button @click="drawGrid(2)">提取库存</el-button>
+                <!--<el-button @click="colVisible2 = true">设置</el-button>-->
+                <el-popover ref="popover2" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+                  <template v-for="(collist,i) in gridOptions2.columnDefs">
+                    <div class="colVisible">
+                      <el-checkbox v-model="collist.visible"
+                                   @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)"
+                                   style="float: left;width: 180px">
+                        {{collist.headerName}}
+                      </el-checkbox>
+                    </div>
+                  </template>
+                  <template>
+                    <div class="colVisible">
+                      <el-button @click="visibleChoice(1,'grid2')" size="small">全选</el-button>
+                      <el-button @click="visibleChoice(2,'grid2')" size="small">全不选</el-button>
+                    </div>
+                  </template>
+                </el-popover>
+                <el-button v-popover:popover2>设置</el-button>
+              </div>
+              <el-form-item>
+                <el-button style="visibility: hidden"></el-button>
+              </el-form-item>
+            </div>
+          </el-form>
+          <div style="float: right">
+            <el-button @click="leftSelect"> > </el-button>
+            <el-button @click="leftSelectAll"> >> </el-button>
+          </div>
+          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged2" style="width: 200px"></el-input>
+          <!--未核销处表格-->
+          <div style="margin-top: 10px">
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
+                         :gridOptions="gridOptions2"
+                         :suppressMovableColumns="true"
+                         :enableColResize="true"
+                         :enableSorting="true"
+                         :enableFilter="true"
+                         :groupHeaders="true"
+                         :suppressCellSelection="true"
+                         :rowHeight=40
+                         :headerHeight=40
+
+                         :rowDoubleClicked="leftDoubleClick"
+                         :animateRows="true"
+                         rowSelection="multiple"
+            ></ag-grid-vue>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <el-form>
+            <el-form-item>
+              <el-button style="visibility: hidden"></el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button @click="confirmSubmit">确认入库</el-button>
+              <!--<el-button @click="colVisible3 = true">设置</el-button>-->
+              <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+                <template v-for="(collist,i) in gridOptions3.columnDefs">
+                  <div class="colVisible">
+                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)"
+                                 style="float: left;width: 180px">
+                      {{collist.headerName}}
+                    </el-checkbox>
+                  </div>
+                </template>
+                <template>
+                  <div class="colVisible">
+                    <el-button @click="visibleChoice(1,'grid3')" size="small">全选</el-button>
+                    <el-button @click="visibleChoice(2,'grid3')" size="small">全不选</el-button>
+                  </div>
+                </template>
+              </el-popover>
+              <el-button v-popover:popover3>设置</el-button>
+            </el-form-item>
+          </el-form>
+          <el-button @click="rightSelect"> < </el-button>
+          <el-button @click="rightSelectAll"> << </el-button>
+          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
+          <!--待核销处表格-->
+          <div style="margin-top: 10px">
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
+                         :gridOptions="gridOptions3"
+                         :suppressMovableColumns="true"
+                         :enableColResize="true"
+                         :enableSorting="true"
+                         :enableFilter="true"
+                         :groupHeaders="true"
+                         :suppressCellSelection="true"
+                         :rowHeight=40
+                         :headerHeight=40
+
+                         :gridReady="grid3Ready"
+                         :rowDoubleClicked="rightDoubleClick"
+                         :animateRows="true"
+                         rowSelection="multiple"
+            ></ag-grid-vue>
+          </div>
+        </el-col>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="verVisible = false">取 消</el-button>
+      </div>
     </el-dialog>
+
+
     <!--确认入库弹框，选择支付方式与填写摘要-->
     <el-dialog title="确认入库" :visible.sync="confirmSubVisible" size="tiny" :closeOnClickModal="false">
       <h2>入库成功！</h2>
@@ -392,7 +517,8 @@
         filterForm2: {
           orderId: '', // 订单号
           shipNam: '', // 发货方姓名
-          receNam: '' // 收货人姓名
+          receNam: '', // 收货人姓名
+          startTime: ''
         },
         // 核销完成后提交给后台的数据
         confirmSubForm: {
