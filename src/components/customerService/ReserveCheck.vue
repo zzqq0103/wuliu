@@ -5,38 +5,31 @@
     <div style="width: 100%">
         <el-form :model="filterForm" ref="filterForm" :inline="true">
           <el-form-item label="出入库时间:">
-            <el-form-item prop="startTime">
-              <el-date-picker type="date" placeholder="选择开始日期" v-model="filterForm.startTime"
-                              style="width: 150px"></el-date-picker>
-            </el-form-item>
-            <span>--&nbsp</span>
-            <el-form-item prop="endTime">
-              <el-date-picker type="date" placeholder="选择结束日期" v-model="filterForm.endTime"
-                              style="width: 150px"></el-date-picker>
-            </el-form-item>
+            <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+                            :picker-options="pickerOptions" range-separator='/' style="width: 200px">
+            </el-date-picker>
           </el-form-item>
-          <el-form-item label="入库类型:" style="float: right">
+          <el-form-item label="入库类型:">
             <el-select v-model="filterForm.depotType" style="width: 100px">
               <el-option label="新货入库" value="newDepot"></el-option>
               <el-option label="长途入库" value="longDepot"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="订单号:" style="float: right">
-            <el-input v-model="filterForm.orderId" type="text" placeholder="请输入查找的订单号" style="width: 150px" @input="onQuickFilterChanged"></el-input>
-          </el-form-item>
-          <el-form-item label="订单号:" style="float: right">
-            <el-input v-model="filterForm.loadingId" type="text" placeholder="请输入查找的装载单号" style="width: 150px" @input="onQuickFilterChanged"></el-input>
-          </el-form-item>
-          <el-form-item label="仓库站点:" style="float: right">
+          <el-form-item label="仓库站点:">
             <el-select v-model="filterForm.depotSite" placeholder="请选择仓库站点" style="width: 100px">
               <el-option label="南京" value="南京"></el-option>
               <el-option label="北京" value="北京"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="装载单号:" style="position: absolute;top: 140px;left: 0px">
+            <el-input v-model="filterForm.orderId" type="text" placeholder="请输入查找的订单号" style="width: 150px" @input="onQuickFilterChanged"></el-input>
+          </el-form-item>
+          <el-form-item label="订单号:" style="position: absolute;top: 140px;left: 244px">
+            <el-input v-model="filterForm.loadingId" type="text" placeholder="请输入查找的装载单号" style="width: 150px" @input="onQuickFilterChanged"></el-input>
+          </el-form-item>
         </el-form>
       </div>
-    <div style="float: right">
-      <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged()" style="width: 150px"></el-input>
+    <div style="">
       <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
         <template v-for="(collist,i) in gridOptions.columnDefs">
           <div class="colVisible">
@@ -52,9 +45,10 @@
           </div>
         </template>
       </el-popover>
-      <el-button v-popover:popover1>设置</el-button>
-      <el-button @click="drawGrid()">提取</el-button>
-      <el-button>打印</el-button>
+      <el-button @click="drawGrid()" style="position: absolute;left: 480px">提取</el-button>
+      <el-button style="float: right">导出</el-button>
+      <el-button v-popover:popover1 style="float: right">设置</el-button>
+      <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged()" style="width: 150px;float: right"></el-input>
     </div>
     <div style="clear: both"></div>
     <div style="width: 100%; margin-top: 2%">
@@ -69,6 +63,7 @@
                    :rowHeight=40
                    :headerHeight=40
 
+                   :rowDoubleClicked="detailDoubleClick"
                    :pagination="true"
                    :paginationPageSize="10"
                    :suppressPaginationPanel="true"
@@ -87,12 +82,17 @@
         layout="total,sizes,prev,pager,next"
         :total="rowCount"></el-pagination>
     </div>
+    <!--订单详情弹框-->
+    <el-dialog title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
+      <order-details :orderId="filterForm.orderId"></order-details>
+    </el-dialog>
     </div>
 </template>
 <script>
   import {AgGridVue} from 'ag-grid-vue'
   import testJson from '../../../static/test/testJSON.js'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   export default {
     data () {
       return {
@@ -177,6 +177,7 @@
         pageSize: 20,
         rowCount: 0,
         allChangeType: '',
+        detailVisible: false, // 订单详情弹框
         visible: true,
         //    定义筛选条件
         filterForm: {
@@ -186,10 +187,68 @@
           orderId: '', // 运单号
           loadingId: '', // 装载单号
           depotSite: '' // 仓库站点
+        },
+        pickerOptions: {
+          shortcuts: [{
+            text: '上周',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfWeek = now.getDay()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * (nowDayOfWeek + 6))
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfWeek)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '上个月',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfMonth = now.getDate()
+              const nowMonth = now.getMonth()
+              start.setDate(1)
+              start.setMonth(nowMonth - 1)
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfMonth)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '去年',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowYear = now.getFullYear()
+              start.setYear(nowYear - 1)
+              start.setMonth(0)
+              start.setDate(1)
+              end.setYear(nowYear - 1)
+              end.setMonth(11)
+              end.setDate(31)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '今年',
+            onClick (picker) {
+              const start = new Date()
+              const end = new Date()
+              start.setMonth(0)
+              start.setDate(1)
+              picker.$emit('pick', [start, end])
+            }
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
+          }
         }
       }
     },
     components: {
+      OrderDetails,
       'ag-grid-vue': AgGridVue
     },
     methods: {
@@ -254,6 +313,10 @@
 //        console.log(totalRows, processedRows)
         this.rowCount = processedRows
 //        console.log(model.getRowCount())
+      },
+      detailDoubleClick (event) {
+        this.filterForm.orderId = event.data.orderId
+        this.detailVisible = true
       },
       visibleChoice (i) {
         if (i === 1) {
