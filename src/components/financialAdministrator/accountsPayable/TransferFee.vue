@@ -369,9 +369,6 @@
               headerName: '送货费', width: 150, field: 'sendFee', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '中转备注', width: 150, field: 'changeRemark', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            {
               headerName: '回单份数', width: 150, field: 'receNums', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {

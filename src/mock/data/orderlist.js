@@ -24,6 +24,9 @@ const epibolyList = []
 // 待中转订单列表
 const epibolingList = []
 
+// 装载单中的订单列表
+const orderList = []
+
 // 所有“已完成”页面的数据
 for (let i = 0; i < 100; i++) {
   // “已送货”装载单数据
@@ -256,6 +259,7 @@ for (let i = 0; i < 100; i++) {
     // 备注
     remarks: Mock.mock('@csentence()')
   }))
+
   // “待接货”订单数据
   receivingList.push(Mock.mock({
     //  序号
@@ -392,4 +396,64 @@ for (let i = 0; i < 100; i++) {
   }))
 }
 
-export {deliveredLoadedList, transportedList, receivedList, epibolyList, deliveringLoadingList, receivingList, transportingList, epibolingList}
+// 装载单中的订单列表
+for (let i = 0; i < 20; i++) {
+  orderList.push(Mock.mock({
+    // 序号
+    id: Mock.mock('@increment(1)'),
+    // 订单号
+    orderId: Mock.mock('@string("number",5)'),
+    // 开单日期
+    orderDate: Mock.mock('@datetime'),
+    // 预约单号
+    reservationId: Mock.mock('@string("number",5)'),
+    // 始发站
+    departure: Mock.mock('@city()'),
+    // 到站点
+    arrive: Mock.mock('@city()'),
+    // 订单属性
+    orderStatus: '已完成',
+    // 所属仓库
+    warehouse: '北京',
+    // 发货人单位
+    deliverSite: Mock.mock('@ctitle(5)'),
+    // 发货人姓名
+    deliverName: Mock.mock('@cname'),
+    // 发货人电话
+    deliverPhone: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
+    // 发货人地址
+    deliverAddress: Mock.mock('@county(true)'),
+    // 收货人单位
+    consignee: Mock.mock('@ctitle(5)'),
+    // 收货人名称
+    consigneeName: Mock.mock('@cname'),
+    // 收货人电话
+    consigneePhone: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
+    // 收货地址
+    consigneeAddress: Mock.mock('@county(true)'),
+    // 货物名称
+    goodsName: Mock.mock('@ctitle(5)'),
+    // 件数
+    'allNumbers|1-50': 50,
+    // 重量
+    'allWeights|1-50': 50,
+    // 体积
+    'allVolumes|1-50': 50,
+    // 订单备注
+    remarks: Mock.mock('@csentence(10,20)'),
+    // 操作
+    operation: ''
+  }))
+}
+
+export {
+  deliveredLoadedList,
+  transportedList,
+  receivedList,
+  epibolyList,
+  deliveringLoadingList,
+  receivingList,
+  transportingList,
+  epibolingList,
+  orderList
+}

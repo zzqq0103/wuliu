@@ -8,7 +8,7 @@
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div>
-          <el-button @click="addForm">添加</el-button>
+          <el-button @click="addForm">注册</el-button>
           <!--<el-button @click="setting">设置</el-button>-->
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
@@ -54,20 +54,20 @@
         :total="rowCount">
       </el-pagination>
     </div>
-
-    <el-dialog title="外包企业信息:" :visible.sync="enterpriseVisable">
+    <!--注册弹框-->
+    <el-dialog title="外包企业注册:" :visible.sync="enterpriseVisable" size="tiny">
       <el-form :model="enterpriseForm" :rules="rules" ref="enterpriseForm">
-        <el-form-item label="公司名称:" :label-width="formLabelWidth">
-          <el-input v-model="enterpriseForm.companyname"></el-input>
+        <el-form-item label="公司名称:" :label-width="formLabelWidth" prop="companyname">
+          <el-input v-model="enterpriseForm.companyname" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="中转起始点:" :label-width="formLabelWidth">
-          <el-input v-model="enterpriseForm.changeStart"></el-input>
+        <el-form-item label="中转起始点:" :label-width="formLabelWidth" prop="changeStart">
+          <el-input v-model="enterpriseForm.changeStart" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="中转企业联系人:" :label-width="formLabelWidth">
-          <el-input v-model="enterpriseForm.changeName"></el-input>
+        <el-form-item label="中转企业联系人:" :label-width="formLabelWidth" prop="changeName">
+          <el-input v-model="enterpriseForm.changeName" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="联系方式:" :label-width="formLabelWidth">
-          <el-input v-model="enterpriseForm.id"></el-input>
+        <el-form-item label="联系方式:" :label-width="formLabelWidth" prop="id">
+          <el-input v-model="enterpriseForm.id" style="width: 50%"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -118,7 +118,20 @@
           'id': '' // 联系方式
 
         },
-        rules: {},
+        rules: {
+          companyname: [{
+            required: true, message: '请输入公司名称', trigger: 'blur'
+          }],
+          changeStart: [{
+            required: true, message: '请输入中转起始地', trigger: 'blur'
+          }],
+          changeName: [{
+            required: true, message: '请输入企业联系人', trigger: 'blur'
+          }],
+          id: [{
+            required: true, message: '请输入联系方式', trigger: 'blur'
+          }]
+        },
         formLabelWidth: '150px',
         gridOptions: {
           context: {
@@ -135,7 +148,12 @@
               visible: true
             },
             {
-              headerName: '公司名称', width: 150, field: 'companyName', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '公司名称',
+              width: 150,
+              field: 'companyName',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
               headerName: '中转起始点',
@@ -221,13 +239,10 @@
       // 增加
       addForm () {
         this.enterpriseVisable = true
-        this.enterpriseForm.licePlateNum = ''
-        this.enterpriseForm.driverName = ''
-        this.enterpriseForm.tel = ''
-        this.enterpriseForm.capacity = ''
-        this.enterpriseForm.carType = ''
-        this.enterpriseForm.pickUpArea = ''
-        this.enterpriseForm.carPosition = ''
+        this.enterpriseForm.companyname = ''
+        this.enterpriseForm.changeStart = ''
+        this.enterpriseForm.changeName = ''
+        this.enterpriseForm.id = ''
       },
       visibleChoice (i) {
         if (i === 1) {

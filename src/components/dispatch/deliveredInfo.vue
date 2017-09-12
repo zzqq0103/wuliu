@@ -58,7 +58,7 @@
     <!-- 清除浮动 -->
     <div style="clear: both;">
     </div>
-    
+
     <!-- 表格 -->
     <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
@@ -71,17 +71,15 @@
                    :suppressCellSelection="true"
                    :rowHeight="40"
                    :headerHeight="40"
-
-                   :pagination="true"
-                   :paginationPageSize="10"
-                   :suppressPaginationPanel="true"
-                   :filterChanged="gridfilterChange"
-                   :rowDoubleClicked="detailDoubleClick"
+                   :rowDoubleClicked="changeDialogVisible"
       ></ag-grid-vue>
     </div>
 
     <!-- 装载单详细列表信息 -->
     <dispatched> </dispatched>
+
+    <!-- 装载单页面订单列表 -->
+    <deliver-order-list :title="titleText"></deliver-order-list>
 
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
@@ -115,9 +113,13 @@
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   // 引入装载单页面的 （dispatched.vue）页面
   import dispatched from './dispatched'
+  // 引入装载单订单页面 （deliverOrderList.vue) 页面
+  import DeliverOrderList from './deliverOrderList'
   export default {
     data () {
       return {
+        titleText: '已送货装载单订单列表',
+        dialogVisible: false,
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
@@ -251,16 +253,17 @@
     components: {
       'ag-grid-vue': AgGridVue,
       OrderDetails,
-      dispatched
+      dispatched,
+      DeliverOrderList
     },
 
     // 实例方法
     methods: {
-      // 订单详情弹框
-      detailDoubleClick (event) {
-        // console.log(event.data.orderId)
-        this.orderId = event.data.orderId
-        this.dispatchVisible = true
+      // 装载单订单列表弹框
+      changeDialogVisible (event) {
+        this.loadOrderId = event.data.loadOrderId
+        console.log(event.data.loadOrderId)
+        this.dialogVisible = true
       },
       // 改变每页显示的个数
       handleSizeChange (val) {

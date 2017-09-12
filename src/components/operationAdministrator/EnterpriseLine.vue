@@ -203,7 +203,7 @@
               visible: true
             },
             {
-              headerName: '合同号',
+              headerName: '合同价格',
               width: 120,
               field: 'contractPrice',
               filterFramework: PartialMatchFilterComponent,
