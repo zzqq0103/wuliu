@@ -58,7 +58,7 @@
     <!-- 清除浮动 -->
     <div style="clear: both;">
     </div>
-    
+
     <!-- 表格 -->
     <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
@@ -71,14 +71,14 @@
                    :suppressCellSelection="true"
                    :rowHeight="40"
                    :headerHeight="40"
-
-                   :pagination="true"
-                   :paginationPageSize="10"
-                   :suppressPaginationPanel="true"
-                   :filterChanged="gridfilterChange"
                    :rowDoubleClicked="detailDoubleClick"
       ></ag-grid-vue>
     </div>
+
+    <!-- 装载单订单列表展示 -->
+    <el-dialog :title="已装载单订单列表" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
+      <Dispatched :status="status"> </Dispatched>
+    </el-dialog>
 
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
@@ -110,6 +110,9 @@
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  // 引入装载单页面的 （dispatched.vue）页面
+  import Dispatched from './dispatched'
+
   export default {
     data () {
       return {
@@ -262,13 +265,16 @@
           }]
         },
         dateValue: '', // 日期值
-        detailVisible: false // 订单详情弹框
+        detailVisible: false, // 订单详情弹框
+        deliveringVisible: false,
+        ststus: 1
       }
     },
     // 实例组件
     components: {
       'ag-grid-vue': AgGridVue,
-      OrderDetails
+      OrderDetails,
+      Dispatched
     },
 
     // 实例方法
@@ -277,7 +283,7 @@
       detailDoubleClick (event) {
         console.log(event.data.orderId)
         this.orderId = event.data.orderId
-        this.detailVisible = true
+        this.deliveringVisible = true
       },
       // 改变每页显示的个数
       handleSizeChange (val) {
