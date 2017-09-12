@@ -91,6 +91,10 @@
       <deliver-order-list :loaderId="loadOrderId" :flag="flag"></deliver-order-list>
     </el-dialog>
 
+    <!-- 装载单订单列表展示 -->
+    <el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
+      <Dispatching></Dispatching>
+    </el-dialog>
 
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
@@ -120,12 +124,13 @@
   // 引入dispatchLoaderInfo 组件页面
   import DeliverOrderList from './deliverOrderList'
   // 引入装载单页面的 （dispatched.vue）页面
-  import dispatched from './dispatched'
+  import Dispatching from './dispatching'
   export default {
     data () {
       return {
         titleText: '待长途装载单订单列表',
         dialogVisible: false, // 装载单订单列表弹窗的显示真值
+        deliveringVisible: false, // 装载单订单列表弹窗显示真值
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
         flag: false, // flag = true 表示是新增装载单
@@ -409,7 +414,7 @@
       'ag-grid-vue': AgGridVue,
       OrderDetails,
       DeliverOrderList,
-      dispatched,
+      Dispatching,
       operateComponent: {
         template: '<span style="margin-left:5px;"><el-button  class="del-but" @click="depart" type="info" size="small">发车</el-button></span>',
         methods: {
@@ -427,8 +432,10 @@
       // 装载单订单列表弹框
       changeDialogVisible (event) {
         this.loadOrderId = event.data.loadOrderId
-        this.dialogVisible = true
-        this.flag = false
+        console.log(this.deliveringVisible)
+        this.deliveringVisible = true
+//        this.dialogVisible = true
+//        this.flag = false
       },
       // 新增装载单
       createLoaderList () {

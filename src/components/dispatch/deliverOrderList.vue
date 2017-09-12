@@ -5,7 +5,9 @@
     <!-- 左边表格 -->
     <div style="float:left; width: 49%;">
       <h3 style="text-align: center;color:red;">待装载订单列表</h3>
-      <ag-grid-vue style="widht:100%;height: 800px; margin-top:20px; " class="ag-blue"
+      <el-button @click="leftSelect" style="float:right;"> > </el-button>
+      <el-button @click="leftSelectAll" style="float:right;margin-right:10px;"> >> </el-button>
+      <ag-grid-vue style="widht:100%;height: 700px; margin-top:57px; " class="ag-blue"
                    :gridOptions="gridOptions_left"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
@@ -18,12 +20,15 @@
                    :headerHeight="40"
                    :rowDoubleClicked="detailDoubleClick"
       ></ag-grid-vue>
+      <el-button type="primary" v-if="flag" style="float:right; margin-top:10px;">智能配载</el-button>
     </div>
     <!-- 右边表格 -->
     <div style="margin-left: 2%; width:49%; float:left;">
       <h3 style="text-align: center;color:red;" v-if="!flag">调整订单列表</h3>
       <h3 style="text-align: center;color:red;" v-if="flag">新增新的装载单列表</h3>
-      <ag-grid-vue style="width: 100%; height: 800px; margin-top:20px; float:right;" class="ag-blue" v-if="!flag"
+      <el-button @click="rightSelect" style="float:left;"> < </el-button>
+      <el-button @click="rightSelectAll" style="float:left;"> << </el-button>
+      <ag-grid-vue style="width: 100%; height: 700px; margin-top:20px; float:right;" class="ag-blue" v-if="!flag"
                    :gridOptions="gridOptions_right"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
@@ -36,7 +41,7 @@
                    :headerHeight="40"
                    :rowDoubleClicked="detailDoubleClick"
       ></ag-grid-vue>
-      <ag-grid-vue style="width: 100%; height: 800px; margin-top:20px; float:right;" class="ag-blue" v-if="flag"
+      <ag-grid-vue style="width: 100%; height: 700px; margin-top:20px; float:right;" class="ag-blue" v-if="flag"
                    :gridOptions="gridOptions_new"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
@@ -50,6 +55,9 @@
                    :rowDoubleClicked="detailDoubleClick"
       ></ag-grid-vue>
     </div>
+
+        <el-button type="success" style="float:right;margin-top:10px;" @click="cancle">取消</el-button>
+        <el-button type="danger" style="float:right;margin-right:30px;margin-top:10px;" @click="adjust">确定</el-button>
 
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
     <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :modal-append-to-body=false
