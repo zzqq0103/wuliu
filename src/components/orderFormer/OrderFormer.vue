@@ -548,7 +548,7 @@
       'ag-grid-vue': AgGridVue,
       operateComponent: {
         // template:'<span></span><select><option  @click="vehicleDel" value="派送">派送</option><option  @click="vehicleDel" value="签收">签收</option></select></span>',
-        template: '<span><el-button class="del-but" @click="orderdetails(liceNum)">详 情</el-button></span>',
+        template: '<span><el-button class="del-but" @click="orderdetails(liceNum)" type="info">详 情</el-button></span>',
         methods: {
           orderdetails (liceNum) {
             this.params.context.componentParent.verVisible = true
@@ -556,7 +556,7 @@
         }
       },
       condition: {
-        template: '<span><el-button class="del-but" @click="edit">编 辑</el-button></span>',
+        template: '<span><el-button class="del-but" @click="edit" type="info">编 辑</el-button></span>',
 //        template: '<el-select v-model="appointlnfoForm.Selectsites"  placeholder="选择" class="appointmentoption col-1" style="width:80px"> <el-option key="yes" label=" 已签 " value="yes"></el-option><el-option key="yes" label=" 在途 " value="no"></el-option></el-select>',
         // '<select placeholder="选择" class="appointmentoption" style="width:150px;heght:60px"><option key="yes" label="回单已签" value="yes"></option><option key="no" label="回单在途" value="no"></option><option key="no" label="回单已反" value="no"></option> </select>'//          return {
 //            appointlnfoForm: {
@@ -634,17 +634,17 @@
     width: 50%;
   }
 
-  .del-but {
-    cursor: pointer;
-    float: right;
-    margin-right: 10px;
-    border-radius: 4px;
-    background: #fff;
-    border: 1px solid rgb(191, 217, 216);
-    color: rgb(31, 61, 60);
-    padding: 5px 10px;
-    font-size: 10px
-  }
+  /*.del-but {*/
+    /*cursor: pointer;*/
+    /*float: right;*/
+    /*margin-right: 10px;*/
+    /*border-radius: 4px;*/
+    /*background: #fff;*/
+    /*border: 1px solid rgb(191, 217, 216);*/
+    /*color: rgb(31, 61, 60);*/
+    /*padding: 5px 10px;*/
+    /*font-size: 10px*/
+  /*}*/
 
   .appointmenttime {
     /* float: left; */
