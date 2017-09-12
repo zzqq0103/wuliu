@@ -7,17 +7,17 @@
       <h3 style="text-align: center;color:red;">待装载订单列表</h3>
       <el-button @click="leftSelect" style="float:right;"> > </el-button>
       <el-button @click="leftSelectAll" style="float:right;margin-right:10px;"> >> </el-button>
-      <ag-grid-vue style="widht:100%;height: 700px; margin-top:57px; " class="ag-blue" 
-                   :gridOptions="gridOptions_left" 
-                   :suppressMovableColumns="true" 
-                   :enableColResize="true" 
-                   :enableSorting="true" 
-                   :enableFilter="true" 
-                   :groupHeaders="true" 
-                   :suppressCellSelection="true" 
-                   :rowHeight="40" 
-                   :headerHeight="40" 
-                   :rowDoubleClicked="detailDoubleClick" 
+      <ag-grid-vue style="widht:100%;height: 700px; margin-top:57px; " class="ag-blue"
+                   :gridOptions="gridOptions_left"
+                   :suppressMovableColumns="true"
+                   :enableColResize="true"
+                   :enableSorting="true"
+                   :enableFilter="true"
+                   :groupHeaders="true"
+                   :suppressCellSelection="true"
+                   :rowHeight="40"
+                   :headerHeight="40"
+                   :rowDoubleClicked="detailDoubleClick"
                    :animateRows="true"
                    rowSelection="multiple">
       </ag-grid-vue>
@@ -30,17 +30,17 @@
       <h3 style="text-align: center;color:red;" v-if="flag">新增新的装载单列表</h3>
       <el-button @click="rightSelect" style="float:left;"> < </el-button>
       <el-button @click="rightSelectAll" style="float:left;"> << </el-button>
-      <ag-grid-vue style="width: 100%; height: 700px; margin-top:20px; float:right;" class="ag-blue" 
-                   :gridOptions="gridOptions_right" 
-                   :suppressMovableColumns="true" 
-                   :enableColResize="true" 
-                   :enableSorting="true" 
-                   :suppressRowClickSelection="true" 
-                   :enableFilter="true" 
-                   :groupHeaders="true" 
-                   :suppressCellSelection="true" 
-                   :rowHeight="40" 
-                   :headerHeight="40" 
+      <ag-grid-vue style="width: 100%; height: 700px; margin-top:20px; float:right;" class="ag-blue"
+                   :gridOptions="gridOptions_right"
+                   :suppressMovableColumns="true"
+                   :enableColResize="true"
+                   :enableSorting="true"
+                   :suppressRowClickSelection="true"
+                   :enableFilter="true"
+                   :groupHeaders="true"
+                   :suppressCellSelection="true"
+                   :rowHeight="40"
+                   :headerHeight="40"
                    :rowDoubleClicked="detailDoubleClick"
                    :animateRows="true"
                    rowSelection="multiple">
@@ -50,7 +50,7 @@
       <el-button type="success" style="float:right;margin-right:30px;margin-top:10px;" @click="adjust">确定</el-button>
     </div>
 
-    
+
 
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
     <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :modal-append-to-body=false :close-on-press-escape=false top="5%">
@@ -376,17 +376,17 @@ export default {
   methods: {
     // 装载单配载界面右侧添加行数据，左侧删除行数据
     addChoose (newItems) {
-        this.gridOptions_right.api.updateRowData({add: newItems})
-        this.gridOptions_left.api.updateRowData({remove: newItems})
+      this.gridOptions_right.api.updateRowData({add: newItems})
+      this.gridOptions_left.api.updateRowData({remove: newItems})
     },
     // 选中左边已选的数据
     leftChoose () {
-        const selectedData = this.gridOptions_left.api.getSelectedRows()
-        this.addChoose(selectedData)
+      const selectedData = this.gridOptions_left.api.getSelectedRows()
+      this.addChoose(selectedData)
     },
     detailDoubleClick (event) {
-       this.orderId = event.data.OrderId
-       this.detailVisible = true
+      this.orderId = event.data.OrderId
+      this.detailVisible = true
     },
     loadOrderList () {
       let params = {
