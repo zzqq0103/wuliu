@@ -22,18 +22,6 @@
   </div>
 </template>
 <script>
-<<<<<<< HEAD
- // 引入表格组件
-// import {AgGridVue} from 'ag-grid-vue'
- // 引入订单详情列表
- import {OrderDetail} from '../financialAdministrator/ShowOrderDetails'
-// 引入外部筛选函数组件系统
-export default {
-    // 数据模型
-   data () {
-       // 订单详情框是否显示
-     detailVisible: false
-=======
 // 引入 ag-grid 表格
 import { AgGridVue } from 'ag-grid-vue'
 // 引入 OrderList 订单详情
@@ -42,7 +30,6 @@ import OrderDetails from '../financialAdministrator/ShowOrderDetails.vue'
 import { getOrderList } from '../../api/api'
 // 引入dispatchLoaderInfo 组件页面
 import DeliverOrderList from './deliverOrderList'
->>>>>>> zq
 
 export default {
   // 数据模型

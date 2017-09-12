@@ -18,12 +18,6 @@
   </div>
 </template>
 <script>
-<<<<<<< HEAD
-// 引入表格组件
-// import {AgGridVue} from 'ag-grid-vue'
-// 引入axios后台接口
-//   import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
-=======
 // 引入 ag-grid 表格
 import { AgGridVue } from 'ag-grid-vue'
 // 引入 OrderList 订单详情
@@ -33,7 +27,6 @@ import { getOrderList } from '../../api/api'
 // 引入dispatchLoaderInfo 组件页面
 import DeliverOrderList from './deliverOrderList'
 
->>>>>>> zq
 export default {
   // 数据模型
   data () {
