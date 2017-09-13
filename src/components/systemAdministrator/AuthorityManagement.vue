@@ -20,6 +20,11 @@
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
+          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
+        </div>
+
+        <div>
+
         </div>
       </div>
     </div>
@@ -53,7 +58,15 @@
         :total="totalpages">
       </el-pagination>
     </div>
-
+    <div>
+      <el-dialog title="提示" :visible.sync="delFormVisible" size="small" top="30%" :closeOnClickModal="false">
+        <h2 style="padding:30px">确认删除吗？</h2>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="delFormVisible = false">取 消</el-button>
+          <el-button @click="delFormVisible = false" type="primary">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -68,7 +81,7 @@
         queryName: '',
         currentpage: 1,
         colVisible: false,
-        vehicleVisable: false,
+        deleteVisible: false,
         vehicleDelVisable: false,
         orderId: '', // 运单号
         tableForm: {
@@ -88,25 +101,25 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '调度员姓名', width: 146, field: 'id', filter: 'text', hide: false
+              headerName: '调度员姓名', width: 100, field: 'id', filter: 'text', hide: false
             },
             {
-              headerName: '性别', width: 146, field: 'deliverOrderId', filter: 'text', hide: false
+              headerName: '性别', width: 100, field: 'deliverOrderId', filter: 'text', hide: false
             },
             {
-              headerName: '联系电话', width: 146, field: 'orderId', filter: 'text', hide: false
+              headerName: '联系电话', width: 100, field: 'orderId', filter: 'text', hide: false
             },
             {
-              headerName: '所属站点', width: 146, field: 'OrderDate', filter: 'text', hide: false
+              headerName: '所属站点', width: 100, field: 'OrderDate', filter: 'text', hide: false
             },
             {
-              headerName: '调度员状态', width: 146, field: 'driverName', filter: 'text', hide: false
+              headerName: '调度员状态', width: 100, field: 'driverName', filter: 'text', hide: false
             },
             {
-              headerName: '调度员类别', width: 146, field: 'consigneeAddr', filter: 'text', hide: false
+              headerName: '调度员类别', width: 100, field: 'consigneeAddr', filter: 'text', hide: false
             },
             {
-              headerName: '是否删除', width: 146, field: 'consignee', cellRendererFramework: 'operateComponent', hide: false
+              headerName: '操作', width: 100, field: 'consignee', cellRendererFramework: 'operateComponent', hide: false
             }
           ]
         },
@@ -131,6 +144,7 @@
         }],
         selectvalue: 1,
         orderlist: [],
+        delFormVisible: false,
         totalpages: 1,
         pageSize: 25,
         pickerOptions: {
@@ -168,12 +182,11 @@
       'ag-grid-vue': AgGridVue,
       OrderDetails,
       operateComponent: {
-        template: '<span><el-button type="danger" class="del-but" @click="vehicleDel">删 除</el-button></span>',
+        template: '<span><el-button type="danger" @click="del">删 除</el-button></span>',
         methods: {
           del () {
             let self = this.params.context.componentParent
             self.delFormVisible = true
-            self.staffForm.employeeNam = this.params.data.employeeNam
           },
           vehicleDel () {
             this.params.context.componentParent.vehicleDelVisable = true
@@ -182,6 +195,9 @@
       }
     },
     methods: {
+      onQuickFilterChanged (input) {
+        this.gridOptions.api.setQuickFilter(input)
+      },
       handleSizeChange (val) {
         this.pageSize = val
       },
@@ -191,9 +207,6 @@
       },
       handleIconClick (input) {
         this.getQueryData()
-      },
-      onQuickFilterChanged (input) {
-        this.gridOptions.api.setQuickFilter(input)
       },
       changeColumnDefsBoolen () {
         var columnlist = this.gridOptions.columnDefs
