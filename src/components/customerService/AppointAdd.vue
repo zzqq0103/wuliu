@@ -1,8 +1,8 @@
-<template xmlns:v-bind="http://www.w3.org/1999/xhtml">
+ <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div>
     <h2 style="text-align:center;margin-top:0">新建预约单</h2>
     <div class='div-form'>
-      <el-form >       
+      <el-form >
         <!-- <span style='float:left;padding:0.6% 1% 0% 0%;width:10%;text-align:left'>发货方：</span> -->
         <el-form-item label="发货方：" style="float:left;width:50%;" label-width="90px">
           <input type="text" list="shipComp" v-model="shipComp" class='input-tishi' style="float:left"/>
@@ -19,7 +19,7 @@
         <el-form-item label="提货地址：" style="clear:both;width:100%" label-width="90px">
           <div id='focus1' class="dropdown2" style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(1)" @blur="addressVisible=false">
             <el-input v-model="pickUpAdr" placeholder="请选择提货地址"  readonly="readonly"style="width:73%" ></el-input>
-            <div class="dropdown-content" style='width:31%' v-show="addressVisible"> 
+            <div class="dropdown-content" style='width:31%' v-show="addressVisible">
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
                 <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
@@ -79,7 +79,7 @@
         <el-form-item label="收货地址：" style="clear:both;width:100%" label-width="90px">
           <div id='focus2' class='dropdown2' style='outline:none' contenteditable="true" tabindex="0"  @click="getFocus(2)" @blur="addressVisible2=false">
             <el-input v-model="receAdr" placeholder="请选择收货地址" readonly="readonly" style="width:78%;width:73%"></el-input>
-            <div class="dropdown-content" style='width:31%' v-show="addressVisible2"> 
+            <div class="dropdown-content" style='width:31%' v-show="addressVisible2">
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
                 <li @click="setShi(2)" class='dropdown-li' v-bind:class="{'selectOn':shi2}">城市</li>
