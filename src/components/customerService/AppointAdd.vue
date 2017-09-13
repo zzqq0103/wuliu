@@ -2,31 +2,24 @@
   <div>
     <h2 style="text-align:center;margin-top:0">新建预约单</h2>
     <div class='div-form'>
-      <el-form >          
-        <el-form-item label="发货方：" style="float:left;width:50%;">
-          <input type="text" list="shipComp" v-model="shipComp" class='input-tishi' style="float:left;width:50%"/>
+      <el-form >       
+        <!-- <span style='float:left;padding:0.6% 1% 0% 0%;width:10%;text-align:left'>发货方：</span> -->
+        <el-form-item label="发货方：" style="float:left;width:50%;" label-width="90px">
+          <input type="text" list="shipComp" v-model="shipComp" class='input-tishi' style="float:left"/>
           <datalist id="shipComp">
             <option v-for="item in shipTipList" :value="item" :key="item"/>
           </datalist>
         </el-form-item>
-
-        <el-form-item label="目的站：" style="float:left;width:50%">
-          <input type="text" list="arrStation" v-model="arrStation" class='input-tishi' style="float:left;width:50%" />
-          <datalist id="arrStation">
-            <option v-for="item in arrStationList" :value="item" :key="item" />
-          </datalist>
-        </el-form-item>
-
-        <el-form-item label="联系人：" style="float:left;width:50%">
+        <el-form-item label="联系人：" style="float:left;width:50%" label-width="90px">
           <el-input v-model="shipNam" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="手机：" style="clear:both;width:50%">
-          <el-input v-model="shipTel" style="width:60%;margin-left:5%"></el-input>
+        <el-form-item label="手机：" style="clear:both;width:50%" label-width="90px">
+          <el-input v-model="shipTel" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="提货地址：" style="clear:both;width:100%">
+        <el-form-item label="提货地址：" style="clear:both;width:100%" label-width="90px">
           <div id='focus1' class="dropdown2" style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(1)" @blur="addressVisible=false">
-            <el-input v-model="pickUpAdr" placeholder="请选择提货地址"  readonly="readonly"style="width:400px;margin-left:-3%;width:73%" ></el-input>
-            <div class="dropdown-content" style='width:33%' v-show="addressVisible"> 
+            <el-input v-model="pickUpAdr" placeholder="请选择提货地址"  readonly="readonly"style="width:73%" ></el-input>
+            <div class="dropdown-content" style='width:31%' v-show="addressVisible"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
                 <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
@@ -53,40 +46,40 @@
           </div>
           <el-input class='addressDetail' placeholder="输入详细提货地址"></el-input>
         </el-form-item>
-        <el-form-item label="货物名称：" style="float:left;width:50%">
-          <el-input v-model="goodsNam" style="width:60%;margin-left:-4%"></el-input>
+        <el-form-item label="货物名称：" style="float:left;width:50%" label-width="90px">
+          <el-input v-model="goodsNam" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="件数：" style="float:left;width:50%">
-          <el-input v-model="goodsNums" style="width:60%;margin-left:5%"></el-input>
+        <el-form-item label="件数：" style="float:left;width:50%" label-width="90px">
+          <el-input v-model="goodsNums" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="重量：" style="float:left;width:50%">
-          <el-input v-model="goodsWeight" style="width:60%;margin-left:5%"></el-input>
+        <el-form-item label="重量：" style="float:left;width:50%" label-width="90px">
+          <el-input v-model="goodsWeight" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="体积：" style="float:left;width:50%">
-          <el-input v-model="goodsVolumn" style="width:60%;margin-left:5%"></el-input>
+        <el-form-item label="体积：" style="float:left;width:50%" label-width="90px">
+          <el-input v-model="goodsVolumn" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="包装：" style="float:left;width:50%">
-          <el-input v-model="package" style="width:60%;margin-left:5%"></el-input>
+        <el-form-item label="包装：" style="float:left;width:50%" label-width="90px">
+          <el-input v-model="package" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="货物备注：" style="clear:both;width:100%">
-          <el-input v-model="note" style="width:78%;margin-left:-2%"></el-input>
+        <el-form-item label="货物备注：" style="clear:both;width:100%" label-width="90px">
+          <el-input v-model="note" style="width:78%"></el-input>
         </el-form-item>
-        <el-form-item label="收货方：" style="float:left;width:50%;">
+        <el-form-item label="收货方：" style="float:left;width:50%;" label-width="90px">
           <input type="text" list="receComp" v-model="receComp" class='input-tishi' style="float:left;width:50%"/>
           <datalist id="receComp">
             <option v-for="item in receTipList" :value="item" :key="item"/>
           </datalist>
         </el-form-item>
-        <el-form-item label="联系人：" style="float:left;width:50%">
+        <el-form-item label="联系人：" style="float:left;width:50%" label-width="90px">
           <el-input v-model="receNam" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="手机：" style="clear:both;width:50%">
-          <el-input v-model="receTel" style="width:60%;margin-left:5%"></el-input>
+        <el-form-item label="手机：" style="clear:both;width:50%" label-width="90px">
+          <el-input v-model="receTel" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="收货地址：" style="clear:both;width:100%">
+        <el-form-item label="收货地址：" style="clear:both;width:100%" label-width="90px">
           <div id='focus2' class='dropdown2' style='outline:none' contenteditable="true" tabindex="0"  @click="getFocus(2)" @blur="addressVisible2=false">
-            <el-input v-model="receAdr" placeholder="请选择收货地址" readonly="readonly" style="width:78%;margin-left:-3%;width:73%"></el-input>
-            <div class="dropdown-content" style='width:33%' v-show="addressVisible2"> 
+            <el-input v-model="receAdr" placeholder="请选择收货地址" readonly="readonly" style="width:78%;width:73%"></el-input>
+            <div class="dropdown-content" style='width:31%' v-show="addressVisible2"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
                 <li @click="setShi(2)" class='dropdown-li' v-bind:class="{'selectOn':shi2}">城市</li>
@@ -140,6 +133,8 @@
     },
     data () {
       return {
+        labelWidth: '90px',
+        formLabelWidth: '15%',
         /** 地址内容 */
         shenfenSelected: '',
         shiSelected: '',
@@ -354,7 +349,7 @@
     height: 200px;
     position: absolute;
     background-color: #fff;
-    margin-left: -3%;
+    margin-left: -1%;
     padding: 0;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
     z-index: 1;

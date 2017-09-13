@@ -24,12 +24,20 @@ export default new Router({
           component: resolve => require(['../components/operationAdministrator/Enterprise.vue'], resolve)
         },
         {
+          path: '/enterpriseline',
+          component: resolve => require(['../components/operationAdministrator/EnterpriseLine.vue'], resolve)
+        },
+        {
           path: '/personnel',
           component: resolve => require(['../components/operationAdministrator/PersonnelInfo.vue'], resolve)
         },
         {
-          path: '/vehicle',
-          component: resolve => require(['../components/operationAdministrator/VehicleInfo.vue'], resolve)
+          path: '/shortvehicle',
+          component: resolve => require(['../components/operationAdministrator/ShortVehicleInfo.vue'], resolve)
+        },
+        {
+          path: '/longvehicle',
+          component: resolve => require(['../components/operationAdministrator/LongVehicleInfo.vue'], resolve)
         },
         // 财务管理员
         // 应收

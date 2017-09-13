@@ -1,4 +1,3 @@
-
 // 采用indexOf的实现的模糊搜索，第一个参数是目标数组，第二个参数是目标字段，第三个参数是字段
 function searchByIndexOf (arr, keyWord, statement) {
   if (!(arr instanceof Array)) {

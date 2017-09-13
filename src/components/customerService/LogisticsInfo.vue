@@ -27,16 +27,16 @@
         <div>
           <el-form :model="filterForm" :ref="filterForm" :inline="true">
             <el-form-item label="订单编号:" style="margin-right: 10px">
-              <el-input v-model="filterForm.orderId" type="text" placeholder="请输入查找的订单号" style="width: auto" @input="onQuickFilterChanged"></el-input>
+              <el-input v-model="filterForm.orderId" type="text" placeholder="请输入查找的订单号" style="width: 150px" @input="onQuickFilterChanged"></el-input>
             </el-form-item>
             <el-form-item label="订单状态:" style="margin-right: 10px">
-              <el-select v-model="filterForm.state" placeholder="请选择订单状态">
+              <el-select v-model="filterForm.state" placeholder="请选择订单状态" style="width: 150px">
                 <el-option label="新开单" value="新开单"></el-option>
                 <el-option label="旧开单" value="旧开单"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="送货方式:" style="margin-right: 10px">
-              <el-select v-model="filterForm.sendMode" placeholder="请选择送货方式">
+              <el-select v-model="filterForm.sendMode" placeholder="请选择送货方式" style="width: 150px">
                 <el-option label="自提" value="自提"></el-option>
                 <el-option label="送货上门" value="送货上门"></el-option>
               </el-select>
@@ -57,6 +57,7 @@
                      :rowHeight=40
                      :headerHeight=40
 
+                     :rowDoubleClicked="detailDoubleClick"
                      :pagination="true"
                      :paginationPageSize="10"
                      :suppressPaginationPanel="true"
@@ -89,40 +90,10 @@
           <el-button type="primary" @click="colVisible = false">确 定</el-button>
         </div>
       </el-dialog>
-      <!--查找物流信息 已弃用-->
-      <!--<el-dialog title="查询物流信息:" :visible.sync="selectFormVisible">-->
-        <!--<el-form :model="orderForm">-->
-          <!--<el-form-item label="订单编号">-->
-            <!--<el-input v-model="orderForm.oderId"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="始发地">-->
-            <!--<el-input v-model="orderForm.departure"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="发送电话">-->
-            <!--<el-input v-model="orderForm.telDeparture"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="目的地">-->
-            <!--<el-input v-model="orderForm.destination"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="收货电话">-->
-            <!--<el-input v-model="orderForm.telReceiving"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="货物名称">-->
-            <!--<el-input v-model="orderForm.cargoName"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="件数">-->
-            <!--<el-input v-model="orderForm.cargoPieces"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="物资状态">-->
-            <!--<el-input v-model="orderForm.cargoCondition"></el-input>-->
-          <!--</el-form-item>-->
-        <!--</el-form>-->
-        <!--<div class="dialog-footer">-->
-          <!--<el-button @click="selectFormVisible=false">取消</el-button>-->
-          <!--<el-button type="primary" @click="selectFormVisible=false">确定</el-button>-->
-        <!--</div>-->
-      <!--</el-dialog>-->
     </div>
+    <el-dialog title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
+      <order-details :orderId="filterForm.orderId"></order-details>
+    </el-dialog>
   </div>
 </template>
 
@@ -130,6 +101,7 @@
   import {AgGridVue} from 'ag-grid-vue'
   import testJson from '../../../static/test/testJSON.js'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  import OrderDetails from '../financialAdministrator/ShowOrderDetails'
 export default {
     data () {
       return {
@@ -140,7 +112,7 @@ export default {
               headerName: '序号', width: 100, field: 'index', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '订单编号', width: 150, field: 'oderId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '订单编号', width: 150, field: 'orderId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '始发地', width: 150, field: 'departure', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -177,7 +149,7 @@ export default {
         }],
         value2: '',
         orderForm: {
-          oderId: '',
+          orderId: '',
           departure: '',
           telDeparture: '',
           destination: '',
@@ -197,15 +169,17 @@ export default {
         formLabelWidth: '150px',
         currentPage: 1,
         pageSize: 20,
-        rowCount: 0
+        rowCount: 0,
+        detailVisible: false // 订单详情弹框
       }
     },
     components: {
+      OrderDetails,
       'ag-grid-vue': AgGridVue
     },
     methods: {
       createRowData () {
-        this.gridOptions.rowData = testJson.oderInfo.list
+        this.gridOptions.rowData = testJson.orderInfo.list
         this.gridOptions.api.setRowData(this.gridOptions.rowData)
         this.calculateGrid()
       },
@@ -223,22 +197,14 @@ export default {
           columnlist[i].hide = !columnlist[i].hide
         }
       },
+      detailDoubleClick (event) {
+        this.filterForm.orderId = event.data.orderId
+        this.detailVisible = true
+        console.log(this.filterForm.orderId)
+      },
       setting () {
         this.colVisible = true
       },
-//      selectForm () {
-//        this.selectFormVisible = true
-//        this.orderForm = {
-//          oderId: '',
-//          departure: '',
-//          telDeparture: '',
-//          destination: '',
-//          telReceiving: '',
-//          cargoName: '',
-//          cargoPieces: '',
-//          cargoCondition: ''
-//        }
-//      },
       handleSizeChange (val) {
         this.gridOptions.api.paginationSetPageSize(Number(val))
       },

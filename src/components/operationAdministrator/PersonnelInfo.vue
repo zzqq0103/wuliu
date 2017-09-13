@@ -94,8 +94,9 @@
         <el-form-item label="所属片区:" :label-width="formLabelWidth">
           <el-input v-model="personnelForm.area" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="业务员ID:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.salesmanId" style="width: 50%"></el-input>
+        <el-form-item label="业务员:" :label-width="formLabelWidth">
+          <el-input v-model="personnelForm.salesmanData" style="width: 50%" :disabled="true"></el-input>
+          <el-button type="primary" @click="createSalesmanData" >选择业务员</el-button>
         </el-form-item>
         <el-form-item label="是否三方:" :label-width="formLabelWidth">
           <el-select v-model="personnelForm.isTril" placeholder="请选择" style="width:30%">
@@ -108,6 +109,22 @@
         <el-button @click="vehicleVisable = false">取 消</el-button>
         <el-button type="primary" @click="vehicleVisable = false">确 定</el-button>
       </div>
+    </el-dialog>
+
+    <!--添加业务员信息-->
+    <el-dialog title="业务员:" :visible.sync="salesmanVisible" size="tiny" :closeOnClickModal="false">
+      <template v-for="(collist,i) in salesmanData">
+        <div class="colVisible" style="margin: 10px">
+          <el-radio :label=collist.infor v-model="salesmanReq" style="width: 100%" >
+            {{collist.infor}}
+          </el-radio>
+        </div>
+      </template>
+      <template>
+        <div class="salesmanVisible" style="float: right;margin-bottom: 20px" >
+          <el-button type="primary" @click="updateSalesman">确定</el-button>
+        </div>
+      </template>
     </el-dialog>
 
     <!--编辑客户信息-->
@@ -233,7 +250,8 @@
               suppressSorting: true,
               cellRendererFramework: 'operateComponent',
               hide: false,
-              visible: true
+              visible: true,
+              pinned: 'right'
             }
           ],
           context: {
@@ -246,14 +264,16 @@
           tel: '',
           compAdr: '',
           area: '',
-          salesmanId: '',
-          isTril: ''
+          isTril: '',
+          salesmanData: ''
         },
+        salesmanReq: '',
         rules: {},
         colVisible: false,
         addFormVisible: false,
         delFormVisible: false,
         editFormVisible: false,
+        salesmanVisible: false,
         formLabelWidth: '150px',
         currentPage: 1,
         pageSize: 20,
@@ -276,7 +296,7 @@
             let self = this.params.context.componentParent
             self.editFormVisible = true
             self.personnelForm = this.params.data
-            console.log(self.personnelForm)
+//            console.log(self.personnelForm)
           }
         }
       }
@@ -284,6 +304,10 @@
     methods: {
       createRowData () {
         this.gridOptions.rowData = testJson.personnelInfo.list
+      },
+      createSalesmanData () {
+        this.salesmanData = testJson.salesman
+        this.salesmanVisible = true
       },
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
@@ -298,10 +322,9 @@
 //        for (let i = 0; i < columnlist.length; i++) {
 //          columnlist[i].hide = !columnlist[i].hide
 //        }
-//      },
       test () {
 //        this.gridOptions.api.refreshHeader()
-        console.log(this.gridOptions.columnApi.getAllColumns())
+//        console.log(this.gridOptions.columnApi.getAllColumns())
 //        console.log(this.gridOptions.columnDefs[0].hide)
 //        console.log(this.gridOptions.columnApi.getAllDisplayedColumns())
 //        if (this.gridOptions.columnDefs[0].hide) {
@@ -341,8 +364,8 @@
       calculateGrid () {
         this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
         let model = this.gridOptions.api.getModel()
-        console.log(model)
-        console.log(this.gridOptions.rowData)
+//        console.log(model)
+//        console.log(this.gridOptions.rowData)
         let processedRows = model.getRowCount()
 //        let totalRows = this.gridOptions.rowData.length
 //        console.log(totalRows, processedRows)
@@ -359,6 +382,11 @@
           }
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
+      },
+      updateSalesman () {
+        this.personnelForm.salesmanData = this.salesmanReq
+        this.salesmanVisible = false
+        console.log(this.personnelForm.salesmanData)
       }
     },
     beforeMount () {

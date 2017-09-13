@@ -2510,7 +2510,8 @@ export default {
         veriNam: 'Ada Buckley',
         veriTim: '2014-07-11T04:02:53 -08:00',
         veriSite: false,
-        payMode: 'green'
+        payMode: 'green',
+        unActIncome: 1000
       },
       {
         orderId: '599cf2a9a5925597eb076f60',
@@ -2533,7 +2534,8 @@ export default {
         veriNam: 'Anne Kane',
         veriTim: '2015-08-16T01:11:31 -08:00',
         veriSite: false,
-        payMode: 'green'
+        payMode: 'green',
+        unActIncome: 1000
       },
       {
         orderId: '599cf2a95627e19d5133ac53',
@@ -20470,10 +20472,10 @@ export default {
     ]
   },
   //订单信息
-  'oderInfo': {
+  'orderInfo': {
     'list': [
       {
-        "oderId": '1234',
+        "orderId": '1234',
         "departure": '北京',
         "telDeparture": '123456',
         "destination": '苏州',
@@ -20483,7 +20485,7 @@ export default {
         "cargoCondition": '运送中'
       },
       {
-        "oderId": '5678',
+        "orderId": '5678',
         "departure": '南京',
         "telDeparture": '654321',
         "destination": '北京',
@@ -20494,4 +20496,8 @@ export default {
       }
     ]
   },
+  //业务员信息
+  'salesman' : [
+    {"infor": '张三-18080890921' },{"infor": '赵五-18080890921' },{"infor": '李四-18080890921' },{"infor": '王而-18080890921' }
+  ]
 }

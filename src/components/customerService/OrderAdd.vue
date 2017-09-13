@@ -34,9 +34,9 @@
             </div>
         </div>
         -->
-        <div class='dropdown'>
-            <input type="text" 上  class='input col-4' v-model='fahuoKeyword' @keyup="getSearchFahuo()"  placeholder="请输入发货方名称"></input>
-            <div class="dropdown-content" v-show="fahuoShow" style='width:38%'> 
+        <div class='dropdown_fahuo col-4'>
+            <input type="text" 上  class='input' style='width:100%' v-model='fahuoKeyword' @keyup="getSearchFahuo()"  placeholder="请输入发货方名称"></input>
+            <div class="dropdown-content" v-show="fahuoShow" style='width:39%'> 
               <div class='dropdown-select'>
                 <ul class='dropdown-fahuo'>
                   <li v-bind:key="data" v-for="(data,i) in this.fahuoList"  v-on:dblclick="clickFahuo(data)"  style='text-align:center;font-size:100%;padding:1% 0 1% 0'>{{data}}</li>
@@ -53,9 +53,9 @@
         <!-- <span class='label col-1'>地址</span>
         <input class='input col-4' style='height:38px'></input> -->
         <div class='label col-1'>提货地址:</div>
-        <div id='focus_fahuoAd' class='dropdown' style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(1)" @blur="addressVisible=false">
-            <input type="text" v-model="form.baseAddressFa" v-bind:readonly="isReadOnly" class='input col-2' @focus="addressVisible=true" placeholder="请选择发货地址"></input>
-            <div class="dropdown-content2" v-show="addressVisible"> 
+        <div id='focus_fahuoAd' class='dropdown col-2' style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(1)" @blur="addressVisible=false">
+            <input type="text" v-model="form.baseAddressFa" v-bind:readonly="isReadOnly" class='input' style='width:100%' @focus="addressVisible=true" placeholder="请选择发货地址"></input>
+            <div class="dropdown-content2 col-2" v-show="addressVisible"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
                 <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
@@ -76,9 +76,9 @@
         </div>
         <input class='input col-2' v-model='form.pickUpAdr' placeholder="输入详细提货地址"></input>
         <span class='label col-1'>收货地址</span>
-        <div id='focus_shouhuoAd' class="dropdown2" style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(2)" @blur="addressVisible2=false">
-            <input type="text" v-model="form.baseAddressShou" v-bind:readonly="isReadOnly" class='input col-2' @focus="addressVisible2=true" placeholder="请选择提货地址"></input>
-            <div class="dropdown-content2" style='width:19%;margin-left:58.2%;margin-top:7.6%' v-show="addressVisible2"> 
+        <div id='focus_shouhuoAd' class="dropdown col-2" style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(2)" @blur="addressVisible2=false">
+            <input type="text" v-model="form.baseAddressShou" v-bind:readonly="isReadOnly" class='input' style="width:100%" @focus="addressVisible2=true" placeholder="请选择提货地址"></input>
+            <div class="dropdown-content2 col-2" style='margin-top:38px' v-show="addressVisible2"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
                 <li @click="setShi(2)" class='dropdown-li' v-bind:class="{'selectOn':shi2}">城市</li>
@@ -151,7 +151,7 @@
         <label class='label2 col-2' style="height:29px">返款</label>
         <label class='label2 col-1' style="height:29px">金额</label>
         <label class='label2 col-1' style="height:29px">支付方式</label>
-        <input class='input col-1 input-mid' v-model="form.baseFee"></input>
+        <input class='input col-1 input-mid' @click="baseFeeVisible=true" v-model="form.baseFee"></input>
         <input class='input col-1 input-mid' v-model="form.pickUpFee"></input>
         <input class='input col-1 input-mid' v-model="form.sendFee"></input>
         <input class='input col-1 input-mid' v-model="form.packFee"></input>
@@ -178,6 +178,10 @@
         <el-button type="primary" @click="setInsurance">确 定</el-button>
       </div>
     </el-dialog>
+    <!--生成运费弹窗-->
+    <el-dialog :visible.sync="baseFeeVisible" size="tiny">
+      <el-button style='text-align:center;verticle-align:center' @click="getBaseFee">生成运费</el-button>
+    </el-dialog>
   </div>
 </template>
 
@@ -195,20 +199,17 @@ export default {
       fahuoRelated: {
         baseAddressFa: '北京北京海淀区',
         baseAddressShou: '江苏无锡惠山区',
-        shipNam: '张三',
-        shipTel: '12345',
-        pickUpAdr: '1234566',
-        receNam: '李四',
-        receTel: '12345',
-        receAdr: '654321',
-        goodsNam: '沙发',
-        goodsNums: '5',
-        goodsWeight: '120',
-        goodsVolumn: '120',
-        package: '纸箱'
+        shipNam: '张三发',
+        shipTel: '发货方电话',
+        pickUpAdr: '提货地址',
+        receNam: '李四收',
+        receTel: '收货方电话',
+        receAdr: '收货方地址'
       },
       fahuoList: [],
       fahuoShow: false,
+      baseFeeinit: 1000,
+      baseFeeVisible: false,
       /** 地址内容 */
       shenfenSelected: '',
       shiSelected: '',
@@ -305,6 +306,11 @@ export default {
     test () {
       alert('sds')
     },
+    // 自动生成运费
+    getBaseFee () {
+      this.form.baseFee = 1000
+      this.baseFeeVisible = false
+    },
     // 实时搜索发货方列表
     getSearchFahuo () {
       if (this.fahuoKeyword !== '') {
@@ -329,11 +335,6 @@ export default {
       this.form.receNam = this.fahuoRelated.receNam
       this.form.receTel = this.fahuoRelated.receTel
       this.form.receAdr = this.fahuoRelated.receAdr
-      this.form.goodsNam = this.fahuoRelated.goodsNam
-      this.form.goodsNums = this.fahuoRelated.goodsNums
-      this.form.goodsWeight = this.fahuoRelated.goodsWeight
-      this.form.goodsVolumn = this.fahuoRelated.goodsVolumn
-      this.form.package = this.fahuoRelated.package
       this.form.baseAddressFa = this.fahuoRelated.baseAddressFa
       this.form.baseAddressShou = this.fahuoRelated.baseAddressShou
     },
@@ -495,7 +496,13 @@ export default {
     background-color: rgba(151, 168, 190, .3);
     transition: .3s background-color;
 }
+.dropdown_fahuo{
+  display: inline-block;
+  float: left
+}
 .dropdown{
+  display: inline-block;
+  float: left
 }
 .dropdown-content {
   /*
@@ -509,8 +516,8 @@ export default {
   margin-left:9.7%;
   margin-top:3.5% */
     position: absolute;
-    margin-left:9.7%;
-    margin-top:3.5%;
+    margin-left:0%;
+    margin-top:38px;
     width:20%;
     z-index: 1001;
     border: 1px solid rgb(209, 229, 229);
@@ -527,9 +534,8 @@ export default {
   padding: 0;
   box-shadow: 10px 8px 16px 0px rgba(0, 0, 0, 0.5);
   z-index: 1;
-  width:19.5%;
-  margin-left:9.7%;
-  margin-top:9% 
+  width:20%;
+  margin-top:38px 
 }
 
 .dropdown-select{

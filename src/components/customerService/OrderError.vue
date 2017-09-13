@@ -7,7 +7,22 @@
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div style="margin-left:12%">
-          <el-button @click="setting">设置</el-button>
+          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+            <template v-for="(collist,i) in gridOptions.columnDefs">
+              <div class="colVisible">
+                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
+                  {{collist.headerName}}
+                </el-checkbox>
+              </div>
+            </template>
+            <template>
+              <div class="colVisible">
+                <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+              </div>
+            </template>
+          </el-popover>
+          <el-button v-popover:popover1>设置</el-button>
         </div>
       </p>
     </div>
@@ -94,6 +109,7 @@
 </template>
 <script>
 import { AgGridVue } from 'ag-grid-vue'
+import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
 export default {
   created () {
     for (var i = 0; i < 50; i++) {
@@ -128,16 +144,16 @@ export default {
         rowData: null,
         columnDefs: [
           {
-            headerName: '订单ID', width: 200, field: 'orderId', filter: 'text', hide: false
+            headerName: '订单ID', width: 200, field: 'orderId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '物流状态更改', width: 200, field: 'orderLogiState', filter: 'text', hide: false
+            headerName: '物流状态更改', width: 200, field: 'orderLogiState', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '订单位置更改', width: 200, field: 'currPosition', filter: 'text', hide: false
+            headerName: '订单位置更改', width: 200, field: 'currPosition', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '操作', field: 'value', width: 200, cellRendererFramework: 'operateComponent', hide: false
+            headerName: '操作', field: 'value', width: 200, cellRendererFramework: 'operateComponent', hide: false, visible: true, pinned: 'right', suppressMenu: true, suppressSorting: true
           }
         ]
       }
@@ -162,6 +178,18 @@ export default {
     }
   },
   methods: {
+    visibleChoice (i) {
+      if (i === 1) {
+        for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+          this.gridOptions.columnDefs[j].visible = true
+        }
+      } else if (i === 2) {
+        for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+          this.gridOptions.columnDefs[j].visible = false
+        }
+      }
+      this.updataColumnDefs(this.gridOptions.columnDefs)
+    },
     createRowData () {
       this.gridOptions.rowData = this.orderErrorList
     },
@@ -179,7 +207,7 @@ export default {
     },
     updataColumnDefs (collist) {
       for (let i = 0; i < collist.length; i++) {
-        this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+        this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
       }
     },
     // 编辑/增加异动信息

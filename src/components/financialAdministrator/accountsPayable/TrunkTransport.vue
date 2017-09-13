@@ -30,15 +30,9 @@
       <div>
         <el-form :model="filterForm" ref="filterForm" :inline="true">
           <el-form-item label="订单时间:">
-            <el-form-item prop="startTime">
-              <el-date-picker type="date" placeholder="选择开始日期" v-model="filterForm.startTime"
-                              style="width: 150px"></el-date-picker>
-            </el-form-item>
-            <span>--&nbsp</span>
-            <el-form-item prop="endTime">
-              <el-date-picker type="date" placeholder="选择结束日期" v-model="filterForm.endTime"
-                              style="width: 150px"></el-date-picker>
-            </el-form-item>
+            <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+                            :picker-options="pickerOptions" range-separator='/' style="width: 200px">
+            </el-date-picker>
           </el-form-item>
           <el-form-item label="区间:">
             <el-select v-model="filterForm.startPoint" placeholder="起点" style="width: 100px">
@@ -54,6 +48,20 @@
             </el-select>
           </el-form-item>
           <el-button @click="drawGrid(1)">提取</el-button>
+        </el-form>
+      </div>
+      <div style="float: left">
+        <el-form :model="totalForm" ref="totalForm" :inline="true">
+          <el-form-item label="中转费合计:">
+            <el-input v-model="totalForm.transferFeeTotal" style="width: 100px" readonly="true"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div style="float: left">
+        <el-form :model="totalForm" ref="totalForm" :inline="true">
+          <el-form-item label="付款金额合计:">
+            <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
+          </el-form-item>
         </el-form>
       </div>
       <div style="float: right">
@@ -75,6 +83,7 @@
                    :rowHeight=40
                    :headerHeight=40
 
+                   :rowDoubleClicked="detailDoubleClick"
                    :pagination="true"
                    :paginationPageSize="10"
                    :suppressPaginationPanel="true"
@@ -291,7 +300,7 @@
     </el-dialog>
 
     <!--订单详情弹框-->
-    <el-dialog title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
+    <el-dialog title="订单详情:" :visible.sync="detailVisible" :closeOnClickModal="false">
       <order-details :orderId="filterForm.orderId"></order-details>
     </el-dialog>
   </div>
@@ -367,7 +376,10 @@
               headerName: '中转路线', width: 150, field: 'companyNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '中转日期', width: 150, field: 'changeFee', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '中转日期', width: 150, field: 'changeTim', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '中转金额', width: 150, field: 'changeFee', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '送货方式', width: 150, field: 'sendMode', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -912,20 +924,6 @@
     }
   }
 </script>
-<style>
-  .del-but {
-    cursor: pointer;
-    float: right;
-    margin-right: 10px;
-    border-radius: 4px;
-    background: #fff;
-    border: 1px solid rgb(191, 217, 216);
-    color: rgb(31, 61, 60);
-    padding: 5px 10px;
-    font-size: 10px
-  }
-</style>
-
 <!--//发出请求-->
 <!--filterForm: {-->
 <!--startTime: '', // 开始时间-->

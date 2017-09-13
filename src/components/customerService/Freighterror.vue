@@ -7,7 +7,22 @@
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div>
-          <el-button @click="setting">设置</el-button>
+           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+            <template v-for="(collist,i) in gridOptions.columnDefs">
+              <div class="colVisible">
+                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
+                  {{collist.headerName}}
+                </el-checkbox>
+              </div>
+            </template>
+            <template>
+              <div class="colVisible">
+                <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+              </div>
+            </template>
+          </el-popover>
+          <el-button v-popover:popover1>设置</el-button>
         </div>
       </p>
     </div>
@@ -106,7 +121,7 @@
 </template>
 <script>
   import { AgGridVue } from 'ag-grid-vue'
-
+  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   export default {
     created () {
       for (var i = 0; i < 50; i++) {
@@ -146,48 +161,43 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '订单ID', width: 150, field: 'orderID', filter: 'text', hide: false
+              headerName: '订单ID', width: 150, field: 'orderID', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '异动支出', width: 150, field: 'unActExpense', filter: 'text', hide: false
+              headerName: '异动支出', width: 150, field: 'unActExpense', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '异动收入', width: 150, field: 'unActIncome', filter: 'text', hide: false
+              headerName: '异动收入', width: 150, field: 'unActIncome', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '异动时间', width: 150, field: 'unActTim', filter: 'text', hide: false
+              headerName: '异动时间', width: 150, field: 'unActTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '异动描述', width: 150, field: 'unActDes', filter: 'text', hide: false
+              headerName: '异动描述', width: 150, field: 'unActDes', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '客服名称', width: 150, field: 'serviceNam', filter: 'text', hide: false
-            },
-            {
-              headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false
+              headerName: '客服名称', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             }
           ]
         }
       }
     },
     components: {
-      'ag-grid-vue': AgGridVue,
-      operateComponent: {
-        template: '<el-button class="del-but" style="margin-left:25%"  size="small" type="info" @click="setDelVisable">删 除</el-button>',
-        methods: {
-          setDelVisable () {
-            this.params.context.componentParent.delVisable = true
-          },
-          setEditVisable () {
-            /* var vehicleform = this.params.context.componentParent.vehicleForm
-            vehicleform.licePlateNum = vehicleList[this.params.node.rowIndex].licePlateNum */
-            this.params.context.componentParent.addEditVisable = true
-            this.params.context.componentParent.unActForm = this.params.data
-          }
-        }
-      }
+      'ag-grid-vue': AgGridVue
     },
     methods: {
+      visibleChoice (i) {
+        if (i === 1) {
+          for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+            this.gridOptions.columnDefs[j].visible = true
+          }
+        } else if (i === 2) {
+          for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+            this.gridOptions.columnDefs[j].visible = false
+          }
+        }
+        this.updataColumnDefs(this.gridOptions.columnDefs)
+      },
       createRowData () {
         this.gridOptions.rowData = this.unActList
       },
@@ -205,7 +215,7 @@
       },
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
-          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
         }
       },
       // 设置增加弹窗
@@ -245,7 +255,7 @@
       this.createRowData()
     },
     mounted () {
-      this.changeColumnDefsBoolen()
+      // this.changeColumnDefsBoolen()
       this.calculateGrid()
     }
   }

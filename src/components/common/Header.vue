@@ -3,7 +3,6 @@
     <div class="logo">物流管理系统</div>
     <div class="user-info">
 
-
       <el-dropdown trigger="click" @command="handleCommand">
         <span class="el-dropdown-link">
           <img src="../../../static/img/img.jpg" class="user-logo">
@@ -42,7 +41,7 @@
       <!--修改密码提示框-->
       <el-dialog title="修改密码:" :visible.sync="confirmPasswordVisable" size="tiny" top="30%" :closeOnClickModal="false">
         <el-form :model="personalForm" :rules="rules" ref="personalForm">
-          <el-form-item label="请输入登陆密码:" :label-width="formLabelWidth" prop="password">
+          <el-form-item label="登陆旧密码:" :label-width="formLabelWidth" prop="password">
             <el-input type="password" v-model="personalForm.password"></el-input>
           </el-form-item>
         </el-form>
@@ -123,7 +122,7 @@
             trigger: 'blur'
           }]
         },
-        formLabelWidth: '25%'
+        formLabelWidth: '30%'
       }
     },
     computed: {

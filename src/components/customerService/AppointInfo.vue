@@ -27,9 +27,10 @@
           <el-option key="yes" label="待生成" value="yes"></el-option>
           <el-option key="no" label="已生成" value="no"></el-option>
         </el-select>
+        <el-button style="margin-right:5%">查找</el-button>
       </p>
       <p style="margin-top:1%;float:right;margin-right:5%">
-        <el-button>查找</el-button>
+        <!--<el-button>查找</el-button>-->
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
             <div class="colVisible">
@@ -380,7 +381,7 @@
       'ag-grid-vue': AgGridVue,
       operateComponent: {
 //        template: '<el-span><el-button class="del-but" @click="vehicleDel">删 除</el-button><el-button class="del-but" @click="vehicleEdit">编 辑</el-button></el-span>',
-        template: '<el-span><el-button  class="del-but" @click="particulars()"> 详 情 </el-button></el-span>',
+        template: '<el-span><el-button  class="del-but" @click="particulars()" type="info"> 详 情 </el-button></el-span>',
         methods: {
           particulars () {
             this.params.context.componentParent.detailsVisable = true
@@ -394,7 +395,7 @@
         }
       },
       receivingstate: {
-        template: '<span><el-button class="del-but" @click="edit">编 辑</el-button></span>',
+        template: '<span><el-button class="del-but" @click="edit" type="info">编 辑</el-button></span>',
         methods: {
           edit () {
             this.params.context.componentParent.appointlnfoVisable = true
@@ -461,17 +462,17 @@
   }
 </script>
 <style>
-  .del-but {
-    cursor: pointer;
-    float: right;
-    margin-right: 10px;
-    margin: 3px;
-    border-radius: 4px;
-    background:#ff4949;
-    border: 1px solid rgb(191, 217, 216);
-    color: #f9f9f9;
-    font-size: 0.6em;
-  }
+  /*.del-but {*/
+    /*cursor: pointer;*/
+    /*float: right;*/
+    /*margin-right: 10px;*/
+    /*margin: 3px;*/
+    /*border-radius: 4px;*/
+    /*background:#ff4949;*/
+    /*border: 1px solid rgb(191, 217, 216);*/
+    /*color: #f9f9f9;*/
+    /*font-size: 0.6em;*/
+  /*}*/
 
   .appointmenttime {
     float: left;

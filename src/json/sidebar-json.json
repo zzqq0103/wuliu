@@ -60,8 +60,18 @@
         "items": [
             {
                 "icon": "car",
-                "index": "vehicle",
-                "title": "车辆信息管理"
+                "index": "1",
+                "title": "车辆信息管理",
+                "subs":[
+                {
+                  "index":"shortvehicle",
+                  "title":"接送货车辆"
+                },
+                {
+                  "index":"longvehicle",
+                  "title":"长途车辆"
+                 }
+                ]
             },
             {
                 "icon": "person",
@@ -75,8 +85,18 @@
             },
             {
                 "icon": "enterprise",
-                "index": "enterprise",
-                "title": "外包企业信息管理"
+                "index": "2",
+                "title": "外包企业",
+                "subs":[
+                {
+                  "index":"enterprise",
+                  "title":"外包企业信息管理"
+                },
+                {
+                  "index":"enterpriseline",
+                  "title":"外包企业路线管理"
+                }
+                ]
             }
         ]
     },
@@ -171,7 +191,7 @@
             {
                 "icon": "tripartite",
                 "index": "tripartiteSettlement",
-                "title": "三方结算"
+                "title": "三方盈收"
             },
             {
                 "icon": "finance",

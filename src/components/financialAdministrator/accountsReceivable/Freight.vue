@@ -16,15 +16,6 @@
             <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
                             :picker-options="pickerOptions" range-separator='/' style="width: 200px">
             </el-date-picker>
-            <!--<el-form-item prop="startTime">-->
-            <!--<el-date-picker type="date" placeholder="选择开始日期" v-model="filterForm.startTime"-->
-            <!--style="width: 150px"></el-date-picker>-->
-            <!--</el-form-item>-->
-            <!--<span>&#45;&#45;&nbsp</span>-->
-            <!--<el-form-item prop="endTime">-->
-            <!--<el-date-picker type="date" placeholder="选择结束日期" v-model="filterForm.endTime"-->
-            <!--style="width: 150px"></el-date-picker>-->
-            <!--</el-form-item>-->
           </el-form-item>
           <el-form-item label="区间:">
             <el-select v-model="filterForm.startPoint" placeholder="起点" style="width: 80px">
@@ -143,23 +134,6 @@
         layout="total,sizes,prev,pager,next"
         :total="rowCount"></el-pagination>
     </div>
-    <!--列表切换显示-->
-    <!--<el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false" top="30%">-->
-    <!--<template v-for="(collist,i) in gridOptions.columnDefs">-->
-    <!--<div v-if="collist.children">-->
-    <!--</div>-->
-    <!--<div v-else>-->
-    <!--<el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)">-->
-    <!--{{collist.headerName}}-->
-    <!--</el-checkbox>-->
-    <!--</div>-->
-    <!--</template>-->
-    <!--<div slot="footer" class="dialog-footer">-->
-    <!--<el-button type="primary" @click="colVisible = false">确 定</el-button>-->
-    <!--</div>-->
-    <!--</el-dialog>-->
-
-
     <!--
     --核销界面
     -->
