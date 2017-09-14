@@ -88,9 +88,10 @@
         <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
           <el-input v-model="personnelForm.tel" :rules="rules" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="收货地址：" style="clear:both;width:100%" :label-width="formLabelWidth" prop="adr">
-          <div id='focus2' class='dropdown2' style='outline:none' contenteditable="true" tabindex="0"  @click="getFocus(2)" @blur="addressVisible2=false">
-            <el-input v-model="receAdr" placeholder="请选择收货地址" readonly="readonly" style="width: 142.5px;"></el-input>
+        <el-form-item label="企业详细地址：" style="clear:both;width:100%" :label-width="formLabelWidth" prop="adr">
+          <div id='focus2' class='dropdown2' style='outline:none' tabindex="0"  @click="getFocus(2)" @blur="addressVisible2=false">
+            <el-input v-model="receAdr" style="width: 142.5px;" @blur="adrCheck"></el-input>
+            <div class="el-form-item__error" v-show="messageErro">请输入地址</div>
             <div class="dropdown-content" style='width:142.5px' v-show="addressVisible2">
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
@@ -114,7 +115,7 @@
               </div>
             </div>
           </div>
-          <el-input class='addressDetail' placeholder="输入详细收货地址"style="float: right" v-model="personnelForm.compAdr"></el-input>
+          <el-input v-model="compAdr" style="width: 122.5px;left: 40px" @blur="adrCheck"></el-input>
         </el-form-item>
         <el-form-item label="所属片区:" :label-width="formLabelWidth" prop="area">
           <el-input v-model="personnelForm.area" :rules="rules" style="width: 80%"></el-input>
@@ -335,11 +336,6 @@
             required: true,
             message: '请输入企业名称',
             trigger: 'blur'
-          }],
-          adr: [{
-            required: true,
-            message: '请输入地址',
-            trigger: 'blur'
           }]
         },
         colVisible: false,
@@ -386,7 +382,8 @@
         receTipList: ['单位111111111', '单位2', '单位3'],
         receNam: '',
         receTel: '',
-        receAdr: ''
+        receAdr: '',
+        messageErro: false
       }
     },
     components: {
@@ -626,6 +623,13 @@
               }
             })
           }
+        }
+      },
+      adrCheck () {
+        if (this.receAdr !== '' && this.compAdr !== '') {
+          this.messageErro = false
+        } else {
+          this.messageErro = true
         }
       }
     },
