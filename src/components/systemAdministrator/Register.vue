@@ -13,9 +13,8 @@
             <el-cascader
               expand-trigger="hover"
               :options="ruleForm2.stationOptions"
-              v-model="ruleForm2.selectedOptions2"
               @change="handleChange"
-              placeholder="北京 / 西城区">
+              :placeholder="ruleForm2.stationOptions[0].children[0].label">
             </el-cascader>
           </div>
           <el-button style="width: 70px; height: 35px" @click="editVisible = true" type="primary">编 辑</el-button>
@@ -42,8 +41,8 @@
         <el-tree
           :data="data2"
           show-checkbox
+          ref="tree"
           node-key="id"
-          :default-expanded-keys="[1, 2]"
           style="width: 100%"
           :props="defaultProps">
         </el-tree>
@@ -100,64 +99,61 @@
         }
         callback()
       }
-      var checkStation = (rule, value, callback) => {
-        return callback(new Error('站点/网点不能为空'))
-      }
       return {
         data2: [{
-          id: 1,
           label: '北京',
           children: [{
-            id: 3,
+            id: 1,
             label: '西城区'
           }, {
-            id: 4,
+            id: 2,
             label: '朝阳区'
           }, {
-            id: 5,
+            id: 3,
             label: '海淀区'
           }]
         }, {
-          id: 2,
           label: '南京',
           children: [{
-            id: 6,
+            id: 4,
             label: '玄武区'
           }, {
-            id: 7,
+            id: 5,
             label: '秦淮区'
           }, {
-            id: 8,
+            id: 6,
             label: '鼓楼区'
           }]
         }],
         editVisible: false,
         rules: {},
-        stationForm: {
-          station: '',
-          branch: ''
-        },
         ruleForm2: {
           selectvalue: 1,
           queryItemOptions: [{
 
             value: 1,
-            label: '调度管理员'
+            label: '营运'
           }, {
             value: 2,
-            label: '客服人员'
+            label: '客服'
           }, {
             value: 3,
-            label: '外包人员'
+            label: '财务核销'
           }, {
             value: 4,
-            label: '财务核销人员'
+            label: '财务审核'
           }, {
             value: 5,
-            label: '财务审核人员'
+            label: '高级财务管理员'
           }, {
             value: 6,
+            label: '调度'
+          }, {
+            value: 7,
             label: '业务员'
+          }, {
+            value: 8,
+            label: '短途司机'
           }],
           name: '',
           pass: '666666',
@@ -204,9 +200,6 @@
           ],
           name: [
             {validator: checkName, trigger: 'blur'}
-          ],
-          stationOptions: [
-            {validator: checkStation, trigger: 'blur'}
           ]
         }
       }
@@ -217,16 +210,16 @@
           if (valid) {
             alert('submit!')
           } else {
-            console.log('error submit!!')
+            alert('error submit!!')
             return false
           }
         })
       },
-      deleteStation (xo) {
-        xo
+      deleteStation () {
+        alert(this.$refs.tree.getCheckedKeys())
       },
       handleChange (value) {
-        console.log(value)
+        alert(value)
       }
     }
   }

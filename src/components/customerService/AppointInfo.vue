@@ -28,9 +28,6 @@
           <el-option key="no" label="已生成" value="no"></el-option>
         </el-select>
         <el-button style="margin-right:5%">查找</el-button>
-      </p>
-      <p style="margin-top:1%;float:right;margin-right:5%">
-        <!--<el-button>查找</el-button>-->
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
             <div class="colVisible">
@@ -47,7 +44,26 @@
           </template>
         </el-popover>
         <el-button v-popover:popover1>设置</el-button>
-        <el-button>导出</el-button>
+      </p>
+      <p style="margin-top:1%;float:right;margin-right:5%">
+        <!--<el-button>查找</el-button>-->
+        <!--<el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">-->
+          <!--<template v-for="(collist,i) in gridOptions.columnDefs">-->
+            <!--<div class="colVisible">-->
+              <!--<el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">-->
+                <!--{{collist.headerName}}-->
+              <!--</el-checkbox>-->
+            <!--</div>-->
+          <!--</template>-->
+          <!--<template>-->
+            <!--<div class="colVisible">-->
+              <!--<el-button @click="visibleChoice(1)" size="small">全选</el-button>-->
+              <!--<el-button @click="visibleChoice(2)" size="small">全不选</el-button>-->
+            <!--</div>-->
+          <!--</template>-->
+        <!--</el-popover>-->
+        <!--<el-button v-popover:popover1>设置</el-button>-->
+        <!--<el-button>导出</el-button>-->
       </p>
     </div>
     <el-dialog title="预约单状态:" :visible.sync="appointlnfoVisable">
@@ -126,7 +142,12 @@
         layout="total,sizes,prev,pager,next"
         :total="rowCount">
       </el-pagination>
+      <p style="margin-top:1%;float:right;margin-right:5%">
+        <!--<el-button>查找</el-button>-->
+        <el-button>导出</el-button>
+      </p>
     </div>
+
     <!--<div>-->
     <!--<p style="margin-top:1%;float:right;margin-right:5%;width:50%">-->
     <!--<el-button style="margin-right:6%">提 交 更 改</el-button>-->
