@@ -210,16 +210,16 @@
           if (valid) {
             alert('submit!')
           } else {
-            console.log('error submit!!')
+            alert('error submit!!')
             return false
           }
         })
       },
       deleteStation () {
-        console.log(this.$refs.tree.getCheckedKeys())
+        alert(this.$refs.tree.getCheckedKeys())
       },
       handleChange (value) {
-        console.log(value)
+        alert(value)
       }
     }
   }
