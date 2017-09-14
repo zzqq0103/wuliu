@@ -45,10 +45,10 @@
           <el-button type="primary" @click="orderformerVisable = false">确 定</el-button>
         </div>
       </el-dialog>
-      <p style="margin-top:1%;float:right;margin-right:5%">
-        <!--<el-button>查找</el-button>-->
-        <el-button>导出</el-button>
-      </p>
+      <!--<p style="margin-top:1%;float:right;margin-right:5%">-->
+        <!--&lt;!&ndash;<el-button>查找</el-button>&ndash;&gt;-->
+        <!--<el-button>导出</el-button>-->
+      <!--</p>-->
     </div>
     <div style="clear: both;">
     </div>
@@ -70,6 +70,10 @@
           layout="total,sizes,prev,pager,next"
           :total="rowCount">
         </el-pagination>
+        <p style="margin-top:1%;float:right;margin-right:5%">
+          <!--<el-button>查找</el-button>-->
+          <el-button>导出</el-button>
+        </p>
       </div>
       <!--<p style="margin-top:1%;float:right;margin-right:5%;width:50%">-->
       <!--<el-button style="margin-right:6%">确 认 更 新</el-button>-->
