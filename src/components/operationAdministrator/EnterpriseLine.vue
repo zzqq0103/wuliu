@@ -9,11 +9,11 @@
         </div>
         <div>
           <el-form v-model="filterForm" ref="filterForm" inline="true">
-            <el-form-item label="外包企业名称">
+            <el-form-item label="外包企业名称：">
               <el-input v-model="filterForm.companyName"></el-input>
             </el-form-item>
             <el-button @click="">提取</el-button>
-            <el-button @click="addForm" style="margin-left: 50px">添加</el-button>
+            <el-button @click="addForm" style="margin-left: 50px">注册</el-button>
             <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
               <template v-for="(collist,i) in gridOptions.columnDefs">
                 <div class="colVisible">
@@ -60,34 +60,64 @@
         :total="rowCount">
       </el-pagination>
     </div>
-
-    <el-dialog title="外包企业信息:" :visible.sync="enterpriseVisable">
+<!--添加企业路线-->
+    <el-dialog title="外包企业路线注册:" :visible.sync="enterpriseVisable" size="tiny">
       <el-form :model="enterpriseForm" :rules="rules" ref="enterpriseForm">
-        <el-form-item label="公司名称:" :label-width="formLabelWidth">
-          <el-input v-model="enterpriseForm.companyname"></el-input>
+        <el-form-item label="公司名称:" :label-width="formLabelWidth" prop="companyName">
+          <el-input v-model="enterpriseForm.companyName" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="中转起始点:" :label-width="formLabelWidth">
-          <el-input v-model="enterpriseForm.changeStart"></el-input>
+        <el-form-item label="中转起始点:" :label-width="formLabelWidth" prop="changeStart">
+          <el-input v-model="enterpriseForm.changeStart" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="中转目的地:" :label-width="formLabelWidth">
-          <el-input v-model="enterpriseForm.changeEnd"></el-input>
+        <el-form-item label="中转目的地:" :label-width="formLabelWidth" prop="changeEnd">
+          <el-input v-model="enterpriseForm.changeEnd" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="中转企业联系人:" :label-width="formLabelWidth">
-          <el-input v-model="enterpriseForm.changeName"></el-input>
+        <el-form-item label="中转企业联系人:" :label-width="formLabelWidth" prop="changeName">
+          <el-input v-model="enterpriseForm.changeName" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="联系方式:" :label-width="formLabelWidth">
-          <el-input v-model="enterpriseForm.id"></el-input>
+        <el-form-item label="联系方式:" :label-width="formLabelWidth" prop="id">
+          <el-input v-model="enterpriseForm.id" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="合同号:" :label-width="formLabelWidth">
-          <el-input v-model="enterpriseForm.contractId"></el-input>
+        <el-form-item label="合同号:" :label-width="formLabelWidth" prop="contractId">
+          <el-input v-model="enterpriseForm.contractId" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="合同价格:" :label-width="formLabelWidth">
-          <el-input v-model="enterpriseForm.contractPrice"></el-input>
+        <el-form-item label="合同价格:" :label-width="formLabelWidth" prop="contractPrice">
+          <el-input v-model="enterpriseForm.contractPrice" style="width: 50%"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="enterpriseVisable = false">取 消</el-button>
         <el-button type="primary" @click="enterpriseVisable = false">确 定</el-button>
+      </div>
+    </el-dialog>
+<!--编辑企业路线-->
+    <el-dialog title="外包企业路线注册:" :visible.sync="editVisible" size="tiny">
+      <el-form :model="enterpriseForm" :rules="rules" ref="enterpriseForm">
+        <el-form-item label="公司名称:" :label-width="formLabelWidth" prop="companyName">
+          <el-input v-model="enterpriseForm.companyName" style="width: 50%"></el-input>
+        </el-form-item>
+        <el-form-item label="中转起始点:" :label-width="formLabelWidth" prop="changeStart">
+          <el-input v-model="enterpriseForm.changeStart" style="width: 50%"></el-input>
+        </el-form-item>
+        <el-form-item label="中转目的地:" :label-width="formLabelWidth" prop="changeEnd">
+          <el-input v-model="enterpriseForm.changeEnd" style="width: 50%"></el-input>
+        </el-form-item>
+        <el-form-item label="中转企业联系人:" :label-width="formLabelWidth" prop="changeName">
+          <el-input v-model="enterpriseForm.changeName" style="width: 50%"></el-input>
+        </el-form-item>
+        <el-form-item label="联系方式:" :label-width="formLabelWidth" prop="id">
+          <el-input v-model="enterpriseForm.id" style="width: 50%" disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="合同号:" :label-width="formLabelWidth" prop="contractId">
+          <el-input v-model="enterpriseForm.contractId" style="width: 50%" disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="合同价格:" :label-width="formLabelWidth" prop="contractPrice">
+          <el-input v-model="enterpriseForm.contractPrice" style="width: 50%" disabled="true"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editVisible = false">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -126,8 +156,9 @@
         colVisible: false,
         enterpriseVisable: false,
         enterpriseDelVisable: false,
+        editVisible: false,
         enterpriseForm: {
-          'companyname': '', // 外包公司名称
+          'companyName': '', // 外包公司名称
           'changeStart': '', // 中转起始地
           'changeEnd': '', // 中转目的地
           'changeName': '', // 中转企业联系人
@@ -138,7 +169,29 @@
         filterForm: {
           'companyName': ''
         },
-        rules: {},
+        rules: {
+          companyName: [{
+            required: true, message: '请输入公司名称', trigger: 'blur'
+          }],
+          changeStart: [{
+            required: true, message: '请输入中转起始地', trigger: 'blur'
+          }],
+          changeEnd: [{
+            required: true, message: '请输入中转目的地', trigger: 'blur'
+          }],
+          changeName: [{
+            required: true, message: '请输入中转企业联系人', trigger: 'blur'
+          }],
+          id: [{
+            required: true, message: '请输入联系方式', trigger: 'blur'
+          }],
+          contractId: [{
+            required: true, message: '请输入合同号', trigger: 'blur'
+          }],
+          contractPrice: [{
+            required: true, message: '请输入合同价格', trigger: 'blur'
+          }]
+        },
         formLabelWidth: '150px',
         gridOptions: {
           context: {
@@ -256,13 +309,13 @@
       // 增加
       addForm () {
         this.enterpriseVisable = true
-        this.enterpriseForm.licePlateNum = ''
-        this.enterpriseForm.driverName = ''
-        this.enterpriseForm.tel = ''
-        this.enterpriseForm.capacity = ''
-        this.enterpriseForm.carType = ''
-        this.enterpriseForm.pickUpArea = ''
-        this.enterpriseForm.carPosition = ''
+        this.enterpriseForm.companyName = ''
+        this.enterpriseForm.changeStart = ''
+        this.enterpriseForm.changeEnd = ''
+        this.enterpriseForm.changeName = ''
+        this.enterpriseForm.id = ''
+        this.enterpriseForm.contractId = ''
+        this.enterpriseForm.contractPrice = ''
       },
       visibleChoice (i) {
         if (i === 1) {
