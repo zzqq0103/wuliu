@@ -124,23 +124,30 @@
           ]
         },
         queryItemOptions: [{
+
           value: 1,
-          label: '调度管理员'
+          label: '营运'
         }, {
           value: 2,
-          label: '客服人员'
+          label: '客服'
         }, {
           value: 3,
-          label: '外包人员'
+          label: '财务核销'
         }, {
           value: 4,
-          label: '财务核销人员'
+          label: '财务审核'
         }, {
           value: 5,
-          label: '财务审核人员'
+          label: '高级财务管理员'
         }, {
           value: 6,
+          label: '调度'
+        }, {
+          value: 7,
           label: '业务员'
+        }, {
+          value: 8,
+          label: '短途司机'
         }],
         selectvalue: 1,
         orderlist: [],
