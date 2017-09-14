@@ -77,7 +77,7 @@
 
 
     <!--添加客户信息-->
-    <el-dialog title="添加客户信息1:" :visible.sync="addFormVisible" size="tiny">
+    <el-dialog title="添加客户信息:" :visible.sync="addFormVisible" size="tiny">
       <el-form :model="personnelForm" ref="personnelForm" :rules="rules">
         <el-form-item label="客户企业名称:" :label-width="formLabelWidth" prop="clientCompNam">
           <el-input v-model="personnelForm.clientCompNam" style="width: 80%"></el-input>
@@ -125,7 +125,7 @@
           <el-button type="primary" @click="createSalesmanData" >选择业务员</el-button>
         </el-form-item>
         <el-form-item label="是否三方:" :label-width="formLabelWidth" prop="isTril">
-          <el-select v-model="personnelForm.isTril" placeholder="请选择" style="width:30%">
+          <el-select v-model="personnelForm.isTril" style="width:30%">
             <el-option label="是" value="yes"></el-option>
             <el-option label="否" value="no"></el-option>
           </el-select>
@@ -133,7 +133,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="vehicleVisable = false">取 消</el-button>
-        <el-button type="primary" @click="vehicleVisable = false">确 定</el-button>
+        <el-button type="primary" @click="vehicleVisable = false">注 册</el-button>
       </div>
     </el-dialog>
 
@@ -155,27 +155,27 @@
 
     <!--编辑客户信息-->
     <el-dialog title="编辑:" :visible.sync="editFormVisible" size="tiny" :closeOnClickModal="false">
-      <el-form :model="personnelForm" :rules="rules" ref="personnelForm">
+      <el-form :model="personnelForm" :rules="rules" ref="personnelForm" prop="clientCompNam">
         <el-form-item label="客户企业名称:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.clientCompNam" style="width: 80%" prop="clientCompNam"></el-input>
+          <el-input v-model="personnelForm.clientCompNam" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="联系人姓名:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.nam" style="width: 50%" prop="nam"></el-input>
+        <el-form-item label="联系人姓名:" :label-width="formLabelWidth" prop="nam">
+          <el-input v-model="personnelForm.nam" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.tel" style="width: 50%" prop="tel"></el-input>
+        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
+          <el-input v-model="personnelForm.tel" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="企业详细地址:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.compAdr" style="width: 80%" prop="compAdr"></el-input>
+        <el-form-item label="企业详细地址:" :label-width="formLabelWidth" prop="compAdr">
+          <el-input v-model="personnelForm.compAdr" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="所属片区:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.area" style="width: 80%" prop="area"></el-input>
+        <el-form-item label="所属片区:" :label-width="formLabelWidth" prop="area">
+          <el-input v-model="personnelForm.area" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="业务员ID:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.salesmanId" style="width: 50%" prop="salesmanId"></el-input>
+        <el-form-item label="业务员:" :label-width="formLabelWidth" prop="salesmanData">
+          <el-input v-model="personnelForm.salesmanId" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="是否三方:" :label-width="formLabelWidth" prop="salesmanId">
-          <el-select v-model="personnelForm.isTril" placeholder="请选择" style="width:30%">
+          <el-select v-model="personnelForm.isTril" style="width:30%">
             <el-option label="是" value="yes"></el-option>
             <el-option label="否" value="no"></el-option>
           </el-select>
@@ -209,6 +209,18 @@
       this.regionList = regionJson
     },
     data () {
+//      验证电话号码
+      let validatePhoneNum = (rule, value, callback) => {
+        let reg = /^1[3|4|5|7|8][0-9]{9}$/
+        if (value === '') {
+          callback(new Error('请输入电话号码'))
+        } else {
+          if (reg.test(value) === false) {
+            callback(new Error('请输入正确电话号码'))
+          }
+          callback()
+        }
+      }
       return {
         gridOptions: {
           rowData: null,
@@ -313,8 +325,7 @@
             trigger: 'blur'
           }],
           tel: [{
-            required: true,
-            message: '请输入联系电话',
+            validator: validatePhoneNum,
             trigger: 'blur'
           }],
           compAdr: [{
@@ -324,17 +335,17 @@
           }],
           area: [{
             required: true,
-            message: '请输入企业名称',
+            message: '请输入片区',
             trigger: 'blur'
           }],
           isTril: [{
             required: true,
-            message: '请输入企业名称',
+            message: '请输入三方信息',
             trigger: 'blur'
           }],
           salesmanData: [{
             required: true,
-            message: '请输入企业名称',
+            message: '请输入业务员',
             trigger: 'blur'
           }]
         },
