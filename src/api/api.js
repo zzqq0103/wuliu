@@ -55,3 +55,8 @@ export const getQueryTransOrderList = params => {
 
 // -------  已 长 途 运 输 订 单 结 束 --------
 
+// 获取装载单中的订单列表
+
+export const getOrderList = params => {
+  return axios.get(`${baseUrl}/Loader/getOrderList`, {params: params})
+}

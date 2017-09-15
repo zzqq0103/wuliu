@@ -30,15 +30,15 @@
     <div style="clear: both;">
     </div>
     <div style="margin-top:2%">
-      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue" 
-        :gridOptions="gridOptions" 
-        :suppressMovableColumns="true" 
-        :enableColResize="true" 
-        :enableSorting="true" 
-        :enableFilter="true" 
-        :groupHeaders="true" 
+      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+        :gridOptions="gridOptions"
+        :suppressMovableColumns="true"
+        :enableColResize="true"
+        :enableSorting="true"
+        :enableFilter="true"
+        :groupHeaders="true"
         :suppressCellSelection="true"
-        :rowHeight=40 
+        :rowHeight=40
         :headerHeight=40
         :pagination="true"
         :paginationPageSize="10"

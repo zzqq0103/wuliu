@@ -1,13 +1,21 @@
 <template>
   <div>
     <div style="text-align: center;margin: 10px">
-      <h2>客户信息管理</h2>
+      <h2>常用客户信息管理</h2>
     </div>
     <div>
+      <div style="position: absolute">
+        <el-form v-model="filterForm" ref="filterForm" inline="true"s>
+          <el-form-item label="常用联系人">
+            <el-input v-model="filterForm.companyName"></el-input>
+          </el-form-item>
+          <el-button @click="">提取</el-button>
+        </el-form>
+      </div>
       <div style="float: right">
         <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged"></el-input>
       </div>
-      <div>
+      <div style="float: right;margin-right: 20px">
         <el-button @click="addForm">添加</el-button>
         <!--<el-button @click="setting">设置</el-button>-->
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
@@ -261,30 +269,6 @@
               visible: true
             },
             {
-              headerName: '所属片区',
-              width: 150,
-              field: 'area',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '业务员ID',
-              width: 150,
-              field: 'salesmanId',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '是否三方',
-              width: 150,
-              field: 'isTril',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
               headerName: '操作',
               field: 'value',
               width: 120,
@@ -292,13 +276,15 @@
               suppressSorting: true,
               cellRendererFramework: 'operateComponent',
               hide: false,
-              visible: true,
-              pinned: 'right'
+              visible: true
             }
           ],
           context: {
             componentParent: this
           }
+        },
+        filterForm: {
+          'companyName': ''
         },
         personnelForm: {
           clientCompNam: '',

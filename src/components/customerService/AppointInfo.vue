@@ -27,9 +27,7 @@
           <el-option key="yes" label="待生成" value="yes"></el-option>
           <el-option key="no" label="已生成" value="no"></el-option>
         </el-select>
-      </p>
-      <p style="margin-top:1%;float:right;margin-right:5%">
-        <el-button>查找</el-button>
+        <el-button style="margin-right:5%">查找</el-button>
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
             <div class="colVisible">
@@ -46,7 +44,26 @@
           </template>
         </el-popover>
         <el-button v-popover:popover1>设置</el-button>
-        <el-button>导出</el-button>
+      </p>
+      <p style="margin-top:1%;float:right;margin-right:5%">
+        <!--<el-button>查找</el-button>-->
+        <!--<el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">-->
+          <!--<template v-for="(collist,i) in gridOptions.columnDefs">-->
+            <!--<div class="colVisible">-->
+              <!--<el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">-->
+                <!--{{collist.headerName}}-->
+              <!--</el-checkbox>-->
+            <!--</div>-->
+          <!--</template>-->
+          <!--<template>-->
+            <!--<div class="colVisible">-->
+              <!--<el-button @click="visibleChoice(1)" size="small">全选</el-button>-->
+              <!--<el-button @click="visibleChoice(2)" size="small">全不选</el-button>-->
+            <!--</div>-->
+          <!--</template>-->
+        <!--</el-popover>-->
+        <!--<el-button v-popover:popover1>设置</el-button>-->
+        <!--<el-button>导出</el-button>-->
       </p>
     </div>
     <el-dialog title="预约单状态:" :visible.sync="appointlnfoVisable">
@@ -125,7 +142,12 @@
         layout="total,sizes,prev,pager,next"
         :total="rowCount">
       </el-pagination>
+      <p style="margin-top:1%;float:right;margin-right:5%">
+        <!--<el-button>查找</el-button>-->
+        <el-button>导出</el-button>
+      </p>
     </div>
+
     <!--<div>-->
     <!--<p style="margin-top:1%;float:right;margin-right:5%;width:50%">-->
     <!--<el-button style="margin-right:6%">提 交 更 改</el-button>-->
@@ -380,7 +402,7 @@
       'ag-grid-vue': AgGridVue,
       operateComponent: {
 //        template: '<el-span><el-button class="del-but" @click="vehicleDel">删 除</el-button><el-button class="del-but" @click="vehicleEdit">编 辑</el-button></el-span>',
-        template: '<el-span><el-button  class="del-but" @click="particulars()"> 详 情 </el-button></el-span>',
+        template: '<el-span><el-button  class="del-but" @click="particulars()" type="info"> 详 情 </el-button></el-span>',
         methods: {
           particulars () {
             this.params.context.componentParent.detailsVisable = true
@@ -394,7 +416,7 @@
         }
       },
       receivingstate: {
-        template: '<span><el-button class="del-but" @click="edit">编 辑</el-button></span>',
+        template: '<span><el-button class="del-but" @click="edit" type="info">编 辑</el-button></span>',
         methods: {
           edit () {
             this.params.context.componentParent.appointlnfoVisable = true
@@ -461,17 +483,17 @@
   }
 </script>
 <style>
-  .del-but {
-    cursor: pointer;
-    float: right;
-    margin-right: 10px;
-    margin: 3px;
-    border-radius: 4px;
-    background:#ff4949;
-    border: 1px solid rgb(191, 217, 216);
-    color: #f9f9f9;
-    font-size: 0.6em;
-  }
+  /*.del-but {*/
+    /*cursor: pointer;*/
+    /*float: right;*/
+    /*margin-right: 10px;*/
+    /*margin: 3px;*/
+    /*border-radius: 4px;*/
+    /*background:#ff4949;*/
+    /*border: 1px solid rgb(191, 217, 216);*/
+    /*color: #f9f9f9;*/
+    /*font-size: 0.6em;*/
+  /*}*/
 
   .appointmenttime {
     float: left;

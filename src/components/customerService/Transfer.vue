@@ -8,10 +8,10 @@
                         :picker-options="pickerOptions" range-separator='/' style="width: 200px">
         </el-date-picker>
         <!--<el-date-picker type="datetime" class="appointmenttimes" placeholder="开始时间"-->
-                        <!--v-model="transfer.startTime"></el-date-picker>-->
+        <!--v-model="transfer.startTime"></el-date-picker>-->
         <!--<el-h5 class="appointmenttimes">到</el-h5>-->
         <!--<el-date-picker type="datetime" class="appointmenttimes" placeholder="结束时间"-->
-                        <!--v-model="transfer.endTime"></el-date-picker>-->
+        <!--v-model="transfer.endTime"></el-date-picker>-->
         <el-h5 class="appointmenttimes">预约单号：</el-h5>
         <el-input class="appointmenttimeman"></el-input>
         <el-h5 class="appointmenttimes">回单状态：</el-h5>
@@ -24,6 +24,7 @@
           <el-option key="yes" label="已付款" value="yes"></el-option>
           <el-option key="no" label="未付款" value="no"></el-option>
         </el-select>
+        <el-button>查找</el-button>
       </p>
       <el-dialog title="回单管理:" :visible.sync="orderformerVisable">
         <el-form :model="orderformerForm" :rules="rules" ref="orderformerForm">
@@ -44,10 +45,10 @@
           <el-button type="primary" @click="orderformerVisable = false">确 定</el-button>
         </div>
       </el-dialog>
-      <p style="margin-top:1%;float:right;margin-right:5%">
-        <el-button>查找</el-button>
-        <el-button>导出</el-button>
-      </p>
+      <!--<p style="margin-top:1%;float:right;margin-right:5%">-->
+        <!--&lt;!&ndash;<el-button>查找</el-button>&ndash;&gt;-->
+        <!--<el-button>导出</el-button>-->
+      <!--</p>-->
     </div>
     <div style="clear: both;">
     </div>
@@ -69,6 +70,10 @@
           layout="total,sizes,prev,pager,next"
           :total="rowCount">
         </el-pagination>
+        <p style="margin-top:1%;float:right;margin-right:5%">
+          <!--<el-button>查找</el-button>-->
+          <el-button>导出</el-button>
+        </p>
       </div>
       <!--<p style="margin-top:1%;float:right;margin-right:5%;width:50%">-->
       <!--<el-button style="margin-right:6%">确 认 更 新</el-button>-->
@@ -235,7 +240,7 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><el-button class="del-but" @click="edit">编 辑</el-button></span>',
+        template: '<span><el-button class="del-but" @click="edit" type="info">编 辑</el-button></span>',
 //        template: '<el-select v-model="appointlnfoForm.Selectsites"  placeholder="选择" class="appointmentoption col-1" style="width:130px"> <el-option key="yes" label=" 回单已签 " value="yes"></el-option><el-option key="yes" label=" 回单在途 " value=""></el-option></el-option><el-option key="yes" label=" 回单已返 " value="no"></el-option></el-select>',
         // '<select placeholder="选择" class="appointmentoption" style="width:150px;heght:60px"><option key="yes" label="回单已签" value="yes"></option><option key="no" label="回单在途" value="no"></option><option key="no" label="回单已反" value="no"></option> </select>'
 //        data: function () {

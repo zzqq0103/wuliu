@@ -1,45 +1,70 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align:center">大车毛利</h2>
-      <p style="margin-top:3%">
-        <el-form v-model="filterForm" ref="filterForm">
+      <h2 style="text-align:center;margin: 10px">大车毛利</h2>
+      <!--表格上方操作区域-->
+      <div>
+        <!--第一行-->
+        <div style="float: right">
+          <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
+        </div>
+        <div>
+          <el-form v-model="filterForm" ref="filterForm" :inline="true">
+            <el-form-item label="订单时间:">
+              <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+                              :picker-options="pickerOptions" range-separator='/' style="width: 200px">
+              </el-date-picker>
+            </el-form-item>
+            <el-button @click="search">搜索</el-button>
+            <!--<el-button @click="setting">设置</el-button>-->
+            <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+              <template v-for="(collist,i) in gridOptions.columnDefs">
+                <div class="colVisible">
+                  <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
+                    {{collist.headerName}}
+                  </el-checkbox>
+                </div>
+              </template>
+              <template>
+                <div class="colVisible">
+                  <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                  <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+                </div>
+              </template>
+            </el-popover>
+            <el-button v-popover:popover1>设置</el-button>
+          </el-form>
 
-         <span style='float:left;padding:0.6% 1% 0% 0%'>到达时间：</span>
-          <el-form-item  prop="startTime" style='float:left;width:13%'>
-              <el-date-picker type="datetime" placeholder="选择开始日期" v-model="filterForm.startTim"
-                              style="width:100%"></el-date-picker>
-          </el-form-item>
-          <span style='float:left;padding:0.8% 0.8%'>--</span>
-          <el-form-item prop="endTime" style='float:left;width:13%'>
-              <el-date-picker type="datetime" placeholder="选择结束日期" v-model="filterForm.endTim"
-                              style="width:100%"></el-date-picker>
-          </el-form-item>
-        </el-form>
-        <span style='float:left;width:10%;padding:0.5% 0.5% 0% 3%'>大车毛利合计：</span>
-        <el-input readonly="readonly" v-model="totalGrossCarProfit" style='float:left;width:10%'></el-input>
-        <el-button @click="search" style='float:right'>搜索</el-button>
-        <el-button @click="setting" style='float:right;margin-right:3%'>设置</el-button>
-        <el-input type="text" placeholder="请输入搜索内容" style='float:right;width:15%;margin-right:3%' @input="onQuickFilterChanged"></el-input>
-      </p>
+        </div>
+        <!--第二行-->
+        <div>
+          <el-form style="float: left" :model="totalForm" ref="totalForm" :inline="true">
+            <el-form-item label="大车毛利合计:">
+              <el-input readonly="readonly" v-model="totalGrossCarProfit" style='width:100px'></el-input>
+
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
     </div>
     <div style="clear: both;">
     </div>
-    <div style="margin-top:2%">
-      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue" 
-        :gridOptions="gridOptions" 
-        :suppressMovableColumns="true" 
-        :enableColResize="true" 
-        :enableSorting="true" 
-        :enableFilter="true" 
-        :groupHeaders="true" 
-        :suppressCellSelection="true"
-        :rowHeight=40 
-        :headerHeight=30
-        :pagination="true"
-        :paginationPageSize="10"
-        :suppressPaginationPanel="true"
-        :filterChanged="gridfilterChange">
+    <div>
+      <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
+                   :gridOptions="gridOptions"
+                   :suppressMovableColumns="true"
+                   :enableColResize="true"
+                   :enableSorting="true"
+                   :enableFilter="true"
+                   :groupHeaders="true"
+                   :suppressCellSelection="true"
+                   :rowHeight=40
+                   :headerHeight=40
+
+                   :pagination="true"
+                   :paginationPageSize="10"
+                   :suppressPaginationPanel="true"
+                   :filterChanged="gridfilterChange">
       </ag-grid-vue>
     </div>
 
@@ -60,7 +85,7 @@
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
       <template v-for="(collist,i) in gridOptions.columnDefs">
         <div>
-          <el-checkbox v-model="collist.hide" @change="updataColumnDefs(gridOptions.columnDefs)">
+          <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
             {{collist.headerName}}
           </el-checkbox>
         </div>
@@ -72,164 +97,308 @@
   </div>
 </template>
 <script>
-import { AgGridVue } from 'ag-grid-vue'
-export default {
-  created () {
-    for (var i = 0; i < 50; i++) {
-      this.grossProfitList.push({
-        'loadingId': '装载单' + i,
-        'departTim': '发车时间' + i,
-        'arrTim': '到达时间' + i,
-        'driverNam': '司机姓名' + i,
-        'driverTel': '司机联系方式' + i,
-        'licePlateNum': '车牌号' + i,
-        'startPoint': '起始站' + i,
-        'endPoint': '终点站' + i,
-        'dispatAdmiNam': '调度员' + i,
-        'totalFreight': i, // 总运费
-        'totalRefund': i, // 总返款
-        'feeMoney': i, // 大车费
-        'totalChanFee': i, // 总中转费
-        'totalPickUpFee': i, // 总提送费
-        'grossCarProfit': i // 大车总毛利
-      })
-    }
-  },
-  data () {
-    return {
-      filterForm: {
-        startTim: '',
-        endTim: ''
-      },
-      totalGrossCarProfit: 0,
-      grossProfitList: [],
-      colVisible: false,
-      detailVisible: false,
-      currentPage: 1,
-      rules: {
-      },
-      rowCount: 0,
-      pageSize: 10,
-      formLabelWidth: '20%',
-      gridOptions: {
-        context: {
-          componentParent: this
+  import {AgGridVue} from 'ag-grid-vue'
+  import PartialMatchFilterComponent from '../../common/PartialMatchFilterComponent'
+
+  export default {
+    created () {
+      for (var i = 0; i < 50; i++) {
+        this.grossProfitList.push({
+          'loadingId': '装载单' + i,
+          'departTim': '发车时间' + i,
+          'arrTim': '到达时间' + i,
+          'driverNam': '司机姓名' + i,
+          'driverTel': '司机联系方式' + i,
+          'licePlateNum': '车牌号' + i,
+          'startPoint': '起始站' + i,
+          'endPoint': '终点站' + i,
+          'dispatAdmiNam': '调度员' + i,
+          'totalFreight': i, // 总运费
+          'totalRefund': i, // 总返款
+          'feeMoney': i, // 大车费
+          'totalChanFee': i, // 总中转费
+          'totalPickUpFee': i, // 总提送费
+          'grossCarProfit': i // 大车总毛利
+        })
+      }
+    },
+    data () {
+      return {
+        filterForm: {
+          startTime: '',
+          endTime: ''
         },
-        rowData: null,
-        columnDefs: [
-          {
-            headerName: '装载单ID', width: 150, field: 'loadingId', filter: 'text', hide: false
+        totalGrossCarProfit: 0,
+        grossProfitList: [],
+        colVisible: false,
+        detailVisible: false,
+        currentPage: 1,
+        rules: {},
+        rowCount: 0,
+        pageSize: 10,
+        formLabelWidth: '20%',
+        gridOptions: {
+          context: {
+            componentParent: this
           },
-          {
-            headerName: '发车时间', width: 150, field: 'departTim', filter: 'text', hide: false
-          },
-          {
-            headerName: '到达时间', width: 150, field: 'arrTim', filter: 'text', hide: false
-          },
-          {
-            headerName: '司机姓名', width: 150, field: 'driverNam', filter: 'text', hide: false
-          },
-          {
-            headerName: '司机联系方式', width: 150, field: 'driverTel', filter: 'text', hide: false
-          },
-          {
-            headerName: '车牌号', field: 'licePlateNum', width: 150, filter: 'text', hide: false
-          },
-          {
-            headerName: '起始站', field: 'startPoint', width: 150, filter: 'text', hide: false
-          },
-          {
-            headerName: '终点站', field: 'endPoint', width: 150, filter: 'text', hide: false
-          },
-          {
-            headerName: '调度员', field: 'dispatAdmiNam', width: 150, filter: 'text', hide: false
-          },
-          {
-            headerName: '总运费', field: 'totalFreight', width: 150, filter: 'text', hide: false
-          },
-          {
-            headerName: '总返款', field: 'totalRefund', width: 150, filter: 'text', hide: false
-          },
-          {
-            headerName: '大车费', field: 'feeMoney', width: 150, filter: 'text', hide: false
-          },
-          {
-            headerName: '总中转费', field: 'totalChanFee', width: 150, filter: 'text', hide: false
-          },
-          {
-            headerName: '总提送费', field: 'totalPickUpFee', width: 150, filter: 'text', hide: false
-          },
-          {
-            headerName: '大车总毛利', field: 'grossCarProfit', width: 150, filter: 'text', hide: false
+          rowData: null,
+          columnDefs: [
+            {
+              headerName: '装载单ID', width: 150, field: 'loadingId', suppressmenu: true, hide: false, visible: true
+            },
+            {
+              headerName: '发车时间',
+              width: 200,
+              field: 'departTim',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '到达时间',
+              width: 200,
+              field: 'arrTim',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '司机姓名',
+              width: 150,
+              field: 'driverNam',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '司机联系方式',
+              width: 150,
+              field: 'driverTel',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '车牌号',
+              field: 'licePlateNum',
+              width: 150,
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '起始站',
+              field: 'startPoint',
+              width: 150,
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '终点站',
+              field: 'endPoint',
+              width: 150,
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '调度员',
+              field: 'dispatAdmiNam',
+              width: 150,
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '总运费',
+              field: 'totalFreight',
+              width: 150,
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '总返款',
+              field: 'totalRefund',
+              width: 150,
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '大车费',
+              field: 'feeMoney',
+              width: 150,
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '总中转费',
+              field: 'totalChanFee',
+              width: 150,
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '总提送费',
+              field: 'totalPickUpFee',
+              width: 150,
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '大车总毛利',
+              field: 'grossCarProfit',
+              width: 150,
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            }
+          ]
+        },
+        // 设置日期选择器的条件
+        pickerOptions: {
+          shortcuts: [{
+            text: '上周',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfWeek = now.getDay()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * (nowDayOfWeek + 6))
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfWeek)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '上个月',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfMonth = now.getDate()
+              const nowMonth = now.getMonth()
+              start.setDate(1)
+              start.setMonth(nowMonth - 1)
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfMonth)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '去年',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowYear = now.getFullYear()
+              start.setYear(nowYear - 1)
+              start.setMonth(0)
+              start.setDate(1)
+              end.setYear(nowYear - 1)
+              end.setMonth(11)
+              end.setDate(31)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '今年',
+            onClick (picker) {
+              const start = new Date()
+              const end = new Date()
+              start.setMonth(0)
+              start.setDate(1)
+              picker.$emit('pick', [start, end])
+            }
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
           }
-        ]
-      }
-    }
-  },
-  components: {
-    'ag-grid-vue': AgGridVue
-  },
-  methods: {
-    search () {
-    },
-    createRowData () {
-      this.gridOptions.rowData = this.grossProfitList
-    },
-    onQuickFilterChanged (input) {
-      this.gridOptions.api.setQuickFilter(input)
-    },
-    changeColumnDefsBoolen () {
-      var columnlist = this.gridOptions.columnDefs
-      for (let i = 0; i < columnlist.length; i++) {
-        columnlist[i].hide = !columnlist[i].hide
+        }
       }
     },
-    setting () {
-      this.colVisible = true
+    components: {
+      'ag-grid-vue': AgGridVue
     },
-    updataColumnDefs (collist) {
-      for (let i = 0; i < collist.length; i++) {
-        this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
+    methods: {
+      search () {
+        this.createRowData()
+        this.calculateMoney
+      },
+      createRowData () {
+        this.gridOptions.rowData = this.grossProfitList
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
+      },
+      onQuickFilterChanged (input) {
+        this.gridOptions.api.setQuickFilter(input)
+      },
+      changeColumnDefsBoolen () {
+        var columnlist = this.gridOptions.columnDefs
+        for (let i = 0; i < columnlist.length; i++) {
+          columnlist[i].hide = !columnlist[i].hide
+        }
+      },
+      setting () {
+        this.colVisible = true
+      },
+      updataColumnDefs (collist) {
+        for (let i = 0; i < collist.length; i++) {
+          this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
+        }
+      },
+      handleSizeChange (val) {
+        this.gridOptions.api.paginationSetPageSize(Number(val))
+      },
+      handleCurrnetChange (val) {
+        this.gridOptions.api.paginationGoToPage(val - 1)
+      },
+      gridfilterChange () {
+        this.calculateGrid()
+      },
+      // 设置分页组件数据总数
+      calculateGrid () {
+        this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
+        this.rowCount = this.gridOptions.api.getModel().getRowCount()
+      },
+      visibleChoice (i) {
+        if (i === 1) {
+          for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+            this.gridOptions.columnDefs[j].visible = true
+          }
+        } else if (i === 2) {
+          for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
+            this.gridOptions.columnDefs[j].visible = false
+          }
+        }
+        this.updataColumnDefs(this.gridOptions.columnDefs)
       }
     },
-    handleSizeChange (val) {
-      this.gridOptions.api.paginationSetPageSize(Number(val))
+    computed: {
+      // 计算合计金额
+      calculateMoney () {
+        this.totalGrossCarProfit = 0
+        let model = this.gridOptions.api.getModel()
+        let arr = model.rootNode.childrenAfterFilter
+        console.log(arr[0].data)
+        for (let i = 0; i < arr.length; i++) {
+          this.totalGrossCarProfit += arr[i].data.grossCarProfit
+        }
+      }
     },
-    handleCurrnetChange (val) {
-      this.gridOptions.api.paginationGoToPage(val - 1)
-    },
-    gridfilterChange () {
+//    beforeMount () {
+//      this.createRowData()
+//    },
+    mounted () {
+//      this.changeColumnDefsBoolen()
       this.calculateGrid()
     },
-    // 设置分页组件数据总数
-    calculateGrid () {
-      this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
-      this.rowCount = this.gridOptions.api.getModel().getRowCount()
+    // 数据发生更新时
+    updated () {
+      console.log('update')
+      this.calculateMoney
     }
-  },
-  computed: {
-    // 计算合计金额
-    calculateMoney () {
-      this.totalGrossCarProfit = 0
-      let model = this.gridOptions.api.getModel()
-      let arr = model.rootNode.childrenAfterFilter
-      console.log(arr[0].data)
-      for (let i = 0; i < arr.length; i++) {
-        this.totalGrossCarProfit += arr[i].data.grossCarProfit
-      }
-    }
-  },
-  beforeMount () {
-    this.createRowData()
-  },
-  mounted () {
-    this.changeColumnDefsBoolen()
-    this.calculateGrid()
-  },
-   // 数据发生更新时
-  updated () {
-    console.log('update')
-    this.calculateMoney
   }
-}
 </script>
