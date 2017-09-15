@@ -7,9 +7,7 @@
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div>
-          <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
           <el-button @click="vehicleAdd">添加</el-button>
-          <!-- <el-button @click="setting">设置</el-button> -->
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">
@@ -64,7 +62,7 @@
     </div>
 
     <!-- 添加车辆信息弹窗 -->
-    <el-dialog title="添加接送货车辆信息:" :visible.sync="vehicleVisable" size="tiny" v-if="rerender">
+    <el-dialog title="添加接送货车辆信息:" :visible.sync="vehicleVisable" size="tiny">
       <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
         <el-form-item label="车牌号码:" :label-width="formLabelWidth" prop="licePlateNum">
           <el-input v-model="vehicleForm.licePlateNum" style="width: 50%"></el-input>
@@ -98,44 +96,46 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="vehicleVisable = false">取 消</el-button>
-        <el-button type="primary" @click="vehicleVisable = false">注 册</el-button>
+        <el-button @click="resetForm('vehicleForm')">重置</el-button>
+        <el-button type="primary" @click="submitForm('vehicleForm')">注 册</el-button>
       </div>
     </el-dialog>
     <!--编辑车辆信息-->
-    <el-dialog title="编辑接送货车辆信息:" :visible.sync="editVisable" size="tiny">
-      <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
+    <el-dialog title="编辑接送货车辆信息:" :visible.sync="editVisable" size="tiny" @close="resetForm('editForm')">
+      <el-form :model="editForm" :rules="rules" ref="editForm">
         <el-form-item label="车牌号码:" :label-width="formLabelWidth" prop="licePlateNum">
-          <el-input v-model="vehicleForm.licePlateNum" style="width: 50%"></el-input>
+          <el-input v-model="editForm.licePlateNum" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverName">
-          <el-input v-model="vehicleForm.driverName" style="width: 50%"></el-input>
+          <el-input v-model="editForm.driverName" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="vehicleForm.tel" style="width: 50%" disabled="true"></el-input>
+          <el-input v-model="editForm.tel" style="width: 50%" disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="车容量:" :label-width="formLabelWidth" prop="capacity">
-          <el-input v-model="vehicleForm.capacity" style="width: 30%"></el-input>
+          <el-input v-model="editForm.capacity" style="width: 30%"></el-input>
           &nbsp/立方
         </el-form-item>
         <el-form-item label="吨位:" :label-width="formLabelWidth" prop="tonnage">
-          <el-input v-model="vehicleForm.tonnage" style="width: 30%"></el-input>
+          <el-input v-model="editForm.tonnage" style="width: 30%"></el-input>
           &nbsp/吨
         </el-form-item>
         <el-form-item label="车辆类型:" :label-width="formLabelWidth" prop="carType">
-          <el-input v-model="vehicleForm.carType" style="width: 30%"></el-input>
+          <el-input v-model="editForm.carType" style="width: 30%"></el-input>
         </el-form-item>
         <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
-          <el-select v-model="vehicleForm.carState" style="width: 30%">
+          <el-select v-model="editForm.carState" style="width: 30%">
             <el-option key="available" label="可用" value="available"></el-option>
             <el-option key="unavailable" label="不可用" value="unavailable"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="车辆位置:" :label-width="formLabelWidth" prop="carPosition">
-          <el-input v-model="vehicleForm.carPosition" style="width: 50%"></el-input>
+          <el-input v-model="editForm.carPosition" style="width: 50%"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="editVisable = false">取 消</el-button>
+        <el-button @click="resetForm('editForm')">重置</el-button>
         <el-button type="primary" @click="editVisable = false">确 定</el-button>
       </div>
     </el-dialog>
@@ -204,7 +204,16 @@
           'carState': '', // 车辆状态
           'carPosition': '' // 车辆位置
         },
-        rerender: true, // 用于重新刷新添加的弹框
+        editForm: {
+          'licePlateNum': '', // 车牌号
+          'driverName': '', // 司机姓名
+          'tel': '', // 司机联系方式
+          'capacity': '', // 车容量
+          'carType': '', // 车型
+          'tonnage': '', // 吨位
+          'carState': '', // 车辆状态
+          'carPosition': '' // 车辆位置
+        },
         rules: {
           licePlateNum: [{
             required: true, message: '请输入车牌号', trigger: 'blur'
@@ -341,7 +350,8 @@
             /* var vehicleform = this.params.context.componentParent.vehicleForm
              vehicleform.licePlateNum = vehicleList[this.params.node.rowIndex].licePlateNum */
             this.params.context.componentParent.editVisable = true
-            this.params.context.componentParent.vehicleForm = this.params.data
+            this.params.context.componentParent.editForm = this.params.data
+            console.log(this.params.context.componentParent.editForm)
           }
         }
       }
@@ -375,11 +385,7 @@
       },
       // 增加
       vehicleAdd () {
-        this.rerender = false
-        this.$nextTick(function () {
-          console.log(this.rerender)
-          this.rerender = true
-        })
+        this.resetForm('vehicleForm')
         this.vehicleVisable = true
         this.vehicleForm.licePlateNum = ''
         this.vehicleForm.driverName = ''
@@ -403,6 +409,23 @@
       calculateGrid () {
         this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
         this.rowCount = this.gridOptions.api.getModel().getRowCount()
+      },
+      // 提交表单，提交前验证
+      submitForm (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!')
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+      // 重置表单
+      resetForm (formName) {
+        this.$nextTick(function () {
+          this.$refs[formName].resetFields()
+        })
       }
     },
     beforeMount () {
