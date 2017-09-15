@@ -497,7 +497,7 @@
           'shipTel': '发货人联系方式' + i,
           'receNam': '收货人' + i,
           'receTel': '收货人联系方式' + i,
-          'serviceNam': '制单人' + i,
+          'serviceNam': '开单客服' + i,
           'changeFee': i,
           'receMoney': i,
           'veriNam': '核销人' + i,
@@ -512,7 +512,7 @@
           'orderState': '运单状态' + i,
           'shipNam': '发货人' + i,
           'receNam': '收货人' + i,
-          'serviceNam': '制单人' + i,
+          'serviceNam': '开单客服' + i,
           'receMoney': i,
           'receState': '回单状态' + i,
           'receNums': '回单份数' + i
@@ -560,7 +560,7 @@
               headerName: '收货人联系方式', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '开单客服', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
               headerName: '中转费', width: 150, field: 'changeFee', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
@@ -607,7 +607,7 @@
               headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true
+              headerName: '开单客服', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true
             },
             {
               headerName: '回单押款', width: 150, field: 'receMoney', filter: 'text', hide: false, visible: true
@@ -639,7 +639,7 @@
               headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true
+              headerName: '开单客服', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true
             },
             {
               headerName: '回单押款', width: 150, field: 'receMoney', filter: 'text', hide: false, visible: true
