@@ -93,7 +93,7 @@
 
     <!-- 装载单订单列表展示 -->
     <el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
-      <Dispatching></Dispatching>
+      <deliver-order-list></deliver-order-list>
     </el-dialog>
 
     <!-- 分页 -->

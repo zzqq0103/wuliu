@@ -93,6 +93,15 @@
       <order-details :orderId="orderId"></order-details>
     </el-dialog>
 
+    <!-- 是否确认中转对话框 -->
+        <el-dialog title="" :visible.sync="departVisible" size="tiny" top="30%">
+          <h2 style="padding:30px">确认中转吗？</h2>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="departVisible = false">取 消</el-button>
+            <el-button @click="departVisible = false" type="danger">确 定</el-button>
+          </div>
+        </el-dialog>
+
   </div>
 </template>
 
@@ -201,6 +210,9 @@
             },
             {
               headerName: '备注', field: 'remarks', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '操作', field: 'operate', width: 80, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true, cellRendererFramework: 'operateComponent', pinned: 'right'
             }
           ]
         },
@@ -251,13 +263,25 @@
           }]
         },
         dateValue: '', // 日期值
-        detailVisible: false // 订单详情弹框
+        detailVisible: false, // 订单详情弹框
+        departVisible: false
       }
     },
     // 实例组件
     components: {
       'ag-grid-vue': AgGridVue,
-      OrderDetails
+      OrderDetails,
+      operateComponent: {
+        template: '<span style="margin-left:5px;"><el-button  class="del-but" @click="depart" type="info" size="small">确认中转</el-button></span>',
+        methods: {
+          // 点击发车按钮，进行操作
+          depart () {
+            let self = this.params.context.componentParent
+            console.log(self)
+            self.departVisible = true
+          }
+        }
+      }
     },
 
     // 实例方法
