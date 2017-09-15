@@ -137,7 +137,8 @@
     <!--
     --核销界面
     -->
-    <el-dialog title="运费核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+    <el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+      <h2 style='text-align:center;margin-top:-2%'>运费核销</h2>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">

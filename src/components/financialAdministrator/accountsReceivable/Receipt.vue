@@ -213,7 +213,8 @@
     <!--
     --核销界面
     -->
-    <el-dialog title="回单押款核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+    <el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+      <h2 style='text-align:center;margin-top:-2%'>回单押款核销</h2>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
@@ -388,7 +389,7 @@
               <el-button @click="rightSelect"> < </el-button>
               <el-button @click="rightSelectAll"> << </el-button>
           </el-form-item>
-          
+
           <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions3.columnDefs">
               <div class="colVisible">

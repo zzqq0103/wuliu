@@ -8,7 +8,7 @@
         </div>
         <div>
           <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
-          <el-button @click="vehicleAdd">注册</el-button>
+          <el-button @click="vehicleAdd">添加</el-button>
           <!-- <el-button @click="setting">设置</el-button> -->
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
@@ -104,7 +104,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="vehicleVisable = false">取 消</el-button>
-        <el-button type="primary" @click="vehicleVisable = false">确 定</el-button>
+        <el-button type="primary" @click="vehicleVisable = false">注 册</el-button>
       </div>
     </el-dialog>
     <!--编辑车辆信息-->
@@ -212,6 +212,8 @@
           'tel': '', // 司机联系电话
           'contractID': '', // 合同号
           'contractPrice': '', // 合同价格
+          'carType': '', // 车型
+          'shipmentsNum': '', // 运输次数
           'targetHub': '', // 目的枢纽
           'capacity': '', // 车容量
           'tonnage': '', // 吨位
@@ -303,6 +305,22 @@
               headerName: '合同价格',
               width: 150,
               field: 'contractPrice',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '车辆类型',
+              width: 150,
+              field: 'carType',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '运输次数',
+              width: 150,
+              field: 'shipmentsNum',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true

@@ -71,26 +71,26 @@
           <div v-if="filterForm.payType === 'nowPay'">
             <el-form-item label="现付金额合计：" style='float:left;width:25%'>
               <el-input readonly="readonly" v-model="totalForm.totalMoney" style='width:50%'></el-input>
-            </el-form-item>   
+            </el-form-item>
           </div>
           <div v-else-if="filterForm.payType ==='cashOnDelivery'">
             <el-form-item label="到付金额合计：" style='float:left;width:25%'>
               <el-input readonly="readonly" v-model="totalForm.totalMoney" style='width:50%'></el-input>
-            </el-form-item> 
+            </el-form-item>
           </div>
           <div v-else-if="filterForm.payType ==='inArrears'">
             <el-form-item label="欠付金额合计：" style='float:left;width:25%'>
               <el-input readonly="readonly" v-model="totalForm.totalMoney" style='width:50%'></el-input>
-            </el-form-item> 
+            </el-form-item>
           </div>
           <div v-else-if="filterForm.payType ==='monthly'">
             <el-form-item label="月结金额合计：" style='float:left;width:25%'>
               <el-input readonly="readonly" v-model="totalForm.totalMoney" style='width:50%'></el-input>
-            </el-form-item> 
+            </el-form-item>
           </div>
           <el-form-item style="float:left;width:13%;padding-left:0.6%">
             <el-input readonly="readonly" placeholder="输入内容进行搜索" @input="onQuickFilterChanged" style="width:100%"></el-input>
-          </el-form-item>       
+          </el-form-item>
         </el-form>
     </div> -->
 
@@ -387,6 +387,7 @@
     --核销界面
     -->
     <el-dialog title="三方收入核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+      <h2 style='text-align:center;margin-top:-2%'>三方收入核销</h2>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">

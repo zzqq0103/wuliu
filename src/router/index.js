@@ -31,10 +31,10 @@ export default new Router({
           path: '/personnel',
           component: resolve => require(['../components/operationAdministrator/PersonnelInfo.vue'], resolve)
         },
-        {
-          path: '/familiarPersonnel',
-          component: resolve => require(['../components/operationAdministrator/familiarPersonnelInfo.vue'], resolve)
-        },
+        // {
+        //   path: '/familiarPersonnel',
+        //   component: resolve => require(['../components/operationAdministrator/familiarPersonnelInfo.vue'], resolve)
+        // },
         {
           path: '/shortvehicle',
           component: resolve => require(['../components/operationAdministrator/ShortVehicleInfo.vue'], resolve)
