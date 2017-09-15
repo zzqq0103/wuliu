@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import Vuelidate from 'vuelidate'
 import App from './App'
 import router from './router'
 import axios from 'axios'
@@ -16,6 +17,7 @@ mock.bootstrap()
 
 Vue.use(ElementUI)
 Vue.use(Icon)
+Vue.use(Vuelidate)
 Vue.prototype.$axios = axios
 new Vue({
   router,

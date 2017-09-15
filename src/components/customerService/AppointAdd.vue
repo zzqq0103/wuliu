@@ -2,24 +2,24 @@
   <div>
     <h2 style="text-align:center;margin-top:0">新建预约单</h2>
     <div class='div-form'>
-      <el-form >       
+      <el-form :model="appointForm" :rules="appointRules" ref="appointForm" >       
         <!-- <span style='float:left;padding:0.6% 1% 0% 0%;width:10%;text-align:left'>发货方：</span> -->
-        <el-form-item label="发货方：" style="float:left;width:50%;" label-width="90px">
-          <input type="text" list="shipComp" v-model="shipComp" class='input-tishi' style="float:left"/>
+        <el-form-item label="发货方：" style="float:left;width:50%;" label-width="100px" prop="shipComp">
+          <input type="text" list="shipComp" v-model="appointForm.shipComp" class='input-tishi' style="float:left"/>
           <datalist id="shipComp">
             <option v-for="item in shipTipList" :value="item" :key="item"/>
           </datalist>
         </el-form-item>
-        <el-form-item label="联系人：" style="float:left;width:50%" label-width="90px">
-          <el-input v-model="shipNam" style="width:60%"></el-input>
+        <el-form-item label="联系人：" style="float:left;width:50%" label-width="100px" prop="shipNam">
+          <el-input v-model="appointForm.shipNam" style="width:60%" placeholder="输入发货方联系人"></el-input>
         </el-form-item>
-        <el-form-item label="手机：" style="clear:both;width:50%" label-width="90px">
-          <el-input v-model="shipTel" style="width:60%"></el-input>
+        <el-form-item label="手机：" style="clear:both;width:50%" label-width="100px" prop="shipTel">
+          <el-input v-model="appointForm.shipTel" style="width:60%" placeholder="输入发货方手机"></el-input>
         </el-form-item>
-        <el-form-item label="提货地址：" style="clear:both;width:100%" label-width="90px">
+        <el-form-item label="提货地址：" style="float:left;width:50%" label-width="100px" prop="pickUpAdr">
           <div id='focus1' class="dropdown2" style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(1)" @blur="addressVisible=false">
-            <el-input v-model="pickUpAdr" placeholder="请选择提货地址"  readonly="readonly"style="width:73%" ></el-input>
-            <div class="dropdown-content" style='width:31%' v-show="addressVisible"> 
+            <el-input v-model="appointForm.pickUpAdr" placeholder="请选择提货地址"  readonly="readonly"style="width:73%" ></el-input>
+            <div class="dropdown-content" style='width:80%' v-show="addressVisible"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
                 <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
@@ -44,42 +44,46 @@
               </div>
             </div>
           </div>
-          <el-input class='addressDetail' placeholder="输入详细提货地址"></el-input>
         </el-form-item>
-        <el-form-item label="货物名称：" style="float:left;width:50%" label-width="90px">
-          <el-input v-model="goodsNam" style="width:60%"></el-input>
+
+        <el-form-item style="float:left;width:50%"  prop="pickUpAdrDe">
+          <el-input style='width:78%' v-model="appointForm.pickUpAdrDe" placeholder="输入详细提货地址" ></el-input>
         </el-form-item>
-        <el-form-item label="件数：" style="float:left;width:50%" label-width="90px">
-          <el-input v-model="goodsNums" style="width:60%"></el-input>
+        <el-form-item label="货物名称：" style="float:left;width:50%" label-width="100px" prop="goodsNam">
+          <el-input v-model="appointForm.goodsNam" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="重量：" style="float:left;width:50%" label-width="90px">
-          <el-input v-model="goodsWeight" style="width:60%"></el-input>
+        <el-form-item label="件数：" style="float:left;width:50%" label-width="100px" prop="goodsNums">
+          <el-input v-model="appointForm.goodsNums" style="width:60%" type="number"></el-input>
         </el-form-item>
-        <el-form-item label="体积：" style="float:left;width:50%" label-width="90px">
-          <el-input v-model="goodsVolumn" style="width:60%"></el-input>
+        <el-form-item label="重量：" style="float:left;width:50%" label-width="100px" prop="goodsWeight">
+          <el-input v-model="appointForm.goodsWeight" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="包装：" style="float:left;width:50%" label-width="90px">
-          <el-input v-model="package" style="width:60%"></el-input>
+        <el-form-item label="体积：" style="float:left;width:50%" label-width="100px" prop="goodsVolumn">
+          <el-input v-model="appointForm.goodsVolumn" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="货物备注：" style="clear:both;width:100%" label-width="90px">
-          <el-input v-model="note" style="width:78%"></el-input>
+        <el-form-item label="包装：" style="float:left;width:50%" label-width="100px" prop="package">
+          <el-input v-model="appointForm.package" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="收货方：" style="float:left;width:50%;" label-width="90px">
-          <input type="text" list="receComp" v-model="receComp" class='input-tishi' style="float:left;width:50%"/>
+        <el-form-item label="货物备注：" style="clear:both;width:100%" label-width="100px">
+          <el-input v-model="appointForm.note" style="width:78%"></el-input>
+        </el-form-item>
+        <el-form-item label="收货方：" style="float:left;width:50%;" label-width="100px" prop="receComp">
+          <input type="text" list="receComp" v-model="appointForm.receComp" class='input-tishi' style="float:left;width:50%"/>
           <datalist id="receComp">
             <option v-for="item in receTipList" :value="item" :key="item"/>
           </datalist>
         </el-form-item>
-        <el-form-item label="联系人：" style="float:left;width:50%" label-width="90px">
-          <el-input v-model="receNam" style="width:60%"></el-input>
+        <el-form-item label="联系人：" style="float:left;width:50%" label-width="100px" prop="receNam">
+          <el-input v-model="appointForm.receNam" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="手机：" style="clear:both;width:50%" label-width="90px">
-          <el-input v-model="receTel" style="width:60%"></el-input>
+        <el-form-item label="手机：" style="clear:both;width:50%" label-width="100px" prop="receTel">
+          <el-input v-model="appointForm.receTel" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="收货地址：" style="clear:both;width:100%" label-width="90px">
+        <!-- <el-form-item label="收货地址：" style="clear:both;width:100%" label-width="90px" prop="receAdr"> -->
+        <el-form-item label="收货地址：" style="float:left;width:50%" label-width='100px' prop="receAdr">
           <div id='focus2' class='dropdown2' style='outline:none' contenteditable="true" tabindex="0"  @click="getFocus(2)" @blur="addressVisible2=false">
-            <el-input v-model="receAdr" placeholder="请选择收货地址" readonly="readonly" style="width:78%;width:73%"></el-input>
-            <div class="dropdown-content" style='width:31%' v-show="addressVisible2"> 
+            <el-input v-model="appointForm.receAdr" placeholder="请选择收货地址" readonly="readonly" style="width:73%"></el-input>
+            <div class="dropdown-content" style='width:80%' v-show="addressVisible2">
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
                 <li @click="setShi(2)" class='dropdown-li' v-bind:class="{'selectOn':shi2}">城市</li>
@@ -102,12 +106,17 @@
               </div>
             </div>
           </div>
-          <el-input class='addressDetail' placeholder="输入详细收货地址"></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="详细地址：" style="clear:both;width:100%" label-width="90px" prop="receAdrDe">
+          <el-input style='width:78%' v-model="appointForm.receAdrDe" placeholder="输入详细收货地址" ></el-input>
+        </el-form-item> -->
+        <el-form-item style="float:left;width:50%"  prop="receAdrDe">
+          <el-input style='width:78%' v-model="appointForm.receAdrDe" placeholder="输入详细收货地址" ></el-input>
         </el-form-item>
       </el-form>
     </div>
     <div style='text-align:center'>
-      <el-button style='margin-top:2%' @click="submitAppoint">保存</el-button>
+      <el-button style='margin-top:2%' @click="submitAppoint('appointForm')">保存</el-button>
       <el-button style='margin-left:10%' @click="cancleVisable=true">取消</el-button>
     </div>
     <!--提交弹窗-->
@@ -126,7 +135,6 @@
 </template>
 <script>
   import regionJson from '../../../static/region.json'
-
   export default {
     created () {
       this.regionList = regionJson
@@ -156,34 +164,87 @@
         shenfen2: false,
         shi2: false,
         quyu2: false,
-        inputWidth: 78,
-        inputWidth2: 78,
-        dropdownWidth: 78,
         isFocus: false,
         isFocus2: false,
         detailVisible: false,
         detailVisible2: false,
         isReadOnly: false,
         isReadOnly2: false,
-        /** 发货人信息 */
-        shipComp: '',
         shipTipList: ['单位1', '单位2', '单位33333'],
-        shipNam: '',
-        shipTel: '',
-        pickUpAdr: '123',
-        /** 货物信息 */
-        goodsNam: '',
-        goodsNums: '',
-        goodsWeight: '',
-        goodsVolumn: '',
-        package: '',
-        note: '',
-        /** 收货人信息 */
-        receComp: '',
         receTipList: ['单位111111111', '单位2', '单位3'],
-        receNam: '',
-        receTel: '',
-        receAdr: '',
+        appointForm: {
+          /** 发货人信息 */
+          shipComp: '',
+          shipNam: '3',
+          shipTel: '',
+          pickUpAdr: '123',
+          pickUpAdrDe: '',
+          /** 货物信息 */
+          goodsNam: '',
+          goodsNums: '',
+          goodsWeight: '',
+          goodsVolumn: '',
+          package: '',
+          note: '',
+          /** 收货人信息 */
+          receComp: '',
+          receNam: '',
+          receTel: '',
+          receAdr: '',
+          receAdrDe: ''
+        },
+        appointRules: {
+          goodsNam: [
+            {required: true, message: '请填写货物名称', trigger: 'blur'}
+          ],
+          goodsNums: [
+            {required: true, message: '请填写货物数量', trigger: 'blur'},
+            {validator (r, v, b) { (/^[0-9]*[1-9][0-9]*$/).test(v) ? b() : b(new Error('请填写正整数')) }}
+          ],
+          goodsWeight: [
+            {required: true, message: '请填写货物重量', trigger: 'blur'},
+            {validator (r, v, b) { (/^\\d+(\\.\\d+)?$/).test(v) ? b() : b(new Error('请填写正确数字')) }}
+          ],
+          goodsVolumn: [
+            {required: true, message: '请填写货物体积', trigger: 'blur'},
+            {validator (r, v, b) { (/^\\d+(\\.\\d+)?$/).test(v) ? b() : b(new Error('请填写正确数字')) }}
+          ],
+          package: [
+            {required: true, message: '请选择货物包装'}
+          ],
+          shipComp: [
+            {required: true, message: '请输入发货方', trigger: 'blur'}
+          ],
+          shipNam: [
+            {required: true, message: '请输入发货人', trigger: 'blur'}
+          ],
+          shipTel: [
+            {required: true, message: '请输入发货方电话', trigger: 'blur'},
+            {validator (r, v, b) { (/^1[3|4|5|8]\d{9}$/).test(v) ? b() : b(new Error('请填写正确的电话号码')) }}
+          ],
+          receComp: [
+            {required: true, message: '请输入收货方', trigger: 'blur'}
+          ],
+          receNam: [
+            {required: true, message: '请输入收货人', trigger: 'blur'}
+          ],
+          receTel: [
+            {required: true, message: '请输入收货方电话', trigger: 'blur'},
+            {validator (r, v, b) { (/^1[3|4|5|8]\d{9}$/).test(v) ? b() : b(new Error('请填写正确的电话号码')) }}
+          ],
+          receAdr: [
+            {required: true, message: '请选择收货地址'}
+          ],
+          receAdrDe: [
+            {required: true, message: '请输入收货详细地址', trigger: 'blur'}
+          ],
+          pickUpAdr: [
+            {required: true, message: '请选择提货地址'}
+          ],
+          pickUpAdrDe: [
+            {required: true, message: '请输入提货详细地址', trigger: 'blur'}
+          ]
+        },
         /** 其它 */
         cancleVisable: false,
         submitVisable: false
@@ -213,8 +274,8 @@
           this.quList2 = []
           this.shiList2 = []
         }
-        this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-        this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+        this.appointForm.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+        this.appointForm.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
       },
       selectShi (num, name) {
         if (num === 1) {
@@ -226,29 +287,25 @@
           this.quSelected2 = ''
           this.quList2 = []
         }
-        this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-        this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+        this.appointForm.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+        this.appointForm.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
       },
       selectQu (num, name) {
         if (num === 1) {
           this.quSelected = name
           this.addressVisible = false
-          this.inputWidth = 73
-          this.dropdownWidth = 33
           this.isFocus = true
           this.detailVisible = true
           this.isReadOnly = true
         } else {
           this.quSelected2 = name
           this.addressVisible2 = false
-          this.inputWidth2 = 73
-          this.dropdownWidth2 = 33
           this.isFocus2 = true
           this.detailVisible2 = true
           this.isReadOnly2 = true
         }
-        this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-        this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+        this.appointForm.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+        this.appointForm.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
       },
       setShenfen (num) {
         if (num === 1) {
@@ -326,9 +383,18 @@
       cancle_ok () {
         this.cancleVisable = false
       },
-      submitAppoint () {
-        this.submitVisable = true
-        setTimeout(() => { this.submitVisable = false }, 500)
+
+    // 提交新建预约单
+      submitAppoint (formName) {
+        const self = this
+        self.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.submitVisable = true
+          } else {
+            return false
+          }
+        })
+        // setTimeout(() => { this.submitVisable = false }, 500)
       }
     }
   }
@@ -341,7 +407,7 @@
 
   .dropdown2 {
     display: inline-block;
-    width: 40%;
+    width: 100%;
     float: left
   }
 
