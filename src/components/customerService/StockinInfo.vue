@@ -16,17 +16,10 @@
               <el-date-picker type="datetime" placeholder="2" v-model="filterForm1.departTimEnd"
                               style="width:100%"></el-date-picker>
           </el-form-item>-->
-          <span style='float:left;padding:0.6% 1% 0% 0%'>订单时间：</span>
+          <span style='float:left;padding:0.6% 1% 0% 0%'>发车时间：</span>
           <el-date-picker v-model="filterForm1.departTimEnd" type="daterange" placeholder="选择日期范围"
                             :picker-options="pickerOptions" range-separator='/' style='float:left;width:200px'>
           </el-date-picker>
-          <span style='float:left;padding:0.6% 1% 0% 3%'>仓库位置：</span>
-          <el-form-item style="float:left;width:10%">
-            <el-select placeholder="请选择" v-model="filterForm1.stockPos" style='width:100%'>
-              <el-option label="南京" value="nanjing"></el-option>
-              <el-option label="北京" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
           <!-- <el-form-item label="司机姓名：" style="float:left;width:25%">
             <el-input v-model="filterForm1.driverNam" style="width:65%"></el-input>
           </el-form-item> -->
@@ -245,7 +238,7 @@
         <el-col :span="12">
           <el-form :model="filterForm2" ref="filterForm" :inline="true">
             <div>
-              <el-form-item label="订单时间">
+              <el-form-item label="发车时间：">
                 <el-date-picker v-model="filterForm2.startTime" type="daterange" placeholder="选择日期范围"
                                   :picker-options="pickerOptions" style='width:200px' range-separator='/'>
                 </el-date-picker>
@@ -309,7 +302,8 @@
               <el-button style="visibility: hidden"></el-button>
             </el-form-item>
             <el-form-item>
-              <el-button @click="confirmSubmit">确认入库</el-button>
+              <el-button @click="this.unusualVisible = true">确认入库</el-button>
+              <el-button @click="errorSubmit">入库异常</el-button>
               <!--<el-button @click="colVisible3 = true">设置</el-button>-->
               <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                 <template v-for="(collist,i) in gridOptions3.columnDefs">
@@ -364,11 +358,20 @@
     <el-dialog title="确认入库" :visible.sync="confirmSubVisible" size="tiny" :closeOnClickModal="false">
       <h2>入库成功！</h2>
     </el-dialog>
-    <!--警告弹窗-->
+    <!--无入库内容警告弹窗-->
     <el-dialog title="错误" :visible.sync="errorVisible" size="tiny">
       <p>未发现需要入库的内容</p>
       <div slot="footer" class="dialog-footer">
         <el-button @click="errorVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!--提交异常弹窗-->
+    <el-dialog title="" :visible.sync="unusualVisible" size="tiny">
+      <p>确认提交异常么？</p>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="errorToStage">确 定</el-button>
+        <el-button @click="unusualVisible = false">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -388,13 +391,12 @@
       for (let i = 0; i < 100; i++) {
         this.testData1.push({
           'loadingId': '装载单ID' + i,
-          'stockPos': '南京' + i,
           'driverNam': '司机姓名' + i,
           'licePlateNum': '车牌号' + i,
           'startPoint': '起始站' + i,
           'endPoint': '终点站' + i,
           'departTim': '发车时间' + i,
-          'arrTim': '到达时间' + i
+          'loadingSta': '装载单状态'
         })
         this.testData2.push({
           'loadingId': 'loadingId',
@@ -417,25 +419,25 @@
           rowData: [],
           columnDefs: [
             {
-              headerName: '装载单号', width: 150, field: 'loadingId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '装载单号', width: 200, field: 'loadingId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '司机', width: 150, field: 'driverNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '司机', width: 200, field: 'driverNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '车牌号', width: 200, field: 'licePlateNum', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '起始站', width: 150, field: 'startPoint', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '起始站', width: 200, field: 'startPoint', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '终点站', width: 150, field: 'endPoint', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '终点站', width: 200, field: 'endPoint', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '发车时间', width: 150, field: 'departTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '发车时间', width: 200, field: 'departTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '到达时间', width: 150, field: 'arrTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '装载单状态', width: 200, field: 'loadingSta', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             }
           ],
           context: {
@@ -511,7 +513,6 @@
           departTimStart: '', // 发车区域开始
           departTimEnd: '', // 发车区域结束
           loadingId: '', // 装载单ID
-          stockPos: '', // 仓库位置
           driverNam: '' // 司机姓名
         },
         filterForm2: {
@@ -707,6 +708,10 @@
         }
         console.log(confirmData)
         this.drawGrid(2)
+      },
+      // 提交入库异常到后台
+      errorToStage () {
+        this.unusualVisible = false
       },
       // 提交后台
       submit () {

@@ -99,12 +99,6 @@
         <el-button type="primary" @click="colVisible = false">确 定</el-button>
       </div>
     </el-dialog>
-
-    <!-- 增加/编辑成功弹窗 -->
-    <el-dialog title="" :visible.sync="successVisable" size="" tiny>
-      <h2 style="padding:30px">异动信息提交成功！</h2>
-    </el-dialog>
-
   </div>
 </template>
 <script>
@@ -126,7 +120,6 @@ export default {
       colVisible: false,
       addEditVisable: false,
       delVisable: false,
-      successVisable: false,
       orderErrorForm: {
         'orderId': '',
         'orderLogiState': '',
@@ -144,38 +137,20 @@ export default {
         rowData: null,
         columnDefs: [
           {
-            headerName: '订单ID', width: 200, field: 'orderId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '订单ID', width: 300, field: 'orderId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '物流状态更改', width: 200, field: 'orderLogiState', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '物流状态更改', width: 300, field: 'orderLogiState', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '订单位置更改', width: 200, field: 'currPosition', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
-          },
-          {
-            headerName: '操作', field: 'value', width: 200, cellRendererFramework: 'operateComponent', hide: false, visible: true, pinned: 'right', suppressMenu: true, suppressSorting: true
+            headerName: '订单位置更改', width: 300, field: 'currPosition', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           }
         ]
       }
     }
   },
   components: {
-    'ag-grid-vue': AgGridVue,
-    operateComponent: {
-      template: '<el-button class="del-but" type="info" size="small" style="margin-left:35%" @click="setDelVisable">删 除</el-button>',
-      methods: {
-        setDelVisable () {
-          this.params.context.componentParent.delVisable = true
-        },
-        setEditVisable () {
-          let self = this.params.context.componentParent
-          /* var vehicleform = this.params.context.componentParent.vehicleForm
-          vehicleform.licePlateNum = vehicleList[this.params.node.rowIndex].licePlateNum */
-          self.addEditVisable = true
-          self.orderErrorForm = this.params.data
-        }
-      }
-    }
+    'ag-grid-vue': AgGridVue
   },
   methods: {
     visibleChoice (i) {
