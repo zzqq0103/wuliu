@@ -33,7 +33,7 @@ export default new Router({
         },
         {
           path: '/familiarPersonnel',
-          component: resolve => require(['../components/operationAdministrator/familiarPersonnelInfo.vue'], resolve)
+          component: resolve => require(['../components/operationAdministrator/FamiliarPersonne.vue'], resolve)
         },
         {
           path: '/shortvehicle',
