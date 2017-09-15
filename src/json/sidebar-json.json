@@ -75,8 +75,18 @@
             },
             {
                 "icon": "person",
-                "index": "personnel",
-                "title": "客户信息管理"
+                "index": "2",
+                "title": "客户信息管理",
+              "subs":[
+                {
+                  "index":"personnel",
+                  "title":"客户信息"
+                },
+                {
+                  "index":"familiarPersonnel",
+                  "title":"常用客户信息"
+                }
+              ]
             },
             {
                 "icon": "price",
@@ -85,7 +95,7 @@
             },
             {
                 "icon": "enterprise",
-                "index": "2",
+                "index": "3",
                 "title": "外包企业",
                 "subs":[
                 {
