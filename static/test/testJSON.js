@@ -20472,10 +20472,10 @@ export default {
     ]
   },
   //订单信息
-  'oderInfo': {
+  'orderInfo': {
     'list': [
       {
-        "oderId": '1234',
+        "orderId": '1234',
         "departure": '北京',
         "telDeparture": '123456',
         "destination": '苏州',
@@ -20485,7 +20485,7 @@ export default {
         "cargoCondition": '运送中'
       },
       {
-        "oderId": '5678',
+        "orderId": '5678',
         "departure": '南京',
         "telDeparture": '654321',
         "destination": '北京',
@@ -20496,4 +20496,8 @@ export default {
       }
     ]
   },
+  //业务员信息
+  'salesman' : [
+    {"infor": '张三-18080890921' },{"infor": '赵五-18080890921' },{"infor": '李四-18080890921' },{"infor": '王而-18080890921' }
+  ]
 }

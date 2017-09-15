@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <div>
@@ -14,7 +13,8 @@
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">
-                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
+                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"
+                             style="float: left;width: 180px">
                   {{collist.headerName}}
                 </el-checkbox>
               </div>
@@ -64,32 +64,34 @@
     </div>
 
     <!-- 编辑/添加车辆信息弹窗 -->
-    <el-dialog title="车辆信息:" :visible.sync="vehicleVisable" size="tiny">
+    <el-dialog title="接送货车辆信息:" :visible.sync="vehicleVisable" size="tiny">
       <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
         <el-form-item label="车牌号码:" :label-width="formLabelWidth">
-          <el-input v-model="vehicleForm.licePlateNum"  style="width: 80%"></el-input>
+          <el-input v-model="vehicleForm.licePlateNum" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="司机姓名:" :label-width="formLabelWidth">
-          <el-input v-model="vehicleForm.driverName"  style="width: 80%"></el-input>
+          <el-input v-model="vehicleForm.driverName" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="联系电话:" :label-width="formLabelWidth">
-          <el-input v-model="vehicleForm.tel"  style="width: 80%"></el-input>
+          <el-input v-model="vehicleForm.tel" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="车容量:" :label-width="formLabelWidth">
-          <el-input v-model="vehicleForm.capacity"  style="width: 80%"></el-input>
+          <el-input v-model="vehicleForm.capacity" style="width: 30%"></el-input>&nbsp/立方
+        </el-form-item>
+        <el-form-item label="吨位:" :label-width="formLabelWidth">
+          <el-input v-model="vehicleForm.tonnage" style="width: 30%"></el-input>&nbsp/吨
         </el-form-item>
         <el-form-item label="车辆类型:" :label-width="formLabelWidth">
-          <el-input v-model="vehicleForm.carType"  style="width: 80%"></el-input>
+          <el-input v-model="vehicleForm.carType" style="width: 30%"></el-input>
+        </el-form-item>
+        <el-form-item label="车辆状态:" :label-width="formLabelWidth">
+          <el-select v-model="vehicleForm.carState" style="width: 30%">
+            <el-option key="available" label="可用" value="available"></el-option>
+            <el-option key="unavailable" label="不可用" value="unavailable"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="车辆位置:" :label-width="formLabelWidth">
-          <el-input v-model="vehicleForm.carPosition"  style="width: 80%"></el-input>
-        </el-form-item>
-        <el-form-item label="车辆接送区域:" label-width="150px">
-          <el-select v-model="vehicleForm.pickUpArea" placeholder="请选择"  style="width: 80%">
-            <el-option key="ct" label="长途" value="ct"></el-option>
-            <el-option key="dt" label="短途" value="dt"></el-option>
-            <el-option key="ctdt" label="长途与短途" value="ctdt"></el-option>
-          </el-select>
+          <el-input v-model="vehicleForm.carPosition" style="width: 50%"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -97,6 +99,7 @@
         <el-button type="primary" @click="vehicleVisable = false">确 定</el-button>
       </div>
     </el-dialog>
+    <!--编辑车辆信息-->
     <!-- 删除弹窗 -->
     <el-dialog title="" :visible.sync="vehicleDelVisable" size="tiny">
       <h2 style="text-align:center">确认删除车牌号为<{{vehicleForm.licePlateNum}}>的车吗？</h2>
@@ -123,7 +126,7 @@
   </div>
 </template>
 <script>
-  import { AgGridVue } from 'ag-grid-vue'
+  import {AgGridVue} from 'ag-grid-vue'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
 
   export default {
@@ -152,19 +155,19 @@
         vehicleVisable: false,
         vehicleDelVisable: false,
         vehicleForm: {
-          'licePlateNum': '',
-          'driverName': '',
-          'tel': '',
-          'capacity': '',
-          'carType': '',
-          'pickUpArea': '',
-          'carPosition': ''
+          'licePlateNum': '', // 车牌号
+          'driverName': '', // 司机姓名
+          'tel': '', // 司机联系方式
+          'capacity': '', // 车容量
+          'carType': '', // 车型
+          'tonnage': '', // 吨位
+          'carState': '', // 车辆状态
+          'carPosition': '' // 车辆位置
         },
-        rules: {
-        },
+        rules: {},
         rowCount: 0,
         pageSize: 10,
-        formLabelWidth: '150px',
+        formLabelWidth: '30%',
         gridOptions: {
           context: {
             componentParent: this
@@ -180,31 +183,79 @@
               visible: true
             },
             {
-              headerName: '车牌号码', width: 150, field: 'licePlateNum', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '车牌号码',
+              width: 150,
+              field: 'licePlateNum',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '司机姓名', width: 150, field: 'driverName', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '司机姓名',
+              width: 150,
+              field: 'driverName',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '联系电话', width: 150, field: 'tel', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '联系电话',
+              width: 150,
+              field: 'tel',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '车容量', width: 150, field: 'capacity', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '车容量',
+              width: 150,
+              field: 'capacity',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '吨位', width: 150, field: 'tonnage', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '吨位',
+              width: 150,
+              field: 'tonnage',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '车辆类型', width: 150, field: 'carType', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '车辆类型',
+              width: 150,
+              field: 'carType',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '车辆状态', width: 150, field: 'carState', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '车辆状态',
+              width: 150,
+              field: 'carState',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '车辆位置', width: 150, field: 'carPosition', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '车辆位置',
+              width: 150,
+              field: 'carPosition',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             },
             {
-              headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false, visible: true, suppressMenu: true, suppressSorting: true, pinned: 'right'
+              headerName: '操作',
+              field: 'value',
+              width: 150,
+              cellRendererFramework: 'operateComponent',
+              hide: false,
+              visible: true,
+              suppressMenu: true,
+              suppressSorting: true,
+              pinned: 'right'
             }
           ]
         }

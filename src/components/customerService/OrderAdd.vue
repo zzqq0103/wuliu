@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 style="text-align:center">网点开单</h2>
-    <el-form ref="form" :model="form">
+    <el-form ref="form" :model="form" rules="orderRules">
       <div style='margin-top:2%;display:inline-block;width:100%'>
         <span style='float:left;padding-top:0.7%;width:5%'>日期：</span>
         <span style='float:left;padding-top:0.9%;width:13%'>{{timeNow}}</span>
@@ -35,7 +35,7 @@
         </div>
         -->
         <div class='dropdown_fahuo col-4'>
-            <input type="text" 上  class='input' style='width:100%' v-model='fahuoKeyword' @keyup="getSearchFahuo()"  placeholder="请输入发货方名称"></input>
+            <input type="text"  class='input' style='width:100%' v-model='form.shipNam' @keyup="getSearchFahuo()" v-bind:class="{'error':isshipNam}" placeholder="请输入发货方名称"  @blur="check(1)"></input>
             <div class="dropdown-content" v-show="fahuoShow" style='width:39%'> 
               <div class='dropdown-select'>
                 <ul class='dropdown-fahuo'>
@@ -45,16 +45,16 @@
             </div>
         </div>
         <span class='label col-1'>收货方</span>
-        <input class='input col-4' style='height:38px' v-model="form.receNam"></input>
+        <input class='input col-4' style='height:38px' v-model="form.receNam" v-bind:class="{'error':isreceNam}"  @blur="check(2)"  placeholder="请输入收货方名称"></input>
         <span class='label col-1'>电话</span>
-        <input class='input col-4' style='height:38px' v-model="form.shipTel"></input>
+        <input class='input col-4' style='height:38px' v-bind:class="{ 'error': isshipTel}" v-model="form.shipTel"  @blur="check(3)"></input>
         <span class='label col-1'>电话</span>
-        <input class='input col-4' style='height:38px' v-model="form.receTel"></input>
+        <input class='input col-4' style='height:38px' v-bind:class="{'error':isreceTel}" v-model="form.receTel"  @blur="check(4)"></input>
         <!-- <span class='label col-1'>地址</span>
         <input class='input col-4' style='height:38px'></input> -->
         <div class='label col-1'>提货地址:</div>
-        <div id='focus_fahuoAd' class='dropdown col-2' style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(1)" @blur="addressVisible=false">
-            <input type="text" v-model="form.baseAddressFa" v-bind:readonly="isReadOnly" class='input' style='width:100%' @focus="addressVisible=true" placeholder="请选择发货地址"></input>
+        <div id='focus_fahuoAd' class='dropdown col-2' style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(1)" @blur="check(5)">
+            <input type="text" v-model="form.baseAddressFa" v-bind:readonly="isReadOnly" class='input' v-bind:class="{'error':isbaseAddressFa}" style='width:100%' @focus="addressVisible=true" placeholder="请选择发货地址"></input>
             <div class="dropdown-content2 col-2" v-show="addressVisible"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
@@ -74,10 +74,10 @@
               </div>
             </div>
         </div>
-        <input class='input col-2' v-model='form.pickUpAdr' placeholder="输入详细提货地址"></input>
+        <input class='input col-2' v-model='form.pickUpAdr' v-bind:class="{'error':ispickUpAdr}" @blur="check(6)" placeholder="输入详细提货地址"></input>
         <span class='label col-1'>收货地址</span>
-        <div id='focus_shouhuoAd' class="dropdown col-2" style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(2)" @blur="addressVisible2=false">
-            <input type="text" v-model="form.baseAddressShou" v-bind:readonly="isReadOnly" class='input' style="width:100%" @focus="addressVisible2=true" placeholder="请选择提货地址"></input>
+        <div id='focus_shouhuoAd' class="dropdown col-2" style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(2)" @blur="check(7)">
+            <input type="text" v-model="form.baseAddressShou" v-bind:readonly="isReadOnly" class='input' style="width:100%" v-bind:class="{'error':isbaseAddressShou}" @focus="addressVisible2=true" placeholder="请选择提货地址"></input>
             <div class="dropdown-content2 col-2" style='margin-top:38px' v-show="addressVisible2"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
@@ -97,7 +97,7 @@
               </div>
             </div>
           </div>
-        <input class='input col-2' placeholder="输入详细收货地址" v-model="form.receAdr"></input>
+        <input class='input col-2' placeholder="输入详细收货地址" v-bind:class="{'error':isreceAdr}" @blur="check(8)" v-model="form.receAdr"></input>
         <span class='label label-mo col-1'>货物名称</span>
         <span class='label label-mo col-1'>包装</span>
         <span class='label col-1 label-mo'>件数</span>
@@ -146,8 +146,7 @@
         <span class='label col-1 label-mo'>包装费</span>
         <span class='label col-1 label-mo'>卸货费</span>
         <span class='label col-1 label-mo'>保价费</span>
-        <span class='label col-1 label-mo'>代收费</span>
-        <label class='label col-1 label-mo'>其它费用</label>
+        <span class='label col-2 label-mo'>代收费</span>
         <label class='label2 col-2' style="height:29px">返款</label>
         <label class='label2 col-1' style="height:29px">金额</label>
         <label class='label2 col-1' style="height:29px">支付方式</label>
@@ -157,14 +156,39 @@
         <input class='input col-1 input-mid' v-model="form.packFee"></input>
         <input class='input col-1 input-mid' v-model="form.landingFee"></input>
         <input class='input col-1 input-mid' v-model="form.insurance" @click="coverageVisible = true" v-bind:readonly="true"></input>
-        <input class='input col-1 input-mid'></input>
-        <input class='input col-1 input-mid'></input>
+        <input class='input col-2 input-mid'></input>
         <input class='input col-1 input-mid' v-model="form.refuMoney"></input>
         <input class='input col-1 input-mid'></input>
-        <span class='label col-1 input-mid'>费用合计</span>
-        <input class='input col-2'></input>
+        <span class='label col-1 label-mo'>异动收入</span>
+        <span class='label col-1 label-mo'>异动支出</span>
+        <span class='label col-2 label-mo'>总运费</span>
+        <span class='label col-2 label-mo'>代收金额</span>
+        <label class='label2 col-4' style="height:29px">返款</label>
+        <label class='label2 col-1' style="height:29px">现付</label>
+        <label class='label2 col-1' style="height:29px">到付</label>
+        <label class='label2 col-1' style="height:29px">欠付</label>
+        <label class='label2 col-1' style="height:29px">月结</label>
+        <input class='input col-1 input-mid'></input>
+        <input class='input col-1 input-mid'></input>
+        <input class='input col-2 input-mid'></input>
+        <input class='input col-2 input-mid'></input>
+        <input class='input col-1 input-mid'></input>
+        <input class='input col-1 input-mid'></input>
+        <input class='input col-1 input-mid'></input>
+        <input class='input col-1 input-mid'></input>
       </div>
     </el-form>
+
+    <div style='text-align:center;clear:both'>
+      <el-button style='margin-top:2%;background-color:#00d1b2;color:white' @click="submitOrder()">保存</el-button>
+      <el-button style='margin-left:10%'>取消</el-button>
+    </div>
+    
+    <!-- 错误输入提示弹窗 -->
+    <el-dialog title="错误：" :visible.sync="wrongNoteVisable" size="tiny">
+      <h2 style="text-align:center;padding: 30px 0 30px 0px">{{wrongNote}}</h2>
+    </el-dialog>
+
     <!-- 输入保额弹窗 -->
     <el-dialog :visible.sync="coverageVisible" size="tiny">
       <el-form :rules="rules" v-model='form' style='text-align:center;verticle-align:center'>
@@ -178,10 +202,6 @@
         <el-button type="primary" @click="setInsurance">确 定</el-button>
       </div>
     </el-dialog>
-    <!--生成运费弹窗-->
-    <el-dialog :visible.sync="baseFeeVisible" size="tiny">
-      <el-button style='text-align:center;verticle-align:center' @click="getBaseFee">生成运费</el-button>
-    </el-dialog>
   </div>
 </template>
 
@@ -194,16 +214,34 @@ export default {
   },
   data: function () {
     return {
+      wrongNote: '',
       receList: [1, 2, 3],
+      wrongNoteVisable: false, // 错误提示弹窗
       coverageVisible: false, // 保额输入弹窗
+      isbaseAddressFa: false, // 样式class是否选择
+      isbaseAddressShou: false,
+      isshipNam: false,
+      isshipTel: false,
+      ispickUpAdr: false,
+      isreceNam: false,
+      isreceTel: false,
+      isreceAdr: false,
+      baseAddressFaOk: false, // 是否验证无误
+      baseAddressShouOk: false,
+      shipNamOk: false,
+      shipTelOk: false,
+      pickUpAdrOk: false,
+      receNamOk: false,
+      receTelOk: false,
+      receAdrOk: false,
       fahuoRelated: {
         baseAddressFa: '北京北京海淀区',
         baseAddressShou: '江苏无锡惠山区',
         shipNam: '张三发',
-        shipTel: '发货方电话',
+        shipTel: '15003582722',
         pickUpAdr: '提货地址',
         receNam: '李四收',
-        receTel: '收货方电话',
+        receTel: '18810690061',
         receAdr: '收货方地址'
       },
       fahuoList: [],
@@ -280,6 +318,11 @@ export default {
         orderNote: '',
         baseAddressFa: '',
         baseAddressShou: ''
+      },
+      orderRules: {
+        shipTel: [
+          {required: true, message: '请输入发货方电话', trigger: 'blur'}
+        ]
       }
     }
   },
@@ -306,17 +349,106 @@ export default {
     test () {
       alert('sds')
     },
-    // 自动生成运费
-    getBaseFee () {
-      this.form.baseFee = 1000
-      this.baseFeeVisible = false
+    // 验证规则
+    check (num) {
+      if (num === 1 || num === 0) {
+        if (this.form.shipNam === '') {
+          this.isshipNam = true
+        } else {
+          this.isshipNam = false
+          this.shipNamOk = true
+        }
+      }
+      if (num === 2 || num === 0) {
+        if (this.form.receNam === '') {
+          this.isreceNam = true
+        } else {
+          this.isreceNam = false
+          this.receNamOk = true
+        }
+      }
+      if (num === 3 || num === 0) {
+        let a = 'isshipTel'
+        if (this.form.shipTel === '') {
+          this[a] = true
+        } else if (!(/^1[3|4|5|8]\d{9}$/.test(this.form.shipTel))) {
+          this[a] = true
+          this.wrongNote = '请输入正确电话号码'
+          this.wrongNoteVisable = true
+          setTimeout(() => { this.wrongNoteVisable = false }, 800)
+        } else {
+          this[a] = false
+          this.shipTelOk = true
+        }
+      }
+      if (num === 4 || num === 0) {
+        if (this.form.receTel === '') {
+          this.isreceTel = true
+        } else if (!(/^1[3|4|5|8]\d{9}$/.test(this.form.receTel))) {
+          this.isreceTel = true
+          this.wrongNote = '请输入正确电话号码'
+          this.wrongNoteVisable = true
+          setTimeout(() => { this.wrongNoteVisable = false }, 800)
+        } else {
+          this.isreceTel = false
+          this.receTelOk = true
+        }
+      }
+      if (num === 5 || num === 0) {
+        this.addressVisible = false
+        if (this.form.baseAddressFa === '') {
+          this.isbaseAddressFa = true
+        } else if (this.shiSelected === '' || this.shenfenSelected === '' || this.quSelected === '') {
+          this.isbaseAddressFa = true
+          this.wrongNote = '请选择提货地址完整区域'
+          this.wrongNoteVisable = true
+          setTimeout(() => { this.wrongNoteVisable = false }, 800)
+        } else {
+          this.isbaseAddressFa = false
+          this.baseAddressFaOk = true
+        }
+      }
+      if (num === 6 || num === 0) {
+        if (this.form.pickUpAdr === '') {
+          this.ispickUpAdr = true
+        } else {
+          this.ispickUpAdr = false
+          this.pickUpAdrOk = true
+        }
+      }
+      if (num === 7 || num === 0) {
+        this.addressVisible2 = false
+        if (this.form.baseAddressShou === '') {
+          this.isbaseAddressShou = true
+        } else if (this.shiSelected2 === '' || this.shenfenSelected2 === '' || this.quSelected2 === '') {
+          this.isbaseAddressShou = true
+          this.wrongNote = '请选择提货完整区域'
+          this.wrongNoteVisable = true
+          setTimeout(() => { this.wrongNoteVisable = false }, 800)
+        } else {
+          this.isbaseAddressShou = false
+          this.baseAddressShouOk = true
+        }
+      }
+      if (num === 8 || num === 0) {
+        if (this.form.receAdr === '') {
+          this.isreceAdr = true
+        } else {
+          this.isreceAdr = false
+          this.receAdrOk = true
+        }
+      }
+    },
+    // 提交订单
+    submitOrder () {
+      this.check(0)
     },
     // 实时搜索发货方列表
     getSearchFahuo () {
-      if (this.fahuoKeyword !== '') {
+      if (this.form.shipNam !== '') {
         this.fahuoShow = true
         this.fahuoList = ['发货方1', '发货方2', '发货方3', '发货方4']
-      } else if (this.fahuoKeyword === '') {
+      } else if (this.form.shipNam === '') {
         this.fahuoShow = false
       }
     },
@@ -351,9 +483,6 @@ export default {
       }
     },
     cancleOrder () {
-      this.cancleVisable = false
-    },
-    submitOrder () {
       this.cancleVisable = false
     },
     selectShenfen (num, name) {
@@ -683,7 +812,9 @@ export default {
   padding: 0.5% 10px;
   transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
 }
-
+.error {
+  border: 3px solid #f00000;
+}
 .label2 {
   background-color: #fff;
   border: 1px solid #000000;
