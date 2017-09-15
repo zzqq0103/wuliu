@@ -7,6 +7,7 @@
       <h3 style="text-align: center;color:red;">待装载订单列表</h3>
       <el-button @click="leftSelect" style="float:right;"> > </el-button>
       <el-button @click="leftSelectAll" style="float:right;margin-right:10px;"> >> </el-button>
+      <p style="float:left;padding-top:20px;font-size:16px;">司机信息: <span style="color:red;">张学林 豫PE6112 13404164678</span><i class="el-icon-picture" style="margin-left:20px;font-size:18px;"></i></p>
       <ag-grid-vue style="widht:100%;height: 700px; margin-top:57px; " class="ag-blue"
                    :gridOptions="gridOptions_left"
                    :suppressMovableColumns="true"
@@ -49,8 +50,6 @@
       <el-button type="danger" style="float:right;margin-top:10px;" @click="cancle">取消</el-button>
       <el-button type="success" style="float:right;margin-right:30px;margin-top:10px;" @click="adjust">确定</el-button>
     </div>
-
-
 
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
     <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :modal-append-to-body=false :close-on-press-escape=false top="5%">
