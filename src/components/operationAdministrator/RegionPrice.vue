@@ -1,15 +1,12 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align:center">长途车辆信息管理</h2>
+      <h2 style="text-align:center">区域价格管理</h2>
       <div style="margin-top:1%">
         <div style="float: right">
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div>
-          <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
-          <el-button @click="vehicleAdd">添加</el-button>
-          <!-- <el-button @click="setting">设置</el-button> -->
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">
@@ -62,88 +59,37 @@
         :total="rowCount">
       </el-pagination>
     </div>
-
-    <!-- 添加车辆信息弹窗 -->
-    <el-dialog title="注册车辆信息:" :visible.sync="vehicleVisable" size="tiny">
-      <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
-        <el-form-item label="车牌号码:" :label-width="formLabelWidth" prop="licePlateNum">
-          <el-input v-model="vehicleForm.licePlateNum" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverName">
-          <el-input v-model="vehicleForm.driverName" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="vehicleForm.tel" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="合同号:" :label-width="formLabelWidth" prop="contractID">
-          <el-input v-model="vehicleForm.contractID" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="合同价格:" :label-width="formLabelWidth" prop="contractPrice">
-          <el-input v-model="vehicleForm.contractPrice" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="目的枢纽:" :label-width="formLabelWidth" prop="targetHub">
-          <el-input v-model="vehicleForm.targetHub" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="车容量:" :label-width="formLabelWidth" prop="capacity">
-          <el-input v-model="vehicleForm.capacity" style="width: 30%"></el-input>
-          &nbsp/立方
-        </el-form-item>
-        <el-form-item label="吨位:" :label-width="formLabelWidth" prop="tonnage">
-          <el-input v-model="vehicleForm.tonnage" style="width: 30%"></el-input>
-          &nbsp/吨
-        </el-form-item>
-        <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
-          <el-select v-model="vehicleForm.carState" style="width: 30%">
-            <el-option key="available" label="可用" value="available"></el-option>
-            <el-option key="unavailable" label="不可用" value="unavailable"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="车辆位置:" :label-width="formLabelWidth" prop="carPosition">
-          <el-input v-model="vehicleForm.carPosition" style="width: 50%"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="vehicleVisable = false">取 消</el-button>
-        <el-button type="primary" @click="vehicleVisable = false">注 册</el-button>
-      </div>
-    </el-dialog>
     <!--编辑车辆信息-->
-    <el-dialog title="编辑车辆信息:" :visible.sync="editVisable" size="tiny">
-      <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
+    <el-dialog title="编辑接送货车辆信息:" :visible.sync="editVisable" size="tiny">
+      <el-form :model="regionForm" :rules="rules" ref="regionForm">
         <el-form-item label="车牌号码:" :label-width="formLabelWidth" prop="licePlateNum">
-          <el-input v-model="vehicleForm.licePlateNum" style="width: 50%"></el-input>
+          <el-input v-model="regionForm.licePlateNum" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverName">
-          <el-input v-model="vehicleForm.driverName" style="width: 50%"></el-input>
+          <el-input v-model="regionForm.driverName" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="vehicleForm.tel" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="合同号:" :label-width="formLabelWidth" prop="contractID">
-          <el-input v-model="vehicleForm.contractID" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="合同价格:" :label-width="formLabelWidth" prop="contractPrice">
-          <el-input v-model="vehicleForm.contractPrice" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="目的枢纽:" :label-width="formLabelWidth" prop="targetHub">
-          <el-input v-model="vehicleForm.targetHub" style="width: 50%"></el-input>
+          <el-input v-model="regionForm.tel" style="width: 50%" disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="车容量:" :label-width="formLabelWidth" prop="capacity">
-          <el-input v-model="vehicleForm.capacity" style="width: 30%"></el-input>
+          <el-input v-model="regionForm.capacity" style="width: 30%"></el-input>
           &nbsp/立方
         </el-form-item>
         <el-form-item label="吨位:" :label-width="formLabelWidth" prop="tonnage">
-          <el-input v-model="vehicleForm.tonnage" style="width: 30%"></el-input>
+          <el-input v-model="regionForm.tonnage" style="width: 30%"></el-input>
           &nbsp/吨
         </el-form-item>
+        <el-form-item label="车辆类型:" :label-width="formLabelWidth" prop="carType">
+          <el-input v-model="regionForm.carType" style="width: 30%"></el-input>
+        </el-form-item>
         <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
-          <el-select v-model="vehicleForm.carState" style="width: 30%">
+          <el-select v-model="regionForm.carState" style="width: 30%">
             <el-option key="available" label="可用" value="available"></el-option>
             <el-option key="unavailable" label="不可用" value="unavailable"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="车辆位置:" :label-width="formLabelWidth" prop="carPosition">
-          <el-input v-model="vehicleForm.carPosition" style="width: 50%"></el-input>
+          <el-input v-model="regionForm.carPosition" style="width: 50%"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -152,11 +98,11 @@
       </div>
     </el-dialog>
     <!-- 删除弹窗 -->
-    <el-dialog title="" :visible.sync="vehicleDelVisable" size="tiny">
-      <h2 style="text-align:center">确认删除车牌号为<{{vehicleForm.licePlateNum}}>的车吗？</h2>
+    <el-dialog title="" :visible.sync="regionDelVisable" size="tiny">
+      <h2 style="text-align:center">确认删除车牌号为<{{regionForm.licePlateNum}}>的车吗？</h2>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="vehicleDelVisable = false">取 消</el-button>
-        <el-button @click="vehicleDelVisable = false" type="primary">确 定</el-button>
+        <el-button @click="regionDelVisable = false">取 消</el-button>
+        <el-button @click="regionDelVisable = false" type="primary">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -183,8 +129,8 @@
   export default {
     created () {
       for (var i = 0; i < 100; i++) {
-        this.vehicleList.push({
-          'licePlateNum': i,
+        this.regionList.push({
+          'licePlateNum': 'num' + i,
           'driverName': 'test' + i,
           'tel': '电话号码' + i,
           'contractID': '合同ID' + i,
@@ -201,25 +147,22 @@
     },
     data () {
       return {
-        vehicleList: [],
+        regionList: [],
         colVisible: false,
-        vehicleVisable: false,
-        vehicleDelVisable: false,
+        regionVisable: false,
+        regionDelVisable: false,
         editVisable: false,
-        vehicleForm: {
+        regionForm: {
           'licePlateNum': '', // 车牌号
           'driverName': '', // 司机姓名
-          'tel': '', // 司机联系电话
-          'contractID': '', // 合同号
-          'contractPrice': '', // 合同价格
-          'carType': '', // 车型
-          'shipmentsNum': '', // 运输次数
-          'targetHub': '', // 目的枢纽
+          'tel': '', // 司机联系方式
           'capacity': '', // 车容量
+          'carType': '', // 车型
           'tonnage': '', // 吨位
           'carState': '', // 车辆状态
           'carPosition': '' // 车辆位置
         },
+        rerender: true, // 用于重新刷新添加的弹框
         rules: {
           licePlateNum: [{
             required: true, message: '请输入车牌号', trigger: 'blur'
@@ -228,19 +171,13 @@
             required: true, message: '请输入司机姓名', trigger: 'blur'
           }],
           tel: [{
-            required: true, message: '请输入司机联系电话', trigger: 'blur'
-          }],
-          contractID: [{
-            required: true, message: '请输入合同号', trigger: 'blur'
-          }],
-          contractPrice: [{
-            required: true, message: '请输入合同价格', trigger: 'blur'
-          }],
-          targetHub: [{
-            required: true, message: '请输入目的枢纽', trigger: 'blur'
+            required: true, message: '请输入联系方式', trigger: 'blur'
           }],
           capacity: [{
             required: true, message: '请输入车容量', trigger: 'blur'
+          }],
+          carType: [{
+            required: true, message: '请输入车型', trigger: 'blur'
           }],
           tonnage: [{
             required: true, message: '请输入吨位', trigger: 'blur'
@@ -254,7 +191,8 @@
         },
         rowCount: 0,
         pageSize: 10,
-        formLabelWidth: '150px',
+        currentPage: 1, // 分页当前页面
+        formLabelWidth: '30%',
         gridOptions: {
           context: {
             componentParent: this
@@ -270,47 +208,7 @@
               visible: true
             },
             {
-              headerName: '车牌号码',
-              width: 150,
-              field: 'licePlateNum',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '司机姓名',
-              width: 150,
-              field: 'driverName',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '联系电话',
-              width: 150,
-              field: 'tel',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '合同号',
-              width: 150,
-              field: 'contractID',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '合同价格',
-              width: 150,
-              field: 'contractPrice',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '车辆类型',
+              headerName: '车型',
               width: 150,
               field: 'carType',
               filterFramework: PartialMatchFilterComponent,
@@ -318,49 +216,25 @@
               visible: true
             },
             {
-              headerName: '运输次数',
+              headerName: '所属区域名称',
               width: 150,
-              field: 'shipmentsNum',
+              field: 'regionName',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
             {
-              headerName: '目的枢纽',
+              headerName: '区域起步价',
               width: 150,
-              field: 'targetHub ',
+              field: 'startPrice',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
             {
-              headerName: '车容量',
+              headerName: '区域单票价',
               width: 150,
-              field: 'capacity',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '吨位',
-              width: 150,
-              field: 'tonnage',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '车辆状态',
-              width: 150,
-              field: 'carState',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '车辆位置',
-              width: 150,
-              field: 'carPosition',
+              field: 'singleFare ',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -383,24 +257,18 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><el-button class="del-but" type="info" size="small" @click="vehicleEdit">编 辑</el-button><el-button class="del-but" type="danger" size="small" @click="vehicleDel">删 除</el-button></span>',
+        template: '<span><el-button class="del-but" type="info" size="small" @click="regionEdit">编 辑</el-button></span>',
         methods: {
-          vehicleDel () {
-            this.params.context.componentParent.vehicleDelVisable = true
-            this.params.context.componentParent.vehicleForm.licePlateNum = this.params.data.licePlateNum
-          },
-          vehicleEdit () {
-            /* var vehicleform = this.params.context.componentParent.vehicleForm
-             vehicleform.licePlateNum = vehicleList[this.params.node.rowIndex].licePlateNum */
-            this.params.context.componentParent.vehicleVisable = true
-            this.params.context.componentParent.vehicleForm = this.params.data
+          regionEdit () {
+            this.params.context.componentParent.editVisable = true
+            this.params.context.componentParent.regionForm = this.params.data
           }
         }
       }
     },
     methods: {
       createRowData () {
-        this.gridOptions.rowData = this.vehicleList
+        this.gridOptions.rowData = this.regionList
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
@@ -425,17 +293,6 @@
           this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
         }
       },
-      // 增加
-      vehicleAdd () {
-        this.vehicleVisable = true
-        this.vehicleForm.licePlateNum = ''
-        this.vehicleForm.driverName = ''
-        this.vehicleForm.tel = ''
-        this.vehicleForm.capacity = ''
-        this.vehicleForm.carType = ''
-        this.vehicleForm.pickUpArea = ''
-        this.vehicleForm.carPosition = ''
-      },
       handleSizeChange (val) {
         this.gridOptions.api.paginationSetPageSize(Number(val))
       },
@@ -457,6 +314,10 @@
     mounted () {
       this.calculateGrid()
     }
+//    update () {
+//      console.log('update')
+//    }
   }
 </script>
-
+<style scoped>
+</style>

@@ -62,23 +62,23 @@
           <el-form-item style="width:5%;float:right;padding-right:1%">
             <el-button @click="drawGrid(1)">提取</el-button>
           </el-form-item>
-          
+
           <el-form-item label="中转费合计：" style='float:left;width:25%'>
             <el-input v-model="totalForm.transferFeeTotal" style='width:50%'></el-input>
           </el-form-item>
           <div v-if="filterForm.payType === 'nowPay'">
             <el-form-item label="现返金额合计：" style='float:left;width:25%'>
               <el-input readonly="readonly" v-model="totalForm.totalMoney" style='width:50%'></el-input>
-            </el-form-item>   
+            </el-form-item>
           </div>
           <div v-else>
             <el-form-item label="欠返金额合计：" style='float:left;width:25%'>
               <el-input readonly="readonly" v-model="totalForm.totalMoney" style='width:50%'></el-input>
-            </el-form-item> 
+            </el-form-item>
           </div>
           <el-form-item style="float:left;width:13%;padding-left:0.6%">
             <el-input  placeholder="输入内容进行搜索" @input="onQuickFilterChanged" style="width:100%"></el-input>
-          </el-form-item>       
+          </el-form-item>
         </el-form>
     </div>-->
     <!--表格上方操作区域-->
@@ -519,7 +519,7 @@
           'shipTel': '发货人联系方式' + i,
           'receNam': '收货人' + i,
           'receTel': '收货人联系方式' + i,
-          'serviceNam': '制单人' + i,
+          'serviceNam': '开单客服' + i,
           'changeFee': i, // 中转费
           'changeTim': '中转时间' + i,
           'payType': '付款方式' + i,
@@ -538,7 +538,7 @@
           'orderState': '运单状态' + i,
           'shipNam': '发货人' + i,
           'receNam': '收货人' + i,
-          'serviceNam': '制单人' + i,
+          'serviceNam': '开单客服' + i,
           'feeMoney': i // 付款金额
         })
       }
@@ -584,7 +584,7 @@
               headerName: '收货人联系方式', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '开单客服', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
               headerName: '中转费', width: 150, field: 'changeFee', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
@@ -638,7 +638,7 @@
               headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '开单客服', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {}
           ],
@@ -662,7 +662,7 @@
               headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '开单客服', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {}
           ],

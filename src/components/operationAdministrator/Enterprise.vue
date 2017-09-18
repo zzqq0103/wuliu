@@ -75,8 +75,28 @@
         <el-button type="primary" @click="enterpriseVisable = false">确 定</el-button>
       </div>
     </el-dialog>
-
-    <el-dialog title="" :visible.sync="enterpriseDelVisable" size="" tiny>
+    <!--编辑弹框-->
+    <el-dialog title="外包企业信息编辑:" :visible.sync="editVisable" size="tiny">
+      <el-form :model="enterpriseForm" :rules="rules" ref="enterpriseForm">
+        <el-form-item label="公司名称:" :label-width="formLabelWidth" prop="companyname">
+          <el-input v-model="enterpriseForm.companyname" style="width: 50%"></el-input>
+        </el-form-item>
+        <el-form-item label="中转起始点:" :label-width="formLabelWidth" prop="changeStart">
+          <el-input v-model="enterpriseForm.changeStart" style="width: 50%"></el-input>
+        </el-form-item>
+        <el-form-item label="中转企业联系人:" :label-width="formLabelWidth" prop="changeName">
+          <el-input v-model="enterpriseForm.changeName" style="width: 50%"></el-input>
+        </el-form-item>
+        <el-form-item label="联系方式:" :label-width="formLabelWidth" prop="id">
+          <el-input v-model="enterpriseForm.id" style="width: 50%" disabled="true"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editVisable = false">取 消</el-button>
+        <el-button type="primary" @click="editVisable = false">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="删除客户信息" :visible.sync="enterpriseDelVisable" size="tiny">
       <h2 style="padding:30px">确认删除吗？</h2>
       <div slot="footer" class="dialog-footer">
         <el-button @click="enterpriseDelVisable = false">取 消</el-button>
@@ -111,6 +131,7 @@
         colVisible: false,
         enterpriseVisable: false,
         enterpriseDelVisable: false,
+        editVisable: false,
         enterpriseForm: {
           'companyname': '', // 外包公司名称
           'changeStart': '', // 中转起始地
@@ -203,7 +224,7 @@
           vehicleEdit () {
             /* var vehicleform = this.params.context.componentParent.vehicleForm
              vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum */
-            this.params.context.componentParent.enterpriseVisable = true
+            this.params.context.componentParent.editVisable = true
             console.log(this.params.data)
             this.params.context.componentParent.enterpriseForm = this.params.data
           }

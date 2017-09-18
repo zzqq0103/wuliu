@@ -518,7 +518,7 @@
               visible: true
             },
             {
-              headerName: '制单人',
+              headerName: '开单客服',
               width: 100,
               field: 'serviceNam',
               filterFramework: PartialMatchFilterComponent,
@@ -710,7 +710,7 @@
               visible: true
             },
             {
-              headerName: '制单人',
+              headerName: '开单客服',
               width: 100,
               field: 'serviceNam',
               filterFramework: PartialMatchFilterComponent,
@@ -902,7 +902,7 @@
               visible: true
             },
             {
-              headerName: '制单人',
+              headerName: '开单客服',
               width: 100,
               field: 'serviceNam',
               filterFramework: PartialMatchFilterComponent,
