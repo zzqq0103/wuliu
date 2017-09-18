@@ -42,6 +42,8 @@
                    :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
+                   :pagination="true"
+                   :suppressPaginationPanel="true"
                    :rowHeight="40"
                    :headerHeight="40"
       ></ag-grid-vue>
@@ -52,14 +54,17 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentpage"
-        :page-sizes="[25, 50, 75, 100]"
-        :page-size="25"
+        :page-sizes="[20,50,100,200]"
+        :page-size="20"
         layout="total, sizes, prev, pager, next"
         :total="totalpages">
       </el-pagination>
     </div>
     <div>
-      <el-dialog title="提示" :visible.sync="delFormVisible" size="small" top="30%" :closeOnClickModal="false">
+      <el-dialog title="提示" :visible.sync="delFormVisible" size="tiny" top="30%"
+                 :closeOnClickModal="false"
+                 :close-on-press-escape="false"
+                 :show-close="false">
         <h2 style="padding:30px">确认删除吗？</h2>
         <div slot="footer" class="dialog-footer">
           <el-button @click="delFormVisible = false">取 消</el-button>
@@ -209,8 +214,7 @@
         this.pageSize = val
       },
       handleCurrentChange (val) {
-        this.currentpage = val
-        this.getOrderList()
+        this.gridOptions.api.paginationGoToPage(val - 1)
       },
       handleIconClick (input) {
         this.getQueryData()
