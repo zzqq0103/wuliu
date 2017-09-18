@@ -1,13 +1,12 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align:center">接送货车辆信息管理</h2>
+      <h2 style="text-align:center">区域价格管理</h2>
       <div style="margin-top:1%">
         <div style="float: right">
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
         <div>
-          <el-button @click="vehicleAdd">添加</el-button>
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">
@@ -60,91 +59,50 @@
         :total="rowCount">
       </el-pagination>
     </div>
-
-    <!-- 添加车辆信息弹窗 -->
-    <el-dialog title="添加接送货车辆信息:" :visible.sync="vehicleVisable" size="tiny">
-      <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
-        <el-form-item label="车牌号码:" :label-width="formLabelWidth" prop="licePlateNum">
-          <el-input v-model="vehicleForm.licePlateNum" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverName">
-          <el-input v-model="vehicleForm.driverName" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="vehicleForm.tel" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="车容量:" :label-width="formLabelWidth" prop="capacity">
-          <el-input v-model="vehicleForm.capacity" style="width: 30%"></el-input>
-          &nbsp/立方
-        </el-form-item>
-        <el-form-item label="吨位:" :label-width="formLabelWidth" prop="tonnage">
-          <el-input v-model="vehicleForm.tonnage" style="width: 30%"></el-input>
-          &nbsp/吨
-        </el-form-item>
-        <el-form-item label="车辆类型:" :label-width="formLabelWidth" prop="carType">
-          <el-input v-model="vehicleForm.carType" style="width: 30%"></el-input>
-        </el-form-item>
-        <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
-          <el-select v-model="vehicleForm.carState" style="width: 30%">
-            <el-option key="available" label="可用" value="available"></el-option>
-            <el-option key="unavailable" label="不可用" value="unavailable"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="车辆位置:" :label-width="formLabelWidth" prop="carPosition">
-          <el-input v-model="vehicleForm.carPosition" style="width: 50%"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="vehicleVisable = false">取 消</el-button>
-        <el-button @click="resetForm('vehicleForm')">重置</el-button>
-        <el-button type="primary" @click="submitForm('vehicleForm')">注 册</el-button>
-      </div>
-    </el-dialog>
     <!--编辑车辆信息-->
-    <el-dialog title="编辑接送货车辆信息:" :visible.sync="editVisable" size="tiny" @close="resetForm('editForm')">
-      <el-form :model="editForm" :rules="rules" ref="editForm">
+    <el-dialog title="编辑接送货车辆信息:" :visible.sync="editVisable" size="tiny">
+      <el-form :model="regionForm" :rules="rules" ref="regionForm">
         <el-form-item label="车牌号码:" :label-width="formLabelWidth" prop="licePlateNum">
-          <el-input v-model="editForm.licePlateNum" style="width: 50%"></el-input>
+          <el-input v-model="regionForm.licePlateNum" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverName">
-          <el-input v-model="editForm.driverName" style="width: 50%"></el-input>
+          <el-input v-model="regionForm.driverName" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="editForm.tel" style="width: 50%" disabled="true"></el-input>
+          <el-input v-model="regionForm.tel" style="width: 50%" disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="车容量:" :label-width="formLabelWidth" prop="capacity">
-          <el-input v-model="editForm.capacity" style="width: 30%"></el-input>
+          <el-input v-model="regionForm.capacity" style="width: 30%"></el-input>
           &nbsp/立方
         </el-form-item>
         <el-form-item label="吨位:" :label-width="formLabelWidth" prop="tonnage">
-          <el-input v-model="editForm.tonnage" style="width: 30%"></el-input>
+          <el-input v-model="regionForm.tonnage" style="width: 30%"></el-input>
           &nbsp/吨
         </el-form-item>
         <el-form-item label="车辆类型:" :label-width="formLabelWidth" prop="carType">
-          <el-input v-model="editForm.carType" style="width: 30%"></el-input>
+          <el-input v-model="regionForm.carType" style="width: 30%"></el-input>
         </el-form-item>
         <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
-          <el-select v-model="editForm.carState" style="width: 30%">
+          <el-select v-model="regionForm.carState" style="width: 30%">
             <el-option key="available" label="可用" value="available"></el-option>
             <el-option key="unavailable" label="不可用" value="unavailable"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="车辆位置:" :label-width="formLabelWidth" prop="carPosition">
-          <el-input v-model="editForm.carPosition" style="width: 50%"></el-input>
+          <el-input v-model="regionForm.carPosition" style="width: 50%"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="editVisable = false">取 消</el-button>
-        <el-button @click="resetForm('editForm')">重置</el-button>
         <el-button type="primary" @click="editVisable = false">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 删除弹窗 -->
-    <el-dialog title="" :visible.sync="vehicleDelVisable" size="tiny">
-      <h2 style="text-align:center">确认删除车牌号为<{{vehicleForm.licePlateNum}}>的车吗？</h2>
+    <el-dialog title="" :visible.sync="regionDelVisable" size="tiny">
+      <h2 style="text-align:center">确认删除车牌号为<{{regionForm.licePlateNum}}>的车吗？</h2>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="vehicleDelVisable = false">取 消</el-button>
-        <el-button @click="vehicleDelVisable = false" type="primary">确 定</el-button>
+        <el-button @click="regionDelVisable = false">取 消</el-button>
+        <el-button @click="regionDelVisable = false" type="primary">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -171,7 +129,7 @@
   export default {
     created () {
       for (var i = 0; i < 100; i++) {
-        this.vehicleList.push({
+        this.regionList.push({
           'licePlateNum': 'num' + i,
           'driverName': 'test' + i,
           'tel': '电话号码' + i,
@@ -189,12 +147,12 @@
     },
     data () {
       return {
-        vehicleList: [],
+        regionList: [],
         colVisible: false,
-        vehicleVisable: false,
-        vehicleDelVisable: false,
+        regionVisable: false,
+        regionDelVisable: false,
         editVisable: false,
-        vehicleForm: {
+        regionForm: {
           'licePlateNum': '', // 车牌号
           'driverName': '', // 司机姓名
           'tel': '', // 司机联系方式
@@ -204,16 +162,7 @@
           'carState': '', // 车辆状态
           'carPosition': '' // 车辆位置
         },
-        editForm: {
-          'licePlateNum': '', // 车牌号
-          'driverName': '', // 司机姓名
-          'tel': '', // 司机联系方式
-          'capacity': '', // 车容量
-          'carType': '', // 车型
-          'tonnage': '', // 吨位
-          'carState': '', // 车辆状态
-          'carPosition': '' // 车辆位置
-        },
+        rerender: true, // 用于重新刷新添加的弹框
         rules: {
           licePlateNum: [{
             required: true, message: '请输入车牌号', trigger: 'blur'
@@ -259,47 +208,7 @@
               visible: true
             },
             {
-              headerName: '车牌号码',
-              width: 150,
-              field: 'licePlateNum',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '司机姓名',
-              width: 150,
-              field: 'driverName',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '联系电话',
-              width: 150,
-              field: 'tel',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '车容量',
-              width: 150,
-              field: 'capacity',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '吨位',
-              width: 150,
-              field: 'tonnage',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '车辆类型',
+              headerName: '车型',
               width: 150,
               field: 'carType',
               filterFramework: PartialMatchFilterComponent,
@@ -307,17 +216,25 @@
               visible: true
             },
             {
-              headerName: '车辆状态',
+              headerName: '所属区域名称',
               width: 150,
-              field: 'carState',
+              field: 'regionName',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
             {
-              headerName: '车辆位置',
+              headerName: '区域起步价',
               width: 150,
-              field: 'carPosition',
+              field: 'startPrice',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '区域单票价',
+              width: 150,
+              field: 'singleFare ',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -340,25 +257,18 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><el-button class="del-but" type="info" size="small" @click="vehicleEdit">编 辑</el-button><el-button class="del-but" type="danger" size="small" @click="vehicleDel">删 除</el-button></span>',
+        template: '<span><el-button class="del-but" type="info" size="small" @click="regionEdit">编 辑</el-button></span>',
         methods: {
-          vehicleDel () {
-            this.params.context.componentParent.vehicleDelVisable = true
-            this.params.context.componentParent.vehicleForm.licePlateNum = this.params.data.licePlateNum
-          },
-          vehicleEdit () {
-            /* var vehicleform = this.params.context.componentParent.vehicleForm
-             vehicleform.licePlateNum = vehicleList[this.params.node.rowIndex].licePlateNum */
+          regionEdit () {
             this.params.context.componentParent.editVisable = true
-            this.params.context.componentParent.editForm = this.params.data
-            console.log(this.params.context.componentParent.editForm)
+            this.params.context.componentParent.regionForm = this.params.data
           }
         }
       }
     },
     methods: {
       createRowData () {
-        this.gridOptions.rowData = this.vehicleList
+        this.gridOptions.rowData = this.regionList
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
@@ -383,19 +293,6 @@
           this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
         }
       },
-      // 增加
-      vehicleAdd () {
-        this.resetForm('vehicleForm')
-        this.vehicleVisable = true
-        this.vehicleForm.licePlateNum = ''
-        this.vehicleForm.driverName = ''
-        this.vehicleForm.tel = ''
-        this.vehicleForm.capacity = ''
-        this.vehicleForm.carType = ''
-        this.vehicleForm.tonnage = ''
-        this.vehicleForm.carState = ''
-        this.vehicleForm.carPosition = ''
-      },
       handleSizeChange (val) {
         this.gridOptions.api.paginationSetPageSize(Number(val))
       },
@@ -409,23 +306,6 @@
       calculateGrid () {
         this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
         this.rowCount = this.gridOptions.api.getModel().getRowCount()
-      },
-      // 提交表单，提交前验证
-      submitForm (formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!')
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
-      },
-      // 重置表单
-      resetForm (formName) {
-        this.$nextTick(function () {
-          this.$refs[formName].resetFields()
-        })
       }
     },
     beforeMount () {

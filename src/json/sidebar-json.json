@@ -75,8 +75,18 @@
             },
             {
                 "icon": "person",
-                "index": "personnel",
-                "title": "客户信息管理"
+                "index": "2",
+                "title": "客户信息管理",
+              "subs":[
+                {
+                  "index":"personnel",
+                  "title":"客户信息"
+                },
+                {
+                  "index":"familiarPersonnel",
+                  "title":"常用客户信息"
+                }
+              ]
             },
             {
                 "icon": "price",
@@ -84,8 +94,23 @@
                 "title": "价格梯度信息管理"
             },
             {
+                "icon":"region",
+                "index":"3",
+                "title":"区域及计价管理",
+                "subs":[
+                {
+                   "index":"region",
+                   "title":"区域管理"
+                },
+                {
+                    "index":"regionprice",
+                    "title":"区域价格管理"
+                }
+                ]
+            },
+            {
                 "icon": "enterprise",
-                "index": "2",
+                "index": "4",
                 "title": "外包企业",
                 "subs":[
                 {

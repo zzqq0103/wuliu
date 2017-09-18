@@ -122,7 +122,7 @@
             trigger: 'blur'
           }]
         },
-        formLabelWidth: '30%'
+        formLabelWidth: '25%'
       }
     },
     computed: {

@@ -348,7 +348,7 @@
               headerName: '件数', width: 150, field: 'goodsNums', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单客服', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '中转路线', width: 150, field: 'companyNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -422,7 +422,7 @@
               headerName: '收货人', width: 150, field: 'receNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单客服', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '中转起始地', width: 150, field: 'changeStart', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -475,7 +475,7 @@
               headerName: '收货人', width: 150, field: 'receNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单客服', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '中转起始地', width: 150, field: 'changeStart', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -921,7 +921,7 @@
 <!--receNam 收货人-->
 <!--receTel 收货人联系方式-->
 <!--goodsNam 品名-->
-<!--serviceNam 制单人-->
+<!--serviceNam 开单客服-->
 <!--companyNam 中转路线-->
 <!--changeFee 中转日期-->
 <!--payType 付款方式-->
@@ -939,7 +939,7 @@
 <!--orderTim 下单时间-->
 <!--shipNam 发货人-->
 <!--receNam 收货人-->
-<!--serviceNam 制单人-->
+<!--serviceNam 开单客服-->
 <!--changeStart 中转起始地-->
 <!--changeEnd 中转目的地-->
 <!--receNums 回单份数-->

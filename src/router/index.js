@@ -32,6 +32,18 @@ export default new Router({
           component: resolve => require(['../components/operationAdministrator/PersonnelInfo.vue'], resolve)
         },
         {
+          path: '/familiarPersonnel',
+          component: resolve => require(['../components/operationAdministrator/FamiliarPersonne.vue'], resolve)
+        },
+        {
+          path: '/region',
+          component: resolve => require(['../components/operationAdministrator/Region.vue'], resolve)
+        },
+        {
+          path: '/regionprice',
+          component: resolve => require(['../components/operationAdministrator/RegionPrice.vue'], resolve)
+        },
+        {
           path: '/shortvehicle',
           component: resolve => require(['../components/operationAdministrator/ShortVehicleInfo.vue'], resolve)
         },
