@@ -77,7 +77,7 @@
 
 <script>
   import {AgGridVue} from 'ag-grid-vue'
-  import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
+  import {getCurrentDelivered, getQueryOrderList} from '../../api/dispatch/api'
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   export default {
     data () {

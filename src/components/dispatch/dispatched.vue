@@ -24,7 +24,7 @@ import { AgGridVue } from 'ag-grid-vue'
 // 引入 OrderList 订单详情
 import OrderDetails from '../financialAdministrator/ShowOrderDetails.vue'
 // 引入 axios 的后台请求接口
-import { getOrderList } from '../../api/api'
+import { getOrderList } from '../../api/dispatch/api'
 // 引入dispatchLoaderInfo 组件页面
 import DeliverOrderList from './deliverOrderList'
 
