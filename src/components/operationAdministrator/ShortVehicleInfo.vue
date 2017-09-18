@@ -62,7 +62,8 @@
     </div>
 
     <!-- 添加车辆信息弹窗 -->
-    <el-dialog title="添加接送货车辆信息:" :visible.sync="vehicleVisable" size="tiny">
+    <el-dialog title="添加接送货车辆信息:" :visible.sync="vehicleVisable" size="tiny" :close-on-click-modal="false"
+               :close-on-press-escape="false" :show-close="false">
       <el-form :model="vehicleForm" :rules="rules" ref="vehicleForm">
         <el-form-item label="车牌号码:" :label-width="formLabelWidth" prop="licePlateNum">
           <el-input v-model="vehicleForm.licePlateNum" style="width: 50%"></el-input>
@@ -95,13 +96,14 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="vehicleVisable = false">取 消</el-button>
+        <el-button @click="cancleForm('vehicleForm')">取 消</el-button>
         <el-button @click="resetForm('vehicleForm')">重置</el-button>
         <el-button type="primary" @click="submitForm('vehicleForm')">注 册</el-button>
       </div>
     </el-dialog>
     <!--编辑车辆信息-->
-    <el-dialog title="编辑接送货车辆信息:" :visible.sync="editVisable" size="tiny" @close="resetForm('editForm')">
+    <el-dialog title="编辑接送货车辆信息:" :visible.sync="editVisable" size="tiny" :close-on-click-modal="false"
+               :close-on-press-escape="false" :show-close="false">
       <el-form :model="editForm" :rules="rules" ref="editForm">
         <el-form-item label="车牌号码:" :label-width="formLabelWidth" prop="licePlateNum">
           <el-input v-model="editForm.licePlateNum" style="width: 50%"></el-input>
@@ -109,8 +111,8 @@
         <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverName">
           <el-input v-model="editForm.driverName" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="editForm.tel" style="width: 50%" disabled="true"></el-input>
+        <el-form-item label="联系电话:" :label-width="formLabelWidth">
+          <el-input v-model="editForm.tel" style="width: 50%" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="车容量:" :label-width="formLabelWidth" prop="capacity">
           <el-input v-model="editForm.capacity" style="width: 30%"></el-input>
@@ -134,9 +136,9 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editVisable = false">取 消</el-button>
-        <el-button @click="resetForm('editForm')">重置</el-button>
-        <el-button type="primary" @click="editVisable = false">确 定</el-button>
+        <el-button @click="cancleForm('editForm')">取 消</el-button>
+        <el-button @click="resetForm('editForm')">重 置</el-button>
+        <el-button type="primary" @click="submitForm('editForm')">更 新</el-button>
       </div>
     </el-dialog>
     <!-- 删除弹窗 -->
@@ -351,7 +353,6 @@
              vehicleform.licePlateNum = vehicleList[this.params.node.rowIndex].licePlateNum */
             this.params.context.componentParent.editVisable = true
             this.params.context.componentParent.editForm = this.params.data
-            console.log(this.params.context.componentParent.editForm)
           }
         }
       }
@@ -385,7 +386,6 @@
       },
       // 增加
       vehicleAdd () {
-        this.resetForm('vehicleForm')
         this.vehicleVisable = true
         this.vehicleForm.licePlateNum = ''
         this.vehicleForm.driverName = ''
@@ -414,7 +414,11 @@
       submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!')
+            if (formName === 'vehicleForm') {
+              alert('添加成功')
+            } else if (formName === 'editForm') {
+              alert('编辑成功')
+            }
           } else {
             console.log('error submit!!')
             return false
@@ -426,6 +430,12 @@
         this.$nextTick(function () {
           this.$refs[formName].resetFields()
         })
+      },
+      // 点击取消弹框时，重置表单
+      cancleForm (formName) {
+        this.resetForm(formName)
+        this.vehicleVisable = false
+        this.editVisable = false
       }
     },
     beforeMount () {
