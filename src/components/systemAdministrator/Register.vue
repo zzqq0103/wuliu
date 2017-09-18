@@ -212,6 +212,17 @@
         this.$refs.tree.setCheckedKeys([])
       },
       clickSelect (data) {
+        var arr = []
+        for (var j = 0; j < this.$refs.tree.getCheckedNodes(true).length; j++) {
+          arr.push(this.$refs.tree.getCheckedNodes(true)[j].$treeNodeId)
+        }
+        console.log(arr)
+        for (var k = 0; k < arr.length; k++) {
+          if (arr[k] === data.$treeNodeId) {
+            this.$refs.tree.setChecked(data, false, false)
+            return 0
+          }
+        }
         this.$refs.tree.setChecked(data, true, false)
       },
       submitForm (formName) {

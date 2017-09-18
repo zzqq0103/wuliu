@@ -105,7 +105,7 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
+  import {getCurrentDelivered, getQueryOrderList} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
@@ -256,7 +256,6 @@
       Dispatched,
       DeliverOrderList
     },
-
     // 实例方法
     methods: {
       // 装载单订单列表弹框
