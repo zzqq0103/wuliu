@@ -13,7 +13,7 @@
               <el-input v-model="filterForm.companyName"></el-input>
             </el-form-item>
             <el-button @click="">提取</el-button>
-            <el-button @click="addForm" style="margin-left: 50px">注册</el-button>
+            <el-button @click="addForm" style="margin-left: 50px">添 加</el-button>
             <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
               <template v-for="(collist,i) in gridOptions.columnDefs">
                 <div class="colVisible">
@@ -60,8 +60,10 @@
         :total="rowCount">
       </el-pagination>
     </div>
-<!--添加企业路线-->
-    <el-dialog title="外包企业路线注册:" :visible.sync="enterpriseVisable" size="tiny">
+    <!--添加企业路线-->
+    <el-dialog title="外包企业路线注册:" :visible.sync="enterpriseVisable" :close-on-click-modal="false"
+               :close-on-press-escape="false"
+               :show-close="false" size="tiny">
       <el-form :model="enterpriseForm" :rules="rules" ref="enterpriseForm">
         <el-form-item label="公司名称:" :label-width="formLabelWidth" prop="companyName">
           <el-input v-model="enterpriseForm.companyName" style="width: 50%"></el-input>
@@ -86,38 +88,50 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="enterpriseVisable = false">取 消</el-button>
-        <el-button type="primary" @click="enterpriseVisable = false">确 定</el-button>
+        <el-button @click="cancleForm('enterpriseForm')">取 消</el-button>
+        <el-button @click="resetForm('enterpriseForm')">重 置</el-button>
+        <el-button type="primary" @click="submitForm('enterpriseForm')">注 册</el-button>
       </div>
+      <!--<el-button @click="enterpriseVisable = false">取 消</el-button>-->
+      <!--<el-button type="primary" @click="enterpriseVisable = false">确 定</el-button>-->
     </el-dialog>
-<!--编辑企业路线-->
-    <el-dialog title="外包企业路线注册:" :visible.sync="editVisible" size="tiny">
-      <el-form :model="enterpriseForm" :rules="rules" ref="enterpriseForm">
+    <!--编辑企业路线-->
+    <el-dialog title="外包企业路线编辑:" :visible.sync="editVisible" :close-on-click-modal="false"
+               :close-on-press-escape="false"
+               :show-close="false" size="tiny">
+      <el-form :model="enterpriseeditForm" :rules="rules" ref="enterpriseeditForm">
         <el-form-item label="公司名称:" :label-width="formLabelWidth" prop="companyName">
-          <el-input v-model="enterpriseForm.companyName" style="width: 50%"></el-input>
+          <el-input v-model="enterpriseeditForm.companyName" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="中转起始点:" :label-width="formLabelWidth" prop="changeStart">
-          <el-input v-model="enterpriseForm.changeStart" style="width: 50%"></el-input>
+          <el-input v-model="enterpriseeditForm.changeStart" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="中转目的地:" :label-width="formLabelWidth" prop="changeEnd">
-          <el-input v-model="enterpriseForm.changeEnd" style="width: 50%"></el-input>
+          <el-input v-model="enterpriseeditForm.changeEnd" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="中转企业联系人:" :label-width="formLabelWidth" prop="changeName">
-          <el-input v-model="enterpriseForm.changeName" style="width: 50%"></el-input>
+          <el-input v-model="enterpriseeditForm.changeName" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="联系方式:" :label-width="formLabelWidth" prop="id">
-          <el-input v-model="enterpriseForm.id" style="width: 50%" disabled="true"></el-input>
+          <!--<el-input v-model="enterpriseeditForm.id" style="width: 50%" disabled="true"></el-input>-->
+          <el-input v-model="enterpriseeditForm.id" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="合同号:" :label-width="formLabelWidth" prop="contractId">
-          <el-input v-model="enterpriseForm.contractId" style="width: 50%" disabled="true"></el-input>
+          <!--<el-input v-model="enterpriseeditForm.contractId" style="width: 50%" disabled="true"></el-input>-->
+          <el-input v-model="enterpriseeditForm.contractId" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="合同价格:" :label-width="formLabelWidth" prop="contractPrice">
-          <el-input v-model="enterpriseForm.contractPrice" style="width: 50%" disabled="true"></el-input>
+          <!--<el-input v-model="enterpriseeditForm.contractPrice" style="width: 50%" disabled="true"></el-input>-->
+          <el-input v-model="enterpriseeditForm.contractPrice" style="width: 50%"></el-input>
+
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editVisible = false">确 定</el-button>
+        <!--<el-button @click="editVisible = false">取 消</el-button>-->
+        <!--<el-button type="primary" @click="editVisible = false">确 定</el-button>-->
+        <el-button @click="cancleForm('enterpriseeditForm')">取 消</el-button>
+        <el-button @click="resetForm('enterpriseeditForm')">重 置</el-button>
+        <el-button type="primary" @click="submitForm('enterpriseeditForm')">更 新</el-button>
       </div>
     </el-dialog>
 
@@ -146,7 +160,7 @@
 </template>
 
 <script>
-  import {AgGridVue} from 'ag-grid-vue'
+  import { AgGridVue } from 'ag-grid-vue'
   import testJson from '../../../static/test/testJSON.js'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
 
@@ -158,6 +172,15 @@
         enterpriseDelVisable: false,
         editVisible: false,
         enterpriseForm: {
+          'companyName': '', // 外包公司名称
+          'changeStart': '', // 中转起始地
+          'changeEnd': '', // 中转目的地
+          'changeName': '', // 中转企业联系人
+          'id': '', // 联系方式
+          'contractId': '', // 合同号
+          'contractPrice': '' // 合同价格
+        },
+        enterpriseeditForm: {
           'companyName': '', // 外包公司名称
           'changeStart': '', // 中转起始地
           'changeEnd': '', // 中转目的地
@@ -282,14 +305,22 @@
         template: '<span><el-button class="del-but" @click="vehicleEdit" type="info" size="small">编 辑</el-button><el-button class="del-but" @click="vehicleDel" type="danger" size="small">删 除</el-button></span>',
         methods: {
           vehicleDel () {
+//            this.params.context.componentParent.editVisible = true
             this.params.context.componentParent.enterpriseDelVisable = true
           },
           vehicleEdit () {
             /* var vehicleform = this.params.context.componentParent.vehicleForm
              vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum */
-            this.params.context.componentParent.enterpriseVisable = true
-            console.log(this.params.data)
-            this.params.context.componentParent.enterpriseForm = this.params.data
+            this.params.context.componentParent.editVisible = true
+            this.enterpriseeditForm.companyName = ''
+            this.enterpriseeditForm.changeStart = ''
+            this.enterpriseeditForm.changeEnd = ''
+            this.enterpriseeditForm.changeName = ''
+            this.enterpriseeditForm.id = ''
+            this.enterpriseeditForm.contractId = ''
+            this.enterpriseeditForm.contractPrice = ''
+//            console.log(this.params.data)
+//            this.params.context.componentParent.enterpriseeditForm = this.params.data
           }
         }
       }
@@ -328,6 +359,33 @@
           }
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
+      },
+      // 提交表单，提交前验证
+      submitForm (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (formName === 'enterpriseForm') {
+              alert('添加成功')
+            } else if (formName === 'enterpriseeditForm') {
+              alert('编辑成功')
+            }
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+      // 重置表单
+      resetForm (formName) {
+        this.$nextTick(function () {
+          this.$refs[formName].resetFields()
+        })
+      },
+      // 点击取消弹框时，重置表单
+      cancleForm (formName) {
+        this.resetForm(formName)
+        this.enterpriseVisable = false
+        this.editVisible = false
       }
     },
     beforeMount () {
