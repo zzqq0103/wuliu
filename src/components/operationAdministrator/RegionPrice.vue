@@ -257,8 +257,15 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><el-button class="del-but" type="info" size="small" @click="regionEdit">编 辑</el-button></span>',
+        template: '<span><el-button class="del-but" type="info" size="small" @click="regionEdit">编 辑</el-button><el-button class="del-but" @click="del" type="danger" size="small">删 除</el-button></span>',
         methods: {
+          del () {
+            let self = this.params.context.componentParent
+            self.delFormVisible = true
+            self.personnelForm.clientCompNam = this.params.data.clientCompNam
+//            self.delFormVisible = true
+//            console.log(this.params.data.clientCompNam)
+          },
           regionEdit () {
             this.params.context.componentParent.editVisable = true
             this.params.context.componentParent.regionForm = this.params.data
@@ -306,6 +313,31 @@
       calculateGrid () {
         this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
         this.rowCount = this.gridOptions.api.getModel().getRowCount()
+      },
+      cancleForm (formName) {
+        this.resetForm(formName)
+        this.editVisable = false
+      },
+      // 重置表单
+      resetForm (formName) {
+        this.$nextTick(function () {
+          this.$refs[formName].resetFields()
+        })
+        this.personnelForm.receAdr = ''
+      },
+      submitForm (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (formName === 'personnelForm') {
+              alert('添加成功')
+            } else if (formName === 'regionForm') {
+              alert('编辑成功')
+            }
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
       }
     },
     beforeMount () {
