@@ -35,16 +35,12 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
-                   :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
                    :headerHeight=40
+
                    :pagination="true"
-                   :paginationPageSize="10"
-                   :suppressPaginationPanel="true"
-                   :filterChanged="gridfilterChange">
+                   :suppressPaginationPanel="true">
       </ag-grid-vue>
     </div>
 
@@ -54,7 +50,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrnetChange"
         :current-page="currentPage"
-        :page-sizes="[10,20,50,100,200]"
+        :page-sizes="[20,50,100,200]"
         :page-size="pageSize"
         layout="total,sizes,prev,pager,next"
         :total="rowCount">
@@ -97,7 +93,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancleForm('vehicleForm')">取 消</el-button>
-        <el-button @click="resetForm('vehicleForm')">重置</el-button>
+        <el-button @click="resetForm('vehicleForm')">重 置</el-button>
         <el-button type="primary" @click="submitForm('vehicleForm')">注 册</el-button>
       </div>
     </el-dialog>
@@ -243,7 +239,7 @@
           }]
         },
         rowCount: 0,
-        pageSize: 10,
+        pageSize: 20,
         currentPage: 1, // 分页当前页面
         formLabelWidth: '30%',
         gridOptions: {
@@ -257,6 +253,7 @@
               width: 60,
               field: 'index',
               suppressMenu: true,
+              suppressSorting: true,
               hide: false,
               visible: true
             },
@@ -400,6 +397,7 @@
         this.gridOptions.api.paginationSetPageSize(Number(val))
       },
       handleCurrnetChange (val) {
+        console.log('页面改变')
         this.gridOptions.api.paginationGoToPage(val - 1)
       },
       gridfilterChange () {

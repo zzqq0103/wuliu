@@ -905,7 +905,6 @@
     methods: {
       // 绘制表格，包括更新列信息与行信息
       drawGrid (i) {
-        console.log(this.filterForm)
         if (i === 2) {
           this.gridOptions3.api.selectAll()
           const selectedData = this.gridOptions3.api.getSelectedRows()
