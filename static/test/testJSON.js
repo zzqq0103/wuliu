@@ -20499,5 +20499,34 @@ export default {
   //业务员信息
   'salesman' : [
     {"infor": '张三-18080890921' },{"infor": '赵五-18080890921' },{"infor": '李四-18080890921' },{"infor": '王而-18080890921' }
-  ]
+  ],
+  //区域管理信息
+  'regionList' : {
+    'list' : [
+      {
+        'province': '四川',
+        'city': '成都',
+        'adminRegion': '青羊',
+        'regionName': '树德'
+      },
+      {
+        'province': '四川',
+        'city': '成都',
+        'adminRegion': '青羊',
+        'regionName': '树德'
+      },
+      {
+        'province': '四川',
+        'city': '成都',
+        'adminRegion': '青羊',
+        'regionName': '树德'
+      },
+      {
+        'province': '四川',
+        'city': '成都',
+        'adminRegion': '青羊',
+        'regionName': '树德'
+      }
+    ]
+  }
 }

@@ -93,8 +93,9 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editVisable = false">取 消</el-button>
-        <el-button type="primary" @click="editVisable = false">确 定</el-button>
+        <el-button @click="cancleForm('regionForm')">取 消</el-button>
+        <el-button @click="resetForm('regionForm')">重 置</el-button>
+        <el-button type="primary" @click="submitForm('regionForm')">更 新</el-button>
       </div>
     </el-dialog>
     <!-- 删除弹窗 -->
