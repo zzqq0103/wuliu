@@ -1,17 +1,19 @@
 import axios from 'axios'
 import qs from 'qs'
 
-axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
-axios.defaults.baseURL = 'http://10.107.8.163:8080/'
-// axios.defaults.withCredentials = true
+axios.defaults.timeout = 5000
+axios.defaults.baseURL = ''
 
 // POST传参序列化
 axios.interceptors.request.use((config) => {
+  console.log(config.data)
   if (config.method === 'post') {
     config.data = qs.parse(config.data)
   }
+  console.log(config.data)
   return config
 }, (error) => {
+  console.log(error)
   return Promise.reject(error)
 })
 
@@ -30,8 +32,10 @@ export function fetch (url, params) {
     axios.post(url, params)
       .then(response => {
         resolve(response.data)
+      }, err => {
+        reject(err)
       })
-      .catch(error => {
+      .catch((error) => {
         reject(error)
       })
   })
@@ -40,10 +44,10 @@ export function fetch (url, params) {
 export default {
   /**
    *
-   * 中转费
+   * 接送货车辆管理
    *
    * **/
-  getTransferFee (params) {
-    return fetch('/logistics/interface/studentManagement/queryStudentModel', {params: params})
+  getShortInfo (params) {
+    return fetch('', params)
   }
 }

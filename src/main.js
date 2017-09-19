@@ -11,8 +11,8 @@ import '../node_modules/ag-grid/dist/styles/ag-grid.css'
 // import '../node_modules/ag-grid/dist/styles/theme-blue.css'
 import '../static/css/grid-theme.css'
 // 导入假数据
-import mock from './mock'
-mock.bootstrap()
+// import mock from './mock'
+// mock.bootstrap()
 
 Vue.use(ElementUI)
 Vue.use(Icon)
