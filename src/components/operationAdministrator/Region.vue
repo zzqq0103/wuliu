@@ -61,7 +61,7 @@
     </div>
 
     <!--编辑车辆信息-->
-    <el-dialog title="编辑接送货车辆信息:" :visible.sync="editVisable" size="tiny">
+    <el-dialog title="编辑接送货车辆信息:" :visible.sync="editVisable" size="tiny" :closeOnClickModal="false" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
       <el-form :model="regionForm" :rules="rules" ref="regionForm">
         <el-form-item label="省:" :label-width="formLabelWidth" >
           <el-input v-model="regionForm.province" style="width: 50%" disabled="true"></el-input>
@@ -77,8 +77,9 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editVisable = false">取 消</el-button>
-        <el-button type="primary" @click="editVisable = false">确 定</el-button>
+        <el-button @click="cancleForm('regionForm')">取 消</el-button>
+        <el-button @click="resetForm('regionForm')">重 置</el-button>
+        <el-button type="primary" @click="submitForm('regionForm')">更 新</el-button>
       </div>
     </el-dialog>
     <!-- 删除弹窗 -->
@@ -225,8 +226,15 @@
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><el-button class="del-but" type="info" size="small" @click="regionEdit">编 辑</el-button></span>',
+        template: '<span><el-button class="del-but" type="info" size="small" @click="regionEdit">编 辑</el-button><el-button class="del-but" @click="del" type="danger" size="small">删 除</el-button></span>',
         methods: {
+          del () {
+            let self = this.params.context.componentParent
+            self.delFormVisible = true
+            self.personnelForm.clientCompNam = this.params.data.clientCompNam
+//            self.delFormVisible = true
+//            console.log(this.params.data.clientCompNam)
+          },
           regionEdit () {
             this.params.context.componentParent.editVisable = true
             this.params.context.componentParent.regionForm = this.params.data
@@ -274,6 +282,31 @@
       calculateGrid () {
         this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
         this.rowCount = this.gridOptions.api.getModel().getRowCount()
+      },
+      cancleForm (formName) {
+        this.resetForm(formName)
+        this.editVisable = false
+      },
+      // 重置表单
+      resetForm (formName) {
+        console.log(formName)
+        this.$nextTick(function () {
+          this.$refs[formName].resetFields()
+        })
+      },
+      submitForm (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (formName === 'personnelForm') {
+              alert('添加成功')
+            } else if (formName === 'regionForm') {
+              alert('编辑成功')
+            }
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
       }
     },
     beforeMount () {

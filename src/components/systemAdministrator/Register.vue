@@ -37,7 +37,10 @@
       </el-form>
     </el-col>
     <div>
-      <el-dialog title="编辑: " :visible.sync="editVisible" size="tiny" :closeOnClickModal="false">
+      <el-dialog title="编辑: " :visible.sync="editVisible" size="tiny"
+                 :closeOnClickModal="false"
+                 :close-on-press-escape="false"
+                 :show-close="false">
         <el-tree
           :data="data2"
           show-checkbox
@@ -50,8 +53,9 @@
         </el-tree>
         <div slot="footer" class="dialog-footer">
           <el-button @click="resetChecked" style="float: left">清空</el-button>
-          <el-button @click="deleteStation">删 除</el-button>
-          <el-button>添 加</el-button>
+          <el-button @click="deleteStation">删除</el-button>
+          <el-button>添加</el-button>
+          <el-button @click="cancelEdit">取消</el-button>
         </div>
       </el-dialog>
     </div>
@@ -240,6 +244,10 @@
       },
       handleChange (value) {
         console.log(value)
+      },
+      cancelEdit () {
+        this.editVisible = false
+        this.$refs.tree.setCheckedKeys([])
       }
     }
   }

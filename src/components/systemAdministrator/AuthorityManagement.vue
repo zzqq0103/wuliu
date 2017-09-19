@@ -21,10 +21,7 @@
             </el-option>
           </el-select>
           <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
-        </div>
-
-        <div>
-
+          <el-button @click="drawGrid">提取</el-button>
         </div>
       </div>
     </div>
@@ -42,6 +39,8 @@
                    :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
+                   :pagination="true"
+                   :suppressPaginationPanel="true"
                    :rowHeight="40"
                    :headerHeight="40"
       ></ag-grid-vue>
@@ -52,14 +51,17 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentpage"
-        :page-sizes="[25, 50, 75, 100]"
-        :page-size="25"
-        layout="total, sizes, prev, pager, next"
-        :total="totalpages">
+        :page-sizes="[20,50,100,200]"
+        :total="rowCount"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next">
       </el-pagination>
     </div>
     <div>
-      <el-dialog title="提示" :visible.sync="delFormVisible" size="small" top="30%" :closeOnClickModal="false">
+      <el-dialog title="提示" :visible.sync="delFormVisible" size="tiny" top="30%"
+                 :closeOnClickModal="false"
+                 :close-on-press-escape="false"
+                 :show-close="false">
         <h2 style="padding:30px">确认删除吗？</h2>
         <div slot="footer" class="dialog-footer">
           <el-button @click="delFormVisible = false">取 消</el-button>
@@ -152,8 +154,8 @@
         selectvalue: 1,
         orderlist: [],
         delFormVisible: false,
-        totalpages: 1,
-        pageSize: 25,
+        pageSize: 20,
+        rowCount: 0,
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -206,11 +208,10 @@
         this.gridOptions.api.setQuickFilter(input)
       },
       handleSizeChange (val) {
-        this.pageSize = val
+        this.gridOptions.api.paginationSetPageSize(Number(val))
       },
       handleCurrentChange (val) {
-        this.currentpage = val
-        this.getOrderList()
+        this.gridOptions.api.paginationGoToPage(val - 1)
       },
       handleIconClick (input) {
         this.getQueryData()
@@ -245,7 +246,6 @@
           // 使用gridOptions中的api方法设定RowData数据
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
-          this.totalpages = res.data.totalPages
           this.listLoading = false
         })
       },
@@ -260,9 +260,16 @@
         getQueryOrderList(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
-          this.totalpages = res.data.totalpages
           this.listLoading = false
         })
+      },
+      drawGrid () {
+        this.updateGrid()
+        this.createRowData()
+      },
+      updateGrid () {
+      },
+      createRowData () {
       }
     },
     mounted () {

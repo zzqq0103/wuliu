@@ -83,121 +83,44 @@
       </div>
     </el-dialog>
 
-
-    <!--添加客户信息-->
-    <el-dialog title="添加客户信息:" :visible.sync="addFormVisible" size="tiny">
-      <el-form :model="personnelForm" ref="personnelForm" :rules="rules">
-        <el-form-item label="客户企业名称:" :label-width="formLabelWidth" prop="clientCompNam">
-          <el-input v-model="personnelForm.clientCompNam" style="width: 80%"></el-input>
-        </el-form-item>
-        <el-form-item label="联系人姓名:" :label-width="formLabelWidth" prop="nam">
-          <el-input v-model="personnelForm.nam" :rules="rules" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="personnelForm.tel" :rules="rules" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="企业详细地址：" style="clear:both;width:100%" :label-width="formLabelWidth" prop="adr">
-          <div id='focus2' class='dropdown2' style='outline:none' tabindex="0"  @click="getFocus(2)" @blur="addressVisible2=false">
-            <el-input v-model="receAdr" style="width: 142.5px;" @blur="adrCheck"></el-input>
-            <div class="el-form-item__error" v-show="messageErro">请输入地址</div>
-            <div class="dropdown-content" style='width:142.5px' v-show="addressVisible2">
-              <ul class='dropdown-content-select'>
-                <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
-                <li @click="setShi(2)" class='dropdown-li' v-bind:class="{'selectOn':shi2}">城市</li>
-                <li @click="setQuyu(2)" class='dropdown-li' v-bind:class="{'selectOn':quyu2}">区县</li>
-              </ul>
-              <div class='dropdown-select'>
-                <ul class='dropdown-shenfen' v-show="shenfen2">
-                  <li v-for="(data,i) in this.regionList" @click="selectShenfen(2,data.name)" style='text-align:center'
-                      :key='data.name'>{{data.name}}
-                  </li>
-                </ul>
-                <ul class='dropdown-shi' v-show="shi2">
-                  <li v-for="(data,i) in this.shiList2.sub" @click="selectShi(2,data.name)" style='text-align:center'
-                      :key='data.name'>{{data.name}}
-                  </li>
-                </ul>
-                <ul v-show="quyu2">
-                  <li v-for="(data,i) in this.quList2" @click="selectQu(2,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <el-input v-model="compAdr" style="width: 122.5px;left: 40px" @blur="adrCheck"></el-input>
-        </el-form-item>
-        <el-form-item label="所属片区:" :label-width="formLabelWidth" prop="area">
-          <el-input v-model="personnelForm.area" :rules="rules" style="width: 80%"></el-input>
-        </el-form-item>
-        <el-form-item label="业务员:" :label-width="formLabelWidth" prop="salesmanData">
-          <el-input v-model="personnelForm.salesmanData" :rules="rules" style="width: 50%" :disabled="true"></el-input>
-          <el-button type="primary" @click="createSalesmanData" >选择业务员</el-button>
-        </el-form-item>
-        <el-form-item label="是否三方:" :label-width="formLabelWidth" prop="isTril">
-          <el-select v-model="personnelForm.isTril" style="width:30%">
-            <el-option label="是" value="yes"></el-option>
-            <el-option label="否" value="no"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="vehicleVisable = false">取 消</el-button>
-        <el-button type="primary" @click="vehicleVisable = false">注 册</el-button>
-      </div>
-    </el-dialog>
-
-    <!--添加业务员信息-->
-    <el-dialog title="业务员:" :visible.sync="salesmanVisible" size="tiny" :closeOnClickModal="false">
-      <template v-for="(collist,i) in salesmanData">
-        <div class="colVisible" style="margin: 10px">
-          <el-radio :label=collist.infor v-model="salesmanReq" style="width: 100%" >
-            {{collist.infor}}
-          </el-radio>
-        </div>
-      </template>
-      <template>
-        <div class="salesmanVisible" style="float: right;margin-bottom: 20px" >
-          <el-button type="primary" @click="updateSalesman">确定</el-button>
-        </div>
-      </template>
-    </el-dialog>
-
     <!--编辑客户信息-->
-    <el-dialog title="编辑:" :visible.sync="editFormVisible" size="tiny" :closeOnClickModal="false">
-      <el-form :model="personnelForm" :rules="rules" ref="personnelForm" prop="clientCompNam">
-        <el-form-item label="客户企业名称:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.clientCompNam" style="width: 80%"></el-input>
+    <el-dialog title="编辑:" :visible.sync="editFormVisible" size="tiny" :closeOnClickModal="false" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
+      <el-form :model="editForm" :rules="rules" ref="editForm">
+        <el-form-item label="客户企业名称:" :label-width="formLabelWidth" prop="clientCompNam">
+          <el-input v-model="editForm.clientCompNam" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="联系人姓名:" :label-width="formLabelWidth" prop="nam">
-          <el-input v-model="personnelForm.nam" style="width: 50%"></el-input>
+          <el-input v-model="editForm.nam" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="personnelForm.tel" style="width: 50%"></el-input>
+          <el-input v-model="editForm.tel" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="企业详细地址:" :label-width="formLabelWidth" prop="compAdr">
-          <el-input v-model="personnelForm.compAdr" style="width: 80%"></el-input>
+          <el-input v-model="editForm.compAdr" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="所属片区:" :label-width="formLabelWidth" prop="area">
-          <el-input v-model="personnelForm.area" style="width: 80%"></el-input>
+          <el-input v-model="editForm.area" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="业务员:" :label-width="formLabelWidth" prop="salesmanData">
-          <el-input v-model="personnelForm.salesmanId" style="width: 50%"></el-input>
+        <el-form-item label="业务员:" :label-width="formLabelWidth" prop="salesmanId">
+          <el-input v-model="editForm.salesmanId" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="是否三方:" :label-width="formLabelWidth" prop="salesmanId">
-          <el-select v-model="personnelForm.isTril" style="width:30%">
-            <el-option label="是" value="yes"></el-option>
-            <el-option label="否" value="no"></el-option>
+        <el-form-item label="是否三方:" :label-width="formLabelWidth" prop="isTril">
+          <el-select v-model="editForm.isTril" style="width:30%">
+            <el-option label="是" value="true"></el-option>
+            <el-option label="否" value="falss"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editFormVisible = false">确 定</el-button>
+        <el-button @click="cancleForm('editForm')">取 消</el-button>
+        <el-button @click="resetForm('editForm')">重 置</el-button>
+        <el-button type="primary" @click="submitForm('editForm')">更 新</el-button>
       </div>
     </el-dialog>
 
     <!--删除客户信息-->
     <el-dialog title="" :visible.sync="delFormVisible" size="tiny" top="30%">
-      <h2 style="padding:30px">确认删除 {{personnelForm.clientCompNam}} 吗？</h2>
+      <h2 style="padding:30px">确认删除 {{editForm.clientCompNam}} 吗？</h2>
       <div slot="footer" class="dialog-footer">
         <el-button @click="delFormVisible = false">取 消</el-button>
         <el-button @click="delFormVisible = false" type="danger">确 定</el-button>
@@ -210,12 +133,8 @@
   import {AgGridVue} from 'ag-grid-vue'
   import testJson from '../../../static/test/testJSON.js'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
-  import regionJson from '../../../static/region.json'
 
   export default {
-    created () {
-      this.regionList = regionJson
-    },
     data () {
 //      验证电话号码
       let validatePhoneNum = (rule, value, callback) => {
@@ -286,17 +205,17 @@
         filterForm: {
           'companyName': ''
         },
-        personnelForm: {
-          clientCompNam: '',
-          nam: '',
-          tel: '',
-          compAdr: '',
-          area: '',
-          isTril: '',
-          salesmanData: '',
-          province: '',
-          city: '',
-          adminRegion: ''
+        editForm: {
+          'clientCompNam': '', // 客户企业名称
+          'nam': '', // 联系人姓名
+          'ltel': '', // 联系电话
+          'compAdr': '', // 企业详细地址
+          'area': '', // 所属片区
+          'isTril': '', // 是否三方
+          'salesmanData': '', // 业务员信息
+          'province': '', // 省
+          'city': '', // 市
+          'adminRegion': ''
         },
         salesmanReq: '',
         rules: {
@@ -329,7 +248,7 @@
             message: '请输入三方信息',
             trigger: 'blur'
           }],
-          salesmanData: [{
+          salesmanId: [{
             required: true,
             message: '请输入业务员',
             trigger: 'blur'
@@ -491,143 +410,31 @@
         this.salesmanVisible = false
         console.log(this.personnelForm.salesmanData)
       },
-//      地址选择
-      getFocus (num) {
-        if (num === 1) {
-          this.addressVisible = true
-          document.getElementById('focus1').focus()
-        } else {
-          this.addressVisible2 = true
-          document.getElementById('focus2').focus()
-        }
+      cancleForm (formName) {
+        this.resetForm(formName)
+        this.addFormVisible = false
+        this.editFormVisible = false
       },
-      selectShenfen (num, name) {
-        if (num === 1) {
-          this.shenfenSelected = name
-          this.shiSelected = ''
-          this.quSelected = ''
-          this.quList = []
-          this.shiList = []
-        } else {
-          this.personnelForm.shenfen = name
-          this.shenfenSelected2 = name
-          this.shiSelected2 = ''
-          this.quSelected2 = ''
-          this.quList2 = []
-          this.shiList2 = []
-        }
-        this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-        this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+      // 重置表单
+      resetForm (formName) {
+        this.$nextTick(function () {
+          this.$refs[formName].resetFields()
+        })
+        this.personnelForm.receAdr = ''
       },
-      selectShi (num, name) {
-        if (num === 1) {
-          this.shiSelected = name
-          this.quSelected = ''
-          this.quList = []
-        } else {
-          this.personnelForm.shi = name
-          this.shiSelected2 = name
-          this.quSelected2 = ''
-          this.quList2 = []
-        }
-        this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-        this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
-      },
-      selectQu (num, name) {
-        if (num === 1) {
-          this.quSelected = name
-          this.addressVisible = false
-          this.inputWidth = 73
-          this.dropdownWidth = 33
-          this.isFocus = true
-          this.detailVisible = true
-          this.isReadOnly = true
-        } else {
-          this.personnelForm.adminRegion = name
-          this.quSelected2 = name
-          this.addressVisible2 = false
-          this.inputWidth2 = 73
-          this.dropdownWidth2 = 33
-          this.isFocus2 = true
-          this.detailVisible2 = true
-          this.isReadOnly2 = true
-        }
-        this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-        this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
-      },
-      setShenfen (num) {
-        if (num === 1) {
-          this.shenfen = true
-          this.shi = false
-          this.quyu = false
-        } else {
-          this.shenfen2 = true
-          this.shi2 = false
-          this.quyu2 = false
-        }
-      },
-      /** 设置城市级 */
-      setShi (num) {
-        if (num === 1) {
-          this.shenfen = false
-          this.shi = true
-          this.quyu = false
-          if (this.shenfenSelected) {
-            regionJson.filter(item => {
-              if (item.name === this.shenfenSelected) {
-                this.shiList = item
-                return true
-              }
-            })
+      submitForm (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (formName === 'personnelForm') {
+              alert('添加成功')
+            } else if (formName === 'editForm') {
+              alert('编辑成功')
+            }
+          } else {
+            console.log('error submit!!')
+            return false
           }
-        } else {
-          this.shenfen2 = false
-          this.shi2 = true
-          this.quyu2 = false
-          if (this.shenfenSelected2) {
-            regionJson.filter(item => {
-              if (item.name === this.shenfenSelected2) {
-                this.shiList2 = item
-                return true
-              }
-            })
-          }
-        }
-      },
-      /** 设置地区 */
-      setQuyu (num) {
-        if (num === 1) {
-          this.shenfen = false
-          this.shi = false
-          this.quyu = true
-          if (this.shiSelected && this.shenfenSelected) {
-            this.shiList.sub.filter(item => {
-              if (item.name === this.shiSelected) {
-                this.quList = item.sub
-                return true
-              }
-            })
-          }
-        } else {
-          this.shenfen2 = false
-          this.shi2 = false
-          this.quyu2 = true
-          if (this.shiSelected2 && this.shenfenSelected2) {
-            this.shiList2.sub.filter(item => {
-              if (item.name === this.shiSelected2) {
-                this.quList2 = item.sub
-                return true
-              }
-            })
-          }
-        }
-      },
-      adrCheck () {
-        if (this.receAdr !== '' && this.compAdr !== '') {
-          this.messageErro = false
-        } else {
-          this.messageErro = true
-        }
+        })
       }
     },
     beforeMount () {
