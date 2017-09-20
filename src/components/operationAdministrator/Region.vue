@@ -109,6 +109,7 @@
 </template>
 <script>
   import {AgGridVue} from 'ag-grid-vue'
+  import testJson from '../../../static/test/testJSON.js'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
 
   export default {
@@ -244,7 +245,7 @@
     },
     methods: {
       createRowData () {
-        this.gridOptions.rowData = this.regionList
+        this.gridOptions.rowData = testJson.regionList.list
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
@@ -289,7 +290,7 @@
       },
       // 重置表单
       resetForm (formName) {
-        console.log(formName)
+        console.log(this.regionForm.regionName)
         this.$nextTick(function () {
           this.$refs[formName].resetFields()
         })
