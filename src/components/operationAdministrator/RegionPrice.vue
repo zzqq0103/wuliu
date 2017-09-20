@@ -6,7 +6,18 @@
         <div style="float: right">
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
-        <div>
+
+        <el-form :model="filterForm" ref="filterForm" :inline="true">
+          <el-form-item label="车型:">
+            <el-input v-model="filterForm.carType" style="width: 150px"></el-input>
+          </el-form-item>
+          <el-form-item label="区域名称:">
+            <el-input v-model="filterForm.regionName" style="width: 150px"></el-input>
+          </el-form-item>
+          <el-button @click="drawGrid()">提取</el-button>
+        </el-form>
+
+        <div style="float: right">
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">
@@ -126,7 +137,6 @@
 <script>
   import {AgGridVue} from 'ag-grid-vue'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
-
   export default {
     created () {
       for (var i = 0; i < 100; i++) {
@@ -153,6 +163,10 @@
         regionVisable: false,
         regionDelVisable: false,
         editVisable: false,
+        filterForm: {
+          'regionName': '', // 区域名称
+          'carType': '' // 车型
+        },
         regionForm: {
           'licePlateNum': '', // 车牌号
           'driverName': '', // 司机姓名
@@ -277,6 +291,7 @@
     methods: {
       createRowData () {
         this.gridOptions.rowData = this.regionList
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
@@ -339,18 +354,25 @@
             return false
           }
         })
+      },
+      drawGrid () {
+        this.updateGrid()
+        this.createRowData()
+        this.calculateGrid()
+      },
+      updateGrid () {
+        this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
       }
     },
     beforeMount () {
-      this.createRowData()
+//      this.createRowData()
     },
     mounted () {
-      this.calculateGrid()
+//      this.calculateGrid()
     }
 //    update () {
 //      console.log('update')
 //    }
   }
 </script>
-<style scoped>
-</style>
+
