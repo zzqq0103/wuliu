@@ -20,11 +20,9 @@
             <el-button @click="createRowData()">提取</el-button>
           </el-form>
         </div>
-        <div style="float: right">
-          <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
-        </div>
         <div>
           <el-button @click="vehicleAdd">添加</el-button>
+          <span style="margin-left: 2%"></span>
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">

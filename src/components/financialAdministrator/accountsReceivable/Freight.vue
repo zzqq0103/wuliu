@@ -1100,6 +1100,7 @@
       confirmSubmit () {
         this.gridOptions3.api.selectAllFiltered()
         const confirmData = this.gridOptions3.api.getSelectedRows()
+        this.confirmSubForm.orderId = []
         if (confirmData.length < 1) {
           this.errorVisible = true
         } else {

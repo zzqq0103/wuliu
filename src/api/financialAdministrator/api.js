@@ -2,7 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 
 axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
-axios.defaults.baseURL = 'http://10.107.8.163:8080/'
+axios.defaults.baseURL = 'http://10.107.10.102:8080/'
 // axios.defaults.withCredentials = true
 
 // POST传参序列化
@@ -44,6 +44,6 @@ export default {
    *
    * **/
   getTransferFee (params) {
-    return fetch('/logistics/interface/studentManagement/queryStudentModel', {params: params})
+    return fetch('/logistics/interface/orderFinanceViewManagement/list_change_fee', {params: params})
   }
 }

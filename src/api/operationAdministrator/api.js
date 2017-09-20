@@ -43,11 +43,16 @@ export function fetch (url, params) {
 
 export default {
   /**
-   *
    * 接送货车辆管理
-   *
    * **/
   getShortInfo (params) {
     return fetch('', params)
+  },
+  /**
+   * 长途车辆信息管理
+   * **/
+  getLongInfo (params) {
+    return fetch('', params)
   }
+
 }

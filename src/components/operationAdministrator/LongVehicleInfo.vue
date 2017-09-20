@@ -3,13 +3,26 @@
     <div>
       <h2 style="text-align:center">长途车辆信息管理</h2>
       <div style="margin-top:1%">
-        <div style="float: right">
-          <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
+        <div>
+          <el-form :model="filterForm" ref="filterForm" :inline="true">
+            <el-form-item label="司机姓名:">
+              <el-input v-model="filterForm.driverName" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-form-item label="车型:">
+              <el-input v-model="filterForm.carType" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-form-item label="车辆状态:">
+              <el-input v-model="filterForm.carState" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-form-item label="车辆位置:">
+              <el-input v-model="filterForm.carPosition" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-button @click="createRowData()">提取</el-button>
+          </el-form>
         </div>
         <div>
-          <!--<el-button @click="vehicleVisable = true">添加</el-button>-->
           <el-button @click="vehicleAdd">添加</el-button>
-          <!-- <el-button @click="setting">设置</el-button> -->
+          <span style="margin-left: 2%"></span>
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">
@@ -183,6 +196,7 @@
 <script>
   import {AgGridVue} from 'ag-grid-vue'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  import api from '../../api/operationAdministrator/api'
 
   export default {
     created () {
@@ -237,6 +251,14 @@
           'tonnage': '', // 吨位
           'carState': '', // 车辆状态
           'carPosition': '' // 车辆位置
+        },
+        filterForm: {
+          'driverName': '', // 司机姓名
+          'carType': '', // 车型
+          'carState': '', // 车辆状态
+          'carPosition': '', // 车辆位置
+          'pageSize': 0, // 分页大小
+          'currentPage': 1 // 当前页码
         },
         rules: {
           licePlateNum: [{
@@ -418,10 +440,18 @@
     },
     methods: {
       createRowData () {
+        this.filterForm.pageSize = this.pageSize
+        this.filterForm.currentPage = this.currentPage
+        api.getLongInfo(this.filterForm)
+          .then(res => {
+            console.log(res)
+          })
+          .catch(error => {
+            console.log('连接失败')
+            console.log(error)
+          })
         this.gridOptions.rowData = this.vehicleList
-      },
-      onQuickFilterChanged (input) {
-        this.gridOptions.api.setQuickFilter(input)
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
       },
       setting () {
         this.colVisible = true
@@ -502,7 +532,7 @@
       }
     },
     beforeMount () {
-      this.createRowData()
+//      this.createRowData()
     },
     mounted () {
       this.calculateGrid()
