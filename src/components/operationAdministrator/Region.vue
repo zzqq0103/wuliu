@@ -6,7 +6,24 @@
         <div style="float: right">
           <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
         </div>
-        <div>
+
+        <el-form :model="filterForm" ref="filterForm" :inline="true">
+          <el-form-item label="省:">
+            <el-input v-model="filterForm.province" style="width: 150px"></el-input>
+          </el-form-item>
+          <el-form-item label="市:">
+            <el-input v-model="filterForm.city" style="width: 150px"></el-input>
+          </el-form-item>
+          <el-form-item label="行政区:">
+            <el-input v-model="filterForm.adminRegion" style="width: 150px"></el-input>
+          </el-form-item>
+          <el-form-item label="所属区域名称:">
+            <el-input v-model="filterForm.regionName" style="width: 150px"></el-input>
+          </el-form-item>
+          <el-button @click="drawGrid()">提取</el-button>
+        </el-form>
+
+        <div style="float: right">
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">
@@ -221,6 +238,12 @@
               pinned: 'right'
             }
           ]
+        },
+        filterForm: {
+          'province': '', // 省
+          'city': '', // 市
+          'adminRegion': '', // 行政区
+          'regionName': '' // 所属区域名称
         }
       }
     },
@@ -244,9 +267,6 @@
       }
     },
     methods: {
-      createRowData () {
-        this.gridOptions.rowData = testJson.regionList.list
-      },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
       },
@@ -308,13 +328,25 @@
             return false
           }
         })
+      },
+      createRowData () {
+        this.gridOptions.rowData = testJson.regionList.list
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
+      },
+      drawGrid () {
+        this.updateGrid()
+        this.createRowData()
+        this.calculateGrid()
+      },
+      updateGrid () {
+        this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
       }
     },
     beforeMount () {
-      this.createRowData()
+//      this.createRowData()
     },
     mounted () {
-      this.calculateGrid()
+//      this.calculateGrid()
     }
 //    update () {
 //      console.log('update')

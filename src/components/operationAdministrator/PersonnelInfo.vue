@@ -8,7 +8,19 @@
         <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged"></el-input>
       </div>
       <div>
-        <el-button @click="addForm">添加</el-button>
+        <el-form :model="filterForm" ref="filterForm" :inline="true">
+          <el-form-item label="客户企业名称:">
+            <el-input v-model="filterForm.clientCompNam" style="width: 150px"></el-input>
+          </el-form-item>
+          <el-form-item label="联系人姓名:">
+            <el-input v-model="filterForm.nam" style="width: 150px"></el-input>
+          </el-form-item>
+          <el-form-item label="联系人电话:">
+            <el-input v-model="filterForm.tel" style="width: 150px"></el-input>
+          </el-form-item>
+          <el-button @click="drawGrid()">提取</el-button>
+        </el-form>
+        <el-button @click="addForm" style="float: right">添加</el-button>
         <!--<el-button @click="setting">设置</el-button>-->
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
@@ -25,7 +37,7 @@
             </div>
           </template>
         </el-popover>
-        <el-button v-popover:popover1>设置</el-button>
+        <el-button v-popover:popover1 style="float: right;margin-right: 20px">设置</el-button>
       </div>
 
     </div>
@@ -301,6 +313,11 @@
             componentParent: this
           }
         },
+        filterForm: {
+          'clientCompNam': '',
+          'nam': '', // 联系人姓名,
+          'tel': ''  // 联系电话
+        },
         personnelForm: {
           'clientCompNam': '', // 客户企业名称
           'nam': '', // 联系人姓名
@@ -432,9 +449,6 @@
       }
     },
     methods: {
-      createRowData () {
-        this.gridOptions.rowData = testJson.personnelInfo.list
-      },
       createSalesmanData () {
         this.salesmanData = testJson.salesman
         this.salesmanVisible = true
@@ -681,10 +695,22 @@
             return false
           }
         })
+      },
+      createRowData () {
+        this.gridOptions.rowData = testJson.regionList.list
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
+      },
+      drawGrid () {
+        this.updateGrid()
+        this.createRowData()
+        this.calculateGrid()
+      },
+      updateGrid () {
+        this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
       }
     },
     beforeMount () {
-      this.createRowData()
+//      this.createRowData()
 //      this.createColumnDefs()
     },
     mounted () {
@@ -693,109 +719,3 @@
     }
   }
 </script>
-<style scoped>
-  .dropdown {
-    width: 100%;
-    margin-left: 15%
-  }
-
-  .dropdown2 {
-    display: inline-block;
-    width: 40%;
-    float: left
-  }
-
-  .dropdown-content {
-    height: 200px;
-    position: absolute;
-    background-color: #fff;
-    margin-left: -1%;
-    padding: 0;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
-    z-index: 1;
-    width: 78%
-  }
-
-  .dropdown-select {
-    clear: both;
-    height: 160px;
-    overflow-y: scroll
-  }
-
-  .dropdown-select ul {
-    clear: both;
-    list-style-type: none
-  }
-
-  .dropdown-select ul li:hover {
-    cursor: pointer;
-    background-color: #D1E5E5
-  }
-
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
-
-  .dropdown-content-select {
-    list-style-type: none;
-  }
-
-  .dropdown-li {
-    cursor: pointer;
-    border-right: 1px solid #C0C0C0;
-    width: 33.33%;
-    margin: 0;
-    float: left;
-    box-sizing: border-box;
-    background-color: #D1E5E5;
-    text-align: center
-  }
-
-  .dropdown-shenfen li:hover {
-    cursor: pointer;
-    background-color: #D1E5E5
-  }
-
-  .addressDetail {
-    width: 45%;
-    float: left;
-    margin-left: -5%
-  }
-
-  .selectOn {
-    background-color: #00d1b2;
-  }
-
-  .selectNo {
-    background-color: #EEF6F6
-  }
-
-  .div-form {
-    border: 2px solid black;
-    width: 60%;
-    margin-left: 18%;
-    display: inline-block;
-    margin-top: 2%;
-    padding: 2%;
-    box-sizing: border-box
-  }
-
-  .input-tishi {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-color: #fff;
-    background-image: none;
-    border-radius: 4px;
-    border: 1px solid rgb(191, 217, 216);
-    box-sizing: border-box;
-    color: rgb(31, 61, 60);
-    display: block;
-    font-size: inherit;
-    height: 36px;
-    line-height: 1;
-    outline: 0;
-    padding: 3px 10px;
-    transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
-  }
-</style>
