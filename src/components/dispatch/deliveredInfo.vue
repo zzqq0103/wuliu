@@ -71,15 +71,9 @@
                    :suppressCellSelection="true"
                    :rowHeight="40"
                    :headerHeight="40"
-                   :rowDoubleClicked="changeDialogVisible"
+                   :rowDoubleClicked="detailDoubleClick"
       ></ag-grid-vue>
     </div>
-
-    <!-- 装载单详细列表信息 -->
-    <dispatched> </dispatched>
-
-    <!-- 装载单页面订单列表 -->
-    <deliver-order-list :title="titleText"></deliver-order-list>
 
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
@@ -94,6 +88,11 @@
       </el-pagination>
     </div>
 
+    <!-- 装载单订单列表展示 -->
+    <el-dialog :title="已装载单订单列表" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
+      <Dispatched :status="status"> </Dispatched>
+    </el-dialog>
+
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
     <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
       <order-details :orderId="orderId"></order-details>
@@ -106,20 +105,21 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
+  import {getCurrentDelivered, getQueryOrderList} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   // 引入装载单页面的 （dispatched.vue）页面
-  import dispatched from './dispatched'
-  // 引入装载单订单页面 （deliverOrderList.vue) 页面
+  import Dispatched from './dispatched'
+  // 引入装载单订单页面 （deliverOrderList.vue） 页面
   import DeliverOrderList from './deliverOrderList'
   export default {
     data () {
       return {
         titleText: '已送货装载单订单列表',
-        dialogVisible: false,
+        status: 1,
+        deliveringVisible: false,
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
@@ -253,17 +253,16 @@
     components: {
       'ag-grid-vue': AgGridVue,
       OrderDetails,
-      dispatched,
+      Dispatched,
       DeliverOrderList
     },
-
     // 实例方法
     methods: {
       // 装载单订单列表弹框
-      changeDialogVisible (event) {
+      detailDoubleClick (event) {
         this.loadOrderId = event.data.loadOrderId
         console.log(event.data.loadOrderId)
-        this.dialogVisible = true
+        this.deliveringVisible = true
       },
       // 改变每页显示的个数
       handleSizeChange (val) {

@@ -1,19 +1,16 @@
 <template>
   <div>
     <div style="text-align: center;margin: 10px">
-      <h2>常用客户信息管理</h2>
+      <h2>常用收货方信息管理</h2>
     </div>
     <div>
       <div style="position: absolute">
         <el-form v-model="filterForm" ref="filterForm" inline="true"s>
-          <el-form-item label="常用联系人">
-            <el-input v-model="filterForm.companyName"></el-input>
+          <el-form-item label="常用发货方:">
+            <el-input v-model="filterForm.shipNam"></el-input>
           </el-form-item>
-          <el-button @click="">提取</el-button>
+          <el-button @click="drawGrid()">提取</el-button>
         </el-form>
-      </div>
-      <div style="float: right">
-        <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged"></el-input>
       </div>
       <div style="float: right;margin-right: 20px">
         <el-button @click="addForm">添加</el-button>
@@ -57,6 +54,54 @@
       ></ag-grid-vue>
     </div>
 
+    <!--添加客户信息-->
+    <el-dialog title="添加客户信息:" :visible.sync="addFormVisible" size="tiny" :closeOnClickModal="false" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
+      <el-form :model="personnelForm" ref="personnelForm" :rules="rules">
+        <el-form-item label="所属发货方:" :label-width="formLabelWidth" prop="clientCompNam">
+          <el-input v-model="personnelForm.shipNam" style="width: 80%"></el-input>
+        </el-form-item>
+        <el-form-item label="收货方:" :label-width="formLabelWidth" prop="clientCompNam">
+          <el-input v-model="personnelForm.receNam" style="width: 80%"></el-input>
+        </el-form-item>
+        <el-form-item label="收货方联系电话:" :label-width="formLabelWidth" prop="tel">
+          <el-input v-model="personnelForm.receTelTel" :rules="rules" style="width: 50%"></el-input>
+        </el-form-item>
+        <el-form-item label="企业详细地址：" style="clear:both;width:100%" :label-width="formLabelWidth" prop="compAdr">
+          <div id='focus2' class='dropdown2' style='outline:none' tabindex="0"  @click="getFocus(2)" @blur="addressVisible2=false">
+            <el-input v-model="personnelForm.receAdr" style="width: 142.5px;"></el-input>
+            <div class="dropdown-content" style='width:142.5px' v-show="addressVisible2">
+              <ul class='dropdown-content-select'>
+                <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
+                <li @click="setShi(2)" class='dropdown-li' v-bind:class="{'selectOn':shi2}">城市</li>
+                <li @click="setQuyu(2)" class='dropdown-li' v-bind:class="{'selectOn':quyu2}">区县</li>
+              </ul>
+              <div class='dropdown-select'>
+                <ul class='dropdown-shenfen' v-show="shenfen2">
+                  <li v-for="(data,i) in this.regionList" @click="selectShenfen(2,data.name)" style='text-align:center'
+                      :key='data.name'>{{data.name}}
+                  </li>
+                </ul>
+                <ul class='dropdown-shi' v-show="shi2">
+                  <li v-for="(data,i) in this.shiList2.sub" @click="selectShi(2,data.name)" style='text-align:center'
+                      :key='data.name'>{{data.name}}
+                  </li>
+                </ul>
+                <ul v-show="quyu2">
+                  <li v-for="(data,i) in this.quList2" @click="selectQu(2,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <el-input v-model="personnelForm.compAdr" style="width: 100px;left: 160px;position: absolute"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancleForm('personnelForm')">取 消</el-button>
+        <el-button @click="resetForm('personnelForm')">重 置</el-button>
+        <el-button type="primary" @click="submitForm('personnelForm')">更 新</el-button>
+      </div>
+    </el-dialog>
+
     <!--分页-->
     <div style="text-align: right">
       <el-pagination
@@ -83,121 +128,31 @@
       </div>
     </el-dialog>
 
-
-    <!--添加客户信息-->
-    <el-dialog title="添加客户信息:" :visible.sync="addFormVisible" size="tiny">
-      <el-form :model="personnelForm" ref="personnelForm" :rules="rules">
-        <el-form-item label="客户企业名称:" :label-width="formLabelWidth" prop="clientCompNam">
-          <el-input v-model="personnelForm.clientCompNam" style="width: 80%"></el-input>
-        </el-form-item>
-        <el-form-item label="联系人姓名:" :label-width="formLabelWidth" prop="nam">
-          <el-input v-model="personnelForm.nam" :rules="rules" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="personnelForm.tel" :rules="rules" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="企业详细地址：" style="clear:both;width:100%" :label-width="formLabelWidth" prop="adr">
-          <div id='focus2' class='dropdown2' style='outline:none' tabindex="0"  @click="getFocus(2)" @blur="addressVisible2=false">
-            <el-input v-model="receAdr" style="width: 142.5px;" @blur="adrCheck"></el-input>
-            <div class="el-form-item__error" v-show="messageErro">请输入地址</div>
-            <div class="dropdown-content" style='width:142.5px' v-show="addressVisible2">
-              <ul class='dropdown-content-select'>
-                <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
-                <li @click="setShi(2)" class='dropdown-li' v-bind:class="{'selectOn':shi2}">城市</li>
-                <li @click="setQuyu(2)" class='dropdown-li' v-bind:class="{'selectOn':quyu2}">区县</li>
-              </ul>
-              <div class='dropdown-select'>
-                <ul class='dropdown-shenfen' v-show="shenfen2">
-                  <li v-for="(data,i) in this.regionList" @click="selectShenfen(2,data.name)" style='text-align:center'
-                      :key='data.name'>{{data.name}}
-                  </li>
-                </ul>
-                <ul class='dropdown-shi' v-show="shi2">
-                  <li v-for="(data,i) in this.shiList2.sub" @click="selectShi(2,data.name)" style='text-align:center'
-                      :key='data.name'>{{data.name}}
-                  </li>
-                </ul>
-                <ul v-show="quyu2">
-                  <li v-for="(data,i) in this.quList2" @click="selectQu(2,data.name)" style='text-align:center' :key='data.name'>{{data.name}}</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <el-input v-model="compAdr" style="width: 122.5px;left: 40px" @blur="adrCheck"></el-input>
-        </el-form-item>
-        <el-form-item label="所属片区:" :label-width="formLabelWidth" prop="area">
-          <el-input v-model="personnelForm.area" :rules="rules" style="width: 80%"></el-input>
-        </el-form-item>
-        <el-form-item label="业务员:" :label-width="formLabelWidth" prop="salesmanData">
-          <el-input v-model="personnelForm.salesmanData" :rules="rules" style="width: 50%" :disabled="true"></el-input>
-          <el-button type="primary" @click="createSalesmanData" >选择业务员</el-button>
-        </el-form-item>
-        <el-form-item label="是否三方:" :label-width="formLabelWidth" prop="isTril">
-          <el-select v-model="personnelForm.isTril" style="width:30%">
-            <el-option label="是" value="yes"></el-option>
-            <el-option label="否" value="no"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="vehicleVisable = false">取 消</el-button>
-        <el-button type="primary" @click="vehicleVisable = false">注 册</el-button>
-      </div>
-    </el-dialog>
-
-    <!--添加业务员信息-->
-    <el-dialog title="业务员:" :visible.sync="salesmanVisible" size="tiny" :closeOnClickModal="false">
-      <template v-for="(collist,i) in salesmanData">
-        <div class="colVisible" style="margin: 10px">
-          <el-radio :label=collist.infor v-model="salesmanReq" style="width: 100%" >
-            {{collist.infor}}
-          </el-radio>
-        </div>
-      </template>
-      <template>
-        <div class="salesmanVisible" style="float: right;margin-bottom: 20px" >
-          <el-button type="primary" @click="updateSalesman">确定</el-button>
-        </div>
-      </template>
-    </el-dialog>
-
     <!--编辑客户信息-->
-    <el-dialog title="编辑:" :visible.sync="editFormVisible" size="tiny" :closeOnClickModal="false">
-      <el-form :model="personnelForm" :rules="rules" ref="personnelForm" prop="clientCompNam">
-        <el-form-item label="客户企业名称:" :label-width="formLabelWidth">
-          <el-input v-model="personnelForm.clientCompNam" style="width: 80%"></el-input>
+    <el-dialog title="编辑:" :visible.sync="editFormVisible" size="tiny" :closeOnClickModal="false" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
+      <el-form :model="editForm" ref="editForm" :rules="rules">
+        <el-form-item label="所属发货方:" :label-width="formLabelWidth" prop="clientCompNam">
+          <el-input v-model="editForm.shipNam" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="联系人姓名:" :label-width="formLabelWidth" prop="nam">
-          <el-input v-model="personnelForm.nam" style="width: 50%"></el-input>
+        <el-form-item label="收货方:" :label-width="formLabelWidth" prop="clientCompNam">
+          <el-input v-model="editForm.receNam" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="personnelForm.tel" style="width: 50%"></el-input>
+        <el-form-item label="收货方联系电话:" :label-width="formLabelWidth" prop="tel">
+          <el-input v-model="editForm.shipTel" :rules="rules" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="企业详细地址:" :label-width="formLabelWidth" prop="compAdr">
-          <el-input v-model="personnelForm.compAdr" style="width: 80%"></el-input>
-        </el-form-item>
-        <el-form-item label="所属片区:" :label-width="formLabelWidth" prop="area">
-          <el-input v-model="personnelForm.area" style="width: 80%"></el-input>
-        </el-form-item>
-        <el-form-item label="业务员:" :label-width="formLabelWidth" prop="salesmanData">
-          <el-input v-model="personnelForm.salesmanId" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="是否三方:" :label-width="formLabelWidth" prop="salesmanId">
-          <el-select v-model="personnelForm.isTril" style="width:30%">
-            <el-option label="是" value="yes"></el-option>
-            <el-option label="否" value="no"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
+          <el-input v-model="editForm.compAdr" style="width: 80%"></el-input>
+        </el-form-item>      </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editFormVisible = false">确 定</el-button>
+        <el-button @click="cancleForm('editForm')">取 消</el-button>
+        <el-button @click="resetForm('editForm')">重 置</el-button>
+        <el-button type="primary" @click="submitForm('editForm')">更 新</el-button>
       </div>
     </el-dialog>
 
     <!--删除客户信息-->
     <el-dialog title="" :visible.sync="delFormVisible" size="tiny" top="30%">
-      <h2 style="padding:30px">确认删除 {{personnelForm.clientCompNam}} 吗？</h2>
+      <h2 style="padding:30px">确认删除 {{editForm.clientCompNam}} 吗？</h2>
       <div slot="footer" class="dialog-footer">
         <el-button @click="delFormVisible = false">取 消</el-button>
         <el-button @click="delFormVisible = false" type="danger">确 定</el-button>
@@ -237,25 +192,25 @@
               headerName: '序号', width: 100, field: 'index', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '客户企业名称',
+              headerName: '所属发货方',
               width: 150,
-              field: 'clientCompNam',
+              field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
             {
-              headerName: '联系人姓名',
+              headerName: '收货方',
               width: 150,
-              field: 'nam',
+              field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
             {
-              headerName: '联系电话',
+              headerName: '收货方联系电话',
               width: 150,
-              field: 'tel',
+              field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -284,19 +239,27 @@
           }
         },
         filterForm: {
-          'companyName': ''
+          'shipNam': ''
         },
         personnelForm: {
-          clientCompNam: '',
-          nam: '',
-          tel: '',
-          compAdr: '',
-          area: '',
-          isTril: '',
-          salesmanData: '',
-          province: '',
-          city: '',
-          adminRegion: ''
+          'shipNam': '',
+          'receNam': '',
+          'receTel': '',
+          'compAdr': '', // 企业详细地址
+          'province': '', // 省
+          'city': '', // 市
+          'adminRegion': '',
+          'receAdr': ''
+        },
+        editForm: {
+          'shipNam  ': '', //
+          'receNam ': '', //
+          'shipTel ': '', //
+          'receAdr': '', //
+          'province': '', // 省
+          'compAdr': '', // 企业详细地址
+          'city': '', //
+          'adminRegion': ''
         },
         salesmanReq: '',
         rules: {
@@ -329,7 +292,7 @@
             message: '请输入三方信息',
             trigger: 'blur'
           }],
-          salesmanData: [{
+          salesmanId: [{
             required: true,
             message: '请输入业务员',
             trigger: 'blur'
@@ -405,9 +368,6 @@
       }
     },
     methods: {
-      createRowData () {
-        this.gridOptions.rowData = testJson.personnelInfo.list
-      },
       createSalesmanData () {
         this.salesmanData = testJson.salesman
         this.salesmanVisible = true
@@ -491,7 +451,45 @@
         this.salesmanVisible = false
         console.log(this.personnelForm.salesmanData)
       },
-//      地址选择
+      cancleForm (formName) {
+        this.resetForm(formName)
+        this.addFormVisible = false
+        this.editFormVisible = false
+      },
+      // 重置表单
+      resetForm (formName) {
+        this.$nextTick(function () {
+          this.$refs[formName].resetFields()
+        })
+        this.personnelForm.receAdr = ''
+      },
+      submitForm (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (formName === 'personnelForm') {
+              alert('添加成功')
+            } else if (formName === 'editForm') {
+              alert('编辑成功')
+            }
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+      createRowData () {
+        this.gridOptions.rowData = testJson.regionList.list
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
+      },
+      drawGrid () {
+        this.updateGrid()
+        this.createRowData()
+        this.calculateGrid()
+      },
+      updateGrid () {
+        this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
+      },
+      //      地址选择
       getFocus (num) {
         if (num === 1) {
           this.addressVisible = true
@@ -503,6 +501,7 @@
       },
       selectShenfen (num, name) {
         if (num === 1) {
+          this.filterForm.shenfen = name
           this.shenfenSelected = name
           this.shiSelected = ''
           this.quSelected = ''
@@ -516,11 +515,12 @@
           this.quList2 = []
           this.shiList2 = []
         }
-        this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-        this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+        this.personnelForm.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+        this.filterForm.receAdr = this.shenfenSelected + this.shiSelected + this.quSelected
       },
       selectShi (num, name) {
         if (num === 1) {
+          this.filterForm.shi = name
           this.shiSelected = name
           this.quSelected = ''
           this.quList = []
@@ -530,11 +530,12 @@
           this.quSelected2 = ''
           this.quList2 = []
         }
-        this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-        this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+        this.personnelForm.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+        this.filterForm.receAdr = this.shenfenSelected + this.shiSelected + this.quSelected
       },
       selectQu (num, name) {
         if (num === 1) {
+          this.filterForm.adminRegion = name
           this.quSelected = name
           this.addressVisible = false
           this.inputWidth = 73
@@ -552,8 +553,8 @@
           this.detailVisible2 = true
           this.isReadOnly2 = true
         }
-        this.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-        this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+        this.personnelForm.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
+        this.filterForm.receAdr = this.shenfenSelected + this.shiSelected + this.quSelected
       },
       setShenfen (num) {
         if (num === 1) {
@@ -621,17 +622,10 @@
             })
           }
         }
-      },
-      adrCheck () {
-        if (this.receAdr !== '' && this.compAdr !== '') {
-          this.messageErro = false
-        } else {
-          this.messageErro = true
-        }
       }
     },
     beforeMount () {
-      this.createRowData()
+//      this.createRowData()
 //      this.createColumnDefs()
     },
     mounted () {
@@ -648,7 +642,7 @@
 
   .dropdown2 {
     display: inline-block;
-    width: 40%;
+    width: 100%;
     float: left
   }
 
@@ -744,5 +738,9 @@
     outline: 0;
     padding: 3px 10px;
     transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+  }
+
+  .Taddress label{
+    float: left;
   }
 </style>

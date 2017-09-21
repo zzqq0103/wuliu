@@ -370,7 +370,7 @@
               headerName: '件数', width: 150, field: 'goodsNums', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单客服', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '中转路线', width: 150, field: 'companyNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -953,7 +953,7 @@
 <!--receTel 收货人联系方式-->
 <!--goodsNam 品名-->
 <!--goodsNums 件数-->
-<!--serviceNam 制单人-->
+<!--serviceNam 开单客服-->
 <!--companyNam 中转路线-->
 <!--changeFee 中转日期-->
 <!--sendMode 送货方式-->

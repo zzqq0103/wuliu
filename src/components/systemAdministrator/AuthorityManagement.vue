@@ -4,28 +4,22 @@
       <h2 style="text-align:center">角 色 信 息 表</h2>
       <div style="margin-top:2%">
 
-        <div class="block" style="float:right;">
-          <el-date-picker
-            v-model="dateValue"
-            type="daterange"
-            align="right"
-            placeholder="选择日期范围"
-            :picker-options="pickerOptions">
-          </el-date-picker>
-        </div>
-
-        <div style="float:left;">
-          <!--下拉选择：角色-->
-          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:130px;">
-            <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
-        </div>
-
         <div>
-
+          <el-form :inline="true">
+            <el-select v-model="selectvalue" style="width:130px;">
+              <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+            <el-form-item style="margin-left: 20px" label="姓名:">
+              <el-input v-model="filterForm.name" style="width: 150px"></el-input>
+            </el-form-item>
+            <el-form-item label="站点:" style="margin-left: 10px">
+              <el-input v-model="filterForm.station" style="width: 150px"></el-input>
+            </el-form-item>
+            <el-button @click="drawGrid">提取</el-button>
+          </el-form>
         </div>
+
       </div>
     </div>
 
@@ -38,10 +32,12 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
+                   :enableSorting="false"
+                   :enableFilter="false"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
+                   :pagination="true"
+                   :suppressPaginationPanel="true"
                    :rowHeight="40"
                    :headerHeight="40"
       ></ag-grid-vue>
@@ -52,18 +48,21 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentpage"
-        :page-sizes="[25, 50, 75, 100]"
-        :page-size="25"
-        layout="total, sizes, prev, pager, next"
-        :total="totalpages">
+        :page-sizes="[20,50,100,200]"
+        :total="rowCount"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next">
       </el-pagination>
     </div>
     <div>
-      <el-dialog title="提示" :visible.sync="delFormVisible" size="small" top="30%" :closeOnClickModal="false">
+      <el-dialog title="提示" :visible.sync="delFormVisible" size="tiny" top="30%"
+                 :closeOnClickModal="false"
+                 :close-on-press-escape="false"
+                 :show-close="false">
         <h2 style="padding:30px">确认删除吗？</h2>
         <div slot="footer" class="dialog-footer">
           <el-button @click="delFormVisible = false">取 消</el-button>
-          <el-button @click="delFormVisible = false" type="primary">确 定</el-button>
+          <el-button @click="delFormVisible = false" type="danger">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -72,11 +71,15 @@
 
 <script>
   import {AgGridVue} from 'ag-grid-vue'
-  import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
+  import {getCurrentDelivered, getQueryOrderList} from '../../api/dispatch/api'
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   export default {
     data () {
       return {
+        filterForm: {
+          'name': '',
+          'station': ''
+        },
         listLoading: false,
         queryName: '',
         currentpage: 1,
@@ -101,22 +104,22 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '调度员姓名', width: 100, field: 'id', filter: 'text', hide: false
+              headerName: '序号', width: 100, field: 'id', filter: 'text', hide: false
             },
             {
-              headerName: '性别', width: 100, field: 'deliverOrderId', filter: 'text', hide: false
+              headerName: '角色', width: 100, field: 'deliverOrderId', filter: 'text', hide: false
             },
             {
-              headerName: '联系电话', width: 100, field: 'orderId', filter: 'text', hide: false
+              headerName: '电话', width: 100, field: 'orderId', filter: 'text', hide: false
             },
             {
-              headerName: '所属站点', width: 100, field: 'OrderDate', filter: 'text', hide: false
+              headerName: '密码', width: 100, field: 'OrderDate', filter: 'text', hide: false
             },
             {
-              headerName: '调度员状态', width: 100, field: 'driverName', filter: 'text', hide: false
+              headerName: '姓名', width: 100, field: 'driverName', filter: 'text', hide: false
             },
             {
-              headerName: '调度员类别', width: 100, field: 'consigneeAddr', filter: 'text', hide: false
+              headerName: '站点', width: 100, field: 'consigneeAddr', filter: 'text', hide: false
             },
             {
               headerName: '操作', width: 100, field: 'consignee', cellRendererFramework: 'operateComponent', hide: false
@@ -148,39 +151,15 @@
         }, {
           value: 8,
           label: '短途司机'
+        }, {
+          value: 9,
+          label: '全部'
         }],
-        selectvalue: 1,
+        selectvalue: 9,
         orderlist: [],
         delFormVisible: false,
-        totalpages: 1,
-        pageSize: 25,
-        pickerOptions: {
-          shortcuts: [{
-            text: '最近一周',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '最近一个月',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '最近三个月',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-              picker.$emit('pick', [start, end])
-            }
-          }]
-        },
+        pageSize: 20,
+        rowCount: 0,
         dateValue: '',
         detailVisible: false // 订单详情弹框
       }
@@ -202,15 +181,11 @@
       }
     },
     methods: {
-      onQuickFilterChanged (input) {
-        this.gridOptions.api.setQuickFilter(input)
-      },
       handleSizeChange (val) {
-        this.pageSize = val
+        this.gridOptions.api.paginationSetPageSize(Number(val))
       },
       handleCurrentChange (val) {
-        this.currentpage = val
-        this.getOrderList()
+        this.gridOptions.api.paginationGoToPage(val - 1)
       },
       handleIconClick (input) {
         this.getQueryData()
@@ -245,7 +220,6 @@
           // 使用gridOptions中的api方法设定RowData数据
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
-          this.totalpages = res.data.totalPages
           this.listLoading = false
         })
       },
@@ -260,13 +234,21 @@
         getQueryOrderList(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
-          this.totalpages = res.data.totalpages
           this.listLoading = false
         })
+      },
+      drawGrid () {
+        this.getOrderList()
+//        this.updateGrid()
+//        this.createRowData()
+      },
+      updateGrid () {
+      },
+      createRowData () {
       }
     },
     mounted () {
-      this.getOrderList()
+//      this.getOrderList()
     }
   }
 </script>

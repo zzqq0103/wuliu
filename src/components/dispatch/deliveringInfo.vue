@@ -49,7 +49,7 @@
 
         <div>
           <!-- 导出 -->
-          <el-button style="float:right; margin-right:10px;">新增装载单</el-button>
+          <el-button style="float:right; margin-right:10px;" @click="createLoaderList">新增装载单</el-button>
           <!-- 新增装载单 -->
           <el-button style="float:right; margin-right:10px;">导出</el-button>
         </div>
@@ -62,6 +62,8 @@
                 <el-button @click="departVisible = false" type="danger">确 定</el-button>
             </div>
         </el-dialog>
+
+
 
       </div>
     </div>
@@ -104,6 +106,16 @@
       <order-details :orderId="orderId"></order-details>
     </el-dialog>
 
+    <!-- 待长途装载单订单对话框  -->
+    <el-dialog :title="titleText" :visible.sync="dialogVisible" size="full" :modal=false :modal-append-to-body=false>
+      <deliver-order-list :loaderId="loadOrderId" :flag="flag"></deliver-order-list>
+    </el-dialog>
+
+    <!-- 装载单订单列表展示 -->
+    <el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
+      <deliver-order-list :flag="flag"></deliver-order-list>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -111,20 +123,25 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {getCurrentDelivered, getQueryOrderList} from '../../api/api'
+  import {getCurrentDelivered, getQueryOrderList} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  // 引入dispatchLoaderInfo 组件页面
+  import DeliverOrderList from './deliverOrderList'
 
   export default {
     data () {
       return {
+        titleText: '待送货装载单列表',
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
         colVisible: false, // 设置弹窗的显示boolean值
         orderId: '', // 运单号
+        dialogVisible: false,
+        deliveringVisible: false,
         tableForm: {
           'id': '',
           'loadOrderId': '',
@@ -335,13 +352,15 @@
         },
         dateValue: '', // 日期值
         detailVisible: false, // 订单详情弹框
-        departVisible: false
+        departVisible: false,
+        flag: false
       }
     },
     // 实例组件
     components: {
       'ag-grid-vue': AgGridVue,
       OrderDetails,
+      DeliverOrderList,
       operateComponent: {
         template: '<span style="margin-left:5px;"><el-button  class="del-but" @click="depart" type="info" size="small">发车</el-button></span>',
         methods: {
@@ -358,9 +377,14 @@
     methods: {
       // 订单详情弹框
       detailDoubleClick (event) {
-        console.log(event.data.orderId)
-        this.orderId = event.data.orderId
-        this.detailVisible = true
+        console.log(event.data.loadOrderId)
+        this.loadOrderId = event.data.loadOrderId
+        this.deliveringVisible = true
+      },
+      // 新增装载单
+      createLoaderList () {
+        this.flag = true
+        this.dialogVisible = true
       },
       // 改变每页显示的个数
       handleSizeChange (val) {

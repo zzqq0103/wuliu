@@ -36,20 +36,7 @@ for (let i = 0; i < 100; i++) {
     // 装载单号
     loadOrderId: Mock.mock('@string("number",5)'),
     // 装载单状态
-    // loadOrderStatus: Mock.mock({
-    //   'object|1': {
-    //     'checkFail': '已分配 已确认'
-    //   }
-    // }),
-    // 装载单状态
     loadOrderStatus: '已分配 已确认',
-    // // 调整状态
-    // adjustmentStatus: Mock.mock({
-    //   'object|1': {
-    //     'adjusted': ' 已调整',
-    //     'unAdjust': '未调整'
-    //   }
-    // }),
     // 调整状态
     adjustmentStatus: '已调整',
     // 所属仓库
@@ -76,6 +63,7 @@ for (let i = 0; i < 100; i++) {
     // 备注
     remarks: Mock.mock('@csentence()')
   }))
+
   // “已收货”订单数据
   receivedList.push(Mock.mock({
     //  序号
@@ -117,6 +105,7 @@ for (let i = 0; i < 100; i++) {
     // 订单备注
     remarks: Mock.mock('@csentence(10,20)')
   }))
+
   // “已长途装载”装载单数据
   transportedList.push(Mock.mock({
     // 序号
@@ -125,13 +114,6 @@ for (let i = 0; i < 100; i++) {
     loadOrderId: Mock.mock('@string("number",5)'),
     // 装载单状态
     loadOrderStatus: '已分配 已确认',
-    // // 调整状态
-    // adjustment: Mock.mock({
-    //   'object|1': {
-    //     'adjusted': ' 已调整',
-    //     'unAdjust': '未调整'
-    //   }
-    // }),
     // 调整状态
     adjustmentStatus: '已调整',
     // 起始站
@@ -169,44 +151,45 @@ for (let i = 0; i < 100; i++) {
     // 备注
     remarks: Mock.mock('@csentence()')
   }))
+
   // “已中转”订单数据
   epibolyList.push(Mock.mock({
     // 序号
     id: Mock.mock('@increment(1)'),
     // 订单号
     orderId: Mock.mock('@string("number",5)'),
-    // 开单日期
-    orderDate: Mock.mock('@datetime'),
-    // 到站点
-    destinaiton: Mock.mock('@county(true)'),
-    // 中转起始站
-    transitOpen: Mock.mock('@city()'),
-    // 中转外包公司
-    transitCompany: Mock.mock('@csentence'),
-    // 中转花费
-    contractSpend: Mock.mock('@integer(100,2000)'),
+    // 开单日期 orderTim
+    orderTim: Mock.mock('@datetime'),
+    // 到站点 arrStation
+    arrStation: Mock.mock('@county(true)'),
+    // 中转起始站 changeStart
+    changeStart: Mock.mock('@city()'),
+    // 中转外包公司 rouSelection
+    rouSelection: Mock.mock('@csentence'),
+    // 中转花费 changeFee
+    changeFee: Mock.mock('@integer(100,2000)'),
     // 合同价格
     contractPrice: Mock.mock('@integer(100,2000)'),
-    // 外包企业联系人
-    ectocyster: Mock.mock('@cname'),
-    // 外包企业联系电话
-    ectocystPhone: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
-    // 发货人姓名
-    senderName: Mock.mock('@cname'),
-    // 收货人姓名
-    receiverName: Mock.mock('@cname'),
-    // 货物名称
-    goodsName: Mock.mock('@cname'),
-    // 包装
-    pack: Mock.mock('@ctitle(5)'),
-    // 件数
-    'numbers|1-50': 50,
-    // 重量
-    'weight|1-50': 50,
-    // 体积
-    'volume|1-50': 50,
-    // 订单备注
-    remarks: Mock.mock('@csentence(10,20)')
+    // 外包企业联系人 lineNam
+    lineNam: Mock.mock('@cname'),
+    // 外包企业联系电话 lineTel
+    lineTel: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
+    // 发货人姓名 shipNam
+    shipNam: Mock.mock('@cname'),
+    // 收货人姓名 receNam
+    receNam: Mock.mock('@cname'),
+    // 货物名称 goodsNam
+    goodsNam: Mock.mock('@cname'),
+    // 包装 package
+    package: Mock.mock('@ctitle(5)'),
+    // 件数 goodsNums
+    'goodsNums|1-50': 50,
+    // 重量 goodsWeight
+    'goodsWeight|1-50': 50,
+    // 体积 goodsVolumn
+    'goodsVolumn|1-50': 50,
+    // 订单备注 orderNote
+    orderNote: Mock.mock('@csentence(10,20)')
   }))
 }
 
@@ -219,20 +202,7 @@ for (let i = 0; i < 100; i++) {
     // 装载单号
     loadOrderId: Mock.mock('@string("number",5)'),
     // 装载单状态
-    // loadOrderStatus: Mock.mock({
-    //   'object|1': {
-    //     'checkFail': '已分配 已确认'
-    //   }
-    // }),
-    // 装载单状态
     loadOrderStatus: '已分配 已确认',
-    // // 调整状态
-    // adjustmentStatus: Mock.mock({
-    //   'object|1': {
-    //     'adjusted': ' 已调整',
-    //     'unAdjust': '未调整'
-    //   }
-    // }),
     // 调整状态
     adjustmentStatus: '已调整',
     // 所属仓库
@@ -361,88 +331,38 @@ for (let i = 0; i < 100; i++) {
     id: Mock.mock('@increment(1)'),
     // 订单号
     orderId: Mock.mock('@string("number",5)'),
-    // 开单日期
-    orderDate: Mock.mock('@datetime'),
-    // 到站点
-    destinaiton: Mock.mock('@county(true)'),
-    // 中转起始站
-    transitOpen: Mock.mock('@city()'),
-    // 中转外包公司
-    transitCompany: Mock.mock('@csentence'),
-    // 中转花费
-    contractSpend: Mock.mock('@integer(100,2000)'),
+    // 开单日期 orderTim
+    orderTim: Mock.mock('@datetime'),
+    // 到站点 arrStation
+    arrStation: Mock.mock('@county(true)'),
+    // 中转起始站 changeStart
+    changeStart: Mock.mock('@city()'),
+    // 中转外包公司 rouSelection
+    rouSelection: Mock.mock('@csentence'),
+    // 中转花费 changeFee
+    changeFee: Mock.mock('@integer(100,2000)'),
     // 合同价格
     contractPrice: Mock.mock('@integer(100,2000)'),
-    // 外包企业联系人
-    ectocyster: Mock.mock('@cname'),
-    // 外包企业联系电话
-    ectocystPhone: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
-    // 发货人姓名
-    senderName: Mock.mock('@cname'),
-    // 收货人姓名
-    receiverName: Mock.mock('@cname'),
-    // 货物名称
-    goodsName: Mock.mock('@cname'),
-    // 包装
-    pack: Mock.mock('@ctitle(5)'),
-    // 件数
-    'numbers|1-50': 50,
-    // 重量
-    'weight|1-50': 50,
-    // 体积
-    'volume|1-50': 50,
-    // 订单备注
-    remarks: Mock.mock('@csentence(10,20)')
-  }))
-}
-
-// 装载单中的订单列表
-for (let i = 0; i < 20; i++) {
-  orderList.push(Mock.mock({
-    // 序号
-    id: Mock.mock('@increment(1)'),
-    // 订单号
-    orderId: Mock.mock('@string("number",5)'),
-    // 开单日期
-    orderDate: Mock.mock('@datetime'),
-    // 预约单号
-    reservationId: Mock.mock('@string("number",5)'),
-    // 始发站
-    departure: Mock.mock('@city()'),
-    // 到站点
-    arrive: Mock.mock('@city()'),
-    // 订单属性
-    orderStatus: '已完成',
-    // 所属仓库
-    warehouse: '北京',
-    // 发货人单位
-    deliverSite: Mock.mock('@ctitle(5)'),
-    // 发货人姓名
-    deliverName: Mock.mock('@cname'),
-    // 发货人电话
-    deliverPhone: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
-    // 发货人地址
-    deliverAddress: Mock.mock('@county(true)'),
-    // 收货人单位
-    consignee: Mock.mock('@ctitle(5)'),
-    // 收货人名称
-    consigneeName: Mock.mock('@cname'),
-    // 收货人电话
-    consigneePhone: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
-    // 收货地址
-    consigneeAddress: Mock.mock('@county(true)'),
-    // 货物名称
-    goodsName: Mock.mock('@ctitle(5)'),
-    // 件数
-    'allNumbers|1-50': 50,
-    // 重量
-    'allWeights|1-50': 50,
-    // 体积
-    'allVolumes|1-50': 50,
-    // 订单备注
-    remarks: Mock.mock('@csentence(10,20)'),
-    // 操作
-    operation: ''
+    // 外包企业联系人 lineNam
+    lineNam: Mock.mock('@cname'),
+    // 外包企业联系电话 lineTel
+    lineTel: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
+    // 发货人姓名 shipNam
+    shipNam: Mock.mock('@cname'),
+    // 收货人姓名 receNam
+    receNam: Mock.mock('@cname'),
+    // 货物名称 goodsNam
+    goodsNam: Mock.mock('@cname'),
+    // 包装 package
+    package: Mock.mock('@ctitle(5)'),
+    // 件数 goodsNums
+    'goodsNums|1-50': 50,
+    // 重量 goodsWeight
+    'goodsWeight|1-50': 50,
+    // 体积 goodsVolumn
+    'goodsVolumn|1-50': 50,
+    // 订单备注 orderNote
+    orderNote: Mock.mock('@csentence(10,20)')
   }))
 }
 

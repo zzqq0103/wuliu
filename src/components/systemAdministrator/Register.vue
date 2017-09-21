@@ -2,7 +2,7 @@
   <div>
     <el-col span="14" offset="7" style="margin-top: 3%">
       <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="角 色">
+        <el-form-item label="角色">
           <el-select v-model="ruleForm2.selectvalue" :placeholder="ruleForm2.queryItemOptions[0].label" style="width: 300px">
             <el-option span="14" v-for="item in ruleForm2.queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
@@ -19,13 +19,13 @@
           </div>
           <el-button style="width: 70px; height: 35px" @click="editVisible = true" type="primary">编 辑</el-button>
         </el-form-item>
-        <el-form-item label="姓 名" prop="name">
+        <el-form-item label="姓名" prop="name">
           <el-input v-model="ruleForm2.name" placeholder="输入姓名" style="width: 300px"></el-input>
         </el-form-item>
-        <el-form-item label="账 号" prop="phone">
+        <el-form-item label="账号" prop="phone">
           <el-input v-model.number="ruleForm2.phone" placeholder="输入手机号" style="width: 300px"></el-input>
         </el-form-item>
-        <el-form-item label="密 码" prop="pass">
+        <el-form-item label="密码" prop="pass">
           <el-input v-model="ruleForm2.pass" auto-complete="off" style="width: 300px"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="checkPass">
@@ -37,18 +37,25 @@
       </el-form>
     </el-col>
     <div>
-      <el-dialog title="编辑: " :visible.sync="editVisible" size="tiny" :closeOnClickModal="false">
+      <el-dialog title="编辑: " :visible.sync="editVisible" size="tiny"
+                 :closeOnClickModal="false"
+                 :close-on-press-escape="false"
+                 :show-close="false">
         <el-tree
           :data="data2"
           show-checkbox
+          default-expand-all
           ref="tree"
           node-key="id"
+          @node-click="clickSelect"
           style="width: 100%"
           :props="defaultProps">
         </el-tree>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="deleteStation">删 除</el-button>
-          <el-button>添 加</el-button>
+          <el-button @click="resetChecked" style="float: left">清空</el-button>
+          <el-button @click="deleteStation">删除</el-button>
+          <el-button>添加</el-button>
+          <el-button @click="cancelEdit">取消</el-button>
         </div>
       </el-dialog>
     </div>
@@ -205,21 +212,42 @@
       }
     },
     methods: {
+      resetChecked () {
+        this.$refs.tree.setCheckedKeys([])
+      },
+      clickSelect (data) {
+        var arr = []
+        for (var j = 0; j < this.$refs.tree.getCheckedNodes(true).length; j++) {
+          arr.push(this.$refs.tree.getCheckedNodes(true)[j].$treeNodeId)
+        }
+        console.log(arr)
+        for (var k = 0; k < arr.length; k++) {
+          if (arr[k] === data.$treeNodeId) {
+            this.$refs.tree.setChecked(data, false, false)
+            return 0
+          }
+        }
+        this.$refs.tree.setChecked(data, true, false)
+      },
       submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             alert('submit!')
           } else {
-            alert('error submit!!')
+            console.log('error submit!')
             return false
           }
         })
       },
       deleteStation () {
-        alert(this.$refs.tree.getCheckedKeys())
+        console.log(this.$refs.tree.getCheckedKeys())
       },
       handleChange (value) {
-        alert(value)
+        console.log(value)
+      },
+      cancelEdit () {
+        this.editVisible = false
+        this.$refs.tree.setCheckedKeys([])
       }
     }
   }

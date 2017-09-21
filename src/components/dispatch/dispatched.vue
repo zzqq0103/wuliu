@@ -4,6 +4,7 @@
     <div style="float:left; width:90%; margin-left:5%;">
       <h3 style="text-align: center;color:red; margin-top:25px; margin-bottom:25px;">装载单订单列表</h3>
       <ag-grid-vue style="widht:100%;height: 700px; margin-top:20px; " class="ag-blue" :gridOptions="gridOptions_left" :suppressMovableColumns="true" :enableColResize="true" :suppressRowClickSelection="true" :enableSorting="true" :enableFilter="true" :groupHeaders="true" :suppressCellSelection="true" :rowHeight="40" :headerHeight="40" :rowDoubleClicked="detailDoubleClick"></ag-grid-vue>
+      <el-button type="danger" style="float:right;margin-top:20px;">取消</el-button>
     </div>
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
     <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :modal-append-to-body=false :close-on-press-escape=false top="5%">
@@ -23,7 +24,7 @@ import { AgGridVue } from 'ag-grid-vue'
 // 引入 OrderList 订单详情
 import OrderDetails from '../financialAdministrator/ShowOrderDetails.vue'
 // 引入 axios 的后台请求接口
-import { getOrderList } from '../../api/api'
+import { getOrderList } from '../../api/dispatch/api'
 // 引入dispatchLoaderInfo 组件页面
 import DeliverOrderList from './deliverOrderList'
 

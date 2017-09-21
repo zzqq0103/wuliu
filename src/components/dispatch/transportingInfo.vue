@@ -93,7 +93,7 @@
 
     <!-- 装载单订单列表展示 -->
     <el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
-      <Dispatching></Dispatching>
+      <deliver-order-list></deliver-order-list>
     </el-dialog>
 
     <!-- 分页 -->
@@ -116,7 +116,7 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {getCurrentTransportedData, getQueryTransOrderList} from '../../api/api'
+  import {getCurrentTransportedData, getQueryTransOrderList} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统

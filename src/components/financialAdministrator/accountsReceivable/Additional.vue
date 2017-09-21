@@ -308,7 +308,7 @@
               headerName: '件数', width: 150, field: 'goodsNums', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单客服', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '中转路线', width: 150, field: 'companyNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -366,7 +366,7 @@
               headerName: '件数', width: 150, field: 'goodsNums', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单客服', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '中转路线', width: 150, field: 'companyNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -396,7 +396,7 @@
               headerName: '发货人', width: 150, field: 'shipNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单客服', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '现付金额', width: 150, field: 'feeMoney', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -425,7 +425,7 @@
               headerName: '发货人', width: 150, field: 'shipNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单客服', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '现付金额', width: 150, field: 'feeMoney', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -480,7 +480,7 @@
               headerName: '发货人', width: 150, field: 'shipNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单客服', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '现付金额', width: 150, field: 'feeMoney', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -521,7 +521,7 @@
               headerName: '发货人', width: 150, field: 'shipNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '制单人', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单客服', width: 150, field: 'serviceNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '现付金额', width: 150, field: 'feeMoney', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -1022,7 +1022,7 @@
 <!--{-->
 <!--: '件数',  'goodsNums', -->
 <!--{-->
-<!--: '制单人',  'serviceNam', -->
+<!--: '开单客服',  'serviceNam', -->
 <!--{-->
 <!--: '中转路线',  'companyNam',-->
 <!--{-->
