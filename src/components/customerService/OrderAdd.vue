@@ -6,17 +6,33 @@
         <span style='float:left;padding-top:0.7%;width:5%'>日期：</span>
         <span style='float:left;padding-top:0.9%;width:13%'>{{timeNow}}</span>
         <span class='order-title-base' style='width:7%'>始发站：</span>
-        <el-select v-model="form.startStation" placeholder="请选择" class='col-1' style='float:left'>
-          <el-option key="beijing" label="北京" value="beijing"></el-option>
-          <el-option key="nanjing" label="南京" value="nanjing"></el-option>
-        </el-select>
-        <span class='order-title-base' style='width:7%'>目的地：</span>
-        <el-form-item style="float:left;width:10%">
+        <!-- <el-select v-model="form.startStation" placeholder="请选择" class='col-1' style='float:left' v-on:change="test">
+          <el-option  v-for="item in initForm.startStationList" :label="item.shi"  :value="item.shi" :key="item.shi"/>
+        </el-select> -->
+        <div style="width: 150px; float: left">
+            <el-cascader
+              expand-trigger="hover"
+              :options="initForm.stationOptions"
+              @change="handleChange1">
+            </el-cascader>
+        </div>
+        <span class='order-title-base' style='width:7%'>目的站：</span>
+        <!-- <el-form-item style="float:left;width:10%">
           <input type="text" list="arrStation" v-model="form.arrStation" class='input-tishi' style="float:left;width:100%" />
           <datalist id="arrStation">
             <option v-for="item in initForm.arrStationList" :value="item" :key="item" />
           </datalist>
-        </el-form-item>
+        </el-form-item> -->
+        <!-- <el-select v-model="form.arrStation" placeholder="请选择" class='col-1' style='float:left'>
+          <el-option  v-for="item in initForm.arrStationList" :label="item.shi" @click="test" :key="item.shi"  :value="item.shi"/>
+        </el-select> -->
+        <div style="width: 150px; float: left">
+            <el-cascader
+              expand-trigger="hover"
+              :options="initForm.stationOptions"
+              @change="handleChange2">
+            </el-cascader>
+        </div>
         <span style='float:left;padding:0.7% 0 0 2%;width:7%'>订单号：</span>
         <span style='float:left;padding-top:0.9%;width:15%'>{{initForm.orderId}}</span>
       </div>
@@ -35,26 +51,36 @@
         </div>
         -->
         <div class='dropdown_fahuo col-4'>
-            <input type="text"  class='input' style='width:100%' v-model='form.shipNam' @keyup="getSearchFahuo()" v-bind:class="{'error':isshipNam}" placeholder="请输入发货方名称"  @blur="check(1)"></input>
+            <input type="text"  class='input' style='width:100%' v-model='form.shipNam' @keyup="getSearchFahuo()" v-bind:class="{'error':isshipNam}" placeholder="请输入发货方名称"  @blur="check(10, 'shipNam')"></input>
             <div class="dropdown-content" v-show="fahuoShow" style='width:39%'> 
               <div class='dropdown-select'>
                 <ul class='dropdown-fahuo'>
-                  <li v-bind:key="data" v-for="(data,i) in this.fahuoList"  v-on:dblclick="clickFahuo(data)"  style='text-align:center;font-size:100%;padding:1% 0 1% 0'>{{data}}</li>
+                  <li v-bind:key="data" v-for="(data,i) in this.fahuoList"  v-on:dblclick="clickFahuo(data)">{{data}}</li>
                 </ul>
               </div>
             </div>
         </div>
         <span class='label col-1'>收货方</span>
-        <input class='input col-4' style='height:38px' v-model="form.receNam" v-bind:class="{'error':isreceNam}"  @blur="check(2)"  placeholder="请输入收货方名称"></input>
+        <!-- <input class='input col-4' style='height:38px' v-model="form.receNam" v-bind:class="{'error':isreceNam}"  @blur="check(10,'receNam')"  placeholder="请输入收货方名称"></input> -->
+        <div id='focus_shouhuo' class='dropdown col-4' style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(3)"  @blur="check(2, 'receNam')">
+            <input type="text" v-model="form.receNam" v-bind:readonly="isReadOnly" class='input' style='width:100%' @focus="getSearchShouhuo()" placeholder="请选择发货地址"></input>
+            <div class="dropdown-content" v-show="shouhuoShow" style='width:39%'>
+              <div class='dropdown-select'>
+                <ul class='dropdown-fahuo'>
+                  <li v-for="(data,i) in this.shouhuoList" :key='data' v-on:dblclick="clickShouhuo(data)">{{data}}</li>
+                </ul>
+              </div>
+            </div>
+        </div>
         <span class='label col-1'>电话</span>
-        <input class='input col-4' style='height:38px' v-bind:class="{ 'error': isshipTel}" v-model="form.shipTel"  @blur="check(3)"></input>
+        <input class='input col-4' style='height:38px' placeholder="请填写发货方电话" v-bind:class="{ 'error': isshipTel}" v-model="form.shipTel"  @blur="check(3)"></input>
         <span class='label col-1'>电话</span>
-        <input class='input col-4' style='height:38px' v-bind:class="{'error':isreceTel}" v-model="form.receTel"  @blur="check(4)"></input>
+        <input class='input col-4' style='height:38px' placeholder="请填写发货方电话" v-bind:class="{'error':isreceTel}" v-model="form.receTel"  @blur="check(4)"></input>
         <!-- <span class='label col-1'>地址</span>
         <input class='input col-4' style='height:38px'></input> -->
         <div class='label col-1'>提货地址:</div>
         <div id='focus_fahuoAd' class='dropdown col-2' style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(1)" @blur="check(5)">
-            <input type="text" v-model="form.baseAddressFa" v-bind:readonly="isReadOnly" class='input' v-bind:class="{'error':isbaseAddressFa}" style='width:100%' @focus="addressVisible=true" placeholder="请选择发货地址"></input>
+            <input type="text" v-model="getbaseAddressFa" v-bind:readonly="isReadOnly" class='input' v-bind:class="{'error':isbaseAddressFa}" style='width:100%' @focus="addressVisible=true" placeholder="请选择发货地址"></input>
             <div class="dropdown-content2 col-2" v-show="addressVisible"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
@@ -74,10 +100,10 @@
               </div>
             </div>
         </div>
-        <input class='input col-2' v-model='form.pickUpAdr' v-bind:class="{'error':ispickUpAdr}" @blur="check(6)" placeholder="输入详细提货地址"></input>
+        <input class='input col-2' v-model='form.pickUpAdr' v-bind:class="{'error':ispickUpAdr}" @blur="check(10, 'pickUpAdr')" placeholder="填写详细提货地址"></input>
         <span class='label col-1'>收货地址</span>
         <div id='focus_shouhuoAd' class="dropdown col-2" style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(2)" @blur="check(7)">
-            <input type="text" v-model="form.baseAddressShou" v-bind:readonly="isReadOnly" class='input' style="width:100%" v-bind:class="{'error':isbaseAddressShou}" @focus="addressVisible2=true" placeholder="请选择提货地址"></input>
+            <input type="text" v-model="getbaseAddressShou" v-bind:readonly="isReadOnly" class='input' style="width:100%" v-bind:class="{'error':isbaseAddressShou}" @focus="addressVisible2=true" placeholder="请选择提货地址"></input>
             <div class="dropdown-content2 col-2" style='margin-top:38px' v-show="addressVisible2"> 
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(2)" class='dropdown-li' v-bind:class="{'selectOn':shenfen2}">省份</li>
@@ -97,19 +123,19 @@
               </div>
             </div>
           </div>
-        <input class='input col-2' placeholder="输入详细收货地址" v-bind:class="{'error':isreceAdr}" @blur="check(8)" v-model="form.receAdr"></input>
+        <input class='input col-2' placeholder="填写详细收货地址" v-bind:class="{'error':isreceAdr}" @blur="check(10, 'receAdr')" v-model="form.receAdr"></input>
         <span class='label label-mo col-1'>货物名称</span>
         <span class='label label-mo col-1'>包装</span>
         <span class='label col-1 label-mo'>件数</span>
         <span class='label col-1 label-mo'>重量</span>
         <span class='label col-1 label-mo'>体积</span>
-        <span class='label col-1 label-mo'>运输方式</span>
+        <span class='label col-1 label-mo'>送货方式</span>
         <span class='label col-1 label-mo'>交货方式</span>
         <label class='label col-1 label-mo'>是否控货</label>
         <label class='label2 col-2' style="height:29px">回单</label>
         <label class='label2 col-1' style="height:29px">回单份数</label>
         <label class='label2 col-1' style="height:29px">回单押款</label>
-        <input class='input col-1 input-mid' v-model="form.goodsNam"></input>
+        <input class='input col-1 input-mid' v-model="form.goodsNam" v-bind:class="{'error':isgoodsNam}" @blur="check(10,'goodsNam')"></input>
         <el-select placeholder="" class='col-1 select' v-model="form.package">
           <el-option key="zhixiang" label="纸箱" value="zhixiang"></el-option>
           <el-option key="muxiang" label="木箱" value="muxiang"></el-option>
@@ -120,9 +146,9 @@
           <el-option key="tong" label="桶" value="tong"></el-option>
           <el-option key="no" label="无" value="no"></el-option>
         </el-select>
-        <input class='input col-1 input-mid' v-model="form.goodsNums"></input>
-        <input class='input col-1 input-mid' v-model="form.goodsWeight"></input>
-        <input class='input col-1 input-mid' v-model="form.goodsVolumn"></input>
+        <input class='input col-1 input-mid' v-model="form.goodsNums" type="number" v-bind:class="{'error':isgoodsNums}" @blur="check(8)"></input>
+        <input class='input col-1 input-mid' v-model="form.goodsWeight" type="number" v-bind:class="{'error':isgoodsWeight}" @blur="check(9,'goodsWeight')"></input>
+        <input class='input col-1 input-mid' v-model="form.goodsVolumn" type="number" v-bind:class="{'error':isgoodsVolumn}" @blur="check(9,'goodsVolumn')"></input>
         <el-select placeholder="" class='col-1 select input-mid' v-model="form.orderType">
           <el-option key="zhixiang" label="普件" value="pujian"></el-option>
           <el-option key="muxiang" label="加急件" value="jiajijian"></el-option>
@@ -135,11 +161,11 @@
           <el-option key="yes" label="是" value="yes"></el-option>
           <el-option key="no" label="否" value="no"></el-option>
         </el-select>
-        <input type="text" list="receList" v-model="form.receNums" class='input-tishi col-1 select input-mid'/>
+        <input list="receList" v-model="form.receNums" v-bind:class="{'error':isreceNums}" @blur="check(9,'receNums')" type="number" @change="setReceMoney" class='input-tishi col-1 select input-mid'/>
         <datalist id="receList">
           <option v-for="item in receList" :value="item" :key="item" />
         </datalist>
-        <input class='input col-1' v-model="form.receMoney"></input>
+        <input class='input input-mid col-1' v-model="form.receMoney" v-bind:class="{'error':isreceMoney}" @blur="check(9,'receMoney')"></input>
         <span class='label col-1 label-mo'>运费</span>
         <span class='label col-1 label-mo'>提货费</span>
         <span class='label col-1 label-mo'>送货费</span>
@@ -150,38 +176,47 @@
         <label class='label2 col-2' style="height:29px">返款</label>
         <label class='label2 col-1' style="height:29px">金额</label>
         <label class='label2 col-1' style="height:29px">支付方式</label>
-        <input class='input col-1 input-mid' @click="baseFeeVisible=true" v-model="form.baseFee"></input>
-        <input class='input col-1 input-mid' v-model="form.pickUpFee"></input>
-        <input class='input col-1 input-mid' v-model="form.sendFee"></input>
-        <input class='input col-1 input-mid' v-model="form.packFee"></input>
-        <input class='input col-1 input-mid' v-model="form.landingFee"></input>
-        <input class='input col-1 input-mid' v-model="form.insurance" @click="coverageVisible = true" v-bind:readonly="true"></input>
-        <input class='input col-2 input-mid'></input>
-        <input class='input col-1 input-mid' v-model="form.refuMoney"></input>
-        <input class='input col-1 input-mid'></input>
+        <input class='input col-1 input-mid' @click="baseFeeVisible=true" v-model="form.baseFee" type="number" v-bind:class="{'error':isbaseFee}" @blur="check(9,'baseFee')"></input>
+        <input class='input col-1 input-mid' v-model="form.pickUpFee" type="number" v-bind:class="{'error':ispickUpFee}" @blur="check(9,'pickUpFee')"></input>
+        <input class='input col-1 input-mid' v-model="form.sendFee" type="number" v-bind:class="{'error':issendFee}" @blur="check(9,'sendFee')"></input>
+        <input class='input col-1 input-mid' v-model="form.packFee" type="number" v-bind:class="{'error':ispackFee}" @blur="check(9,'packFee')"></input>
+        <input class='input col-1 input-mid' v-model="form.landingFee" type="number" v-bind:class="{'error':islandingFee}" @blur="check(9,'landingFee')"></input>
+        <input class='input col-1 input-mid' v-model="insurance" @click="coverageVisible = true" v-bind:readonly="true" type="number" v-bind:class="{'error':isinsurance}"></input>
+        <input class='input col-2 input-mid' v-model="goodsPayment2" @click="goodsPaymentVisible = true" v-bind:readonly="true" type="number" v-bind:class="{'error':isgoodsPayment}"></input>
+        <input class='input col-1 input-mid' v-model="form.refuMoney" @change="setRetuPayMode"  type="number" v-bind:class="{'error':isrefuMoney}" @blur="check(9,'refuMoney')"></input>
+        <!-- <input class='input col-1 input-mid'></input> -->
+        <el-select placeholder="请选择" class='col-1 select input-mid error' v-model="form.retuPayMode" v-bind:style="retuPayModeObject" @change="check(11,'retuPayMode')">
+          <el-option v-for="item in initForm.retuPayModeList" :value="item" :label="item" :key="item"/>
+        </el-select>
         <span class='label col-1 label-mo'>异动收入</span>
         <span class='label col-1 label-mo'>异动支出</span>
         <span class='label col-2 label-mo'>总运费</span>
         <span class='label col-2 label-mo'>代收金额</span>
-        <label class='label2 col-4' style="height:29px">返款</label>
+        <label class='label2 col-4' style="height:29px">付款方式</label>
         <label class='label2 col-1' style="height:29px">现付</label>
         <label class='label2 col-1' style="height:29px">到付</label>
         <label class='label2 col-1' style="height:29px">欠付</label>
         <label class='label2 col-1' style="height:29px">月结</label>
-        <input class='input col-1 input-mid'></input>
-        <input class='input col-1 input-mid'></input>
-        <input class='input col-2 input-mid'></input>
-        <input class='input col-2 input-mid'></input>
-        <input class='input col-1 input-mid'></input>
-        <input class='input col-1 input-mid'></input>
-        <input class='input col-1 input-mid'></input>
-        <input class='input col-1 input-mid'></input>
+        <input class='input col-1 input-mid' type="number" v-model="form.unActIncome" v-bind:class="{'error':isunActIncome}" @blur="check(9,'unActIncome')"></input>
+        <input class='input col-1 input-mid' type="number" v-model="form.unActExpense" v-bind:class="{'error':isunActExpense}" @blur="check(9,'unActExpense')"></input>
+        <input class='input col-2 input-mid' type="number" v-model="gettotalFreight"  v-bind:readonly="true" v-bind:class="{'error':istotalFreight}"></input>
+        <input class='input col-2 input-mid' type="number" v-model="form.goodsPayment" @click="goodsPaymentVisible = true" v-bind:readonly="true"></input>
+        <input class='input col-1 input-mid' type="number" v-model="form.feeMoney[0]" v-bind:class="{'error':isfeeMoney1}" @blur="check(6, 0)"></input>
+        <input class='input col-1 input-mid' type="number" v-model="form.feeMoney[1]" v-bind:class="{'error':isfeeMoney2}" @blur="check(6, 1)"></input>
+        <input class='input col-1 input-mid' type="number" v-model="form.feeMoney[2]" v-bind:class="{'error':isfeeMoney3}" @blur="check(6, 2)"></input>
+        <input class='input col-1 input-mid' type="number" v-model="form.feeMoney[3]" v-bind:class="{'error':isfeeMoney4}" @blur="check(6, 3)"></input>
+        <span class='label label-mo col-1'>备注</span>
+        <label class='label2 col-1' style="height:29px">附属约定</label>
+        <input class='input col-8' style="height:29px" placeholder="请填写客户附加要求"></input>
+        <label class='label2 col-1' style="height:29px">情况说明</label>
+        <input class='input col-8'style="height:29px" placeholder="请填写货物情况说明"></input>
       </div>
     </el-form>
 
     <div style='text-align:center;clear:both'>
-      <el-button style='margin-top:2%;background-color:#00d1b2;color:white' @click="submitOrder()">保存</el-button>
-      <el-button style='margin-left:10%'>取消</el-button>
+      <el-button style='margin-top:2%;background-color:#00d1b2;color:white' @click="submitValidate(1)">生成运费</el-button>
+      <el-button style='margin-top:2%;background-color:#00d1b2;color:white' @click="submitValidate(2)">保存</el-button>
+      <el-button style=''>取消</el-button>
     </div>
     
     <!-- 错误输入提示弹窗 -->
@@ -190,16 +225,33 @@
     </el-dialog>
 
     <!-- 输入保额弹窗 -->
-    <el-dialog :visible.sync="coverageVisible" size="tiny">
-      <el-form :rules="rules" v-model='form' style='text-align:center;verticle-align:center'>
-        <span style='float:left;padding:2% 0% 0% 5%'>保额：</span>
-        <el-form-item>
-          <el-input style='width:60%'  v-model='form.coverage'></el-input>
+    <el-dialog :visible.sync="coverageVisible" size="tiny" :close-on-click-modal="false"
+        :close-on-press-escape="false" 
+        :show-close="false">
+      <el-form :model='form' ref="form" :rules="ruleDialog" >
+        <!-- <span style='float:left;padding:2% 0% 0% 5%'>保额：</span> -->
+        <el-form-item label="保额：" label-width="100px" prop="coverage">
+          <el-input style='width:60%'  v-model='form.coverage' type="number"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="coverageVisible = false">取 消</el-button>
-        <el-button type="primary" @click="setInsurance">确 定</el-button>
+        <el-button @click="submitDialog(0, 'form', 'coverage')">取 消</el-button>
+        <el-button type="primary" @click="submitDialog(1, 'form', 'coverage')">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 输入代收货款金额弹窗 -->
+    <el-dialog :visible.sync="goodsPaymentVisible" size="tiny"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false" 
+        :show-close="false">
+      <el-form :rules="ruleDialog" :model='form' ref="form">
+        <el-form-item label="代收货款金额：" label-width="120px" prop="goodsPayment">
+          <el-input style='width:60%'  v-model='form.goodsPayment' type="number"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="submitDialog(0,'form', 'goodsPayment')">取 消</el-button>
+        <el-button type="primary" @click="submitDialog(1, 'form', 'goodsPayment')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -214,10 +266,14 @@ export default {
   },
   data: function () {
     return {
+      allHave: false, // 表单内容是否全部填上
+      feeHave: false, // 可生成基本费用的内容已全部填上
       wrongNote: '',
       receList: [1, 2, 3],
       wrongNoteVisable: false, // 错误提示弹窗
       coverageVisible: false, // 保额输入弹窗
+      goodsPaymentVisible: false, // 代收货款金额输入弹窗
+      insurance: 0,
       isbaseAddressFa: false, // 样式class是否选择
       isbaseAddressShou: false,
       isshipNam: false,
@@ -226,6 +282,29 @@ export default {
       isreceNam: false,
       isreceTel: false,
       isreceAdr: false,
+      isgoodsNam: false,
+      isgoodsNums: false,
+      isgoodsWeight: false,
+      isgoodsVolumn: false,
+      isreceNums: false,
+      isreceMoney: false,
+      isbaseFee: false,
+      ispickUpFee: false,
+      issendFee: false,
+      ispackFee: false,
+      islandingFee: false,
+      isinsurance: false,
+      iscoverage: false,
+      isgoodsPayment: false,
+      isrefuMoney: false,
+      isretuPayMode: false,
+      isunActIncome: false,
+      isunActExpense: false,
+      isfeeMoney1: false,
+      isfeeMoney2: false,
+      isfeeMoney3: false,
+      isfeeMoney4: false,
+      istotalFreight: false,
       baseAddressFaOk: false, // 是否验证无误
       baseAddressShouOk: false,
       shipNamOk: false,
@@ -234,27 +313,59 @@ export default {
       receNamOk: false,
       receTelOk: false,
       receAdrOk: false,
+      goodsNamOk: false,
+      goodsNumsOk: false,
+      goodsWeightOk: false,
+      goodsVolumnOk: false,
+      receNumsOk: false,
+      receMoneyOk: false,
+      baseFeeOk: false,
+      pickUpFeeOk: false,
+      sendFeeOk: false,
+      packFeeOk: false,
+      landingFeeOk: false,
+      coverageOk: false,
+      goodsPaymentOk: false,
+      refuMoneyOk: false,
+      retuPayModeOk: false,
+      unActIncomeOk: false,
+      unActExpenseOk: false,
+      feeMoney1Ok: false,
+      feeMoney2Ok: false,
+      feeMoney3Ok: false,
+      feeMoney4Ok: false,
+      StationSelected: false,
+      goodsPayment2: 0, // 代收费
+      retuPayModeObject: {}, // 支付方式下拉框样式
       fahuoRelated: {
-        baseAddressFa: '北京北京海淀区',
-        baseAddressShou: '江苏无锡惠山区',
+        shenfenSelected: '北京',
+        shiSelected: '北京',
+        quSelected: '海淀区',
+        baseAddressFa: '',
         shipNam: '张三发',
         shipTel: '15003582722',
         pickUpAdr: '提货地址',
+        goodsNam: '1212',
+        goodsWeight: 1,
+        goodsVolumn: 2,
+        receNums: 3
+      },
+      shouhuoRelated: {
+        shenfenSelected2: '江苏',
+        shiSelected2: '无锡',
+        quSelected2: '惠山区',
+        baseAddressShou: '',
         receNam: '李四收',
         receTel: '18810690061',
         receAdr: '收货方地址'
       },
       fahuoList: [],
+      shouhuoList: [],
       fahuoShow: false,
+      shouhuoShow: false,
       baseFeeinit: 1000,
       baseFeeVisible: false,
       /** 地址内容 */
-      shenfenSelected: '',
-      shiSelected: '',
-      quSelected: '',
-      shenfenSelected2: '',
-      shiSelected2: '',
-      quSelected2: '',
       regionList: [],
       shiList: [],
       quList: [],
@@ -275,14 +386,47 @@ export default {
       isReadOnly: false,
       isReadOnly2: false,
       initForm: {
-        arrStationList: ['目的站1', '目的站2', '目的站3', '目的站4', '目的站5', '目的站6'],
+        retuPayModeList: ['无'], // 返款类型数组
+        stationOptions: [{
+          value: '北京',
+          label: '北京',
+          children: [{
+            value: '北京',
+            label: '北京'
+          }]
+        }, {
+          value: '江苏',
+          label: '江苏',
+          children: [{
+            value: '南京',
+            label: '南京'
+          }, {
+            value: '苏州',
+            label: '苏州'
+          }, {
+            value: '无锡',
+            label: '无锡'
+          }]
+        }],
+        startStationList: [
+          {'shen': '江苏', 'shi': '南京'},
+          {'shen': '江苏', 'shi': '苏州'},
+          {'shen': '江苏', 'shi': '无锡'},
+          {'shen': '江苏', 'shi': '南通'}
+        ],
+        arrStationList: [
+          {'shen': '江苏', 'shi': '怀柔'},
+          {'shen': '北京', 'shi': '海淀'},
+          {'shen': '北京', 'shi': '昌平'},
+          {'shen': '北京', 'shi': '朝阳'}
+        ],
         orderId: '121212'
       },
       form: {
         id: '12345',
         billBranch: '',
-        startStation: '',
-        arrStation: '',
+        startStation: '', // 始发站
+        arrStation: '', // 目的站
         serviceNam: '',
         shipNam: '',
         shipTel: '',
@@ -291,42 +435,73 @@ export default {
         receTel: '',
         receAdr: '',
         goodsNam: '',
-        goodsNums: '',
+        goodsNums: 1,
         goodsWeight: '',
         goodsVolumn: '',
-        package: '',
-        isListenToRele: '',
-        orderType: '',
+        package: '纸箱',
+        isListenToRele: '否',
+        orderType: '普件',
         tranMode: '',
-        sendMode: '',
-        baseFee: '',
-        packFee: '',
-        sendFee: '',
-        pickUpFee: '',
-        landingFee: '',
-        totalFee: '',
-        goodsPayment: '',
+        sendMode: '自提',
+        baseFee: 0,
+        packFee: 0,
+        sendFee: 0,
+        pickUpFee: 0,
+        landingFee: 0,
+        goodsPayment: 3, // 代收货款
         procedureFee: '',
-        coverage: '',
-        insurance: '',
+        coverage: 0.00,
         isReceipt: '',
-        receNums: '',
-        receMoney: '',
-        refuMoney: '',
-        totalFreight: '',
-        feeMoney: [100.2, 200.3, 333.2, 100.00],
+        receNums: 0,
+        receMoney: 0,
+        refuMoney: 0, // 返款
+        retuPayMode: '无', // 返款类型
+        unActIncome: 0, // 异动收入
+        unActExpense: 0, // 异动支出
+        totalFreight: 0,
+        feeMoney: [0, 0, 0, 0], // 现付，到付，欠付，月结
         orderNote: '',
         baseAddressFa: '',
-        baseAddressShou: ''
+        baseAddressShou: '',
+        shenfenSelected: '',
+        shiSelected: '',
+        quSelected: '',
+        shenfenSelected2: '',
+        shiSelected2: '',
+        quSelected2: '',
+        note1: '', // 附属约定
+        note2: '' // 情况说明
       },
-      orderRules: {
-        shipTel: [
-          {required: true, message: '请输入发货方电话', trigger: 'blur'}
+      ruleDialog: {
+        coverage: [
+          {required: true, message: '请填写保额费'},
+          {validator (r, v, b) { (/^\d*?\.?\d*?$/).test(v) ? b() : b(new Error('请填写正确保额费用')) }}
+        ],
+        goodsPayment: [
+          {required: true, message: '请填写代收货款金额'},
+          {validator (r, v, b) { (/^\d*?\.?\d*?$/).test(v) ? b() : b(new Error('请填写正确货款费用')) }}
         ]
       }
     }
   },
   computed: {
+    // 总运费
+    gettotalFreight: function () {
+      this.form.totalFreight = Number(this.form.baseFee) + Number(this.form.pickUpFee) + Number(this.form.sendFee) +
+      Number(this.form.packFee) + Number(this.form.landingFee) + (Number(this.form.coverage)) * 0.005 +
+      Number(this.form.refuMoney) - Number(this.form.unActIncome) + Number(this.form.unActExpense)
+      return (this.form.totalFreight).toFixed(2)
+    },
+    // 三级选择发货区域
+    getbaseAddressFa: function () {
+      this.form.baseAddressFa = this.form.shenfenSelected + this.form.shiSelected + this.form.quSelected
+      return this.form.baseAddressFa
+    },
+    // 三级选择收货区域
+    getbaseAddressShou: function () {
+      this.form.baseAddressShou = this.form.shenfenSelected2 + this.form.shiSelected2 + this.form.quSelected2
+      return this.form.baseAddressShou
+    },
     timeNow: function () {
       let date = new Date()
       let seperator1 = '-'
@@ -349,30 +524,101 @@ export default {
     test () {
       alert('sds')
     },
+    // 取消,确认代收货款弹窗
+    submitDialog (type, formName, data) {
+      const self = this
+      let visible = data + 'Visible'
+      let Ok = data + 'Ok'
+      this[Ok] = false
+      if (type === 1) {
+        if (data === 'coverage') {
+          this.insurance = (this.form[data] * 0.005).toFixed(2)
+        }
+        if (data === 'goodsPayment') {
+          this.goodsPayment2 = (this.form[data] * 0.005).toFixed(2)
+        }
+        self.$refs[formName].validate((valid) => {
+          if (valid) {
+            this[visible] = false
+            this[Ok] = true
+          } else {
+            this[Ok] = false
+            return false
+          }
+        })
+      } else {
+        if (data === 'coverage') {
+          this.insurance = 0.00
+        }
+        if (data === 'goodsPayment') {
+          this.goodsPayment2 = 0.00
+        }
+        this[visible] = false
+      }
+    },
+    // 根据返款有无设置返款类型下拉框
+    setRetuPayMode () {
+      if (parseInt(this.form.refuMoney) === 0) {
+        this.initForm.retuPayModeList = ['无']
+        this.form.retuPayMode = '无'
+      } else {
+        this.initForm.retuPayModeList = ['现返', '欠返']
+        this.form.retuPayMode = ''
+      }
+    },
+    // 根据回单设置回单押款
+    setReceMoney () {
+      if (parseInt(this.form.receNums) === 0) {
+        this.form.receMoney = 0
+      } else {
+        this.form.receMoney = 50
+      }
+    },
+    // 根据表单上方始发站选择提货地址
+    handleChange1 (value) {
+      let data = (value.toString()).split(',')
+      /* startStation: '', // 始发站
+        arrStation: */
+      this.form.startStation = data[1]
+      this.form.shenfenSelected = data[0]
+      this.form.shiSelected = data[1]
+      this.form.quSelected = ''
+      this.form.baseAddressFa = this.form.shenfenSelected + this.form.shiSelected + this.form.quSelected
+      this.setShi(1)
+      this.setQuyu(1)
+    },
+    // 根据表单上方目的站选择设置收货地址
+    handleChange2 (value) {
+      let data = (value.toString()).split(',')
+      this.form.arrStation = data[1]
+      this.form.shenfenSelected2 = data[0]
+      this.form.shiSelected2 = data[1]
+      this.form.quSelected2 = ''
+      this.form.baseAddressShou = this.form.shenfenSelected2 + this.form.shiSelected2 + this.form.quSelected2
+      this.setShi(2)
+      this.setQuyu(2)
+    },
+    // 选择始发站，目的站后补全下方表单地址信息
+    toShi (type, shiData, shenData) {
+      alert('test')
+      let shen = 'form.shenSelected' + type
+      let shi = 'form.shiSelected' + type
+      this[shen] = shenData
+      this[shi] = shiData
+    },
     // 验证规则
-    check (num) {
-      if (num === 1 || num === 0) {
-        if (this.form.shipNam === '') {
-          this.isshipNam = true
-        } else {
-          this.isshipNam = false
-          this.shipNamOk = true
-        }
-      }
-      if (num === 2 || num === 0) {
-        if (this.form.receNam === '') {
-          this.isreceNam = true
-        } else {
-          this.isreceNam = false
-          this.receNamOk = true
-        }
-      }
-      if (num === 3 || num === 0) {
+    check (num, data) {
+      if (num === 2) {
+        this.shouhuoShow = false
+      } else if (num === 3) {
         let a = 'isshipTel'
         if (this.form.shipTel === '') {
           this[a] = true
+          setTimeout(() => { this.isshipTel = false }, 800)
         } else if (!(/^1[3|4|5|8]\d{9}$/.test(this.form.shipTel))) {
           this[a] = true
+          this.shipTelOk = false
+          setTimeout(() => { this.isshipTel = false }, 800)
           this.wrongNote = '请输入正确电话号码'
           this.wrongNoteVisable = true
           setTimeout(() => { this.wrongNoteVisable = false }, 800)
@@ -380,12 +626,14 @@ export default {
           this[a] = false
           this.shipTelOk = true
         }
-      }
-      if (num === 4 || num === 0) {
+      } else if (num === 4) {
         if (this.form.receTel === '') {
           this.isreceTel = true
+          setTimeout(() => { this.isreceTel = false }, 800)
         } else if (!(/^1[3|4|5|8]\d{9}$/.test(this.form.receTel))) {
           this.isreceTel = true
+          this.receTelOk = false
+          setTimeout(() => { this.isreceTel = false }, 800)
           this.wrongNote = '请输入正确电话号码'
           this.wrongNoteVisable = true
           setTimeout(() => { this.wrongNoteVisable = false }, 800)
@@ -393,13 +641,16 @@ export default {
           this.isreceTel = false
           this.receTelOk = true
         }
-      }
-      if (num === 5 || num === 0) {
+      } else if (num === 5) {
         this.addressVisible = false
-        if (this.form.baseAddressFa === '') {
+        if (this.form.shiSelected === '' && this.form.shenfenSelected === '' && this.form.quSelected === '') {
           this.isbaseAddressFa = true
-        } else if (this.shiSelected === '' || this.shenfenSelected === '' || this.quSelected === '') {
+          setTimeout(() => { this.isbaseAddressFa = false }, 800)
+        } else if (this.form.shiSelected === '' || this.form.shenfenSelected === '' || this.form.quSelected === '') {
           this.isbaseAddressFa = true
+          this.baseAddressFaOk = false
+          setTimeout(() => { this.isbaseAddressFa = false }, 800)
+          setTimeout(() => { this.isbaseAddressFa = false }, 800)
           this.wrongNote = '请选择提货地址完整区域'
           this.wrongNoteVisable = true
           setTimeout(() => { this.wrongNoteVisable = false }, 800)
@@ -407,41 +658,190 @@ export default {
           this.isbaseAddressFa = false
           this.baseAddressFaOk = true
         }
-      }
-      if (num === 6 || num === 0) {
-        if (this.form.pickUpAdr === '') {
-          this.ispickUpAdr = true
+      } else if (num === 6) {
+        let data0 = 'feeMoney' + (data + 1)
+        let data1 = 'is' + data0
+        let data2 = data0 + 'Ok'
+        if (!(this.form.feeMoney[data]) && (this.form.feeMoney[data] !== 0)) {
+          this[data1] = true
+          setTimeout(() => { this[data1] = false }, 800)
+        } else if (!(/^\d*?\.?\d*?$/.test(this.form.feeMoney[data]))) {
+          this[data1] = true
+          this[data2] = false
+          setTimeout(() => { this[data1] = false }, 800)
+          this.wrongNote = '请输入正确数字'
+          this.wrongNoteVisable = true
+          setTimeout(() => { this.wrongNoteVisable = false }, 800)
         } else {
-          this.ispickUpAdr = false
-          this.pickUpAdrOk = true
+          this[data1] = false
+          this[data2] = true
         }
-      }
-      if (num === 7 || num === 0) {
+      } else if (num === 7) {
         this.addressVisible2 = false
-        if (this.form.baseAddressShou === '') {
+        if (this.form.shiSelected2 === '' && this.form.shenfenSelected2 === '' && this.form.quSelected2 === '') {
           this.isbaseAddressShou = true
-        } else if (this.shiSelected2 === '' || this.shenfenSelected2 === '' || this.quSelected2 === '') {
+          setTimeout(() => { this.isbaseAddressShou = false }, 800)
+        } else if (this.form.shiSelected2 === '' || this.form.shenfenSelected2 === '' || this.form.quSelected2 === '') {
           this.isbaseAddressShou = true
-          this.wrongNote = '请选择提货完整区域'
+          this.baseAddressShouOk = false
+          setTimeout(() => { this.isbaseAddressShou = false }, 800)
+          this.wrongNote = '请选择收货货完整区域'
           this.wrongNoteVisable = true
           setTimeout(() => { this.wrongNoteVisable = false }, 800)
         } else {
           this.isbaseAddressShou = false
           this.baseAddressShouOk = true
         }
-      }
-      if (num === 8 || num === 0) {
-        if (this.form.receAdr === '') {
-          this.isreceAdr = true
+      } else if (num === 8) {
+        let data = 'goodsNums'
+        let data1 = 'is' + 'goodsNums'
+        let data2 = 'goodsNums' + 'Ok'
+        if (!this.form[data] && (Number(this.form[data]) !== 0)) {
+          this[data1] = true
+          setTimeout(() => { this[data1] = false }, 800)
+        } else if (!(/^[0-9]*[1-9][0-9]*$/.test(this.form[data]))) {
+          this[data1] = true
+          this[data2] = false
+          setTimeout(() => { this[data1] = false }, 800)
+          this.wrongNote = '请输入正确件数'
+          this.wrongNoteVisable = true
+          setTimeout(() => { this.wrongNoteVisable = false }, 800)
         } else {
-          this.isreceAdr = false
-          this.receAdrOk = true
+          this[data1] = false
+          this[data2] = true
+        }
+      } else if (num === 9 || num === 10) {
+        let data1 = 'is' + data
+        let data2 = data + 'Ok'
+        if (!this.form[data]) {
+          this[data1] = false
+          this[data2] = true
+          if (this.form[data] !== 0) {
+            this[data1] = true
+            this[data2] = false
+            setTimeout(() => { this[data1] = false }, 800)
+          }
+        } else {
+          if (num === 9) {
+            if (!(/^\d*?\.?\d*?$/.test(Number(this.form[data])))) {
+              this[data1] = true
+              this[data2] = false
+              setTimeout(() => { this[data1] = false }, 800)
+              this.wrongNote = '请输入正确数字'
+              this.wrongNoteVisable = true
+              setTimeout(() => { this.wrongNoteVisable = false }, 800)
+            } else {
+              this[data1] = false
+              this[data2] = true
+            }
+          } else {
+            this[data1] = false
+            this[data2] = true
+          }
+        }
+      } else if (num === 11) {
+        let style = data + 'Object'
+        let data2 = data + 'Ok'
+        if (this.form[data] === '') {
+          this[data2] = false
+          this[style] = {
+            border: '2px solid red'
+          }
+          setTimeout(() => { this[style] = {} }, 800)
+        } else {
+          this[style] = {}
+          this[data2] = true
         }
       }
     },
-    // 提交订单
+    // 向服务器提交订单数据
     submitOrder () {
-      this.check(0)
+    },
+    // 从服务器获取基本运费
+    getBaseFee () {
+      this.form.baseFee = 1000
+    },
+    // 判断站点与表单区域是否一致
+    isAttSta () {
+      if ((this.form.startStation !== this.form.shiSelected) || (this.form.arrStation !== this.form.shiSelected2)) {
+        this.wrongNote = '地址与所选站点不匹配'
+        this.wrongNoteVisable = true
+        setTimeout(() => { this.wrongNoteVisable = false }, 800)
+        this.feeHave = false
+      } else {
+        this.feeHave = true
+      }
+    },
+
+    // 判断支付费用总和与总运费是否相等
+    isPayTotal () {
+      let custotalFreight = (Number(this.form.feeMoney[0]) + Number(this.form.feeMoney[1]) +
+      Number(this.form.feeMoney[2]) + Number(this.form.feeMoney[3])).toFixed(2)
+      if (custotalFreight !== (this.form.totalFreight).toFixed(2)) {
+        this.wrongNote = '费用不一致'
+        this.wrongNoteVisable = true
+        setTimeout(() => { this.wrongNoteVisable = false }, 800)
+        return false
+      } else {
+        return true
+      }
+    },
+    // 提交验证：订单2，生成运费1
+    submitValidate (type) {
+      let list1 = ['goodsWeight', 'goodsVolumn', 'receNums', 'receMoney', 'baseFee', 'pickUpFee', 'sendFee', 'packFee', 'landingFee', 'coverage', 'goodsPayment', 'refuMoney', 'unActIncome', 'unActExpense']
+      // 'feeMoney1', 'feeMoney2', 'feeMoney3', 'feeMoney4'
+      let list2 = ['goodsWeight', 'goodsVolumn']
+      let list3 = ['shipNam', 'shipTel', 'pickUpAdr', 'goodsNam', 'baseAddressFa', 'baseAddressShou',
+        'receNam', 'receTel', 'receAdr', 'goodsNam'] // 货物名称
+      let list4 = ['retuPayMode'] // 下拉验证：支返款付方式
+      // let list5 = ['feeMoney1', 'feeMoney2', 'feeMoney3', 'feeMoney4'] // 支付费用：现，到，欠，月
+      for (let i = 1; i < 9; i++) {
+        this.check(i)
+      }
+      if (type === 1) {
+        for (let i = 0; i < list2.length; i++) {
+          this.check(9, list2[i])
+        }
+      } else {
+        for (let i = 0; i < list1.length; i++) {
+          this.check(9, list1[i])
+        }
+        for (let i = 0; i < list4.length; i++) {
+          this.check(11, list4[i])
+        }
+        // 支付费用
+        this.check(6, 0)
+        this.check(6, 1)
+        this.check(6, 2)
+        this.check(6, 3)
+      }
+      for (let i = 0; i < list3.length; i++) {
+        this.check(10, list3[i])
+      }
+      if (this.shipNamOk && this.shipTelOk && this.baseAddressFaOk && this.pickUpAdrOk && this.receNamOk &&
+      this.receTelOk && this.baseAddressShouOk && this.receAdrOk && this.goodsNamOk &&
+      this.goodsNumsOk && this.goodsWeightOk && this.goodsVolumnOk) {
+        this.isAttSta()
+        if (type === 1) {
+          if (this.feeHave) {
+            console.log('可以生成基本费用')
+            this.getBaseFee()
+          }
+        }
+        if (type === 2) {
+          if (this.receNumsOk && this.receMoneyOk && this.baseFeeOk && this.pickUpFeeOk && this.sendFeeOk && this.packFeeOk &&
+          this.landingFeeOk && this.coverageOk && this.goodsPaymentOk && this.refuMoneyOk &&
+          this.retuPayModeOk && this.unActIncomeOk && this.unActExpenseOk && this.feeMoney1Ok && this.feeMoney2Ok &&
+          this.feeMoney3Ok && this.feeMoney4Ok) {
+            console.log('数据已经全部填上')
+            this.isPayTotal()
+            if (this.isPayTotal()) {
+              console.log('可以提交订单')
+              // this.submitOrder()
+            }
+          }
+        }
+      }
     },
     // 实时搜索发货方列表
     getSearchFahuo () {
@@ -452,23 +852,34 @@ export default {
         this.fahuoShow = false
       }
     },
+    // 获取对应收货方列表
+    getSearchShouhuo () {
+      this.shouhuoShow = true
+      this.shouhuoList = ['收货方1', '收货方2', '收货方3', '收货方4']
+    },
     // 根据保额设置保价费
     setInsurance () {
-      this.form.insurance = this.form.coverage * 0.005
+      this.insurance = (this.form.coverage * 0.005).toFixed(2)
       this.coverageVisible = false
     },
     // 双击发货方列表补充数据
     clickFahuo (data) {
+      let list = ['shipTel', 'pickUpAdr', 'shenfenSelected', 'shiSelected', 'quSelected', 'baseAddressFa',
+        'goodsNam', 'goodsNums', 'goodsWeight', 'goodsVolumn', 'receNums']
       this.form.shipNam = data
       this.fahuoShow = false
-      this.form.shipNam = data
-      this.form.shipTel = this.fahuoRelated.shipTel
-      this.form.pickUpAdr = this.fahuoRelated.pickUpAdr
-      this.form.receNam = this.fahuoRelated.receNam
-      this.form.receTel = this.fahuoRelated.receTel
-      this.form.receAdr = this.fahuoRelated.receAdr
-      this.form.baseAddressFa = this.fahuoRelated.baseAddressFa
-      this.form.baseAddressShou = this.fahuoRelated.baseAddressShou
+      for (let i = 0; i < list.length; i++) {
+        this.form[list[i]] = this.fahuoRelated[list[i]]
+      }
+    },
+    // 双击收货方补充相关数据
+    clickShouhuo (data) {
+      let list = ['receNam', 'receTel', 'receAdr', 'shenfenSelected2', 'shiSelected2', 'quSelected2', 'baseAddressShou']
+      this.shouhuoShow = false
+      this.form.receNam = data
+      for (let i = 0; i < list.length; i++) {
+        this.form[list[i]] = this.shouhuoRelated[list[i]]
+      }
     },
     getFocus (num) {
       if (num === 1) {
@@ -477,9 +888,9 @@ export default {
       } else if (num === 2) {
         this.addressVisible2 = true
         document.getElementById('focus_shouhuoAd').focus()
-      } else {
-        /* document.getElementById('focus_fahuo').focus()
-        this.fahuoShow = true */
+      } else if (num === 3) {
+        document.getElementById('focus_shouhuo').focus()
+        // this.fahuoShow = true
       }
     },
     cancleOrder () {
@@ -487,46 +898,46 @@ export default {
     },
     selectShenfen (num, name) {
       if (num === 1) {
-        this.shenfenSelected = name
-        this.shiSelected = ''
-        this.quSelected = ''
+        this.form.shenfenSelected = name
+        this.form.shiSelected = ''
+        this.form.quSelected = ''
         this.quList = []
         this.shiList = []
       } else {
-        this.shenfenSelected2 = name
-        this.shiSelected2 = ''
-        this.quSelected2 = ''
+        this.form.shenfenSelected2 = name
+        this.form.shiSelected2 = ''
+        this.form.quSelected2 = ''
         this.quList2 = []
         this.shiList2 = []
       }
-      this.form.baseAddressShou = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-      this.form.baseAddressFa = this.shenfenSelected + this.shiSelected + this.quSelected
+      this.form.baseAddressShou = this.form.shenfenSelected2 + this.form.shiSelected2 + this.form.quSelected2
+      this.form.baseAddressFa = this.form.shenfenSelected + this.form.shiSelected + this.form.quSelected
     },
     selectShi (num, name) {
       if (num === 1) {
-        this.shiSelected = name
-        this.quSelected = ''
-        this.quList = []
+        this.form.shiSelected = name
+        this.form.quSelected = ''
+        this.form.quList = []
       } else {
-        this.shiSelected2 = name
-        this.quSelected2 = ''
-        this.quList2 = []
+        this.form.shiSelected2 = name
+        this.form.quSelected2 = ''
+        this.form.quList2 = []
       }
-      this.form.baseAddressShou = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-      this.form.baseAddressFa = this.shenfenSelected + this.shiSelected + this.quSelected
+      this.form.baseAddressShou = this.form.shenfenSelected2 + this.form.shiSelected2 + this.form.quSelected2
+      this.form.baseAddressFa = this.form.shenfenSelected + this.form.shiSelected + this.form.quSelected
     },
     selectQu (num, name) {
       if (num === 1) {
-        this.quSelected = name
+        this.form.quSelected = name
         this.addressVisible = false
         this.isReadOnly = true
       } else {
-        this.quSelected2 = name
+        this.form.quSelected2 = name
         this.addressVisible2 = false
         this.isReadOnly2 = true
       }
-      this.form.baseAddressShou = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-      this.form.baseAddressFa = this.shenfenSelected + this.shiSelected + this.quSelected
+      this.form.baseAddressShou = this.form.shenfenSelected2 + this.form.shiSelected2 + this.form.quSelected2
+      this.form.baseAddressFa = this.form.shenfenSelected + this.form.shiSelected + this.form.quSelected
     },
     setShenfen (num) {
       if (num === 1) {
@@ -545,9 +956,9 @@ export default {
         this.shenfen = false
         this.shi = true
         this.quyu = false
-        if (this.shenfenSelected) {
+        if (this.form.shenfenSelected) {
           regionJson.filter(item => {
-            if (item.name === this.shenfenSelected) {
+            if (item.name === this.form.shenfenSelected) {
               this.shiList = item
               return true
             }
@@ -557,9 +968,9 @@ export default {
         this.shenfen2 = false
         this.shi2 = true
         this.quyu2 = false
-        if (this.shenfenSelected2) {
+        if (this.form.shenfenSelected2) {
           regionJson.filter(item => {
-            if (item.name === this.shenfenSelected2) {
+            if (item.name === this.form.shenfenSelected2) {
               this.shiList2 = item
               return true
             }
@@ -573,9 +984,9 @@ export default {
         this.shenfen = false
         this.shi = false
         this.quyu = true
-        if (this.shiSelected && this.shenfenSelected) {
+        if (this.form.shiSelected && this.form.shenfenSelected) {
           this.shiList.sub.filter(item => {
-            if (item.name === this.shiSelected) {
+            if (item.name === this.form.shiSelected) {
               this.quList = item.sub
               return true
             }
@@ -585,9 +996,9 @@ export default {
         this.shenfen2 = false
         this.shi2 = false
         this.quyu2 = true
-        if (this.shiSelected2 && this.shenfenSelected2) {
+        if (this.form.shiSelected2 && this.form.shenfenSelected2) {
           this.shiList2.sub.filter(item => {
-            if (item.name === this.shiSelected2) {
+            if (item.name === this.form.shiSelected2) {
               this.quList2 = item.sub
               return true
             }
@@ -712,6 +1123,11 @@ export default {
   background-color: #D1E5E5
 }
 
+.dropdown-fahuo li {
+  text-align:center;
+  font-size:100%;
+  padding:1% 0 1% 0
+}
 .selectOn{
   background-color:#00d1b2;
 }
@@ -771,6 +1187,10 @@ export default {
   width: 60%
 }
 
+.col-8 {
+  width: 80%
+}
+
 .col-10 {
   width: 100%
 }
@@ -813,7 +1233,7 @@ export default {
   transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
 }
 .error {
-  border: 3px solid #f00000;
+  border: 2px solid red;
 }
 .label2 {
   background-color: #fff;
@@ -835,7 +1255,6 @@ export default {
   box-sizing: border-box;
   height: 38px;
   font: inherit;
-  margin-bottom: -12px;
   font-size: inherit
 }
 

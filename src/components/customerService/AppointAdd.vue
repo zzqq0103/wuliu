@@ -203,11 +203,11 @@
           ],
           goodsWeight: [
             {required: true, message: '请填写货物重量', trigger: 'blur'},
-            {validator (r, v, b) { (/^\\d+(\\.\\d+)?$/).test(v) ? b() : b(new Error('请填写正确数字')) }}
+            {validator (r, v, b) { (/^\d*?\.?\d*?$/).test(v) ? b() : b(new Error('请填写正确货物重量')) }}
           ],
           goodsVolumn: [
             {required: true, message: '请填写货物体积', trigger: 'blur'},
-            {validator (r, v, b) { (/^\\d+(\\.\\d+)?$/).test(v) ? b() : b(new Error('请填写正确数字')) }}
+            {validator (r, v, b) { (/^\d*?\.?\d*?$/).test(v) ? b() : b(new Error('请填写正确数字')) }}
           ],
           package: [
             {required: true, message: '请选择货物包装'}
