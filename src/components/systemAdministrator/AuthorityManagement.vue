@@ -16,7 +16,7 @@
 
         <div style="float:left;">
           <!--下拉选择：角色-->
-          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:130px;">
+          <el-select v-model="selectvalue" style="width:130px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -103,22 +103,22 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '调度员姓名', width: 100, field: 'id', filter: 'text', hide: false
+              headerName: '序号', width: 100, field: 'id', filter: 'text', hide: false
             },
             {
-              headerName: '性别', width: 100, field: 'deliverOrderId', filter: 'text', hide: false
+              headerName: '角色', width: 100, field: 'deliverOrderId', filter: 'text', hide: false
             },
             {
-              headerName: '联系电话', width: 100, field: 'orderId', filter: 'text', hide: false
+              headerName: '电话', width: 100, field: 'orderId', filter: 'text', hide: false
             },
             {
-              headerName: '所属站点', width: 100, field: 'OrderDate', filter: 'text', hide: false
+              headerName: '密码', width: 100, field: 'OrderDate', filter: 'text', hide: false
             },
             {
-              headerName: '调度员状态', width: 100, field: 'driverName', filter: 'text', hide: false
+              headerName: '姓名', width: 100, field: 'driverName', filter: 'text', hide: false
             },
             {
-              headerName: '调度员类别', width: 100, field: 'consigneeAddr', filter: 'text', hide: false
+              headerName: '站点', width: 100, field: 'consigneeAddr', filter: 'text', hide: false
             },
             {
               headerName: '操作', width: 100, field: 'consignee', cellRendererFramework: 'operateComponent', hide: false
@@ -150,8 +150,11 @@
         }, {
           value: 8,
           label: '短途司机'
+        }, {
+          value: 9,
+          label: '全部'
         }],
-        selectvalue: 1,
+        selectvalue: 9,
         orderlist: [],
         delFormVisible: false,
         pageSize: 20,
