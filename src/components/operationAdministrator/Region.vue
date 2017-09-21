@@ -3,9 +3,36 @@
     <div>
       <h2 style="text-align:center">区域管理</h2>
       <div style="margin-top:1%">
-        <div style="float: right">
-          <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
-        </div>
+        <el-form :model="filterForm" ref="filterForm" :inline="true">
+          <el-form-item label="企业详细地址:" class="Taddress">
+            <div id='focus1' class='dropdown1' style='outline:none' tabindex="0"  @click="getFocus(1)" @blur="addressVisible=false">
+              <el-input v-model="filterForm.receAdr" style="width: 142.5px;"></el-input>
+              <div class="dropdown-content" style='width:80%' v-show="addressVisible">
+                <ul class='dropdown-content-select'>
+                  <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
+                  <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
+                  <li @click="setQuyu(1)" class='dropdown-li' v-bind:class="{'selectOn':quyu}">区县</li>
+                </ul>
+                <div class='dropdown-select'>
+                  <ul class='dropdown-shenfen' v-show="shenfen">
+                    <li v-for="(data,i) in this.regionList" @click="selectShenfen(1,data.name)" style='text-align:center'
+                        :key='data.name'>{{data.name}}
+                    </li>
+                  </ul>
+                  <ul class='dropdown-shi' v-show="shi">
+                    <li v-for="(data,i) in this.shiList.sub" @click="selectShi(1,data.name)" style='text-align:center'
+                        :key='data.name'>{{data.name}}
+                    </li>
+                  </ul>
+                </div>
+              </div>            </div>
+          </el-form-item>
+          <el-form-item label="所属区域名称:">
+            <el-input v-model="filterForm.regionName" style="width: 150px"></el-input>
+          </el-form-item>
+          <el-button @click="drawGrid()">提取</el-button>
+        </el-form>
+
         <div>
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
@@ -61,7 +88,7 @@
     </div>
 
     <!--编辑车辆信息-->
-    <el-dialog title="编辑接送货车辆信息:" :visible.sync="editVisable" size="tiny">
+    <el-dialog title="编辑接送货车辆信息:" :visible.sync="editFormVisible" size="tiny" :closeOnClickModal="false" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
       <el-form :model="regionForm" :rules="rules" ref="regionForm">
         <el-form-item label="省:" :label-width="formLabelWidth" >
           <el-input v-model="regionForm.province" style="width: 50%" disabled="true"></el-input>
@@ -72,21 +99,27 @@
         <el-form-item label="行政区:" :label-width="formLabelWidth" >
           <el-input v-model="regionForm.adminRegion" style="width: 50%" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="所属区域名称:" :label-width="formLabelWidth" prop="regionName">
-          <el-input v-model="regionForm.regionName" style="width: 30%"></el-input>
+        <el-form-item label="所属区域:" :label-width="formLabelWidth" prop="area">
+          <el-select v-model="regionForm.regionName">
+            <el-option label="A" value="A"></el-option>
+            <el-option label="B" value="B"></el-option>
+            <el-option label="C" value="C"></el-option>
+            <el-option label="D" value="D"></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editVisable = false">取 消</el-button>
-        <el-button type="primary" @click="editVisable = false">确 定</el-button>
+        <el-button @click="cancleForm('regionForm')">取 消</el-button>
+        <el-button @click="resetForm('regionForm')">重 置</el-button>
+        <el-button type="primary" @click="submitForm('regionForm')">更 新</el-button>
       </div>
     </el-dialog>
-    <!-- 删除弹窗 -->
-    <el-dialog title="" :visible.sync="regionDelVisable" size="tiny">
-      <h2 style="text-align:center">确认删除车牌号为<{{regionForm.licePlateNum}}>的车吗？</h2>
+    <!--删除客户信息-->
+    <el-dialog title="" :visible.sync="delFormVisible" size="tiny" top="30%">
+      <h2 style="padding:30px">确认删除吗？</h2>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="regionDelVisable = false">取 消</el-button>
-        <el-button @click="regionDelVisable = false" type="primary">确 定</el-button>
+        <el-button @click="delFormVisible = false">取 消</el-button>
+        <el-button @click="delFormVisible = false" type="danger">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -108,34 +141,26 @@
 </template>
 <script>
   import {AgGridVue} from 'ag-grid-vue'
+  import testJson from '../../../static/test/testJSON.js'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
-
+  import regionJson from '../../../static/region.json'
   export default {
     created () {
-      for (var i = 0; i < 100; i++) {
-        this.regionList.push({
-          'licePlateNum': 'num' + i,
-          'driverName': 'test' + i,
-          'tel': '电话号码' + i,
-          'contractID': '合同ID' + i,
-          'contractPrice': '合同价格' + i,
-          'capacity': '车容量' + i,
-          'tonnage': '吨位' + i,
-          'carType': '车辆类型' + i,
-          'pickUpArea': '区域' + i,
-          'receState': '司机状态' + i,
-          'carState': '车辆状态' + i,
-          'carPosition': '车辆位置' + i
-        })
-      }
+      this.regionList = regionJson
     },
     data () {
       return {
-        regionList: [],
         colVisible: false,
         regionVisable: false,
         regionDelVisable: false,
         editVisable: false,
+        filterForm: {
+          'regionName': '', // 区域名称
+          'carType': '', // 车型
+          'province': '', // 省
+          'city': '', // 市
+          'receAdr': ''
+        },
         regionForm: {
           'province': '', // 省
           'city': '', // 市
@@ -144,17 +169,8 @@
         },
         rerender: true, // 用于重新刷新添加的弹框
         rules: {
-          province: [{
-            required: true, message: '请输入车牌号', trigger: 'blur'
-          }],
-          city: [{
-            required: true, message: '请输入司机姓名', trigger: 'blur'
-          }],
-          adminRegion: [{
-            required: true, message: '请输入联系方式', trigger: 'blur'
-          }],
-          regionName: [{
-            required: true, message: '请输入所属区域名称', trigger: 'blur'
+          area: [{
+            required: true, message: '请输入区域', trigger: 'blur'
           }]
         },
         rowCount: 0,
@@ -219,16 +235,61 @@
               pinned: 'right'
             }
           ]
-        }
+        },
+        editFormVisible: false,
+        delFormVisible: false,
+        /** 地址内容 */
+        shenfenSelected: '',
+        shiSelected: '',
+        quSelected: '',
+        shenfenSelected2: '',
+        shiSelected2: '',
+        quSelected2: '',
+        regionList: [],
+        shiList: [],
+        quList: [],
+        shiList2: [],
+        quList2: [],
+        /** 地址样式 */
+        addressVisible: false,
+        addressVisible2: false,
+        shenfen: false,
+        shi: false,
+        quyu: false,
+        shenfen2: false,
+        shi2: false,
+        quyu2: false,
+        inputWidth: 78,
+        inputWidth2: 78,
+        dropdownWidth: 78,
+        isFocus: false,
+        isFocus2: false,
+        detailVisible: false,
+        detailVisible2: false,
+        isReadOnly: false,
+        isReadOnly2: false,
+        /** 收货人信息 */
+        receComp: '',
+        receTipList: ['单位111111111', '单位2', '单位3'],
+        receNam: '',
+        receTel: '',
+        receAdr: '',
+        messageErro: false
       }
     },
     components: {
       'ag-grid-vue': AgGridVue,
       operateComponent: {
-        template: '<span><el-button class="del-but" type="info" size="small" @click="regionEdit">编 辑</el-button></span>',
+        template: '<span><el-button class="del-but" type="info" size="small" @click="regionEdit">编 辑</el-button><el-button class="del-but" @click="del" type="danger" size="small">删 除</el-button></span>',
         methods: {
+          del () {
+            let self = this.params.context.componentParent
+            self.delFormVisible = true
+//            self.delFormVisible = true
+//            console.log(this.params.data.clientCompNam)
+          },
           regionEdit () {
-            this.params.context.componentParent.editVisable = true
+            this.params.context.componentParent.editFormVisible = true
             this.params.context.componentParent.regionForm = this.params.data
           }
         }
@@ -236,7 +297,8 @@
     },
     methods: {
       createRowData () {
-        this.gridOptions.rowData = this.regionList
+        this.gridOptions.rowData = testJson.regionList.list
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
@@ -274,13 +336,177 @@
       calculateGrid () {
         this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
         this.rowCount = this.gridOptions.api.getModel().getRowCount()
+      },
+      cancleForm (formName) {
+        this.resetForm(formName)
+        this.editFormVisible = false
+      },
+      // 重置表单
+      resetForm (formName) {
+        this.$nextTick(function () {
+          this.$refs[formName].resetFields()
+        })
+      },
+      submitForm (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (formName === 'personnelForm') {
+              alert('添加成功')
+            } else if (formName === 'regionForm') {
+              alert('编辑成功')
+            }
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+      drawGrid () {
+        this.updateGrid()
+        this.createRowData()
+        this.calculateGrid()
+      },
+      updateGrid () {
+        this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
+      },
+      //      地址选择
+      getFocus (num) {
+        if (num === 1) {
+          this.addressVisible = true
+          document.getElementById('focus1').focus()
+        } else {
+          this.addressVisible2 = true
+          document.getElementById('focus2').focus()
+        }
+      },
+      selectShenfen (num, name) {
+        if (num === 1) {
+          this.filterForm.shenfen = name
+          this.shenfenSelected = name
+          this.shiSelected = ''
+          this.quSelected = ''
+          this.quList = []
+          this.shiList = []
+        } else {
+          this.personnelForm.shenfen = name
+          this.shenfenSelected2 = name
+          this.shiSelected2 = ''
+          this.quSelected2 = ''
+          this.quList2 = []
+          this.shiList2 = []
+        }
+        this.filterForm.receAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+        console.log(this.filterForm)
+      },
+      selectShi (num, name) {
+        if (num === 1) {
+          this.filterForm.shi = name
+          this.shiSelected = name
+          this.quSelected = ''
+          this.quList = []
+        } else {
+          this.personnelForm.shi = name
+          this.shiSelected2 = name
+          this.quSelected2 = ''
+          this.quList2 = []
+        }
+        this.filterForm.receAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+      },
+      selectQu (num, name) {
+        if (num === 1) {
+          this.filterForm.adminRegion = name
+          this.quSelected = name
+          this.addressVisible = false
+          this.inputWidth = 73
+          this.dropdownWidth = 33
+          this.isFocus = true
+          this.detailVisible = true
+          this.isReadOnly = true
+        } else {
+          this.personnelForm.adminRegion = name
+          this.quSelected2 = name
+          this.addressVisible2 = false
+          this.inputWidth2 = 73
+          this.dropdownWidth2 = 33
+          this.isFocus2 = true
+          this.detailVisible2 = true
+          this.isReadOnly2 = true
+        }
+        this.filterForm.receAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+      },
+      setShenfen (num) {
+        if (num === 1) {
+          this.shenfen = true
+          this.shi = false
+          this.quyu = false
+        } else {
+          this.shenfen2 = true
+          this.shi2 = false
+          this.quyu2 = false
+        }
+      },
+      /** 设置城市级 */
+      setShi (num) {
+        if (num === 1) {
+          this.shenfen = false
+          this.shi = true
+          this.quyu = false
+          if (this.shenfenSelected) {
+            regionJson.filter(item => {
+              if (item.name === this.shenfenSelected) {
+                this.shiList = item
+                return true
+              }
+            })
+          }
+        } else {
+          this.shenfen2 = false
+          this.shi2 = true
+          this.quyu2 = false
+          if (this.shenfenSelected2) {
+            regionJson.filter(item => {
+              if (item.name === this.shenfenSelected2) {
+                this.shiList2 = item
+                return true
+              }
+            })
+          }
+        }
+      },
+      /** 设置地区 */
+      setQuyu (num) {
+        if (num === 1) {
+          this.shenfen = false
+          this.shi = false
+          this.quyu = true
+          if (this.shiSelected && this.shenfenSelected) {
+            this.shiList.sub.filter(item => {
+              if (item.name === this.shiSelected) {
+                this.quList = item.sub
+                return true
+              }
+            })
+          }
+        } else {
+          this.shenfen2 = false
+          this.shi2 = false
+          this.quyu2 = true
+          if (this.shiSelected2 && this.shenfenSelected2) {
+            this.shiList2.sub.filter(item => {
+              if (item.name === this.shiSelected2) {
+                this.quList2 = item.sub
+                return true
+              }
+            })
+          }
+        }
       }
     },
     beforeMount () {
-      this.createRowData()
+//      this.createRowData()
     },
     mounted () {
-      this.calculateGrid()
+//      this.calculateGrid()
     }
 //    update () {
 //      console.log('update')
@@ -288,4 +514,112 @@
   }
 </script>
 <style scoped>
+  .dropdown {
+    width: 100%;
+    margin-left: 15%
+  }
+
+  .dropdown2 {
+    display: inline-block;
+    width: 100%;
+    float: left
+  }
+
+  .dropdown-content {
+    height: 200px;
+    position: absolute;
+    background-color: #fff;
+    margin-left: -1%;
+    padding: 0;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    width: 78%
+  }
+
+  .dropdown-select {
+    clear: both;
+    height: 160px;
+    overflow-y: scroll
+  }
+
+  .dropdown-select ul {
+    clear: both;
+    list-style-type: none
+  }
+
+  .dropdown-select ul li:hover {
+    cursor: pointer;
+    background-color: #D1E5E5
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .dropdown-content-select {
+    list-style-type: none;
+  }
+
+  .dropdown-li {
+    cursor: pointer;
+    border-right: 1px solid #C0C0C0;
+    width: 33.33%;
+    margin: 0;
+    float: left;
+    box-sizing: border-box;
+    background-color: #D1E5E5;
+    text-align: center
+  }
+
+  .dropdown-shenfen li:hover {
+    cursor: pointer;
+    background-color: #D1E5E5
+  }
+
+  .addressDetail {
+    width: 45%;
+    float: left;
+    margin-left: -5%
+  }
+
+  .selectOn {
+    background-color: #00d1b2;
+  }
+
+  .selectNo {
+    background-color: #EEF6F6
+  }
+
+  .div-form {
+    border: 2px solid black;
+    width: 60%;
+    margin-left: 18%;
+    display: inline-block;
+    margin-top: 2%;
+    padding: 2%;
+    box-sizing: border-box
+  }
+
+  .input-tishi {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid rgb(191, 217, 216);
+    box-sizing: border-box;
+    color: rgb(31, 61, 60);
+    display: block;
+    font-size: inherit;
+    height: 36px;
+    line-height: 1;
+    outline: 0;
+    padding: 3px 10px;
+    transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+  }
+
+  .Taddress label{
+    float: left;
+  }
 </style>
