@@ -238,8 +238,9 @@
         })
       },
       drawGrid () {
-        this.updateGrid()
-        this.createRowData()
+        this.getOrderList()
+//        this.updateGrid()
+//        this.createRowData()
       },
       updateGrid () {
       },
@@ -247,7 +248,7 @@
       }
     },
     mounted () {
-      this.getOrderList()
+//      this.getOrderList()
     }
   }
 </script>
