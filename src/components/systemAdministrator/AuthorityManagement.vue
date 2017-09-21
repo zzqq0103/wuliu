@@ -4,25 +4,22 @@
       <h2 style="text-align:center">角 色 信 息 表</h2>
       <div style="margin-top:2%">
 
-        <div class="block" style="float:right;">
-          <el-date-picker
-            v-model="dateValue"
-            type="daterange"
-            align="right"
-            placeholder="选择日期范围"
-            :picker-options="pickerOptions">
-          </el-date-picker>
+        <div>
+          <el-form :inline="true">
+            <el-select v-model="selectvalue" style="width:130px;">
+              <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+            <el-form-item style="margin-left: 20px" label="姓名:">
+              <el-input v-model="filterForm.name" style="width: 150px"></el-input>
+            </el-form-item>
+            <el-form-item label="站点:" style="margin-left: 10px">
+              <el-input v-model="filterForm.station" style="width: 150px"></el-input>
+            </el-form-item>
+            <el-button @click="drawGrid">提取</el-button>
+          </el-form>
         </div>
 
-        <div style="float:left;">
-          <!--下拉选择：角色-->
-          <el-select v-model="selectvalue" style="width:130px;">
-            <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
-          <el-button @click="drawGrid">提取</el-button>
-        </div>
       </div>
     </div>
 
@@ -35,8 +32,8 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
+                   :enableSorting="false"
+                   :enableFilter="false"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :pagination="true"
@@ -65,7 +62,7 @@
         <h2 style="padding:30px">确认删除吗？</h2>
         <div slot="footer" class="dialog-footer">
           <el-button @click="delFormVisible = false">取 消</el-button>
-          <el-button @click="delFormVisible = false" type="primary">确 定</el-button>
+          <el-button @click="delFormVisible = false" type="danger">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -79,6 +76,10 @@
   export default {
     data () {
       return {
+        filterForm: {
+          'name': '',
+          'station': ''
+        },
         listLoading: false,
         queryName: '',
         currentpage: 1,
@@ -159,33 +160,6 @@
         delFormVisible: false,
         pageSize: 20,
         rowCount: 0,
-        pickerOptions: {
-          shortcuts: [{
-            text: '最近一周',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '最近一个月',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '最近三个月',
-            onClick (picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-              picker.$emit('pick', [start, end])
-            }
-          }]
-        },
         dateValue: '',
         detailVisible: false // 订单详情弹框
       }
@@ -207,9 +181,6 @@
       }
     },
     methods: {
-      onQuickFilterChanged (input) {
-        this.gridOptions.api.setQuickFilter(input)
-      },
       handleSizeChange (val) {
         this.gridOptions.api.paginationSetPageSize(Number(val))
       },
