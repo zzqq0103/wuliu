@@ -30,16 +30,16 @@
           </el-select>
 
           <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
-          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">
-                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
+                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
                   {{collist.headerName}}
                 </el-checkbox>
               </div>
             </template>
             <template>
-              <div class="colVisible">
+              <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
                 <el-button @click="visibleChoice(1)" size="small">全选</el-button>
                 <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
               </div>
