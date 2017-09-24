@@ -1,14 +1,11 @@
 <template>
   <div>
     <h2 style="text-align:center">网点开单</h2>
-    <el-form ref="form" :model="form" rules="orderRules">
+    <el-form  :model="form" ref="form">
       <div style='margin-top:2%;display:inline-block;width:100%'>
         <span style='float:left;padding-top:0.7%;width:5%'>日期：</span>
         <span style='float:left;padding-top:0.9%;width:13%'>{{timeNow}}</span>
         <span class='order-title-base' style='width:7%'>始发站：</span>
-        <!-- <el-select v-model="form.startStation" placeholder="请选择" class='col-1' style='float:left' v-on:change="test">
-          <el-option  v-for="item in initForm.startStationList" :label="item.shi"  :value="item.shi" :key="item.shi"/>
-        </el-select> -->
         <div style="width: 150px; float: left">
             <el-cascader
               expand-trigger="hover"
@@ -17,15 +14,6 @@
             </el-cascader>
         </div>
         <span class='order-title-base' style='width:7%'>目的站：</span>
-        <!-- <el-form-item style="float:left;width:10%">
-          <input type="text" list="arrStation" v-model="form.arrStation" class='input-tishi' style="float:left;width:100%" />
-          <datalist id="arrStation">
-            <option v-for="item in initForm.arrStationList" :value="item" :key="item" />
-          </datalist>
-        </el-form-item> -->
-        <!-- <el-select v-model="form.arrStation" placeholder="请选择" class='col-1' style='float:left'>
-          <el-option  v-for="item in initForm.arrStationList" :label="item.shi" @click="test" :key="item.shi"  :value="item.shi"/>
-        </el-select> -->
         <div style="width: 150px; float: left">
             <el-cascader
               expand-trigger="hover"
@@ -38,20 +26,8 @@
       </div>
       <div style='margin-top:2%;clear:both'>
         <span class='label col-1'>发货方</span>
-        <!--
-        <div id='focus_fahuo' class='dropdown' style='outline:none'  tabindex="0" @click="getFocus(3)" @blur="fahuoShow=false">
-            <input type="text" 上  class='input col-4'  placeholder="请输入发货方名称"></input>
-            <div class="dropdown-content" v-show="fahuoShow" style='width:38%'> 
-              <div class='dropdown-select'>
-                <ul class='dropdown-fahuo'>
-                  <li v-bind:key="data" v-for="(data,i) in this.fahuoList"  v-on:dblclick="clickFahuo(data)"  style='text-align:center;font-size:100%;padding:1% 0 1% 0'>{{data}}</li>
-                </ul>
-              </div>
-            </div>
-        </div>
-        -->
         <div class='dropdown_fahuo col-4'>
-            <input type="text"  class='input' style='width:100%' v-model='form.shipNam' @keyup="getSearchFahuo()" v-bind:class="{'error':isshipNam}" placeholder="请输入发货方名称"  @blur="check(10, 'shipNam')"></input>
+            <input type="text"  class='input' style='width:100%' v-model='form.shipNam' @keyup="getSearchFahuo()" @keyup.enter="setBlur(1)" v-bind:class="{'error':isshipNam}" placeholder="请输入发货方名称"  @blur="check(10, 'shipNam')"></input>
             <div class="dropdown-content" v-show="fahuoShow" style='width:39%'> 
               <div class='dropdown-select'>
                 <ul class='dropdown-fahuo'>
@@ -61,13 +37,22 @@
             </div>
         </div>
         <span class='label col-1'>收货方</span>
-        <!-- <input class='input col-4' style='height:38px' v-model="form.receNam" v-bind:class="{'error':isreceNam}"  @blur="check(10,'receNam')"  placeholder="请输入收货方名称"></input> -->
-        <div id='focus_shouhuo' class='dropdown col-4' style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(3)"  @blur="check(2, 'receNam')">
-            <input type="text" v-model="form.receNam" v-bind:readonly="isReadOnly" class='input' style='width:100%' @focus="getSearchShouhuo()" placeholder="请选择发货地址"></input>
+        <!-- <div id='focus_shouhuo' class='dropdown col-4' style='outline:none' contenteditable="false" tabindex="0" @click="getFocus(3)"  @blur="check(10, 'receNam')">
+            <input type="text" id='focus_shouhuo_input' v-model="form.receNam" class='input' style='width:100%' @keyup="getSearchShouhuo()" placeholder="请选择发货地址" v-bind:class="{'error':isreceNam}"  prop="receNam"></input>
             <div class="dropdown-content" v-show="shouhuoShow" style='width:39%'>
               <div class='dropdown-select'>
                 <ul class='dropdown-fahuo'>
                   <li v-for="(data,i) in this.shouhuoList" :key='data' v-on:dblclick="clickShouhuo(data)">{{data}}</li>
+                </ul>
+              </div>
+            </div>
+        </div> -->
+        <div class='dropdown_fahuo col-4'>
+            <input type="text"  class='input' style='width:100%' v-model='form.receNam' @keyup="getSearchShouhuo()" @keyup.enter="setBlur(2)" v-bind:class="{'error':isreceNam}" placeholder="请输入收货方名称"  @blur="check(10, 'receNam')"></input>
+            <div class="dropdown-content" v-show="shouhuoShow" style='width:39%'> 
+              <div class='dropdown-select'>
+                <ul class='dropdown-fahuo'>
+                  <li v-bind:key="data" v-for="(data,i) in this.shouhuoList"  v-on:dblclick="clickShouhuo(data)">{{data}}</li>
                 </ul>
               </div>
             </div>
@@ -76,10 +61,8 @@
         <input class='input col-4' style='height:38px' placeholder="请填写发货方电话" v-bind:class="{ 'error': isshipTel}" v-model="form.shipTel"  @blur="check(3)"></input>
         <span class='label col-1'>电话</span>
         <input class='input col-4' style='height:38px' placeholder="请填写发货方电话" v-bind:class="{'error':isreceTel}" v-model="form.receTel"  @blur="check(4)"></input>
-        <!-- <span class='label col-1'>地址</span>
-        <input class='input col-4' style='height:38px'></input> -->
         <div class='label col-1'>提货地址:</div>
-        <div id='focus_fahuoAd' class='dropdown col-2' style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(1)" @blur="check(5)">
+        <div id='focus_fahuoAd' class='dropdown col-2' style='outline:none' contenteditable="false" tabindex="0" @click="getFocus(1)" @blur="check(5)">
             <input type="text" v-model="getbaseAddressFa" v-bind:readonly="isReadOnly" class='input' v-bind:class="{'error':isbaseAddressFa}" style='width:100%' @focus="addressVisible=true" placeholder="请选择发货地址"></input>
             <div class="dropdown-content2 col-2" v-show="addressVisible"> 
               <ul class='dropdown-content-select'>
@@ -102,7 +85,7 @@
         </div>
         <input class='input col-2' v-model='form.pickUpAdr' v-bind:class="{'error':ispickUpAdr}" @blur="check(10, 'pickUpAdr')" placeholder="填写详细提货地址"></input>
         <span class='label col-1'>收货地址</span>
-        <div id='focus_shouhuoAd' class="dropdown col-2" style='outline:none' contenteditable="true" tabindex="0" @click="getFocus(2)" @blur="check(7)">
+        <div id='focus_shouhuoAd' class="dropdown col-2" style='outline:none' contenteditable="false" tabindex="0" @click="getFocus(2)" @blur="check(7)">
             <input type="text" v-model="getbaseAddressShou" v-bind:readonly="isReadOnly" class='input' style="width:100%" v-bind:class="{'error':isbaseAddressShou}" @focus="addressVisible2=true" placeholder="请选择提货地址"></input>
             <div class="dropdown-content2 col-2" style='margin-top:38px' v-show="addressVisible2"> 
               <ul class='dropdown-content-select'>
@@ -214,14 +197,24 @@
     </el-form>
 
     <div style='text-align:center;clear:both'>
-      <el-button style='margin-top:2%;background-color:#00d1b2;color:white' @click="submitValidate(1)">生成运费</el-button>
-      <el-button style='margin-top:2%;background-color:#00d1b2;color:white' @click="submitValidate(2)">保存</el-button>
-      <el-button style=''>取消</el-button>
+      <el-button style='margin-top:2%' type="primary" @click="submitValidate(1)">生成运费</el-button>
+      <el-button style='margin-top:2%' type="primary" @click="submitValidate(2)">提交订单</el-button>
     </div>
     
     <!-- 错误输入提示弹窗 -->
     <el-dialog title="错误：" :visible.sync="wrongNoteVisable" size="tiny">
       <h2 style="text-align:center;padding: 30px 0 30px 0px">{{wrongNote}}</h2>
+    </el-dialog>
+
+    <!-- 确认提交订单弹窗 -->
+    <el-dialog :visible.sync="submitOrderVisible" size="tiny" :close-on-click-modal="false"
+        :close-on-press-escape="false" 
+        :show-close="false">
+      <h2 style='text-align:center'>确认提交订单吗？</h2>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="submitOrderVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitOrder()">确 定</el-button>
+      </div>
     </el-dialog>
 
     <!-- 输入保额弹窗 -->
@@ -270,6 +263,7 @@ export default {
       feeHave: false, // 可生成基本费用的内容已全部填上
       wrongNote: '',
       receList: [1, 2, 3],
+      submitOrderVisible: false, // 确认提交订单弹窗
       wrongNoteVisable: false, // 错误提示弹窗
       coverageVisible: false, // 保额输入弹窗
       goodsPaymentVisible: false, // 代收货款金额输入弹窗
@@ -385,6 +379,7 @@ export default {
       isFocus2: false,
       isReadOnly: false,
       isReadOnly2: false,
+      // 进入页面时从后台获取数据
       initForm: {
         retuPayModeList: ['无'], // 返款类型数组
         stationOptions: [{
@@ -408,18 +403,6 @@ export default {
             label: '无锡'
           }]
         }],
-        startStationList: [
-          {'shen': '江苏', 'shi': '南京'},
-          {'shen': '江苏', 'shi': '苏州'},
-          {'shen': '江苏', 'shi': '无锡'},
-          {'shen': '江苏', 'shi': '南通'}
-        ],
-        arrStationList: [
-          {'shen': '江苏', 'shi': '怀柔'},
-          {'shen': '北京', 'shi': '海淀'},
-          {'shen': '北京', 'shi': '昌平'},
-          {'shen': '北京', 'shi': '朝阳'}
-        ],
         orderId: '121212'
       },
       form: {
@@ -472,6 +455,7 @@ export default {
         note1: '', // 附属约定
         note2: '' // 情况说明
       },
+      forminit: {},
       ruleDialog: {
         coverage: [
           {required: true, message: '请填写保额费'},
@@ -523,6 +507,19 @@ export default {
   methods: {
     test () {
       alert('sds')
+    },
+    // 设置弹窗隐藏
+    setBlur (num) {
+      /*
+      document.getElementById('focus2').blur()
+      document.getElementById('inputfocus2').focus() */
+      /* document.getElementById('focus_shouhuo').focus()
+      document.getElementById('focus_shouhuo').blur() */
+      if (num === 1) {
+        this.fahuoShow = false
+      } else {
+        this.shouhuoShow = false
+      }
     },
     // 取消,确认代收货款弹窗
     submitDialog (type, formName, data) {
@@ -756,6 +753,7 @@ export default {
     },
     // 向服务器提交订单数据
     submitOrder () {
+      this.submitOrderVisible = false
     },
     // 从服务器获取基本运费
     getBaseFee () {
@@ -836,6 +834,7 @@ export default {
             console.log('数据已经全部填上')
             this.isPayTotal()
             if (this.isPayTotal()) {
+              this.submitOrderVisible = true
               console.log('可以提交订单')
               // this.submitOrder()
             }
@@ -854,8 +853,12 @@ export default {
     },
     // 获取对应收货方列表
     getSearchShouhuo () {
-      this.shouhuoShow = true
-      this.shouhuoList = ['收货方1', '收货方2', '收货方3', '收货方4']
+      if (this.form.receNam !== '') {
+        this.shouhuoShow = true
+        this.shouhuoList = ['收货方1', '收货方2', '收货方3', '收货方4']
+      } else {
+        this.shouhuoShow = false
+      }
     },
     // 根据保额设置保价费
     setInsurance () {
@@ -871,6 +874,8 @@ export default {
       for (let i = 0; i < list.length; i++) {
         this.form[list[i]] = this.fahuoRelated[list[i]]
       }
+      this.setShi(1)
+      this.setQuyu(1)
     },
     // 双击收货方补充相关数据
     clickShouhuo (data) {
@@ -880,6 +885,8 @@ export default {
       for (let i = 0; i < list.length; i++) {
         this.form[list[i]] = this.shouhuoRelated[list[i]]
       }
+      this.setShi(2)
+      this.setQuyu(2)
     },
     getFocus (num) {
       if (num === 1) {
@@ -889,7 +896,7 @@ export default {
         this.addressVisible2 = true
         document.getElementById('focus_shouhuoAd').focus()
       } else if (num === 3) {
-        document.getElementById('focus_shouhuo').focus()
+        // document.getElementById('focus_shouhuo').focus()
         // this.fahuoShow = true
       }
     },
@@ -1006,6 +1013,8 @@ export default {
         }
       }
     }
+  },
+  mounted () {
   }
 }
 </script>
@@ -1045,16 +1054,6 @@ export default {
   float: left
 }
 .dropdown-content {
-  /*
-  height:200px;
-  position: absolute;
-  background-color: #fff;
-  padding: 0;
-  box-shadow: 10px 8px 16px 0px rgba(0, 0, 0, 0.5);
-  z-index: 1;
-  width:22%;
-  margin-left:9.7%;
-  margin-top:3.5% */
     position: absolute;
     margin-left:0%;
     margin-top:38px;
