@@ -5,7 +5,7 @@
       <div style="margin-top:1%">
         <div style="float: right">
           <!--<el-row>订单号</el-row> -->
-          <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
+          <!--<el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>-->
         </div>
         <div>
           <el-form :model="filterForm" ref="filterForm" :inline="true">
