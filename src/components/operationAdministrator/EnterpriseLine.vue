@@ -5,7 +5,7 @@
       <div style="margin-top:1%">
         <div style="float: right">
           <!--<el-row>订单号</el-row> -->
-          <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
+          <!--<el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>-->
         </div>
         <div>
           <el-form v-model="filterForm" ref="filterForm" inline="true">
@@ -19,7 +19,7 @@
               <el-input v-model="filterForm.transfersIndestination" style="width: 150px"></el-input>
             </el-form-item>
             <el-button @click="">提取</el-button>
-            <el-button @click="addForm" style="margin-left: 50px; float: right;margin-bottom: 10px">添 加</el-button>
+            <el-button @click="addForm" style="margin-left: 50px; margin-bottom: 10px; margin-right: 2%">添加</el-button>
             <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
               <template v-for="(collist,i) in gridOptions.columnDefs">
                 <div class="colVisible">
@@ -35,7 +35,7 @@
                 </div>
               </template>
             </el-popover>
-            <el-button v-popover:popover1 style="float: right;margin-bottom: 10px">设置</el-button>
+            <el-button v-popover:popover1 style="margin-bottom:10px">设置</el-button>
           </el-form>
           <!--<el-button @click="setting">设置</el-button>-->
         </div>
