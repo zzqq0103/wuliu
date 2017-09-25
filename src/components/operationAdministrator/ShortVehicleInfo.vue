@@ -9,10 +9,19 @@
               <el-input v-model="filterForm.driverName" style="width: 100px"></el-input>
             </el-form-item>
             <el-form-item label="车型:">
-              <el-input v-model="filterForm.carType" style="width: 100px"></el-input>
+              <el-select v-model="filterForm.carType" style="width: 80px" placeholder="类型">
+                <el-option value="A"></el-option>
+                <el-option value="B"></el-option>
+                <el-option value="C"></el-option>
+                <el-option value="D"></el-option>
+                <el-option value="E"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="车辆状态:">
-              <el-input v-model="filterForm.carState" style="width: 100px"></el-input>
+              <el-select v-model="filterForm.carState" style="width: 100px" placeholder="状态">
+                <el-option label="可用" value="available"></el-option>
+                <el-option label="不可用" value="unavailable"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="车辆位置:">
               <el-input v-model="filterForm.carPosition" style="width: 100px"></el-input>
@@ -94,7 +103,13 @@
           &nbsp/吨
         </el-form-item>
         <el-form-item label="车辆类型:" :label-width="formLabelWidth" prop="carType">
-          <el-input v-model="vehicleForm.carType" style="width: 30%"></el-input>
+          <el-select v-model="vehicleForm.carType" style="width: 30%" placeholder="类型">
+            <el-option value="A"></el-option>
+            <el-option value="B"></el-option>
+            <el-option value="C"></el-option>
+            <el-option value="D"></el-option>
+            <el-option value="E"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
           <el-select v-model="vehicleForm.carState" style="width: 30%">
@@ -125,16 +140,22 @@
         <el-form-item label="联系电话:" :label-width="formLabelWidth">
           <el-input v-model="editForm.tel" style="width: 50%" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="车容量:" :label-width="formLabelWidth" prop="capacity">
-          <el-input v-model="editForm.capacity" style="width: 30%"></el-input>
+        <el-form-item label="车容量:" :label-width="formLabelWidth">
+          <el-input v-model="editForm.capacity" style="width: 30%" disabled="true"></el-input>
           &nbsp/立方
         </el-form-item>
-        <el-form-item label="吨位:" :label-width="formLabelWidth" prop="tonnage">
-          <el-input v-model="editForm.tonnage" style="width: 30%"></el-input>
+        <el-form-item label="吨位:" :label-width="formLabelWidth">
+          <el-input v-model="editForm.tonnage" style="width: 30%" disabled="true"></el-input>
           &nbsp/吨
         </el-form-item>
         <el-form-item label="车辆类型:" :label-width="formLabelWidth" prop="carType">
-          <el-input v-model="editForm.carType" style="width: 30%"></el-input>
+          <el-select v-model="editForm.carType" style="width: 30%" placeholder="类型">
+            <el-option value="A"></el-option>
+            <el-option value="B"></el-option>
+            <el-option value="C"></el-option>
+            <el-option value="D"></el-option>
+            <el-option value="E"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
           <el-select v-model="editForm.carState" style="width: 30%">

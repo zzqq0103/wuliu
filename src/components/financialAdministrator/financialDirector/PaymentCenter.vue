@@ -175,7 +175,7 @@
               <el-form-item label="运单号:">
                 <el-input v-model="filterForm.orderId" style="width:150px;"></el-input>
               </el-form-item>
-              <el-form-item label="发货人:">
+              <el-form-item label="发货方:">
                 <el-input v-model="filterForm.shipNam" style="width:100px;"></el-input>
               </el-form-item>
             </div>
@@ -598,7 +598,7 @@
           endTime: '', // 截止时间
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          shipNam: '', //  发货人
+          shipNam: '', //  发货方
           orderId: '' // 运单号
         },
         // 各种费用合计
@@ -723,7 +723,7 @@
           endTime: '', // 截止时间
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          shipNam: '', //  发货人
+          shipNam: '', //  发货方
           orderId: '' // 运单号
         }
         this.verVisible = true

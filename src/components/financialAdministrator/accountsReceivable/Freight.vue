@@ -5,13 +5,12 @@
     </div>
     <!--表格上方操作区域-->
     <div>
-      <!--第一行右侧按钮-->
       <div style="float: right">
-        <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
+        <el-button @click="drawGrid(1)">提取</el-button>
       </div>
       <!--第一行左侧按钮-->
       <div>
-        <el-form :model="filterForm" ref="filterForm" :inline="true">
+        <el-form :model="filterForm" ref="filterForm" :inline="true" class="filterForm">
           <el-form-item label="订单时间:">
             <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
                             :picker-options="pickerOptions" range-separator='/' style="width: 200px">
@@ -30,6 +29,12 @@
               <el-option label="全部" value="all"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="核销状态:">
+            <el-select v-model="filterForm.veriState" style="width: 100px">
+              <el-option label="未核销" value="uncompleted"></el-option>
+              <el-option label="已核销" value="completed"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="类型:">
             <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px">
               <el-option label="现付" value="nowPay"></el-option>
@@ -38,17 +43,9 @@
               <el-option label="月结" value="monthly"></el-option>
             </el-select>
           </el-form-item>
-          <el-button @click="drawGrid(1)">提取</el-button>
         </el-form>
       </div>
       <!--第二行开始-->
-      <div>
-        <el-form style="float: left" :model="totalForm" ref="totalForm" :inline="true">
-          <el-form-item label="中转费合计:">
-            <el-input v-model="totalForm.transferFeeTotal" style="width: 100px" readonly="true"></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
       <div style="float: right">
         <!--<el-button @click="setting">设置</el-button>-->
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
@@ -72,35 +69,25 @@
         <el-button @click="verification">开始核销</el-button>
       </div>
       <!--判断当前需要显示的label-->
-      <div v-if="this.filterForm.payType === 'nowPay'">
-        <el-form :model="totalForm" ref="totalForm" :inline="true">
-          <el-form-item label="现付金额合计:">
-            <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div v-else-if="this.filterForm.payType === 'cashOnDelivery'">
-        <el-form :model="totalForm" ref="totalForm" :inline="true">
-          <el-form-item label="到付金额合计:">
-            <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div v-else-if="this.filterForm.payType === 'inArrears'">
-        <el-form :model="totalForm" ref="totalForm" :inline="true">
-          <el-form-item label="欠付金额合计:">
-            <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div v-else-if="this.filterForm.payType === 'monthly'">
-        <el-form :model="totalForm" ref="totalForm" :inline="true">
-          <el-form-item label="月结金额合计:">
-            <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
+      <el-form :model="totalForm" ref="totalForm" :inline="true">
+        <el-form-item label="现付金额合计:" v-if="this.filterForm.payType === 'nowPay'">
+          <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
+        </el-form-item>
+        <el-form-item label="到付金额合计:" v-else-if="this.filterForm.payType === 'cashOnDelivery'">
+          <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
+        </el-form-item>
+        <el-form-item label="欠付金额合计:" v-else-if="this.filterForm.payType === 'inArrears'">
+          <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
+        </el-form-item>
+        <el-form-item label="月结金额合计:" v-else-if="this.filterForm.payType === 'monthly'">
+          <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
+        </el-form-item>
+        <el-form-item label="中转费合计:">
+          <el-input v-model="totalForm.transferFeeTotal" style="width: 100px" readonly="true"></el-input>
+        </el-form-item>
+      </el-form>
     </div>
+
     <div style="clear: both;"></div>
 
     <!--表格-->
@@ -109,18 +96,14 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
-                   :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
                    :headerHeight=40
 
                    :rowDoubleClicked="detailDoubleClick"
                    :pagination="true"
-                   :paginationPageSize="10"
+                   :paginationPageSize="20"
                    :suppressPaginationPanel="true"
-                   :filterChanged="gridfilterChange"
       ></ag-grid-vue>
     </div>
     <!--分页-->
@@ -139,7 +122,7 @@
     -->
     <el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
       <h2 style='text-align:center;margin-top:-2%'>运费核销</h2>
-      <el-row :gutter="20">
+      <el-row :gutter="20" style="margin-top: 2%">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
             <div>
@@ -183,20 +166,17 @@
               </el-form-item>
             </div>
           </el-form>
+            <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
           <div style="float: right">
             <el-button @click="leftSelect"> > </el-button>
             <el-button @click="leftSelectAll"> >> </el-button>
           </div>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged2" style="width: 200px"></el-input>
           <!--未核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions2"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
                          :headerHeight=40
@@ -236,16 +216,12 @@
           </el-form>
           <el-button @click="rightSelect"> < </el-button>
           <el-button @click="rightSelectAll"> << </el-button>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
           <!--待核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions3"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
                          :headerHeight=40
@@ -273,7 +249,7 @@
             <el-option label="现金" value="cash"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="摘要:">
+        <el-form-item label="备注:">
           <el-input v-model="confirmSubForm.digest" style="width: 200px"></el-input>
         </el-form-item>
       </el-form>
@@ -770,14 +746,15 @@
         },
         // 定义筛选条件
         filterForm: {
-          startTime: '', // 开始时间
-          endTime: '', // 截止时间
+          dateInterval: '', // 时间间隔
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          shipNam: '', //  发货人
+          shipNam: '', //  发货方
           payType: 'nowPay', // 类型（现付，到付，欠付，月结）
-          freiVeriState: '', // 运费核销状态
-          orderId: '' // 运单号
+          orderId: '', // 运单号
+          veriState: '', // 核销状态
+          pageNum: 1, // 当前页码数
+          pageSize: 20 // 分页大小
         },
         // 各种费用合计
         totalForm: {
@@ -1175,5 +1152,7 @@
   }
 </script>
 <style>
-
+  .filterForm .el-form-item {
+    margin-right: 2%;
+  }
 </style>

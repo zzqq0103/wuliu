@@ -54,7 +54,7 @@
       <div style="float: left">
         <el-form :model="totalForm" ref="totalForm" :inline="true">
           <el-form-item label="中转费合计:">
-            <el-input v-model="totalForm.transferFeeTotal" style="width: 100px" readonly="true"></el-input>
+            <el-input v-model="totalForm.transferFeeTotal" style="width: 100px" :readonly="true"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -273,7 +273,7 @@
             <el-option label="油卡" value="oilCard"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="摘要:">
+        <el-form-item label="备注:">
           <el-input v-model="confirmSubForm.digest"></el-input>
         </el-form-item>
       </el-form>
@@ -303,7 +303,7 @@
   import testJson from '../../../../static/test/testJSON.js'
   import OrderDetails from '../ShowOrderDetails'
   import api from '../../../api/financialAdministrator/api.js'
-//  import axios from 'axios'
+  //  import axios from 'axios'
   export default {
     data () {
       return {
@@ -794,10 +794,11 @@
           dateInterval: '', // 时间区间
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          shipNam: '', //  发货人
-          payType: 'nowPay', // 类型（现付，到付，欠付，月结）
-          freiVeriState: '', // 运费核销状态
-          orderId: '', // 运单号
+//          shipNam: '', //  发货人
+//          payType: 'nowPay', // 类型（现付，到付，欠付，月结）
+//          freiVeriState: '', // 运费核销状态
+//          orderId: '', // 运单号
+          veriState: '', // 核销状态
           pageSize: 20,
           pageNum: 1
         },
@@ -947,35 +948,22 @@
       },
       // 获取行数据
       createRowData (i) {
-        let data = {
-          pageSize: 2,
-          pageNum: 1,
-          score: 37
-        }
-//        axios.post('10.107.8.163:8080/logistics/interface/studentManagement/queryStudentModel', data)
-//          .then(res => {
-//            console.log(res)
-//          })
-//          .catch(error => {
-//            console.log(error)
-//          })
-//
-        api.getTransferFee(data)
+        this.filterForm.dateInterval = '2017-08-15/2017-08-16'
+        this.filterForm.startPoint = '北京'
+        this.filterForm.endPoint = '南京'
+        this.filterForm.veriState = 0
+        console.log(this.filterForm)
+        api.getTransferFee(this.filterForm)
           .then(res => {
+            console.log('成功')
             console.log(res)
           })
           .catch(error => {
+            console.log('失败')
             console.log(error)
           })
         if (i === 1) {
-//          api.getTransferFee(data)
-//            .then(res => {
-//              console.log(res)
-//            })
-//            .catch(error => {
-//              console.log(error)
-//            })
-//          this.gridOptions.rowData = res.data
+
         } else if (i === 2) {
           this.gridOptions2.rowData = testJson.freight.list
           this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
