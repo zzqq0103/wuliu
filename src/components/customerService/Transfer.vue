@@ -19,11 +19,11 @@
           <el-option key="yes" label="待生成" value="yes"></el-option>
           <el-option key="no" label="已生成" value="no"></el-option>
         </el-select>
-        <el-h5 class="appointmenttimes">回单押款状态：</el-h5>
-        <el-select v-model="transfer.state" placeholder="选择" class="appointmentoption" style='width:100px'>
-          <el-option key="yes" label="已付款" value="yes"></el-option>
-          <el-option key="no" label="未付款" value="no"></el-option>
-        </el-select>
+        <!--<el-h5 class="appointmenttimes">回单押款状态：</el-h5>-->
+        <!--<el-select v-model="transfer.state" placeholder="选择" class="appointmentoption" style='width:100px'>-->
+          <!--<el-option key="yes" label="已付款" value="yes"></el-option>-->
+          <!--<el-option key="no" label="未付款" value="no"></el-option>-->
+        <!--</el-select>-->
         <el-button>查找</el-button>
       </p>
       <el-dialog title="回单管理:" :visible.sync="orderformerVisable">
@@ -168,14 +168,14 @@
               suppressMenu: true,
               cellRendererFramework: 'operateComponent',
               hide: false
-            },
-            {
-              headerName: '回单押款状态',
-              width: 150,
-              field: 'receiptYaKuanstate',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false
             }
+//            {
+//              headerName: '回单押款状态',
+//              width: 150,
+//              field: 'receiptYaKuanstate',
+//              filterFramework: PartialMatchFilterComponent,
+//              hide: false
+//            }
           ]
         },
         pickerOptions: {
