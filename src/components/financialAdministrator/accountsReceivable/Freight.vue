@@ -129,7 +129,7 @@
               <el-form-item label="运单号:">
                 <el-input v-model="filterForm.orderId" style="width: 150px"></el-input>
               </el-form-item>
-              <el-form-item label="发货人:">
+              <el-form-item label="发货方:">
                 <el-input v-model="filterForm.shipNam" style="width: 100px"></el-input>
               </el-form-item>
             </div>
@@ -157,7 +157,7 @@
                 <el-button v-popover:popover2>设置</el-button>
               </div>
               <el-form-item label="类型:">
-                <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px">
+                <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px" @change="typeChange()">
                   <el-option label="现付" value="nowPay"></el-option>
                   <el-option label="到付" value="cashOnDelivery"></el-option>
                   <el-option label="欠付" value="inArrears"></el-option>
@@ -166,7 +166,7 @@
               </el-form-item>
             </div>
           </el-form>
-            <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
+          <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
           <div style="float: right">
             <el-button @click="leftSelect"> > </el-button>
             <el-button @click="leftSelectAll"> >> </el-button>
@@ -240,7 +240,7 @@
     </el-dialog>
     <!--确认核销弹框，选择支付方式与填写摘要-->
     <el-dialog title="确认核销" :visible.sync="confirmSubVisible" size="tiny" :closeOnClickModal="false">
-      <el-form :model="confirmSubForm" ref="confirmSubForm" labelWidth="80px">
+      <el-form :model="confirmSubForm" ref="confirmSubForm" labelWidth="20%">
         <el-form-item label="支付方式">
           <el-select v-model="confirmSubForm.payMode" placeholder="支付方式" style="width: 100px">
             <el-option label="微信" value="WeChat"></el-option>
@@ -250,7 +250,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注:">
-          <el-input v-model="confirmSubForm.digest" style="width: 200px"></el-input>
+          <el-input v-model="confirmSubForm.digest" style="width: 50%"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -342,7 +342,7 @@
               visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '发货方',
               width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
@@ -350,7 +350,7 @@
               visible: true
             },
             {
-              headerName: '发货人联系方式',
+              headerName: '发货方联系方式',
               width: 150,
               field: 'shipTel',
               filterFramework: PartialMatchFilterComponent,
@@ -358,7 +358,7 @@
               visible: false
             },
             {
-              headerName: '收货人',
+              headerName: '收货方',
               width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
@@ -366,7 +366,7 @@
               visible: true
             },
             {
-              headerName: '收货人联系方式',
+              headerName: '收货方联系方式',
               width: 150,
               field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
@@ -454,6 +454,15 @@
               visible: false
             },
             {
+              headerName: '备注',
+              width: 150,
+              field: 'trilNote',
+              filter: 'text',
+              hide: false,
+              visible: true,
+              filterFramework: PartialMatchFilterComponent
+            },
+            {
               headerName: '支付方式',
               width: 100,
               field: 'payMode',
@@ -526,7 +535,7 @@
               visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '发货方',
               width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
@@ -534,7 +543,7 @@
               visible: true
             },
             {
-              headerName: '发货人联系方式',
+              headerName: '发货方联系方式',
               width: 150,
               field: 'shipTel',
               filterFramework: PartialMatchFilterComponent,
@@ -542,7 +551,7 @@
               visible: false
             },
             {
-              headerName: '收货人',
+              headerName: '收货方',
               width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
@@ -550,7 +559,7 @@
               visible: true
             },
             {
-              headerName: '收货人联系方式',
+              headerName: '收货方联系方式',
               width: 150,
               field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
@@ -665,7 +674,7 @@
               visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '发货方',
               width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
@@ -673,7 +682,7 @@
               visible: true
             },
             {
-              headerName: '发货人联系方式',
+              headerName: '发货方联系方式',
               width: 150,
               field: 'shipTel',
               filterFramework: PartialMatchFilterComponent,
@@ -681,7 +690,7 @@
               visible: false
             },
             {
-              headerName: '收货人',
+              headerName: '收货方',
               width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
@@ -689,7 +698,7 @@
               visible: true
             },
             {
-              headerName: '收货人联系方式',
+              headerName: '收货方联系方式',
               width: 150,
               field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
@@ -924,11 +933,11 @@
             this.gridOptions2.columnDefs[lenth] = this.newadditionalColumnDefs.nowPay
             this.gridOptions3.columnDefs[lenth] = this.newadditionalColumnDefs.nowPay
           } else if (payType === 'cashOnDelivery') {
-            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.cashOnDelivery
-            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.cashOnDelivery
+            this.gridOptions2.columnDefs[lenth] = this.newadditionalColumnDefs.cashOnDelivery
+            this.gridOptions3.columnDefs[lenth] = this.newadditionalColumnDefs.cashOnDelivery
           } else if (payType === 'inArrears') {
-            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.inArrears
-            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.inArrears
+            this.gridOptions2.columnDefs[lenth] = this.newadditionalColumnDefs.inArrears
+            this.gridOptions3.columnDefs[lenth] = this.newadditionalColumnDefs.inArrears
           } else if (payType === 'monthly') {
             this.gridOptions2.columnDefs[lenth] = this.newadditionalColumnDefs.monthly
             this.gridOptions3.columnDefs[lenth] = this.newadditionalColumnDefs.monthly
@@ -938,6 +947,14 @@
         }
 
 //        console.log(this.gridOptions.columnDefs)
+      },
+      // 核销界面，提取库存时，修改类型，清空表格数据
+      typeChange () {
+        this.updateGrid(2)
+        this.gridOptions2.rowData = []
+        this.gridOptions3.rowData = []
+        this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
+        this.gridOptions3.api.setRowData(this.gridOptions3.rowData)
       },
       // 切换列的可见性，三个表格，三个参数j
       updateColumnDefsVisible (j, collist) {
@@ -1010,14 +1027,15 @@
       // 显示切换核销界面的弹框
       verification () {
         this.filterForm = {
-          startTime: '', // 开始时间
-          endTime: '', // 截止时间
+          dateInterval: '', // 时间间隔
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          shipNam: '', //  发货人
+          shipNam: '', //  发货方
           payType: 'nowPay', // 类型（现付，到付，欠付，月结）
-          freiVeriState: '', // 运费核销状态
-          orderId: '' // 运单号
+          orderId: '', // 运单号
+          veriState: '', // 核销状态
+          pageNum: 1, // 当前页码数
+          pageSize: 20 // 分页大小
         }
         this.verVisible = true
         this.gridOptions2.api.selectAllFiltered()
