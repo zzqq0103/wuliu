@@ -10,10 +10,16 @@
         <div>
           <el-form v-model="filterForm" ref="filterForm" inline="true">
             <el-form-item label="外包企业名称：">
-              <el-input v-model="filterForm.companyName"></el-input>
+              <el-input v-model="filterForm.companyName" style="width: 150px"></el-input>
+            </el-form-item>
+            <el-form-item label="中转起始地：">
+              <el-input v-model="filterForm.transfersInhome" style="width: 150px"></el-input>
+            </el-form-item>
+            <el-form-item label="中转目的地：">
+              <el-input v-model="filterForm.transfersIndestination" style="width: 150px"></el-input>
             </el-form-item>
             <el-button @click="">提取</el-button>
-            <el-button @click="addForm" style="margin-left: 50px">添 加</el-button>
+            <el-button @click="addForm" style="margin-left: 50px; float: right;margin-bottom: 10px">添 加</el-button>
             <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
               <template v-for="(collist,i) in gridOptions.columnDefs">
                 <div class="colVisible">
@@ -29,7 +35,7 @@
                 </div>
               </template>
             </el-popover>
-            <el-button v-popover:popover1>设置</el-button>
+            <el-button v-popover:popover1 style="float: right;margin-bottom: 10px">设置</el-button>
           </el-form>
           <!--<el-button @click="setting">设置</el-button>-->
         </div>
@@ -74,7 +80,7 @@
         <el-form-item label="中转目的地:" :label-width="formLabelWidth" prop="changeEnd">
           <el-input v-model="enterpriseForm.changeEnd" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="中转企业联系人:" :label-width="formLabelWidth" prop="changeName">
+        <el-form-item label="线路联系人:" :label-width="formLabelWidth" prop="changeName">
           <el-input v-model="enterpriseForm.changeName" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="联系方式:" :label-width="formLabelWidth" prop="id">
@@ -109,20 +115,20 @@
         <el-form-item label="中转目的地:" :label-width="formLabelWidth" prop="changeEnd">
           <el-input v-model="enterpriseeditForm.changeEnd" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="中转企业联系人:" :label-width="formLabelWidth" prop="changeName">
+        <el-form-item label="线路联系人:" :label-width="formLabelWidth" prop="changeName">
           <el-input v-model="enterpriseeditForm.changeName" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="联系方式:" :label-width="formLabelWidth" prop="id">
           <!--<el-input v-model="enterpriseeditForm.id" style="width: 50%" disabled="true"></el-input>-->
-          <el-input v-model="enterpriseeditForm.id" style="width: 50%"></el-input>
+          <el-input v-model="enterpriseeditForm.id" :disabled="true"  style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="合同号:" :label-width="formLabelWidth" prop="contractId">
           <!--<el-input v-model="enterpriseeditForm.contractId" style="width: 50%" disabled="true"></el-input>-->
-          <el-input v-model="enterpriseeditForm.contractId" style="width: 50%"></el-input>
+          <el-input v-model="enterpriseeditForm.contractId" :disabled="true" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="合同价格:" :label-width="formLabelWidth" prop="contractPrice">
           <!--<el-input v-model="enterpriseeditForm.contractPrice" style="width: 50%" disabled="true"></el-input>-->
-          <el-input v-model="enterpriseeditForm.contractPrice" style="width: 50%"></el-input>
+          <el-input v-model="enterpriseeditForm.contractPrice" :disabled="true"  style="width: 50%"></el-input>
 
         </el-form-item>
       </el-form>
@@ -190,7 +196,9 @@
           'contractPrice': '' // 合同价格
         },
         filterForm: {
-          'companyName': ''
+          'companyName': '',
+          'transfersInhome': '',
+          'transfersIndestination': ''
         },
         rules: {
           companyName: [{
@@ -203,7 +211,7 @@
             required: true, message: '请输入中转目的地', trigger: 'blur'
           }],
           changeName: [{
-            required: true, message: '请输入中转企业联系人', trigger: 'blur'
+            required: true, message: '请输入线路联系人', trigger: 'blur'
           }],
           id: [{
             required: true, message: '请输入联系方式', trigger: 'blur'
@@ -255,7 +263,7 @@
               visible: true
             },
             {
-              headerName: '中转企业联系人',
+              headerName: '线路联系人',
               width: 150,
               field: 'changeName',
               visible: true,
@@ -312,14 +320,15 @@
             /* var vehicleform = this.params.context.componentParent.vehicleForm
              vehicleform.licePlateNum = testJson.vehicleInfo.list[this.params.node.rowIndex].licePlateNum */
             this.params.context.componentParent.editVisible = true
-            this.enterpriseeditForm.companyName = ''
-            this.enterpriseeditForm.changeStart = ''
-            this.enterpriseeditForm.changeEnd = ''
-            this.enterpriseeditForm.changeName = ''
-            this.enterpriseeditForm.id = ''
-            this.enterpriseeditForm.contractId = ''
-            this.enterpriseeditForm.contractPrice = ''
-//            console.log(this.params.data)
+//            this.enterpriseeditForm.companyName = ''
+//            this.enterpriseeditForm.changeStart = ''
+//            this.enterpriseeditForm.changeEnd = ''
+//            this.enterpriseeditForm.changeName = ''
+//            this.enterpriseeditForm.id = ''
+//            this.enterpriseeditForm.contractId = ''
+//            this.enterpriseeditForm.contractPrice = ''
+            console.log(this.params.data)
+//            alert(this.params.data)
 //            this.params.context.componentParent.enterpriseeditForm = this.params.data
           }
         }
