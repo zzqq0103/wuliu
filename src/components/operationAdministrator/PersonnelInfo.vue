@@ -4,23 +4,37 @@
       <h2>客户信息管理</h2>
     </div>
     <div>
-      <div style="float: right">
-        <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged"></el-input>
-      </div>
       <div>
         <el-form :model="filterForm" ref="filterForm" :inline="true">
-          <el-form-item label="客户企业名称:">
-            <el-input v-model="filterForm.clientCompNam" style="width: 150px"></el-input>
+          <el-form-item label="发货方:">
+            <el-input v-model="filterForm.shipNam" style="width: 150px"></el-input>
           </el-form-item>
-          <el-form-item label="联系人姓名:">
-            <el-input v-model="filterForm.nam" style="width: 150px"></el-input>
-          </el-form-item>
-          <el-form-item label="联系人电话:">
-            <el-input v-model="filterForm.tel" style="width: 150px"></el-input>
+          <el-form-item label="企业详细地址:" class="Taddress">
+            <div id='focus1' class='dropdown1' style='outline:none' tabindex="0"  @click="getFocus(1)" @blur="addressVisible=false">
+              <el-input v-model="filterForm.receAdr" style="width: 142.5px;"></el-input>
+              <div class="dropdown-content" style='width:80%' v-show="addressVisible">
+                <ul class='dropdown-content-select'>
+                  <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
+                  <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
+                  <li @click="setQuyu(1)" class='dropdown-li' v-bind:class="{'selectOn':quyu}">区县</li>
+                </ul>
+                <div class='dropdown-select'>
+                  <ul class='dropdown-shenfen' v-show="shenfen">
+                    <li v-for="(data,i) in this.regionList" @click="selectShenfen(1,data.name)" style='text-align:center'
+                        :key='data.name'>{{data.name}}
+                    </li>
+                  </ul>
+                  <ul class='dropdown-shi' v-show="shi">
+                    <li v-for="(data,i) in this.shiList.sub" @click="selectShi(1,data.name)" style='text-align:center'
+                        :key='data.name'>{{data.name}}
+                    </li>
+                  </ul>
+                </div>
+              </div>            </div></el-input>
           </el-form-item>
           <el-button @click="drawGrid()">提取</el-button>
         </el-form>
-        <el-button @click="addForm" style="float: right">添加</el-button>
+        <el-button @click="addForm" style="margin-right: 10px">添加</el-button>
         <!--<el-button @click="setting">设置</el-button>-->
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
@@ -37,7 +51,7 @@
             </div>
           </template>
         </el-popover>
-        <el-button v-popover:popover1 style="float: right;margin-right: 20px">设置</el-button>
+        <el-button v-popover:popover1 >设置</el-button>
       </div>
 
     </div>
@@ -91,14 +105,11 @@
     <!--添加客户信息-->
     <el-dialog title="添加客户信息:" :visible.sync="addFormVisible" size="tiny" :closeOnClickModal="false" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
       <el-form :model="personnelForm" ref="personnelForm" :rules="rules">
-        <el-form-item label="客户企业名称:" :label-width="formLabelWidth" prop="clientCompNam">
-          <el-input v-model="personnelForm.clientCompNam" style="width: 80%"></el-input>
+        <el-form-item label="收货方:" :label-width="formLabelWidth" prop="clientCompNam">
+          <el-input v-model="personnelForm.shipNam" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="联系人姓名:" :label-width="formLabelWidth" prop="nam">
-          <el-input v-model="personnelForm.nam" :rules="rules" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="personnelForm.tel" :rules="rules" style="width: 50%"></el-input>
+        <el-form-item label="收货方联系电话:" :label-width="formLabelWidth" prop="tel">
+          <el-input v-model="personnelForm.shipTel" :rules="rules" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="企业详细地址：" style="clear:both;width:100%" :label-width="formLabelWidth" prop="compAdr">
           <div id='focus2' class='dropdown2' style='outline:none' tabindex="0"  @click="getFocus(2)" @blur="addressVisible2=false">
@@ -126,16 +137,21 @@
               </div>
             </div>
           </div>
-          <el-input v-model="personnelForm.compAdr" style="width: 122.5px;left: 40px" @blur="adrCheck"></el-input>
+          <el-input v-model="personnelForm.compAdr" style="width: 100px;left: 160px;position: absolute"></el-input>
         </el-form-item>
         <el-form-item label="所属片区:" :label-width="formLabelWidth" prop="area">
-          <el-input v-model="personnelForm.area" :rules="rules" style="width: 80%"></el-input>
+          <el-select v-model="personnelForm.area">
+            <el-option label="A" value="A"></el-option>
+            <el-option label="B" value="B"></el-option>
+            <el-option label="C" value="C"></el-option>
+            <el-option label="D" value="D"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="业务员:" :label-width="formLabelWidth" prop="salesmanData">
+        <el-form-item label="业务员:" :label-width="formLabelWidth">
           <el-input v-model="personnelForm.salesmanData" :rules="rules" style="width: 50%" :disabled="true"></el-input>
           <el-button type="primary" @click="createSalesmanData" >选择业务员</el-button>
         </el-form-item>
-        <el-form-item label="是否三方:" :label-width="formLabelWidth" prop="isTril">
+        <el-form-item label="是否三方:" :label-width="formLabelWidth">
           <el-select v-model="personnelForm.isTril" style="width:30%">
             <el-option label="是" value="yes"></el-option>
             <el-option label="否" value="no"></el-option>
@@ -168,25 +184,27 @@
     <!--编辑客户信息-->
     <el-dialog title="编辑:" :visible.sync="editFormVisible" size="tiny" :closeOnClickModal="false" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
       <el-form :model="editForm" :rules="rules" ref="editForm">
-        <el-form-item label="客户企业名称:" :label-width="formLabelWidth" prop="clientCompNam">
-          <el-input v-model="editForm.clientCompNam" style="width: 80%"></el-input>
+        <el-form-item label="收货方:" :label-width="formLabelWidth" prop="clientCompNam">
+          <el-input v-model="editForm.shipNam" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="联系人姓名:" :label-width="formLabelWidth" prop="nam">
-          <el-input v-model="editForm.nam" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="editForm.tel" style="width: 50%"></el-input>
+        <el-form-item label="收货方联系电话:" :label-width="formLabelWidth" prop="tel">
+          <el-input v-model="editForm.shipTel" :rules="rules" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="企业详细地址:" :label-width="formLabelWidth" prop="compAdr">
           <el-input v-model="editForm.compAdr" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="所属片区:" :label-width="formLabelWidth" prop="area">
-          <el-input v-model="editForm.area" style="width: 80%"></el-input>
+          <el-select v-model="editForm.area">
+            <el-option label="A" value="A"></el-option>
+            <el-option label="B" value="B"></el-option>
+            <el-option label="C" value="C"></el-option>
+            <el-option label="D" value="D"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="业务员:" :label-width="formLabelWidth" prop="salesmanId">
+        <el-form-item label="业务员:" :label-width="formLabelWidth">
           <el-input v-model="editForm.salesmanId" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="是否三方:" :label-width="formLabelWidth" prop="isTril">
+        <el-form-item label="是否三方:" :label-width="formLabelWidth">
           <el-select v-model="editForm.isTril" style="width:30%">
             <el-option label="是" value="true"></el-option>
             <el-option label="否" value="falss"></el-option>
@@ -242,25 +260,17 @@
               headerName: '序号', width: 100, field: 'index', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '客户企业名称',
+              headerName: '收货方',
               width: 150,
-              field: 'clientCompNam',
+              field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
             {
-              headerName: '联系人姓名',
+              headerName: '收货方联系电话',
               width: 150,
-              field: 'nam',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '联系电话',
-              width: 150,
-              field: 'tel',
+              field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -282,9 +292,9 @@
               visible: true
             },
             {
-              headerName: '业务员ID',
+              headerName: '业务员姓名',
               width: 150,
-              field: 'salesmanId',
+              field: 'roleNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -315,13 +325,14 @@
         },
         filterForm: {
           'clientCompNam': '',
-          'nam': '', // 联系人姓名,
-          'tel': ''  // 联系电话
+          'shipNam': '', // 联系人姓名,
+          'province': '', // 省
+          'city': '', // 市
+          'receAdr': '' //
         },
         personnelForm: {
-          'clientCompNam': '', // 客户企业名称
-          'nam': '', // 联系人姓名
-          'tel': '', // 联系电话
+          'shipNam': '',
+          'shipTel': '',
           'compAdr': '', // 企业详细地址
           'area': '', // 所属片区
           'isTril': '', // 是否三方
@@ -338,10 +349,7 @@
           'compAdr': '', // 企业详细地址
           'area': '', // 所属片区
           'isTril': '', // 是否三方
-          'salesmanData': '', // 业务员信息
-          'province': '', // 省
-          'city': '', // 市
-          'adminRegion': ''
+          'roleNam': '' // 业务员名字
         },
         salesmanReq: '',
         rules: {
@@ -493,7 +501,10 @@
           compAdr: '',
           area: '',
           salesmanId: '',
-          isTril: ''
+          isTril: '',
+          shi: '',
+          adminRegion: '',
+          shenfen: ''
         }
       },
       handleSizeChange (val) {
@@ -544,6 +555,7 @@
       },
       selectShenfen (num, name) {
         if (num === 1) {
+          this.filterForm.shenfen = name
           this.shenfenSelected = name
           this.shiSelected = ''
           this.quSelected = ''
@@ -558,10 +570,11 @@
           this.shiList2 = []
         }
         this.personnelForm.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-        this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+        this.filterForm.receAdr = this.shenfenSelected + this.shiSelected + this.quSelected
       },
       selectShi (num, name) {
         if (num === 1) {
+          this.filterForm.shi = name
           this.shiSelected = name
           this.quSelected = ''
           this.quList = []
@@ -572,10 +585,11 @@
           this.quList2 = []
         }
         this.personnelForm.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-        this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+        this.filterForm.receAdr = this.shenfenSelected + this.shiSelected + this.quSelected
       },
       selectQu (num, name) {
         if (num === 1) {
+          this.filterForm.adminRegion = name
           this.quSelected = name
           this.addressVisible = false
           this.inputWidth = 73
@@ -594,7 +608,7 @@
           this.isReadOnly2 = true
         }
         this.personnelForm.receAdr = this.shenfenSelected2 + this.shiSelected2 + this.quSelected2
-        this.pickUpAdr = this.shenfenSelected + this.shiSelected + this.quSelected
+        this.filterForm.receAdr = this.shenfenSelected + this.shiSelected + this.quSelected
       },
       setShenfen (num) {
         if (num === 1) {
@@ -663,13 +677,6 @@
           }
         }
       },
-      adrCheck () {
-        if (this.receAdr !== '' && this.compAdr !== '') {
-          this.messageErro = false
-        } else {
-          this.messageErro = true
-        }
-      },
       cancleForm (formName) {
         this.resetForm(formName)
         this.addFormVisible = false
@@ -719,3 +726,113 @@
     }
   }
 </script>
+<style scoped>
+  .dropdown {
+    width: 100%;
+    margin-left: 15%
+  }
+
+  .dropdown2 {
+    display: inline-block;
+    width: 100%;
+    float: left
+  }
+
+  .dropdown-content {
+    height: 200px;
+    position: absolute;
+    background-color: #fff;
+    margin-left: -1%;
+    padding: 0;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    width: 78%
+  }
+
+  .dropdown-select {
+    clear: both;
+    height: 160px;
+    overflow-y: scroll
+  }
+
+  .dropdown-select ul {
+    clear: both;
+    list-style-type: none
+  }
+
+  .dropdown-select ul li:hover {
+    cursor: pointer;
+    background-color: #D1E5E5
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .dropdown-content-select {
+    list-style-type: none;
+  }
+
+  .dropdown-li {
+    cursor: pointer;
+    border-right: 1px solid #C0C0C0;
+    width: 33.33%;
+    margin: 0;
+    float: left;
+    box-sizing: border-box;
+    background-color: #D1E5E5;
+    text-align: center
+  }
+
+  .dropdown-shenfen li:hover {
+    cursor: pointer;
+    background-color: #D1E5E5
+  }
+
+  .addressDetail {
+    width: 45%;
+    float: left;
+    margin-left: -5%
+  }
+
+  .selectOn {
+    background-color: #00d1b2;
+  }
+
+  .selectNo {
+    background-color: #EEF6F6
+  }
+
+  .div-form {
+    border: 2px solid black;
+    width: 60%;
+    margin-left: 18%;
+    display: inline-block;
+    margin-top: 2%;
+    padding: 2%;
+    box-sizing: border-box
+  }
+
+  .input-tishi {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid rgb(191, 217, 216);
+    box-sizing: border-box;
+    color: rgb(31, 61, 60);
+    display: block;
+    font-size: inherit;
+    height: 36px;
+    line-height: 1;
+    outline: 0;
+    padding: 3px 10px;
+    transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+  }
+
+  .Taddress label{
+    float: left;
+  }
+</style>
