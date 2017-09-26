@@ -1,7 +1,8 @@
 <template>
 <!-- 组件必须头元素被一个div容器包括 -->
   <div>
-    <div id="top">
+      <div id="top">
+
       <!-- 标题 -->
       <h2 style="text-align:center">待 中 转 订 单 信 息 页</h2>
 
@@ -23,7 +24,7 @@
         <div style="float:left;">
 
           <el-input placeholder="请输入查询数据" icon="search" v-model="queryName" :on-icon-click="handleIconClick" style="width:170px;"></el-input>
-          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
+          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:140px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -55,12 +56,12 @@
       </div>
     </div>
 
-    <!-- 清除浮动 -->
-    <div style="clear: both;">
-    </div>
+      <!-- 清除浮动 -->
+      <div style="clear: both;">
+      </div>
 
-    <!-- 表格 -->
-    <div id="middle" style="margin-top:2%" v-loading="listLoading">
+      <!-- 表格 -->
+      <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
@@ -72,11 +73,12 @@
                    :rowHeight="40"
                    :headerHeight="40"
                    :rowDoubleClicked="detailDoubleClick"
+                   :colWidth="120"
       ></ag-grid-vue>
     </div>
 
-    <!-- 分页 -->
-    <div id="bottom" class="block" style="float:right; margin-top:30px;">
+      <!-- 分页 -->
+      <div id="bottom" class="block" style="float:right; margin-top:30px;">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -88,49 +90,38 @@
       </el-pagination>
     </div>
 
-    <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
-    <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false" top="15%">
-      <order-details :orderId="orderId"></order-details>
-    </el-dialog>
+      <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
+      <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false" top="7%">
+        <order-details :orderId="orderId"></order-details>
+      </el-dialog>
 
-    <!-- 是否确认中转对话框 -->
-    <el-dialog title="" :visible.sync="departVisible" size="tiny" top="30%">
-          <h2 style="padding:30px">确认中转吗？</h2>
+      <!-- 是否确认中转对话框 -->
+      <el-dialog title="" :visible.sync="departVisible" size="tiny" :close-on-click-modal="false" :close-on-press-escape="false" top="30%">
+          <h2 style="padding:30px">您确认中转吗？</h2>
           <div slot="footer" class="dialog-footer">
             <el-button @click="departVisible = false">取 消</el-button>
-            <el-button @click="departVisible = false" type="danger">确 定</el-button>
+            <el-button @click="transfer('')" type="danger">确 定</el-button>
           </div>
-    </el-dialog>
+      </el-dialog>
 
-    <!-- 编辑待中转表单信息 -->
-    <!--<el-dialog title="" :visible.sync="editVisible" size="tiny">-->
-      <!--<el-form>-->
-        <!--<el-form-item>-->
-
-        <!--</el-form-item>-->
-        <!--<el-form-item>-->
-
-        <!--</el-form-item>-->
-        <!--<el-form-item>-->
-
-        <!--</el-form-item>-->
-      <!--</el-form>-->
-    <!--</el-dialog>-->
-
-  </div>
+</div>
 </template>
 
 <script>
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
+
   // 引入axios后台接口
   import {getCurrentEpiboliedList, getQueryEpiboliedList} from '../../api/dispatch/api'
+
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
+
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   import ElForm from '../../../node_modules/element-ui/packages/form/src/form'
   import ElFormItem from '../../../node_modules/element-ui/packages/form/src/form-item'
+
   export default {
     data () {
       return {
@@ -140,24 +131,24 @@
         colVisible: false, // 设置弹窗的显示boolean值
         orderId: '', // 运单号
         tableForm: {
-          'id': '',
-          'orderId': '',
-          'orderTim': '',
-          'arrStation': '',
-          'changeStart': '',
-          'rouSelection': '',
-          'changeFee': '',
-          'contractPrice': '',
-          'lineNam': '',
-          'lineTel': '',
-          'shipNam': '',
-          'receNam': '',
-          'goodsNam': '',
-          'package': '',
-          'goodsNums': '',
-          'goodsWeight': '',
-          'goodsVolumn': '',
-          'orderNote': ''
+          'id': '', // 序号
+          'orderId': '', // 订单号
+          'orderTim': '', // 订单时间
+          'shipNam': '', // 发货人姓名
+          'receNam': '', // 收货人姓名
+          'arrStation': '', // 到站
+          'goodsNam': '', // 货物名称
+          'goodsNums': '', // 件数
+          'goodsWeight': '', // 重量
+          'goodsVolumn': '', // 体积
+          'package': '', // 包装
+          'rouSelection': '', // 线路选择
+          'changeStart': '', // 中转起始地
+          'changeFee': '', // 中转费
+          'orderNote': '', // 订单备注
+          'lineTel': '', // 外包企业线路账号（联系方式）
+          'lineNam': '', // 联系人
+          'contractPrice': '' // 合同价格
         },
         rules: {}, //
         formLabelWidth: '120px',
@@ -169,67 +160,61 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
+              headerName: '序号', field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            // {
-            //   headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            // },
-            // {
-            //   headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false, filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            // },
-            {
-              headerName: '开单时间', width: 120, field: 'orderTim', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '订单号', field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '到站点', width: 120, field: 'arrStation', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单时间', field: 'orderTim', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '中转起始点', width: 120, field: 'changeStart', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '到站点', field: 'arrStation', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '中转外包公司', width: 120, field: 'rouSelection', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '中转起始点', field: 'changeStart', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '中转花费', width: 120, field: 'changeFee', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '中转外包公司', field: 'rouSelection', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true, editable: true
             },
             {
-              headerName: '合同价格', width: 120, field: 'contractPrice', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '中转花费', field: 'changeFee', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '外包企业联系人', width: 120, field: 'lineNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '合同价格', field: 'contractPrice', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true, editable: true
             },
             {
-              headerName: '外包企业联系电话', width: 120, field: 'lineTel', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '外包企业联系人', width: 140, field: 'lineNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '发货人姓名', width: 120, field: 'shipNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '外包企业联系电话', width: 150, field: 'lineTel', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '收货人姓名', width: 120, field: 'receNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '发货人姓名', field: 'shipNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '货物名称', width: 120, field: 'goodsNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '收货人姓名', field: 'receNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '包装', field: 'package', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '货物名称', field: 'goodsNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '件数', field: 'goodsNums', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '包装', field: 'package', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '重量', field: 'goodsWeight', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '件数', field: 'goodsNums', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '体积', field: 'goodsVolumn', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '重量', field: 'goodsWeight', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '备注', field: 'orderNote', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '体积', field: 'goodsVolumn', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '操作', field: 'operate', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true, cellRendererFramework: 'operateComponent', pinned: 'right'
+              headerName: '备注', field: 'orderNote', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '操作', field: 'operate', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true, cellRendererFramework: 'operateComponent', pinned: 'right'
             }
           ]
         },
@@ -315,6 +300,7 @@
         editVisible: false // 编辑中转列表信息的弹框表单
       }
     },
+
     // 实例组件
     components: {
       ElFormItem,
@@ -326,13 +312,15 @@
         methods: {
           // 点击发车按钮，进行操作
           depart () {
+            console.log(this)
             let self = this.params.context.componentParent
-            console.log(self)
             self.departVisible = true
           },
+          // 点击编辑按钮之后，弹出单元格的数据编辑
           edit () {
-            let self = this.params.context.componentParent
-            self.editVisible = true
+//            console.log(this.params.context.componentParent.$children[6])
+//            console.log(this.params.context.componentParent.$children[6].gridOptions.columnDefs[7].editable)
+//            let rawData = this.params.context.componentParent.$children[6]
           }
         }
       }
@@ -340,38 +328,50 @@
 
     // 实例方法
     methods: {
+      // 点击确认中转 按钮
+      transfer (orderId) {
+        this.departVisible = false
+      },
+
       // 订单详情弹框
       detailDoubleClick (event) {
         console.log(event.data.orderId)
         this.orderId = event.data.orderId
         this.detailVisible = true
       },
+
       // 改变每页显示的个数
       handleSizeChange (val) {
         this.pageSize = val
         this.getOrderList()
       },
+
       // 点击当前选中的第几页
       handleCurrentChange (val) {
         this.currentpage = val
         this.getOrderList()
       },
+
       // 点击查询的Icon，进行查询
       handleIconClick (input) {
         this.getQueryData()
       },
+
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
       },
+
       changeColumnDefsBoolen () {
         var columnlist = this.gridOptions.columnDefs
         for (let i = 0; i < columnlist.length; i++) {
           columnlist[i].hide = !columnlist[i].hide
         }
       },
+
       setting () {
         this.colVisible = true
       },
+
       // 点击设置按钮之后，显示需要弹出的属性名列表，选择checkbox属性
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
@@ -379,6 +379,7 @@
           this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
         }
       },
+
       // 全选  与  全不选 执行函数
       visibleChoice (i) {
         if (i === 1) {
@@ -392,6 +393,7 @@
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
       },
+
       // 获取订单列表
       getOrderList () {
         let para = {
@@ -414,6 +416,7 @@
         })
         return null
       },
+
       // 获取查询数据
       getQueryData () {
         let para = {
@@ -430,6 +433,7 @@
         })
       }
     },
+
     // 挂载元素完毕，自执行函数
     mounted () {
       this.getOrderList()
@@ -438,6 +442,7 @@
 </script>
 
 <style scoped>
+
   .el-select-css {
     width: 50%;
   }
@@ -452,4 +457,5 @@
     padding: 5px 10px;
     font-size: 10px
   }
+
 </style>

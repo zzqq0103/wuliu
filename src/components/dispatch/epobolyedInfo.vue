@@ -23,7 +23,7 @@
         <div style="float:left;">
 
           <el-input placeholder="请输入查询数据" icon="search" v-on:keyup.enter="getQueryData" v-model="queryName" :on-icon-click="handleIconClick" style="width:170px;"></el-input>
-          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
+          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:140px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -114,26 +114,26 @@
         colVisible: false, // 设置弹窗的显示boolean值
         orderId: '', // 运单号
         tableForm: {
-          'id': '',
-          'orderId': '',
-          'orderTim': '',
-          'arrStation': '',
-          'changeStart': '',
-          'rouSelection': '',
-          'changeFee': '',
-          'contractPrice': '',
-          'lineNam': '',
-          'lineTel': '',
-          'shipNam': '',
-          'receNam': '',
-          'goodsNam': '',
-          'package': '',
-          'goodsNums': '',
-          'goodsWeight': '',
-          'goodsVolumn': '',
-          'orderNote': ''
+          'id': '', // 序号
+          'orderId': '', // 订单号
+          'orderTim': '', // 订单时间
+          'shipNam': '', // 发货人姓名
+          'receNam': '', // 收货人姓名
+          'arrStation': '', // 到站
+          'goodsNam': '', // 货物名称
+          'goodsNums': '', // 件数
+          'goodsWeight': '', // 重量
+          'goodsVolumn': '', // 体积
+          'package': '', // 包装
+          'rouSelection': '', // 线路选择
+          'changeStart': '', // 中转起始地
+          'changeFee': '', // 中转费
+          'orderNote': '', // 订单备注
+          'lineTel': '', // 外包企业线路账号（联系方式）
+          'lineNam': '', // 联系人
+          'contractPrice': '' // 合同价格
         },
-        rules: {}, //
+        rules: {},
         formLabelWidth: '120px',
         // Ag-grid 表格组件的data
         gridOptions: {
@@ -148,12 +148,6 @@
             {
               headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
-            // {
-            //   headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            // },
-            // {
-            //   headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false, filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            // },
             {
               headerName: '开单时间', width: 120, field: 'orderTim', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
@@ -173,10 +167,10 @@
               headerName: '合同价格', width: 120, field: 'contractPrice', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '外包企业联系人', width: 120, field: 'lineNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '外包企业联系人', width: 140, field: 'lineNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '外包企业联系电话', width: 120, field: 'lineTel', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '外包企业联系电话', width: 150, field: 'lineTel', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '发货人姓名', width: 120, field: 'shipNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -289,8 +283,7 @@
       'ag-grid-vue': AgGridVue,
       OrderDetails
     },
-
-    // 实例方法
+// 实例方法
     methods: {
       // 订单详情弹框
       detailDoubleClick (event) {
@@ -384,13 +377,15 @@
     },
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getOrderList()
+      this.$nextTick(function () {
+        this.getOrderList()
+      })
     }
   }
 </script>
-<style scoped>
 
-  .el-select-css {
+<style scoped>
+.el-select-css {
     width: 50%;
   }
   .del-but {
