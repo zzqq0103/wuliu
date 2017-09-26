@@ -6,13 +6,31 @@
     <!--表格上方操作区域-->
     <div>
       <div style="float: right">
-        <el-button @click="drawGrid(1)">提取</el-button>
+        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)"
+                           style="float: left;width: 180px">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+        <el-button v-popover:popover1>设置</el-button>
+        <el-button>导出</el-button>
+
       </div>
       <!--第一行左侧按钮-->
       <div>
         <el-form :model="filterForm" ref="filterForm" :inline="true" class="filterForm">
           <el-form-item label="订单时间:">
-            <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+            <el-date-picker v-model="filterForm.dateInterval" type="daterange" placeholder="选择日期范围"
                             :picker-options="pickerOptions" range-separator='/' style="width: 200px">
             </el-date-picker>
           </el-form-item>
@@ -36,36 +54,19 @@
             </el-select>
           </el-form-item>
           <el-form-item label="类型:">
-            <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px">
+            <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px" @change="typeChange(1)">
               <el-option label="现付" value="nowPay"></el-option>
               <el-option label="到付" value="cashOnDelivery"></el-option>
               <el-option label="欠付" value="inArrears"></el-option>
               <el-option label="月结" value="monthly"></el-option>
             </el-select>
           </el-form-item>
+          <el-button @click="drawGrid(1)">提取</el-button>
         </el-form>
       </div>
       <!--第二行开始-->
       <div style="float: right">
         <!--<el-button @click="setting">设置</el-button>-->
-        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-          <template v-for="(collist,i) in gridOptions.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)"
-                           style="float: left;width: 180px">
-                {{collist.headerName}}
-              </el-checkbox>
-            </div>
-          </template>
-          <template>
-            <div class="colVisible">
-              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
-            </div>
-          </template>
-        </el-popover>
-        <el-button v-popover:popover1>设置</el-button>
-        <el-button>导出</el-button>
         <el-button @click="verification">开始核销</el-button>
       </div>
       <!--判断当前需要显示的label-->
@@ -157,7 +158,7 @@
                 <el-button v-popover:popover2>设置</el-button>
               </div>
               <el-form-item label="类型:">
-                <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px" @change="typeChange()">
+                <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px" @change="typeChange(2)">
                   <el-option label="现付" value="nowPay"></el-option>
                   <el-option label="到付" value="cashOnDelivery"></el-option>
                   <el-option label="欠付" value="inArrears"></el-option>
@@ -414,6 +415,13 @@
               visible: true
             },
             {
+              headerName: '付款方式',
+              width: 150,
+              field: 'payType',
+              hide: false,
+              visible: true
+            },
+            {
               headerName: '现付金额',
               width: 100,
               field: 'feeMoney',
@@ -607,6 +615,13 @@
               visible: true
             },
             {
+              headerName: '付款方式',
+              width: 150,
+              field: 'payType',
+              hide: false,
+              visible: true
+            },
+            {
               headerName: '现付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
             }
           ],
@@ -742,6 +757,13 @@
               width: 100,
               field: 'changeFee',
               filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '付款方式',
+              width: 150,
+              field: 'payType',
               hide: false,
               visible: true
             },
@@ -916,14 +938,14 @@
           const payType = this.filterForm.payType
 //          const lenth = (this.gridOptions.columnDefs.length - 1)
           if (payType === 'nowPay') {
-            // 修改现付，到付，欠付，月结，16是手动计算的
-            this.gridOptions.columnDefs[16] = this.newadditionalColumnDefs.nowPay
+            // 修改现付，到付，欠付，月结，17是手动计算的
+            this.gridOptions.columnDefs[17] = this.newadditionalColumnDefs.nowPay
           } else if (payType === 'cashOnDelivery') {
-            this.gridOptions.columnDefs[16] = this.newadditionalColumnDefs.cashOnDelivery
+            this.gridOptions.columnDefs[17] = this.newadditionalColumnDefs.cashOnDelivery
           } else if (payType === 'inArrears') {
-            this.gridOptions.columnDefs[16] = this.newadditionalColumnDefs.inArrears
+            this.gridOptions.columnDefs[17] = this.newadditionalColumnDefs.inArrears
           } else if (payType === 'monthly') {
-            this.gridOptions.columnDefs[16] = this.newadditionalColumnDefs.monthly
+            this.gridOptions.columnDefs[17] = this.newadditionalColumnDefs.monthly
           }
           this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
         } else if (i === 2) {
@@ -949,10 +971,12 @@
 //        console.log(this.gridOptions.columnDefs)
       },
       // 核销界面，提取库存时，修改类型，清空表格数据
-      typeChange () {
-        this.updateGrid(2)
+      typeChange (i) {
+        this.updateGrid(i)
+        this.gridOptions.rowData = []
         this.gridOptions2.rowData = []
         this.gridOptions3.rowData = []
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
         this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
         this.gridOptions3.api.setRowData(this.gridOptions3.rowData)
       },

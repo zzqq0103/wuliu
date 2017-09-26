@@ -7,7 +7,24 @@
     <div>
       <!--第一行右侧按钮-->
       <div style="float: right">
-        <el-button @click="drawGrid(1)">提取</el-button>
+        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)"
+                           style="float: left;width: 180px">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+        <el-button v-popover:popover1>设置</el-button>
+        <el-button>导出</el-button>
       </div>
       <!--第一行左侧按钮-->
       <div>
@@ -36,29 +53,11 @@
               <el-option label="已核销" value="completed"></el-option>
             </el-select>
           </el-form-item>
+          <el-button @click="drawGrid(1)">提取</el-button>
         </el-form>
       </div>
       <!--第二行开始-->
       <div style="float: right">
-        <!--<el-button @click="setting">设置</el-button>-->
-        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-          <template v-for="(collist,i) in gridOptions.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)"
-                           style="float: left;width: 180px">
-                {{collist.headerName}}
-              </el-checkbox>
-            </div>
-          </template>
-          <template>
-            <div class="colVisible">
-              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
-            </div>
-          </template>
-        </el-popover>
-        <el-button v-popover:popover1>设置</el-button>
-        <el-button>导出</el-button>
         <el-button @click="verification">开始核销</el-button>
       </div>
       <!--回单押款合计-->
@@ -139,7 +138,6 @@
               <el-form-item label="发货方:">
                 <el-input v-model="filterForm.shipNam" style="width: 100px"></el-input>
               </el-form-item>
-
             </div>
           </el-form>
           <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
@@ -347,6 +345,14 @@
               headerName: '核销网点', width: 150, field: 'veriSite', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
+              headerName: '备注',
+              width: 150,
+              field: 'trilNote',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
               headerName: '支付方式', width: 150, field: 'payMode', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
@@ -405,7 +411,7 @@
               headerName: '发货方', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true
+              headerName: '收货方', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true
             },
             {
               headerName: '开单客服', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true

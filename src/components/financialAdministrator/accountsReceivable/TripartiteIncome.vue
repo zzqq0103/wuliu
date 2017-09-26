@@ -7,7 +7,24 @@
     <div>
       <!--第一行右侧按钮-->
       <div style="float: right">
-        <el-button @click="drawGrid(1)">提取</el-button>
+        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)"
+                           style="float: left;width: 180px">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+        <el-button v-popover:popover1>设置</el-button>
+        <el-button>导出</el-button>
       </div>
       <!--第一行左侧按钮-->
       <div>
@@ -44,29 +61,12 @@
               <el-option label="已核销" value="completed"></el-option>
             </el-select>
           </el-form-item>
+          <el-button @click="drawGrid(1)">提取</el-button>
         </el-form>
       </div>
       <!--第二行开始-->
       <div style="float: right">
         <!--<el-button @click="setting">设置</el-button>-->
-        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-          <template v-for="(collist,i) in gridOptions.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)"
-                           style="float: left;width: 180px">
-                {{collist.headerName}}
-              </el-checkbox>
-            </div>
-          </template>
-          <template>
-            <div class="colVisible">
-              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
-            </div>
-          </template>
-        </el-popover>
-        <el-button v-popover:popover1>设置</el-button>
-        <el-button>导出</el-button>
         <el-button @click="verification">开始核销</el-button>
       </div>
       <!--判断当前需要显示的label-->
@@ -443,6 +443,13 @@
               filterFramework: PartialMatchFilterComponent
             },
             {
+              headerName: '付款方式',
+              width: 150,
+              field: 'payType',
+              hide: false,
+              visible: true
+            },
+            {
               headerName: '现付金额',
               width: 100,
               field: 'feeMoney',
@@ -548,6 +555,13 @@
               visible: true
             },
             {
+              headerName: '付款方式',
+              width: 150,
+              field: 'payType',
+              hide: false,
+              visible: true
+            },
+            {
               headerName: '现付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
             }
           ],
@@ -594,6 +608,13 @@
               width: 150,
               field: 'salesmanId',
               filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '付款方式',
+              width: 150,
+              field: 'payType',
               hide: false,
               visible: true
             },
@@ -783,13 +804,13 @@
         if (i === 1) {
           const payType = this.filterForm.payType
           if (payType === 'nowPay') {
-            this.gridOptions.columnDefs[13] = this.newadditionalColumnDefs.nowPay
+            this.gridOptions.columnDefs[14] = this.newadditionalColumnDefs.nowPay
           } else if (payType === 'cashOnDelivery') {
-            this.gridOptions.columnDefs[13] = this.newadditionalColumnDefs.cashOnDelivery
+            this.gridOptions.columnDefs[14] = this.newadditionalColumnDefs.cashOnDelivery
           } else if (payType === 'inArrears') {
-            this.gridOptions.columnDefs[13] = this.newadditionalColumnDefs.inArrears
+            this.gridOptions.columnDefs[14] = this.newadditionalColumnDefs.inArrears
           } else if (payType === 'monthly') {
-            this.gridOptions.columnDefs[13] = this.newadditionalColumnDefs.monthly
+            this.gridOptions.columnDefs[14] = this.newadditionalColumnDefs.monthly
           }
           this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
         } else if (i === 2) {
