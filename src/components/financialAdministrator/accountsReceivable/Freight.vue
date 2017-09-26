@@ -1188,7 +1188,6 @@
     },
     // 数据发生更新时
     updated () {
-      console.log('update')
       this.calculateMoney
     }
   }

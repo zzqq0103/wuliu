@@ -156,11 +156,11 @@
           <el-form :model="filterForm" ref="filterForm" :inline="true">
             <div style="float: right">
               <el-button @click="drawGrid(2)">提取库存</el-button>
-              <el-popover ref="popover2" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+              <el-popover ref="popover2" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                 <template v-for="(collist,i) in gridOptions2.columnDefs">
                   <div class="colVisible">
                     <el-checkbox v-model="collist.visible"
-                                 @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)">
+                                 @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)" style="float: left;width: 180px">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
@@ -178,7 +178,7 @@
               <el-form-item label="运单号:">
                 <el-input v-model="filterForm.orderId" style="width: 150px"></el-input>
               </el-form-item>
-              <el-form-item label="发货人:">
+              <el-form-item label="发货方:">
                 <el-input v-model="filterForm.shipNam" style="width: 150px"></el-input>
               </el-form-item>
             </div>
@@ -208,10 +208,10 @@
           <el-form>
             <el-form-item>
               <el-button @click="confirmSubmit">确认核销</el-button>
-              <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+              <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                 <template v-for="(collist,i) in gridOptions3.columnDefs">
                   <div class="colVisible">
-                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)">
+                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)" style="float: left;width: 180px">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
@@ -347,7 +347,7 @@
               visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '发货方',
               width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
@@ -355,7 +355,7 @@
               visible: true
             },
             {
-              headerName: '发货人联系方式',
+              headerName: '发货方联系方式',
               width: 150,
               field: 'shipTel',
               filterFramework: PartialMatchFilterComponent,
@@ -363,7 +363,7 @@
               visible: true
             },
             {
-              headerName: '收货人',
+              headerName: '收货方',
               width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
@@ -371,7 +371,7 @@
               visible: true
             },
             {
-              headerName: '收货人联系方式',
+              headerName: '收货方联系方式',
               width: 150,
               field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
@@ -627,7 +627,7 @@
               visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '发货方',
               width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
@@ -635,7 +635,7 @@
               visible: true
             },
             {
-              headerName: '发货人联系方式',
+              headerName: '发货方联系方式',
               width: 150,
               field: 'shipTel',
               filterFramework: PartialMatchFilterComponent,
@@ -643,7 +643,7 @@
               visible: true
             },
             {
-              headerName: '收货人',
+              headerName: '收货方',
               width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
@@ -651,7 +651,7 @@
               visible: true
             },
             {
-              headerName: '收货人联系方式',
+              headerName: '收货方联系方式',
               width: 150,
               field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
@@ -907,7 +907,7 @@
               visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '发货方',
               width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
@@ -915,7 +915,7 @@
               visible: true
             },
             {
-              headerName: '发货人联系方式',
+              headerName: '发货方联系方式',
               width: 150,
               field: 'shipTel',
               filterFramework: PartialMatchFilterComponent,
@@ -923,7 +923,7 @@
               visible: true
             },
             {
-              headerName: '收货人',
+              headerName: '收货方',
               width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
@@ -931,7 +931,7 @@
               visible: true
             },
             {
-              headerName: '收货人联系方式',
+              headerName: '收货方联系方式',
               width: 150,
               field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
