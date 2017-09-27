@@ -7,8 +7,6 @@
     <div>
       <!--第一行右侧按钮-->
       <div style="float: right">
-        <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
-        <!--<el-button @click="setting">设置</el-button>-->
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
             <div class="colVisible">
@@ -32,7 +30,7 @@
       <div>
         <el-form :model="filterForm" ref="filterForm" :inline="true">
           <el-form-item label="订单时间:">
-            <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+            <el-date-picker v-model="filterForm.dateInterval" type="daterange" placeholder="选择日期范围"
                             :picker-options="pickerOptions" range-separator='/' style="width: 200px">
             </el-date-picker>
           </el-form-item>
@@ -49,8 +47,14 @@
               <el-option label="全部" value="all"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="发货人;">
+          <el-form-item label="发货方;">
             <el-input v-model="filterForm.shipNam" style="width: 100px"></el-input>
+          </el-form-item>
+          <el-form-item label="审核状态:">
+            <el-select v-model="filterForm.auditState" style="width: 100px" clearable>
+              <el-option label="未审核" value="uncompleted"></el-option>
+              <el-option label="已审核" value="completed"></el-option>
+            </el-select>
           </el-form-item>
           <el-button @click="drawGrid(1)">提取</el-button>
         </el-form>
@@ -81,9 +85,6 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
-                   :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
                    :headerHeight=40
@@ -154,8 +155,9 @@
     <!--
     --审核界面
     -->
-    <el-dialog title="财务总账审核" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
-      <el-row :gutter="20">
+    <el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+      <h2 style='text-align:center;margin-top:-2%'>财务总账审核</h2>
+      <el-row :gutter="20" style="margin-top: 2%">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
             <div>
@@ -184,7 +186,7 @@
               <el-form-item label="运单号:">
                 <el-input v-model="filterForm.orderId" style="width: 150px"></el-input>
               </el-form-item>
-              <el-form-item label="发货人:">
+              <el-form-item label="发货方:">
                 <el-input v-model="filterForm.shipNam" style="width: 100px"></el-input>
               </el-form-item>
             </div>
@@ -193,16 +195,13 @@
             <el-button @click="leftSelect"> > </el-button>
             <el-button @click="leftSelectAll"> >> </el-button>
           </div>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged2" style="width: 200px"></el-input>
+          <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
           <!--未核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions2"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
                          :headerHeight=40
@@ -239,16 +238,12 @@
           </el-form>
           <el-button @click="rightSelect"> < </el-button>
           <el-button @click="rightSelectAll"> << </el-button>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
           <!--待核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions3"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
                          :headerHeight=40
@@ -325,7 +320,7 @@
               visible: true
             },
             {
-              headerName: '收入',
+              headerName: '应收',
               width: 100,
               field: 'income',
               filterFramework: PartialMatchFilterComponent,
@@ -333,7 +328,7 @@
               visible: true
             },
             {
-              headerName: '支出',
+              headerName: '应支',
               width: 100,
               field: 'expense',
               filterFramework: PartialMatchFilterComponent,
@@ -341,10 +336,54 @@
               visible: true
             },
             {
-              headerName: '结余',
+              headerName: '盈利',
               width: 100,
               field: 'profit',
               filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '现收',
+              width: 100,
+              field: 'actualIncome',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '现支',
+              width: 100,
+              field: 'actualExpense',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '账面余额',
+              width: 100,
+              field: 'balance',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '发站',
+              width: 100,
+              field: 'startStation',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '到站',
+              width: 100,
+              field: 'arrStation',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '审核状态',
+              width: 100,
+              field: 'auditState',
               hide: false,
               visible: true
             },
@@ -386,7 +425,15 @@
               visible: true
             },
             {
-              headerName: '收入',
+              headerName: '运单号',
+              width: 150,
+              field: 'orderId',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '应收',
               width: 100,
               field: 'income',
               filterFramework: PartialMatchFilterComponent,
@@ -394,7 +441,7 @@
               visible: true
             },
             {
-              headerName: '支出',
+              headerName: '应支',
               width: 100,
               field: 'expense',
               filterFramework: PartialMatchFilterComponent,
@@ -402,10 +449,54 @@
               visible: true
             },
             {
-              headerName: '结余',
+              headerName: '盈利',
               width: 100,
               field: 'profit',
               filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '现收',
+              width: 100,
+              field: 'actualIncome',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '现支',
+              width: 100,
+              field: 'actualExpense',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '账面余额',
+              width: 100,
+              field: 'balance',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '发站',
+              width: 100,
+              field: 'startStation',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '到站',
+              width: 100,
+              field: 'arrStation',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '审核状态',
+              width: 100,
+              field: 'auditState',
               hide: false,
               visible: true
             },
@@ -455,7 +546,7 @@
               visible: true
             },
             {
-              headerName: '收入',
+              headerName: '应收',
               width: 100,
               field: 'income',
               filterFramework: PartialMatchFilterComponent,
@@ -463,7 +554,7 @@
               visible: true
             },
             {
-              headerName: '支出',
+              headerName: '应支',
               width: 100,
               field: 'expense',
               filterFramework: PartialMatchFilterComponent,
@@ -471,10 +562,54 @@
               visible: true
             },
             {
-              headerName: '结余',
+              headerName: '盈利',
               width: 100,
               field: 'profit',
               filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '现收',
+              width: 100,
+              field: 'actualIncome',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '现支',
+              width: 100,
+              field: 'actualExpense',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '账面余额',
+              width: 100,
+              field: 'balance',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '发站',
+              width: 100,
+              field: 'startStation',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '到站',
+              width: 100,
+              field: 'arrStation',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '审核状态',
+              width: 100,
+              field: 'auditState',
               hide: false,
               visible: true
             },
@@ -556,12 +691,14 @@
         },
         // 定义筛选条件
         filterForm: {
-          startTime: '', // 开始时间
-          endTime: '', // 截止时间
+          dateInterval: '', // 时间间隔
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          shipNam: '', //  发货人
-          orderId: '' // 运单号
+          shipNam: '', //  发货方
+          orderId: '', // 运单号
+          auditState: '', // 审核状态
+          pageNum: 1, // 当前页码数
+          pageSize: 20 // 分页大小
         },
         // 各种费用合计
         totalForm: {
@@ -694,7 +831,7 @@
           endTime: '', // 截止时间
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          shipNam: '', //  发货人
+          shipNam: '', //  发货方
           orderId: '' // 运单号
         }
         this.verVisible = true
