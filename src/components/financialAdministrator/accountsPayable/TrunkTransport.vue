@@ -299,9 +299,6 @@
         <el-form-item v-if="oilShow" label="油卡号:">
           <el-input v-model="confirmSubForm.oilCard" id="oId" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item v-if="oilShow" label="油卡金额:">
-          <el-input v-model="confirmSubForm.oilCardMoney" style="width: 50%"></el-input>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="confirmSubVisible = false">取 消</el-button>
