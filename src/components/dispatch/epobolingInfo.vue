@@ -3,14 +3,14 @@
   <div>
       <div id="top">
 
-      <!-- 标题 -->
-      <h2 style="text-align:center">待 中 转 订 单 信 息 页</h2>
+          <!-- 标题 -->
+          <h2 style="text-align:center">待 中 转 订 单 信 息 页</h2>
 
-      <!-- 操作栏 -->
-      <div style="margin-top:2%">
+          <!-- 操作栏 -->
+          <div style="margin-top:2%">
 
-        <!-- 日期选择器 -->
-        <div class="block" style="float:right;">
+          <!-- 日期选择器 -->
+          <div class="block" style="float:right;">
           <el-date-picker
             v-model="dateValue"
             type="daterange"
@@ -20,16 +20,16 @@
           </el-date-picker>
         </div>
 
-        <!-- 查询 & 设置 -->
-        <div style="float:left;">
+          <!-- 查询 & 设置 -->
+          <div style="float:left;">
 
-          <el-input placeholder="请输入查询数据" icon="search" v-model="queryName" :on-icon-click="handleIconClick" style="width:170px;"></el-input>
-          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:140px;">
-            <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
+              <el-input placeholder="请输入查询数据" icon="search" v-model="queryName" :on-icon-click="handleIconClick" style="width:170px;"></el-input>
+              <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:140px;">
+                  <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+              </el-select>
 
-          <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
+              <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
             <div class="colVisible">
@@ -54,7 +54,7 @@
         </div>
 
       </div>
-    </div>
+       </div>
 
       <!-- 清除浮动 -->
       <div style="clear: both;">
@@ -100,8 +100,77 @@
           <h2 style="padding:30px">您确认中转吗？</h2>
           <div slot="footer" class="dialog-footer">
             <el-button @click="departVisible = false">取 消</el-button>
-            <el-button @click="transfer('')" type="danger">确 定</el-button>
+            <el-button @click="transfer" type="danger">确 定</el-button>
           </div>
+      </el-dialog>
+
+      <!--编辑待中转订单信息，只能修改合同价格 和 外包公司， 外包公司和 外包联系人需要做一个级联-->
+      <el-dialog title="编辑" :visible.sync="editFormVisible" size="tiny" :close-on-click-modal="false" :close-on-press-escape="false" top="5%">
+        <el-form :model="tableForm">
+          <el-form-item label="订单号:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.orderId"  :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="开单时间:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.orderTim"  :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="到站点:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.arrStation"  :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="中转起始点:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.changeStart"  :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="中转外包公司:" :label-width="formLabelWidth">
+            <el-select v-model="selectEpolyComp" filterable placeholder="请选择中转外包公司">
+              <el-option
+                v-for="item in selectEpolyCompsOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="合同价格:" :label-width="formLabelWidth">
+            <el-input v-model="comtract_Price" ></el-input>
+          </el-form-item>
+          <el-form-item label="外包联系人:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.lineNam"  :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="外包联系电话:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.lineTel"  :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="中转花费:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.changeFee"  :disabled="true" ></el-input>
+          </el-form-item>
+          <el-form-item label="发货人姓名:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.shipNam" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="收货人姓名:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.receNam" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="货物名称:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.goodsNam" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="包装:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.package" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="件数:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.goodsNums" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="重量:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.goodsWeight" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="体积:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.goodsVolumn" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="备注:" :label-width="formLabelWidth">
+            <el-input v-model="tableForm.orderNote" :disabled="true"></el-input>
+          </el-form-item>
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="editFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="editEpolyForm">确 定</el-button>
+        </div>
       </el-dialog>
 
 </div>
@@ -121,10 +190,15 @@
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   import ElForm from '../../../node_modules/element-ui/packages/form/src/form'
   import ElFormItem from '../../../node_modules/element-ui/packages/form/src/form-item'
+  import ElDialog from '../../../node_modules/element-ui/packages/dialog/src/component'
+  import ElOption from '../../../node_modules/element-ui/packages/select/src/option'
 
   export default {
     data () {
       return {
+        selectEpolyComp: '',
+        selectEpolyCompsOptions: [],
+        editFormVisible: false, // 编辑待中转弹窗的显示与否
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
@@ -142,7 +216,7 @@
           'goodsWeight': '', // 重量
           'goodsVolumn': '', // 体积
           'package': '', // 包装
-          'rouSelection': '', // 线路选择
+          'rouSelection': '', // 中转外包公司
           'changeStart': '', // 中转起始地
           'changeFee': '', // 中转费
           'orderNote': '', // 订单备注
@@ -150,7 +224,7 @@
           'lineNam': '', // 联系人
           'contractPrice': '' // 合同价格
         },
-        rules: {}, //
+        rules: {},
         formLabelWidth: '120px',
         // Ag-grid 表格组件的data
         gridOptions: {
@@ -158,6 +232,7 @@
             componentParent: this
           },
           rowData: null,
+          rowSelection: 'single',
           columnDefs: [
             {
               headerName: '序号', field: 'id', suppressMenu: true, hide: false, visible: true
@@ -175,13 +250,13 @@
               headerName: '中转起始点', field: 'changeStart', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '中转外包公司', field: 'rouSelection', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true, editable: true
+              headerName: '中转外包公司', field: 'rouSelection', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '中转花费', field: 'changeFee', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '合同价格', field: 'contractPrice', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true, editable: true
+              headerName: '合同价格', field: 'contractPrice', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '外包企业联系人', width: 140, field: 'lineNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -303,6 +378,8 @@
 
     // 实例组件
     components: {
+      ElOption,
+      ElDialog,
       ElFormItem,
       ElForm,
       'ag-grid-vue': AgGridVue,
@@ -310,32 +387,53 @@
       operateComponent: {
         template: '<span style="margin-left:5px;"><el-button  class="del-but" @click="edit" type="success" size="mini">编辑</el-button> <el-button  class="del-but" @click="depart" type="danger" size="mini">确认中转</el-button></span>',
         methods: {
-          // 点击发车按钮，进行操作
+          // 点击发车按钮，显示确认弹框，之后在弹框中将该行数据转移至已中转的页面中显示。
           depart () {
             console.log(this)
             let self = this.params.context.componentParent
+            console.log('所选中的行数据:')
             self.departVisible = true
           },
           // 点击编辑按钮之后，弹出单元格的数据编辑
           edit () {
-//            console.log(this.params.context.componentParent.$children[6])
-//            console.log(this.params.context.componentParent.$children[6].gridOptions.columnDefs[7].editable)
-//            let rawData = this.params.context.componentParent.$children[6]
+            let self = this.params.context.componentParent
+            self.editFormVisible = true
+            self.tableForm = this.params.data
           }
         }
       }
     },
-
+    computed: {
+      comtract_Price () {
+        return this.tableForm.contractPrice + '元'
+      }
+    },
     // 实例方法
     methods: {
+      // 点击修改表单，确定按钮的操作
+      editEpolyForm () {
+        this.editFormVisible = false
+      },
+
+      message (result) {
+        this.$message({
+          message: `订单号：  ${result}    的订单，中转成功！`,
+          type: 'success',
+          duration: 1500
+        })
+      },
+
       // 点击确认中转 按钮
-      transfer (orderId) {
+      transfer () {
+        console.log(this)
+        let selected = this.gridOptions.api.getSelectedRows()
+        var res = this.gridOptions.api.updateRowData({remove: selected})
         this.departVisible = false
+        this.message(res.remove[0].data.orderId)
       },
 
       // 订单详情弹框
       detailDoubleClick (event) {
-        console.log(event.data.orderId)
         this.orderId = event.data.orderId
         this.detailVisible = true
       },
@@ -431,20 +529,49 @@
           this.totalpages = res.data.totalpages
           this.listLoading = false
         })
+      },
+
+      // 获取服务端的外包公司数据
+      loadEpolyComp () {
+        return [
+          {
+            'value': '1',
+            'label': '北京安特国际物流公司'
+          },
+          {
+            'value': '2',
+            'label': '北京安特国际物流公司海淀分公司'
+          },
+          {
+            'value': '3',
+            'label': '北京安特国际物流公司大兴分公司'
+          },
+          {
+            'value': '4',
+            'label': '北京安特国际物流公司昌平分公司'
+          }
+        ]
       }
     },
 
     // 挂载元素完毕，自执行函数
     mounted () {
       this.getOrderList()
+      this.selectEpolyCompsOptions = this.loadEpolyComp()
     }
   }
 </script>
 
 <style scoped>
 
+  .el-form-item__label{
+    text-align: center;
+  }
   .el-select-css {
     width: 50%;
+  }
+  .el-input{
+    color:black !important;
   }
   .del-but {
     cursor: pointer;
@@ -455,7 +582,22 @@
     border: 1px solid rgb(191, 217, 216);
     color: rgb(31, 61, 60);
     padding: 5px 10px;
-    font-size: 10px
+    font-size: 0.99em;
+    margin-top: 4px !important;
   }
-
+  .el-select{
+    width:85%;
+  }
+  .el-form-item__content{
+    margin-left: 130px;
+  }
+  .el-form-item__label{
+    width: 140px !important;
+  }
+  .el-form-item{
+    margin-bottom:10px;
+  }
+  .el-input{
+    width:85%;
+  }
 </style>

@@ -141,6 +141,7 @@
             componentParent: this
           },
           rowData: null,
+          rowSelection: 'single',
           columnDefs: [
             {
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
@@ -385,7 +386,7 @@
 </script>
 
 <style scoped>
-.el-select-css {
+  .el-select-css {
     width: 50%;
   }
   .del-but {
@@ -397,6 +398,7 @@
     border: 1px solid rgb(191, 217, 216);
     color: rgb(31, 61, 60);
     padding: 5px 10px;
-    font-size: 10px
+    font-size: 10px;
+
   }
 </style>
