@@ -1,29 +1,32 @@
 <template>
   <div>
     <div style="text-align: center;margin：10px">
-      <h2>入库信息</h2>
+      <h2>长途入库</h2>
     </div>
     <!--表格筛选区域-->
-    <div style='margin-top:2%;font-size:15px'>
-        <el-form :model="filterForm1" ref="filterForm1">
-          <!--<span style='float:left;padding:0.6% 1% 0% 0%'>发车时间：</span>
-          <el-form-item prop="startTime" style='float:left;width:13%'>
-              <el-date-picker type="datetime" placeholder="1" v-model="filterForm1.departTimStart"
-                              style="width:100%"></el-date-picker>
+    <div>
+        <el-form v-model="filterForm1" ref="filterForm1" style='margin-top:20px' :inline="true">
+          <el-form-item label="发车时间：">
+            <el-date-picker v-model="filterForm1.departTimStart" type="daterange" placeholder="选择日期范围"
+                            :picker-options="pickerOptions" range-separator='/' style="width: 200px">
+            </el-date-picker>
           </el-form-item>
-          <span style='float:left;padding:0.8% 1% 0% 1%'>到</span>
-          <el-form-item prop="endTime" style='float:left;width:13%'>
-              <el-date-picker type="datetime" placeholder="2" v-model="filterForm1.departTimEnd"
-                              style="width:100%"></el-date-picker>
-          </el-form-item>-->
-          <span style='float:left;padding:0.6% 1% 0% 0%'>发车时间：</span>
-          <el-date-picker v-model="filterForm1.departTimEnd" type="daterange" placeholder="选择日期范围"
-                            :picker-options="pickerOptions" range-separator='/' style='float:left;width:200px'>
-          </el-date-picker>
-          <!-- <el-form-item label="司机姓名：" style="float:left;width:25%">
-            <el-input v-model="filterForm1.driverNam" style="width:65%"></el-input>
-          </el-form-item> -->
-
+          <el-form-item label="始发站：">
+            <el-select style='width:100px' v-model="filterForm1.startStation">
+              <el-option v-for="item in initForm.startStationList" :value="item" :label="item" :key="item"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="装载单号：">
+            <el-input v-model="filterForm1.loadingId" placeholder="输入装载号" style="width: 150px"></el-input>
+          </el-form-item>
+          <el-form-item label="装载单状态：">
+            <el-select style='width:100px' v-model="filterForm1.loadingState">
+              <el-option value='已发车'></el-option>
+              <el-option value="已到货"></el-option>
+              <el-option value="异常"></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- 设置列 -->
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">
@@ -40,19 +43,10 @@
               </div>
             </template>
           </el-popover>
-          <el-form-item style="float:right;width:5%">
-            <el-button v-popover:popover1>设置</el-button>
-          </el-form-item>
-          <el-form-item style="float:right;width:5%;margin-right:1%">
-            <el-button>导出</el-button>
-          </el-form-item>
-          <el-form-item style="float:right;width:5%;margin-right:1%">
-            <el-button @click="drawGrid(1)">提取</el-button>
-          </el-form-item>
-          <el-form-item style="float:right;width:15%;margin-right:2%">
-            <el-input  placeholder="输入内容进行搜索" @input="onQuickFilterChanged" style="width:100%"></el-input>
-          </el-form-item>
-        </el-form>
+          <el-button v-popover:popover1 style='margin-left:10px;float:right'>设 置</el-button>
+          <el-button style='float:right'>导 出</el-button>
+          <el-button @click="drawGrid(1)" style='float:right'>提 取</el-button>
+       </el-form>
     </div>
     <div style="clear: both;"></div>
     <!--表格-->
@@ -125,115 +119,8 @@
         <el-button type="primary" @click="colVisible3 = false">确 定</el-button>
       </div>
     </el-dialog>
-    <!-- 入库界面 -->
-    <!--<el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
-      <h2 style='text-align:center;margin-top:-2%'>入库更新</h2>
-      <el-form :model="filterForm2" ref="filterForm2" style='margin-top:2%'>
-        <el-form-item label="订单号：" style="float:left;width:23%">
-          <el-input v-model="filterForm2.orderId" style="width:60%"></el-input>
-        </el-form-item>
-        <el-form-item label="发货方：" style="float:left;width:23%">
-          <el-input v-model="filterForm2.shipNam" style="width:65%"></el-input>
-        </el-form-item>
-        <el-form-item label="收货方：" style="float:left;width:23%">
-          <el-input v-model="filterForm1.receNam" style="width:65%"></el-input>
-        </el-form-item>
-        <el-form-item style="float:right;width:5%;margin-right:3%">
-          <el-button @click="drawGrid(2)">提取</el-button>
-        </el-form-item>
-        <el-form-item style="float:left;width:18.5%;clear:left">
-            <el-input placeholder="输入内容进行搜索" @input="onQuickFilterChanged2" style="width:100%"></el-input>
-        </el-form-item>
-
-        <el-popover ref="popover2" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-          <template v-for="(collist,i) in gridOptions2.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)"
-                            style="float: left;width: 180px">
-                {{collist.headerName}}
-              </el-checkbox>
-            </div>
-          </template>
-          <template>
-            <div class="colVisible">
-              <el-button @click="visibleChoice(1,'grid2')" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2,'grid2')" size="small">全不选</el-button>
-            </div>
-          </template>
-        </el-popover>
-        <el-form-item style="float:left;width:5%;margin-left:4%">
-          <el-button v-popover:popover2>设置</el-button>
-        </el-form-item>
-        <el-form-item style="float:left;width:25%;margin-left:15%">
-            <el-button @click="leftSelect"> > </el-button>
-            <el-button @click="leftSelectAll"> >> </el-button>
-            <el-button @click="rightSelect"> < </el-button>
-            <el-button @click="rightSelectAll"> << </el-button>
-        </el-form-item>
-
-
-        <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-          <template v-for="(collist,i) in gridOptions3.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)"
-                            style="float: left;width: 180px">
-                {{collist.headerName}}
-              </el-checkbox>
-            </div>
-          </template>
-          <template>
-            <div class="colVisible">
-              <el-button @click="visibleChoice(1,'grid3')" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2,'grid3')" size="small">全不选</el-button>
-            </div>
-          </template>
-        </el-popover>
-        <el-form-item style="float:right;width:5%;margin-right:3%">
-          <el-button v-popover:popover3>设置</el-button>
-        </el-form-item>
-        <el-form-item style="float:right;width:18.5%;margin-right:4%">
-            <el-input placeholder="输入内容进行搜索" @input="onQuickFilterChanged3" style="width:100%"></el-input>
-        </el-form-item>
-      </el-form>
-      <div style="margin-top: 10px;float:left;width:100%">
-            <ag-grid-vue style="width:48%;height: 550px;display:inline-block;" class="ag-blue"
-                        :gridOptions="gridOptions2"
-                        :suppressMovableColumns="true"
-                        :enableColResize="true"
-                        :enableSorting="true"
-                        :enableFilter="true"
-                        :groupHeaders="true"
-                        :suppressCellSelection="true"
-                        :rowHeight=40
-                        :headerHeight=40
-                        :rowDoubleClicked="leftDoubleClick"
-                        :animateRows="true"
-                        rowSelection="multiple"/>
-            <ag-grid-vue style="display:inline-block;width:48%;margin-left:3%;height: 550px" class="ag-blue"
-                        :gridOptions="gridOptions3"
-                         :suppressMovableColumns="true"
-                         :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
-                         :suppressCellSelection="true"
-                         :rowHeight=40
-                         :headerHeight=40
-                         :rowDoubleClicked="rightDoubleClick"
-                         :animateRows="true"
-                         rowSelection="multiple"/>
-          </div>
-          <div style='text-align:center;clear:both;padding-top:2%'>
-            <el-button @click="confirmSubmit" >确认入库</el-button>
-            <el-button style='margin-left:10%' @click="verVisible = false">取消</el-button>
-          </div>
-    </el-dialog> -->
-
-
-            <!--
-    --入库界面
-    -->
-    <el-dialog title="订单入库" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+    <!--入库界面-->
+    <el-dialog title="订单长途入库" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form :model="filterForm2" ref="filterForm" :inline="true">
@@ -242,6 +129,9 @@
                 <el-date-picker v-model="filterForm2.startTime" type="daterange" placeholder="选择日期范围"
                                   :picker-options="pickerOptions" style='width:200px' range-separator='/'>
                 </el-date-picker>
+              </el-form-item>
+              <el-form-item label="订单号：">
+                <el-input  v-model="filterForm2.orderId" placeholder="输入订单号" style='width:150px'></el-input>
               </el-form-item>
             </div>
             <div>
@@ -276,7 +166,7 @@
             <el-button @click="leftSelect"> > </el-button>
             <el-button @click="leftSelectAll"> >> </el-button>
           </div>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged2" style="width: 200px"></el-input>
+          <el-input style="visibility: hidden;width: 200px"></el-input>
           <!--未核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
@@ -302,8 +192,8 @@
               <el-button style="visibility: hidden"></el-button>
             </el-form-item>
             <el-form-item>
-              <el-button @click="this.unusualVisible = true">确认入库</el-button>
-              <el-button @click="errorSubmit">入库异常</el-button>
+              <el-button @click="confirmSubmit(1)">确认入库</el-button>
+              <el-button @click="confirmSubmit(0)">入库异常</el-button>
               <!--<el-button @click="colVisible3 = true">设置</el-button>-->
               <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                 <template v-for="(collist,i) in gridOptions3.columnDefs">
@@ -353,24 +243,61 @@
       </div>
     </el-dialog>
 
-
-    <!--确认入库弹框，选择支付方式与填写摘要-->
-    <el-dialog title="确认入库" :visible.sync="confirmSubVisible" size="tiny" :closeOnClickModal="false">
-      <h2>入库成功！</h2>
+        <!-- 添加异常信息弹窗 -->
+    <el-dialog title="编辑大车异常信息:"   :visible.sync="errorEditVisable" size="tiny"
+        :closeOnClickModal="false" 
+        :close-on-click-modal="false" 
+        :close-on-press-escape="false" 
+        :show-close="false">
+      <el-form :model='errorForm' :rules="rules" ref="errorForm">
+        <el-form-item label="装载单号：" label-width="100px">
+          <el-label style='width:200px'>{{errorForm.loadingId}}</el-label>
+        </el-form-item>
+        <el-form-item label="车牌号：" label-width="100px">
+          <el-label  style='width:80%'>{{errorForm.licePlateNum}}</el-label>
+        </el-form-item>
+        <el-form-item label="异动支出："label-width="100px" prop="unActExpense">
+          <el-input style='width:80%' v-model='errorForm.unActExpense' type="number"></el-input>
+        </el-form-item>
+        <el-form-item label="异动时间：" label-width="100px" prop="unActTim">
+          <el-date-picker type="date" placeholder="选择日期" v-model='errorForm.unActTim' style="width: 80%"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="异动原因：" label-width="100px" prop="unActDes">
+          <el-input style='width:80%' v-model='errorForm.unActDes'></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancleError('errorForm')">取 消</el-button>
+        <el-button type="primary" @click="resetError('errorForm')">重 置</el-button>
+        <el-button type="primary" @click="submitError('errorForm')">确 定</el-button>
+      </div>
     </el-dialog>
+    <!--确认入库弹框-->
+    <el-dialog title="确认入库" :visible.sync="confirmSubVisible" size="tiny" :close-on-click-modal="false"
+        :close-on-press-escape="false" 
+        :show-close="false">
+      <h2 style='text-align:center'>确认入库吗？</h2>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="confirmSubVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submit(1)">确 定</el-button>
+      </div>
+    </el-dialog>
+
     <!--无入库内容警告弹窗-->
     <el-dialog title="错误" :visible.sync="errorVisible" size="tiny">
-      <p>未发现需要入库的内容</p>
+      <h2>未发现需要提交的内容</h2>
       <div slot="footer" class="dialog-footer">
         <el-button @click="errorVisible = false">取 消</el-button>
       </div>
     </el-dialog>
 
     <!--提交异常弹窗-->
-    <el-dialog title="" :visible.sync="unusualVisible" size="tiny">
-      <p>确认提交异常么？</p>
+    <el-dialog title="确认入库异常" :visible.sync="unusualVisible" size="tiny":close-on-click-modal="false"
+        :close-on-press-escape="false" 
+        :show-close="false">
+      <h2>确认提交入库异常么？</h2>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="errorToStage">确 定</el-button>
+        <el-button @click="submit(0)" type="primary">确 定</el-button>
         <el-button @click="unusualVisible = false">取 消</el-button>
       </div>
     </el-dialog>
@@ -396,11 +323,11 @@
           'startPoint': '起始站' + i,
           'endPoint': '终点站' + i,
           'departTim': '发车时间' + i,
-          'loadingSta': '装载单状态'
+          'loadingState': '装载单状态'
         })
         this.testData2.push({
-          'loadingId': 'loadingId',
           'orderId': '订单号' + i,
+          'subId': '子件号' + i,
           'goodsNam': '货物名称' + i,
           'licePlateNum': '车牌号' + i,
           'shipNam': '发货人' + i,
@@ -414,6 +341,14 @@
       return {
         testData1: [], // 表1测试数据
         testData2: [], // 表2测试数据
+        // 添加大车异常
+        errorForm: {
+          'loadingId': '',
+          'licePlateNum': '',
+          'unActExpense': '',
+          'unActTim': new Date(),
+          'unActDes': ''
+        },
         // 定义三个表格数据
         gridOptions: {
           rowData: [],
@@ -437,7 +372,10 @@
               headerName: '发车时间', width: 200, field: 'departTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '装载单状态', width: 200, field: 'loadingSta', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '装载单状态', width: 200, field: 'loadingState', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            },
+            {
+              headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false, visible: true, pinned: 'right', suppressMenu: true, suppressSorting: true
             }
           ],
           context: {
@@ -448,28 +386,28 @@
           rowData: [],
           columnDefs: [
             {
-              headerName: '装载单号', width: 150, field: 'loadingId', filter: 'text', hide: false, visible: true
+              headerName: '订单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '订单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
+              headerName: '子件号', width: 150, field: 'subId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '货物名称', width: 150, field: 'goodsNam', filter: 'text', hide: false, visible: true
+              headerName: '货物名称', width: 150, field: 'goodsNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true
+              headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true
+              headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '发货人联系方式', width: 150, field: 'shipTel', filter: 'text', hide: false, visible: true
+              headerName: '发货人联系方式', width: 150, field: 'shipTel', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true
+              headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '收货人联系方式', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true
+              headerName: '收货人联系方式', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             }
           ],
           context: {
@@ -480,45 +418,49 @@
           rowData: [],
           columnDefs: [
             {
-              headerName: '装载单号', width: 150, field: 'loadingId', filter: 'text', hide: false, visible: true
+              headerName: '订单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '订单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
+              headerName: '子件号', width: 150, field: 'subId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '货物名称', width: 150, field: 'goodsNam', filter: 'text', hide: false, visible: true
+              headerName: '货物名称', width: 150, field: 'goodsNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true
+              headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true
+              headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '发货人联系方式', width: 150, field: 'shipTel', filter: 'text', hide: false, visible: true
+              headerName: '发货人联系方式', width: 150, field: 'shipTel', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true
+              headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
-              headerName: '收货人联系方式', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true
+              headerName: '收货人联系方式', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             }
           ],
           context: {
             componentParent: this
           }
         },
+        // 初始
+        initForm: {
+          startStationList: ['始发站1', '始发站2', '始发站3', '始发站4', '始发站5']
+        },
         // 定义筛选条件
         filterForm1: {
           departTimStart: '', // 发车区域开始
           departTimEnd: '', // 发车区域结束
           loadingId: '', // 装载单ID
-          driverNam: '' // 司机姓名
+          driverNam: '', // 司机姓名
+          loadingState: '', // 装载单状态
+          startStation: '' // 始发站
         },
         filterForm2: {
           orderId: '', // 订单号
-          shipNam: '', // 发货方姓名
-          receNam: '', // 收货人姓名
           startTime: ''
         },
         pickerOptions: {
@@ -578,21 +520,32 @@
             return timeYear < (nowYear - 1)
           }
         },
-        // 核销完成后提交给后台的数据
+        // 入库完成后提交给后台的数据
         confirmSubForm: {
           orderId: [],
-          payMode: 'WeChat',
-          digest: '',
-          loadingId: ''
+          type: 1 // 1为正常入库，0为入库异常
         },
         //  表单验证规则
-        rules: {},
+        rules: {
+          unActExpense: [
+            {required: true, message: '请输入异动支出', trigger: 'blur'},
+            {validator (r, v, b) { (/^\d*?\.?\d*?$/).test(v) ? b() : b(new Error('请填写正确的异动支出')) }}
+          ],
+          unActTim: [
+            {required: true, message: '请选择时间', type: 'date'}
+          ],
+          unActDes: [
+            {required: true, message: '请填写异常描述', trigger: 'blur'}
+          ]
+        },
         // dialog的可见性
+        errorEditVisable: false, // 编辑异常弹窗
         colVisible: false, // 切换列可见性的弹窗
         colVisible2: false,
         colVisible3: false,
         verVisible: false, // 进入入库页面的弹框
         confirmSubVisible: false, // 提交入库信息的弹框
+        unusualVisible: false, // 提交入库异常信息弹窗
         errorVisible: false, // 错误信息弹框
         detailVisible: false, // 订单详情弹框
         currentPage: 1, // 分页当前页面
@@ -602,9 +555,52 @@
     },
     components: {
       OrderDetails,
-      'ag-grid-vue': AgGridVue
+      'ag-grid-vue': AgGridVue,
+      operateComponent: {
+        template: '<el-button class="del-but" type="info" style="margin-left:20px" size="small" @click="addError">编辑大车异常</el-button>',
+        methods: {
+          addError () {
+            let self = this.params.context.componentParent
+            self.errorEditVisable = true
+            self.errorForm = {
+              'licePlateNum': '',
+              'loadingId': '',
+              'unActExpense': '',
+              'unActTim': new Date(),
+              'unActDes': '',
+              'serviceNam': ''
+            }
+            self.errorForm.loadingId = this.params.data.loadingId
+            self.errorForm.licePlateNum = this.params.data.licePlateNum
+          }
+        }
+      }
     },
     methods: {
+     // 取消表单
+      cancleError (formName) {
+        this.resetError(formName)
+        this.errorEditVisable = false
+      },
+      // 重置表单
+      resetError (formName) {
+        this.$nextTick(function () {
+          this.$refs[formName].resetFields()
+        })
+      },
+      // 提交订单异常
+      submitError (formName) {
+        const self = this
+        self.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.errorEditVisable = false
+            // 向服务器提交数据
+          } else {
+            console.log('error submit!!!')
+            return false
+          }
+        })
+      },
        // 切换列可见性，i=1或者2，1全选或者2全不选，gridnum表示三个表格
       visibleChoice (i, gridnum) {
         let gridCol
@@ -699,7 +695,7 @@
       },
       // 进入订单入库界面
       detailDoubleClick (event) {
-        this.confirmSubForm.loadingId = event.data.loadingId
+        // this.confirmSubForm.loadingId = event.data.loadingId
         this.verVisible = true
         this.gridOptions2.api.selectAll()
         this.gridOptions3.api.selectAll()
@@ -751,8 +747,8 @@
         this.gridOptions2.api.updateRowData({add: newItems})
         this.gridOptions3.api.updateRowData({remove: newItems})
       },
-      // 打开提交入库结果的窗口
-      confirmSubmit () {
+      // 打开提交入库结果的窗口 type=1为正常入库 type=0为入库异常
+      confirmSubmit (type) {
         this.gridOptions3.api.selectAllFiltered()
         const confirmData = this.gridOptions3.api.getSelectedRows()
         if (confirmData.length < 1) {
@@ -761,19 +757,25 @@
           for (let i = 0; i < confirmData.length; i++) {
             this.confirmSubForm.orderId[i] = confirmData[i].orderId
           }
-          this.confirmSubVisible = true
+          if (type === 1) {
+            this.confirmSubVisible = true
+          }
+          if (type === 0) {
+            this.unusualVisible = true
+          }
         }
         console.log(confirmData)
-        this.drawGrid(2)
-      },
-      // 提交入库异常到后台
-      errorToStage () {
-        this.unusualVisible = false
+        // this.drawGrid(2)
       },
       // 提交后台
-      submit () {
+      submit (type) {
+        if (type) {
+          this.confirmSubVisible = false
+        } else {
+          this.unusualVisible = false
+        }
         console.log(this.confirmSubForm)
-        this.confirmSubVisible = false
+
         this.drawGrid(2)
       }
     },

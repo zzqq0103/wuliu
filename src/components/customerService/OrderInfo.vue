@@ -17,8 +17,6 @@
           <el-form-item label="订单号:">
             <el-input v-model="filterForm.orderId" placeholder="输入订单号" style="width: 150px"></el-input>
           </el-form-item>
-          <el-button @click="drawGrid">提 取</el-button>
-          <el-button @click="toOrderAdd">添 加</el-button>
           <!-- 设置列 -->
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
@@ -35,7 +33,9 @@
               </div>
             </template>
           </el-popover>
-          <el-button v-popover:popover1 style='margin-left:10px'>设 置</el-button>
+          <el-button v-popover:popover1 style='margin-left:10px;float:right'>设 置</el-button>
+          <el-button @click="toOrderAdd" style='float:right'>添 加</el-button>
+          <el-button @click="drawGrid" style='float:right'>提 取</el-button>
        </el-form>
       </div>
     </div>
@@ -75,10 +75,10 @@
 
     <!-- 添加异常信息弹窗 -->
     <el-dialog title="编辑异常信息:"   :visible.sync="errorEditVisable" size="tiny"
-    :closeOnClickModal="false" 
-    :close-on-click-modal="false" 
-    :close-on-press-escape="false" 
-    :show-close="false">
+        :closeOnClickModal="false" 
+        :close-on-click-modal="false" 
+        :close-on-press-escape="false" 
+        :show-close="false">
       <el-form :model='errorForm' :rules="rules" ref="errorForm">
         <el-form-item label="订单ID：" :label-width="formLabelWidth">
           <el-label v-model='errorForm.orderId' style='width:80%'>{{errorForm.orderId}}</el-label>
