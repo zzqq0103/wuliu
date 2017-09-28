@@ -31,6 +31,8 @@ axios.defaults.baseURL = 'http://10.107.10.102:8080/'
 //   return Promise.reject(error)
 // })
 
+
+//实际调用axios的地方，传递url与params获取数据
 export function fetch (url, params) {
   return new Promise((resolve, reject) => {
     axios.post(url, params)
