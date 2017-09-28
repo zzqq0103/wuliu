@@ -35,7 +35,7 @@
                 </div>
               </template>
             </el-popover>
-            <el-button v-popover:popover1 style="margin-bottom:10px">设置</el-button>
+            <el-button v-popover:popover1>设置</el-button>
           </el-form>
           <!--<el-button @click="setting">设置</el-button>-->
         </div>
