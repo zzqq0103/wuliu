@@ -7,7 +7,6 @@
     <div>
       <!--第一行右侧按钮-->
       <div style="float: right">
-        <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
             <div class="colVisible">
@@ -47,6 +46,12 @@
               <el-option label="全部" value="all"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="核销状态:">
+            <el-select v-model="filterForm.veriState" style="width: 100px">
+              <el-option label="未核销" value="uncompleted"></el-option>
+              <el-option label="已核销" value="completed"></el-option>
+            </el-select>
+          </el-form-item>
           <el-button @click="drawGrid(1)">提取</el-button>
         </el-form>
       </div>
@@ -54,7 +59,7 @@
       <div>
         <el-form style="float: left" :model="totalForm" ref="totalForm" :inline="true">
           <el-form-item label="归还货款合计:">
-            <el-input v-model="totalForm.paymentReturnTotal" style="width: 100px"></el-input>
+            <el-input v-model="totalForm.paymentReturnTotal" style="width: 100px" readonly="true"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -66,13 +71,10 @@
 
     <!--表格-->
     <div style="margin-top: 10px">
-      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+      <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
-                   :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
                    :headerHeight=40
@@ -95,29 +97,13 @@
         layout="total,sizes,prev,pager,next"
         :total="rowCount"></el-pagination>
     </div>
-    <!--列表切换显示-->
-    <!--<el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false" top="30%">-->
-    <!--<template v-for="(collist,i) in gridOptions.columnDefs">-->
-    <!--<div v-if="collist.children">-->
-    <!--</div>-->
-    <!--<div v-else>-->
-    <!--<el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)">-->
-    <!--{{collist.headerName}}-->
-    <!--</el-checkbox>-->
-    <!--</div>-->
-    <!--</template>-->
-    <!--<div slot="footer" class="dialog-footer">-->
-    <!--<el-button type="primary" @click="colVisible = false">确 定</el-button>-->
-    <!--</div>-->
-    <!--</el-dialog>-->
-
-
 
     <!--
     --核销界面
     -->
-    <el-dialog title="货款归还" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
-      <el-row :gutter="20">
+    <el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+      <h2 style='text-align:center;margin-top:-2%'>货款归还核销</h2>
+      <el-row :gutter="20" style="margin-top: 2%">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
             <div>
@@ -150,20 +136,17 @@
               </el-form-item>
             </div>
           </el-form>
+          <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
           <div style="float: right">
             <el-button @click="leftSelect"> > </el-button>
             <el-button @click="leftSelectAll"> >> </el-button>
           </div>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged2" style="width: 200px"></el-input>
           <!--未核销处表格-->
           <div style="margin-top: 10px">
-            <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions2"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
                          :headerHeight=40
@@ -199,16 +182,12 @@
           </el-form>
           <el-button @click="rightSelect"> < </el-button>
           <el-button @click="rightSelectAll"> << </el-button>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
           <!--待核销处表格-->
           <div style="margin-top: 10px">
-            <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions3"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
                          :headerHeight=40
@@ -227,7 +206,7 @@
     </el-dialog>
     <!--确认核销弹框，选择支付方式与填写摘要-->
     <el-dialog title="确认核销" :visible.sync="confirmSubVisible" size="tiny" :closeOnClickModal="false">
-      <el-form :model="confirmSubForm" ref="confirmSubForm" labelWidth="80px">
+      <el-form :model="confirmSubForm" ref="confirmSubForm" labelWidth="20%">
         <el-form-item label="支付方式">
           <el-select v-model="confirmSubForm.payMode" placeholder="支付方式" style="width: 100px">
             <el-option label="微信" value="WeChat"></el-option>
@@ -236,7 +215,7 @@
             <el-option label="现金" value="cash"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="摘要:">
+        <el-form-item label="备注:">
           <el-input v-model="confirmSubForm.digest" style="width: 200px"></el-input>
         </el-form-item>
       </el-form>      <div slot="footer" class="dialog-footer">
@@ -733,13 +712,15 @@
         },
         // 定义筛选条件
         filterForm: {
-          startTime: '', // 开始时间
-          endTime: '', // 截止时间
+          dateInterval: '', // 时间间隔
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          shipNam: '', //  发货人
-          payType: 'paymentReturn', // 类型（货款代收，货款归还）
-          orderId: '' // 运单号
+          shipNam: '', //  发货方
+          payType: 'nowPay', // 类型（现付，到付，欠付，月结）
+          orderId: '', // 运单号
+          veriState: '', // 核销状态
+          pageNum: 1, // 当前页码数
+          pageSize: 20 // 分页大小
         },
         // 设置日期选择器的条件
         pickerOptions: {

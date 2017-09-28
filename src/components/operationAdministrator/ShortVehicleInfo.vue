@@ -3,11 +3,35 @@
     <div>
       <h2 style="text-align:center">接送货车辆信息管理</h2>
       <div style="margin-top:1%">
-        <div style="float: right">
-          <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
+        <div>
+          <el-form :model="filterForm" ref="filterForm" :inline="true">
+            <el-form-item label="司机姓名:">
+              <el-input v-model="filterForm.driverName" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-form-item label="车型:">
+              <el-select v-model="filterForm.carType" style="width: 80px" placeholder="类型">
+                <el-option value="A"></el-option>
+                <el-option value="B"></el-option>
+                <el-option value="C"></el-option>
+                <el-option value="D"></el-option>
+                <el-option value="E"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="车辆状态:">
+              <el-select v-model="filterForm.carState" style="width: 100px" placeholder="状态">
+                <el-option label="可用" value="available"></el-option>
+                <el-option label="不可用" value="unavailable"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="车辆位置:">
+              <el-input v-model="filterForm.carPosition" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-button @click="createRowData()">提取</el-button>
+          </el-form>
         </div>
         <div>
           <el-button @click="vehicleAdd">添加</el-button>
+          <span style="margin-left: 2%"></span>
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">
@@ -35,16 +59,12 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
-                   :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
                    :headerHeight=40
+
                    :pagination="true"
-                   :paginationPageSize="10"
-                   :suppressPaginationPanel="true"
-                   :filterChanged="gridfilterChange">
+                   :suppressPaginationPanel="true">
       </ag-grid-vue>
     </div>
 
@@ -54,7 +74,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrnetChange"
         :current-page="currentPage"
-        :page-sizes="[10,20,50,100,200]"
+        :page-sizes="[20,50,100,200]"
         :page-size="pageSize"
         layout="total,sizes,prev,pager,next"
         :total="rowCount">
@@ -83,7 +103,13 @@
           &nbsp/吨
         </el-form-item>
         <el-form-item label="车辆类型:" :label-width="formLabelWidth" prop="carType">
-          <el-input v-model="vehicleForm.carType" style="width: 30%"></el-input>
+          <el-select v-model="vehicleForm.carType" style="width: 30%" placeholder="类型">
+            <el-option value="A"></el-option>
+            <el-option value="B"></el-option>
+            <el-option value="C"></el-option>
+            <el-option value="D"></el-option>
+            <el-option value="E"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
           <el-select v-model="vehicleForm.carState" style="width: 30%">
@@ -97,7 +123,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancleForm('vehicleForm')">取 消</el-button>
-        <el-button @click="resetForm('vehicleForm')">重置</el-button>
+        <el-button @click="resetForm('vehicleForm')">重 置</el-button>
         <el-button type="primary" @click="submitForm('vehicleForm')">注 册</el-button>
       </div>
     </el-dialog>
@@ -114,16 +140,22 @@
         <el-form-item label="联系电话:" :label-width="formLabelWidth">
           <el-input v-model="editForm.tel" style="width: 50%" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="车容量:" :label-width="formLabelWidth" prop="capacity">
-          <el-input v-model="editForm.capacity" style="width: 30%"></el-input>
+        <el-form-item label="车容量:" :label-width="formLabelWidth">
+          <el-input v-model="editForm.capacity" style="width: 30%" disabled="true"></el-input>
           &nbsp/立方
         </el-form-item>
-        <el-form-item label="吨位:" :label-width="formLabelWidth" prop="tonnage">
-          <el-input v-model="editForm.tonnage" style="width: 30%"></el-input>
+        <el-form-item label="吨位:" :label-width="formLabelWidth">
+          <el-input v-model="editForm.tonnage" style="width: 30%" disabled="true"></el-input>
           &nbsp/吨
         </el-form-item>
         <el-form-item label="车辆类型:" :label-width="formLabelWidth" prop="carType">
-          <el-input v-model="editForm.carType" style="width: 30%"></el-input>
+          <el-select v-model="editForm.carType" style="width: 30%" placeholder="类型">
+            <el-option value="A"></el-option>
+            <el-option value="B"></el-option>
+            <el-option value="C"></el-option>
+            <el-option value="D"></el-option>
+            <el-option value="E"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
           <el-select v-model="editForm.carState" style="width: 30%">
@@ -169,6 +201,7 @@
 <script>
   import {AgGridVue} from 'ag-grid-vue'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  import api from '../../api/operationAdministrator/api'
 
   export default {
     created () {
@@ -216,6 +249,14 @@
           'carState': '', // 车辆状态
           'carPosition': '' // 车辆位置
         },
+        filterForm: {
+          'driverName': '', // 司机姓名
+          'carType': '', // 车型
+          'carState': '', // 车辆状态
+          'carPosition': '', // 车辆位置
+          'pageSize': 0, // 分页大小
+          'currentPage': 1 // 当前页码
+        },
         rules: {
           licePlateNum: [{
             required: true, message: '请输入车牌号', trigger: 'blur'
@@ -243,7 +284,7 @@
           }]
         },
         rowCount: 0,
-        pageSize: 10,
+        pageSize: 20,
         currentPage: 1, // 分页当前页面
         formLabelWidth: '30%',
         gridOptions: {
@@ -257,6 +298,7 @@
               width: 60,
               field: 'index',
               suppressMenu: true,
+              suppressSorting: true,
               hide: false,
               visible: true
             },
@@ -359,7 +401,19 @@
     },
     methods: {
       createRowData () {
+        this.filterForm.pageSize = this.pageSize
+        this.filterForm.currentPage = this.currentPage
+        api.getShortInfo(this.filterForm)
+          .then(res => {
+            console.log(res)
+          })
+          .catch(error => {
+            console.log('连接失败')
+            console.log(error)
+          })
         this.gridOptions.rowData = this.vehicleList
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
+        this.rowCount = 200
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
@@ -400,6 +454,7 @@
         this.gridOptions.api.paginationSetPageSize(Number(val))
       },
       handleCurrnetChange (val) {
+        console.log('页面改变')
         this.gridOptions.api.paginationGoToPage(val - 1)
       },
       gridfilterChange () {
@@ -439,7 +494,6 @@
       }
     },
     beforeMount () {
-      this.createRowData()
     },
     mounted () {
       this.calculateGrid()

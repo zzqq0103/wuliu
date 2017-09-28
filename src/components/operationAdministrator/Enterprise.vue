@@ -5,27 +5,36 @@
       <div style="margin-top:1%">
         <div style="float: right">
           <!--<el-row>订单号</el-row> -->
-          <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
+          <!--<el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>-->
         </div>
         <div>
-          <el-button @click="addForm">添加</el-button>
-          <!--<el-button @click="setting">设置</el-button>-->
-          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
-            <template v-for="(collist,i) in gridOptions.columnDefs">
-              <div class="colVisible">
-                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
-                  {{collist.headerName}}
-                </el-checkbox>
-              </div>
-            </template>
-            <template>
-              <div class="colVisible">
-                <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-                <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
-              </div>
-            </template>
-          </el-popover>
-          <el-button v-popover:popover1>设置</el-button>
+          <el-form :model="filterForm" ref="filterForm" :inline="true">
+            <el-form-item label="公司名称:">
+              <el-input v-model="filterForm.company" style="width: 150px"></el-input>
+            </el-form-item>
+            <el-form-item label="中转起始地:">
+              <el-input v-model="filterForm.transfersInhome" style="width: 150px"></el-input>
+            </el-form-item>
+            <el-button @click="drawGrid()">提取</el-button>
+            <el-button @click="addForm" style="float: right">添加</el-button>
+            <!--<el-button @click="setting">设置</el-button>-->
+            <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+              <template v-for="(collist,i) in gridOptions.columnDefs">
+                <div class="colVisible">
+                  <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
+                    {{collist.headerName}}
+                  </el-checkbox>
+                </div>
+              </template>
+              <template>
+                <div class="colVisible">
+                  <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                  <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+                </div>
+              </template>
+            </el-popover>
+            <el-button v-popover:popover1 style="float: right">设置</el-button>
+          </el-form>
         </div>
       </div>
     </div>
@@ -155,6 +164,10 @@
           'changeStart': '', // 中转起始地
           'changeName': '', // 中转企业联系人
           'id': '' // 联系方式
+        },
+        filterForm: {
+          'company': '',
+          'transfersInhome': ''
         },
         rules: {
           companyname: [{

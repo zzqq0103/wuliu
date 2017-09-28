@@ -84,7 +84,7 @@
                 },
                 {
                   "index":"familiarPersonnel",
-                  "title":"常用客户信息"
+                  "title":"常用联系人信息"
                 }
               ]
             },
@@ -150,7 +150,7 @@
                     },
                     {
                         "index": "otherIncome",
-                        "title": "其他收入"
+                        "title": "异动收入"
                     }
                 ]
             },
@@ -181,7 +181,7 @@
                     },
                     {
                         "index": "otherPayment",
-                        "title": "其他支出"
+                        "title": "异动支出"
                     },
                     {
                         "index": "staffSalary",
@@ -387,7 +387,7 @@
                     },
                     {
                         "index": "stockinInfo",
-                        "title": "入库管理",
+                        "title": "长途入库",
                         "icon": "",
                         "subs": [
                             {
@@ -417,6 +417,11 @@
             {
                 "index": "orderError",
                 "title": "订单异常",
+                "icon":"orderError"
+            },
+            {
+                "index": "vehicleError",
+                "title": "大车异常",
                 "icon":"orderError"
             }
         ]

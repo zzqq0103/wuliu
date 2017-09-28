@@ -233,7 +233,7 @@
             <el-option label="现金" value="cash"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="摘要:">
+        <el-form-item label="备注:">
           <el-input v-model="confirmSubForm.digest"></el-input>
         </el-form-item>
       </el-form>

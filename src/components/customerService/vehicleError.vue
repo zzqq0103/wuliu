@@ -1,15 +1,15 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align:center">订单异常处理</h2>
+      <h2 style="text-align:center">大车异常处理</h2>
       <el-form v-model="filterForm" ref="filterForm1" style='margin-top:20px' :inline="true">
         <el-form-item label="发车时间：">
           <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
                           :picker-options="pickerOptions" range-separator='/' style="width: 200px">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="订单号：">
-          <el-input v-model="filterForm.orderId" placeholder="输入订单号" style="width: 150px"></el-input>
+        <el-form-item label="司机姓名：">
+          <el-input v-model="filterForm.orderId" placeholder="输入司机姓名" style="width: 150px"></el-input>
         </el-form-item>
         <!-- 设置列 -->
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
@@ -67,33 +67,6 @@
       </el-pagination>
     </div>
 
-    <!-- 编辑/添加异常信息弹窗 -->
-    <el-dialog title="更改订单异常信息:" :visible.sync="addEditVisable"  >
-      <el-form :model="orderErrorForm" :rules="rules" ref="orderErrorForm">
-        <el-form-item label="订单ID：" :label-width="formLabelWidth">
-          <el-input v-model="orderErrorForm.orderId" style='width:80%'></el-input>
-        </el-form-item>
-        <el-form-item label="订单当前位置：" :label-width="formLabelWidth">
-          <el-input v-model="orderErrorForm.currPosition" style='width:80%'></el-input>
-        </el-form-item>
-        <el-form-item label="订单物流状态：" :label-width="formLabelWidth">
-          <el-input v-model="orderErrorForm.orderLogiState" style='width:80%'></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="addEditVisable = false">取 消</el-button>
-        <el-button type="primary" @click="addEdit">确 定</el-button>
-      </div>
-    </el-dialog>
-     <!-- 删除弹窗 -->
-    <el-dialog title="" :visible.sync="delVisable" size="tiny">
-      <h2 style="padding:30px">确认删除吗？</h2>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="delVisable = false">取 消</el-button>
-        <el-button @click="del">确 定</el-button>
-      </div>
-    </el-dialog>
-
     <!-- 列表显示弹窗 -->
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
       <template v-for="(collist,i) in gridOptions.columnDefs">
@@ -116,10 +89,15 @@ export default {
   created () {
     for (var i = 0; i < 50; i++) {
       this.orderErrorList.push({
-        'orderId': '订单ID' + i,
-        'orderLogiState': '物流状态' + i,
-        'currPosition': '订单当前位置' + i,
-        'orderTim': '开单时间' + i
+        'loadingId': '装载单' + i,
+        'driverNam': '司机姓名' + i,
+        'licePlateNum': '车牌号' + i,
+        'startStation': '起始站' + i,
+        'arrStation': '到站' + i,
+        'departTim': '发车时间' + i,
+        'unActExpense': '异动支出' + i,
+        'unActTim': '异动时间' + i,
+        'unActDes': '异动描述' + i
       })
     }
   },
@@ -130,15 +108,9 @@ export default {
       addEditVisable: false,
       delVisable: false,
       filterForm: {
-        orderId: '',
+        driverNam: '',
         startTime: '',
         endTime: ''
-      },
-      orderErrorForm: {
-        'orderId': '',
-        'orderLogiState': '',
-        'currPosition': '',
-        'orderTim': ''
       },
       rules: {
       },
@@ -152,16 +124,34 @@ export default {
         rowData: null,
         columnDefs: [
           {
-            headerName: '订单ID', width: 300, field: 'orderId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '装载单号', width: 150, field: 'loadingId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '开单时间', width: 300, field: 'orderTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '司机姓名', width: 150, field: 'driverNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '物流状态更改', width: 300, field: 'orderLogiState', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '装载单号', width: 150, field: 'loadingId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           },
           {
-            headerName: '订单位置更改', width: 300, field: 'currPosition', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+          },
+          {
+            headerName: '起始站', width: 150, field: 'startStation', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+          },
+          {
+            headerName: '到站', width: 150, field: 'arrStation', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+          },
+          {
+            headerName: '发车时间', width: 150, field: 'departTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+          },
+          {
+            headerName: '异动支出', width: 150, field: 'unActExpense', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+          },
+          {
+            headerName: '异动时间', width: 150, field: 'unActTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+          },
+          {
+            headerName: '异动描述', width: 150, field: 'unActDes', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
           }
         ]
       },

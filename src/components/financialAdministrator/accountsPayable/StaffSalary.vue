@@ -6,7 +6,6 @@
     <!--表格上方操作区域-->
     <div>
       <div style="float: right">
-        <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
         <!--<el-button @click="setting">设置</el-button>-->
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
@@ -57,9 +56,6 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
-                   :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
                    :headerHeight=40
@@ -279,8 +275,9 @@
     <!--
 --核销界面
 -->
-    <el-dialog title="人员支出核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
-      <el-row :gutter="20">
+    <el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+      <h2 style='text-align:center;margin-top:-2%'>人员支出核销</h2>
+      <el-row :gutter="20" style="margin-top: 2%">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
             <div style="float: right">
@@ -313,20 +310,17 @@
               </el-form-item>
             </div>
           </el-form>
+          <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
           <div style="float: right">
             <el-button @click="leftSelect"> > </el-button>
             <el-button @click="leftSelectAll"> >> </el-button>
           </div>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged2" style="width: 200px"></el-input>
           <!--未核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions2"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
                          :headerHeight=40
@@ -362,16 +356,12 @@
           </el-form>
           <el-button @click="rightSelect"> < </el-button>
           <el-button @click="rightSelectAll"> << </el-button>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
           <!--待核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions3"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
                          :headerHeight=40
@@ -399,7 +389,7 @@
             <el-option label="现金" value="cash"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="摘要:">
+        <el-form-item label="备注:">
           <el-input v-model="confirmSubForm.digest" style="width: 200px"></el-input>
         </el-form-item>
       </el-form>
