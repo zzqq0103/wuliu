@@ -29,16 +29,16 @@
           </el-select>
 
           <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
-          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
             <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
+              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
                 {{collist.headerName}}
               </el-checkbox>
             </div>
           </template>
           <template>
-            <div class="colVisible">
+            <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
               <el-button @click="visibleChoice(1)" size="small">全选</el-button>
               <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
             </div>
@@ -220,30 +220,60 @@
         // 日期控件data
         pickerOptions: {
           shortcuts: [{
-            text: '最近一周',
+            text: '上周',
             onClick (picker) {
-              const end = new Date()
+              const now = new Date()
               const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              const end = new Date()
+              const nowDayOfWeek = now.getDay()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * (nowDayOfWeek + 6))
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfWeek)
               picker.$emit('pick', [start, end])
             }
           }, {
-            text: '最近一个月',
+            text: '上个月',
             onClick (picker) {
-              const end = new Date()
+              const now = new Date()
               const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              const end = new Date()
+              const nowDayOfMonth = now.getDate()
+              const nowMonth = now.getMonth()
+              start.setDate(1)
+              start.setMonth(nowMonth - 1)
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfMonth)
               picker.$emit('pick', [start, end])
             }
           }, {
-            text: '最近三个月',
+            text: '去年',
             onClick (picker) {
-              const end = new Date()
+              const now = new Date()
               const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              const end = new Date()
+              const nowYear = now.getFullYear()
+              start.setYear(nowYear - 1)
+              start.setMonth(0)
+              start.setDate(1)
+              end.setYear(nowYear - 1)
+              end.setMonth(11)
+              end.setDate(31)
               picker.$emit('pick', [start, end])
             }
-          }]
+          }, {
+            text: '今年',
+            onClick (picker) {
+              const start = new Date()
+              const end = new Date()
+              start.setMonth(0)
+              start.setDate(1)
+              picker.$emit('pick', [start, end])
+            }
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
+          }
         },
         dateValue: '', // 日期值
         detailVisible: false // 订单详情弹框
