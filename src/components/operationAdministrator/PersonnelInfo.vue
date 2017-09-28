@@ -67,7 +67,6 @@
                    :suppressCellSelection="true"
                    :rowHeight=40
                    :headerHeight=40
-
                    :pagination="true"
                    :paginationPageSize="10"
                    :suppressPaginationPanel="true"

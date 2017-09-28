@@ -183,11 +183,11 @@
             </div>
             <div style="float: right">
               <el-button @click="drawGrid(2)">提取库存</el-button>
-              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                 <template v-for="(collist,i) in gridOptions2.columnDefs">
                   <div class="colVisible">
                     <el-checkbox v-model="collist.visible"
-                                 @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)">
+                                 @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)" style="float: left;width: 180px">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
@@ -238,11 +238,11 @@
             </el-form-item>
             <el-form-item>
               <el-button @click="confirmSubmit">确认核销</el-button>
-              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                 <template v-for="(collist,i) in gridOptions3.columnDefs">
                   <div class="colVisible">
                     <el-checkbox v-model="collist.visible"
-                                 @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)">
+                                 @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)" style="float: left;width: 180px">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
@@ -298,9 +298,6 @@
         </el-form-item>
         <el-form-item v-if="oilShow" label="油卡号:">
           <el-input v-model="confirmSubForm.oilCard" id="oId" style="width: 50%"></el-input>
-        </el-form-item>
-        <el-form-item v-if="oilShow" label="油卡金额:">
-          <el-input v-model="confirmSubForm.oilCardMoney" style="width: 50%"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -762,7 +759,6 @@
           dateInterval: '', // 时间间隔
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          shipNam: '', //  发货方
           payType: 'nowPay', // 类型（现付，到付，欠付，月结）
           loadingId: '', // 装载单号
           veriState: '', // 核销状态
@@ -771,12 +767,12 @@
         },
         // 各种费用合计
         totalForm: {
-          oilCardMoneyTotal: 0, // 中转费合计
-          totalMoney: 0// 月结合计
+          oilCardMoneyTotal: 0, // 油卡金额合计
+          totalMoney: 0// 合计
         },
         // 核销完成后提交给后台的数据
         confirmSubForm: {
-          orderId: [],
+          loadingId: [], // 装载单号
           payMode: 'WeChat',
           digest: '',
           oilCard: '',
@@ -1004,7 +1000,7 @@
           this.errorVisible = true
         } else {
           for (let i = 0; i < confirmData.length; i++) {
-            this.confirmSubForm.orderId[i] = confirmData[i].orderId
+            this.confirmSubForm.loadingId[i] = confirmData[i].loadingId
           }
           this.confirmSubVisible = true
         }

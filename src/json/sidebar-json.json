@@ -387,7 +387,7 @@
                     },
                     {
                         "index": "stockinInfo",
-                        "title": "入库管理",
+                        "title": "长途入库",
                         "icon": "",
                         "subs": [
                             {
@@ -417,6 +417,11 @@
             {
                 "index": "orderError",
                 "title": "订单异常",
+                "icon":"orderError"
+            },
+            {
+                "index": "vehicleError",
+                "title": "大车异常",
                 "icon":"orderError"
             }
         ]

@@ -2,29 +2,36 @@
   <div>
     <div>
       <h2 style="text-align:center">运费异常</h2>
-      <p style="margin-top:1%">
-        <div style="float: right">
-          <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
-        </div>
-        <div>
-           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+        <el-form v-model="filterForm" ref="filterForm1" style='margin-top:20px' :inline="true">
+          <el-form-item label="发车时间：">
+            <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+                            :picker-options="pickerOptions" range-separator='/' style="width: 200px">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="订单号：">
+            <el-input v-model="filterForm.orderId" placeholder="输入订单号" style="width: 150px"></el-input>
+          </el-form-item>
+          <!-- 设置列 -->
+          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">
-                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
+                <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)"
+                              style="float: left;width: 180px">
                   {{collist.headerName}}
                 </el-checkbox>
               </div>
             </template>
             <template>
               <div class="colVisible">
-                <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-                <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+                <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+                <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
               </div>
             </template>
           </el-popover>
-          <el-button v-popover:popover1>设置</el-button>
-        </div>
-      </p>
+          <el-button v-popover:popover1 style='margin-left:10px;float:right'>设 置</el-button>
+          <el-button style='float:right'>导 出</el-button>
+          <el-button @click="drawGrid(1)" style='float:right'>提 取</el-button>
+       </el-form>
     </div>
     <div style="clear: both;">
     </div>
@@ -59,45 +66,6 @@
       </el-pagination>
     </div>
 
-    <!-- 编辑/添加异常信息弹窗 -->
-    <el-dialog title="异动信息:" :visible.sync="addEditVisable">
-      <el-form :model="unActForm" :rules="rules" ref="unActForm">
-        <el-form-item label="订单ID：" :label-width="formLabelWidth">
-          <el-input v-model="unActForm.orderID" style='width:30%'></el-input>
-        </el-form-item>
-        <el-form-item label="异动支出：" :label-width="formLabelWidth">
-          <el-input v-model="unActForm.unActExpense" style='width:30%'></el-input>
-        </el-form-item>
-        <el-form-item label="异动收入：" :label-width="formLabelWidth">
-          <el-input v-model="unActForm.unActIncome" style='width:30%'></el-input>
-        </el-form-item>
-        <el-form-item label="订单时间:" :label-width="formLabelWidth">
-          <el-form-item prop="startTime">
-            <el-date-picker type="date" placeholder="选择开始日期" v-model="unActForm.unActTim"
-                            style="width: 150px"></el-date-picker>
-          </el-form-item>
-        </el-form-item>
-        <el-form-item label="异动原因：" :label-width="formLabelWidth">
-          <el-input v-model="unActForm.unActDes"></el-input>
-        </el-form-item>
-        <el-form-item label="处理客服名称：" :label-width="formLabelWidth">
-          <el-input v-model="unActForm.serviceNam" style='width:30%'></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="addEditVisable = false">取 消</el-button>
-        <el-button type="primary" @click="addEdit">确 定</el-button>
-      </div>
-    </el-dialog>
-    <!-- 删除弹窗 -->
-    <el-dialog title="" :visible.sync="delVisable" size="tiny">
-      <h2 style="padding:30px">确认删除吗？</h2>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="delVisable = false">取 消</el-button>
-        <el-button @click="del">确 定</el-button>
-      </div>
-    </el-dialog>
-
     <!-- 列表显示弹窗 -->
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
       <template v-for="(collist,i) in gridOptions.columnDefs">
@@ -127,6 +95,7 @@
       for (var i = 0; i < 50; i++) {
         this.unActList.push({
           'orderID': i,
+          'orderTim': '开单时间' + i,
           'unActExpense': '异动支出' + i,
           'unActIncome': '异动收入' + i,
           'unActTim': '异动时间' + i,
@@ -142,18 +111,81 @@
         addEditVisable: false,
         delVisable: false,
         successVisable: false,
+        filterForm: {
+          orderId: '',
+          startTime: '',
+          endTime: ''
+        },
         unActForm: {
           'orderID': '',
           'unActExpense': '',
           'unActIncome': '',
           'unActTim': '',
           'unActDes': '',
-          'serviceNam': ''
+          'serviceNam': '',
+          'orderTim': ''
         },
         rules: {},
         rowCount: 0,
         pageSize: 10,
         formLabelWidth: '20%',
+        pickerOptions: {
+          shortcuts: [{
+            text: '上周',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfWeek = now.getDay()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * (nowDayOfWeek + 6))
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfWeek)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '上个月',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfMonth = now.getDate()
+              const nowMonth = now.getMonth()
+              start.setDate(1)
+              start.setMonth(nowMonth - 1)
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfMonth)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '去年',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowYear = now.getFullYear()
+              start.setYear(nowYear - 1)
+              start.setMonth(0)
+              start.setDate(1)
+              end.setYear(nowYear - 1)
+              end.setMonth(11)
+              end.setDate(31)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '今年',
+            onClick (picker) {
+              const start = new Date()
+              const end = new Date()
+              start.setMonth(0)
+              start.setDate(1)
+              picker.$emit('pick', [start, end])
+            }
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
+          }
+        },
         gridOptions: {
           context: {
             componentParent: this
@@ -162,6 +194,9 @@
           columnDefs: [
             {
               headerName: '订单ID', width: 150, field: 'orderID', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            },
+            {
+              headerName: '开单时间', width: 150, field: 'orderTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
             },
             {
               headerName: '异动支出', width: 150, field: 'unActExpense', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
@@ -200,6 +235,7 @@
       },
       createRowData () {
         this.gridOptions.rowData = this.unActList
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
@@ -218,24 +254,6 @@
           this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
         }
       },
-      // 设置增加弹窗
-      setAddVisable () {
-        this.addEditVisable = true
-        this.unActForm.orderID = ''
-        this.unActForm.unActExpense = ''
-        this.unActForm.unActIncome = ''
-        // this.unActForm.unActTim = ''
-        this.unActForm.unActDes = ''
-        this.unActForm.serviceNam = ''
-      },
-      // 编辑/增加异动信息
-      addEdit () {
-        setTimeout(() => { this.addEditVisable = false }, 600)
-      },
-      // 删除异动信息
-      del () {
-        this.delVisable = false
-      },
       handleSizeChange (val) {
         this.gridOptions.api.paginationSetPageSize(Number(val))
       },
@@ -249,10 +267,19 @@
       calculateGrid () {
         this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
         this.rowCount = this.gridOptions.api.getModel().getRowCount()
+      },
+      // 绘制表格
+      drawGrid () {
+        this.updateGrid()
+        this.createRowData()
+        this.calculateGrid()
+      },
+      updateGrid () {
+        this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
       }
     },
     beforeMount () {
-      this.createRowData()
+      // this.createRowData()
     },
     mounted () {
       // this.changeColumnDefsBoolen()

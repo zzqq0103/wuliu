@@ -68,10 +68,10 @@
       </div>
       <!--判断当前需要显示的label-->
       <el-form :model="totalForm" ref="totalForm" :inline="true">
-        <el-form-item label="现付金额合计:" v-if="this.filterForm.payType === 'nowPay'">
+        <el-form-item label="现返金额合计:" v-if="this.filterForm.payType === 'nowPay'">
           <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
         </el-form-item>
-        <el-form-item label="欠付金额合计:" v-else-if="this.filterForm.payType === 'inArrears'">
+        <el-form-item label="欠返金额合计:" v-else-if="this.filterForm.payType === 'inArrears'">
           <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
         </el-form-item>
         <el-form-item label="中转费合计:">
@@ -87,17 +87,14 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
-                   :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
                    :headerHeight=40
+
                    :rowDoubleClicked="detailDoubleClick"
                    :pagination="true"
                    :paginationPageSize="10"
                    :suppressPaginationPanel="true"
-                   :filterChanged="gridfilterChange"
       ></ag-grid-vue>
     </div>
     <!--分页-->
@@ -150,15 +147,17 @@
     <!--
 --核销界面
 -->
-    <el-dialog title="返款核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
-      <el-row :gutter="20">
+    <el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+      <h2 style='text-align:center;margin-top:-2%'>返款核销</h2>
+      <el-row :gutter="20" style="margin-top: 2%">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
             <div>
-              <el-form-item label="订单时间">
-                <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
-                                :picker-options="pickerOptions" style='width:200px' range-separator='/'>
-                </el-date-picker>
+              <el-form-item label="运单号:">
+                <el-input v-model="filterForm.orderId" style="width: 150px"></el-input>
+              </el-form-item>
+              <el-form-item label="发货方:">
+                <el-input v-model="filterForm.shipNam" style="width: 100px"></el-input>
               </el-form-item>
             </div>
             <div>
@@ -185,13 +184,14 @@
                 <el-button v-popover:popover2>设置</el-button>
               </div>
               <el-form-item label="类型:">
-                <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px">
+                <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px" @change="typeChange(2)">
                   <el-option label="现返" value="nowPay"></el-option>
                   <el-option label="欠返" value="inArrears"></el-option>
                 </el-select>
               </el-form-item>
             </div>
           </el-form>
+          <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
           <div style="float: right">
             <el-button @click="leftSelect"> > </el-button>
             <el-button @click="leftSelectAll"> >> </el-button>
@@ -202,9 +202,6 @@
                          :gridOptions="gridOptions2"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
                          :headerHeight=40
@@ -251,9 +248,6 @@
                          :gridOptions="gridOptions3"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
                          :headerHeight=40
@@ -309,7 +303,6 @@
 <script>
   import {AgGridVue} from 'ag-grid-vue'
   import OrderDetails from '../ShowOrderDetails'
-  import PartialMatchFilterComponent from '../../common/PartialMatchFilterComponent'
   export default {
     created () {
       for (let i = 0; i < 100; i++) {
@@ -397,7 +390,7 @@
               visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '发货方',
               width: 150,
               field: 'shipNam',
               filter: 'text',
@@ -405,7 +398,7 @@
               visible: true
             },
             {
-              headerName: '发货人联系方式',
+              headerName: '发货方联系方式',
               width: 150,
               field: 'shipTel',
               filter: 'text',
@@ -413,7 +406,7 @@
               visible: true
             },
             {
-              headerName: '收货人',
+              headerName: '收货方',
               width: 150,
               field: 'receNam',
               filter: 'text',
@@ -421,12 +414,26 @@
               visible: true
             },
             {
-              headerName: '收货人联系方式',
+              headerName: '收货方联系方式',
               width: 150,
               field: 'receTel',
               filter: 'text',
               hide: false,
               visible: true
+            },
+            {
+              headerName: '品名',
+              width: 150,
+              field: 'goodsNam',
+              hide: true,
+              visible: false
+            },
+            {
+              headerName: '件数',
+              width: 60,
+              field: 'goodsNums',
+              hide: true,
+              visible: false
             },
             {
               headerName: '开单客服',
@@ -453,14 +460,6 @@
               visible: true
             },
             {
-              headerName: '业务员',
-              width: 150,
-              field: 'salesmanId',
-              filter: 'text',
-              hide: false,
-              visible: true
-            },
-            {
               headerName: '备注',
               width: 150,
               field: 'trilNote',
@@ -473,6 +472,13 @@
               width: 150,
               field: 'receNums',
               filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '付款方式',
+              width: 150,
+              field: 'payType',
               hide: false,
               visible: true
             },
@@ -523,8 +529,7 @@
               filter: 'text',
               hide: false,
               visible: true
-            },
-            {}
+            }
           ],
           context: {
             componentParent: this
@@ -534,40 +539,88 @@
           rowData: [],
           columnDefs: [
             {
-              headerName: '运单号',
-              width: 150,
-              field: 'orderId',
-              filter: 'text',
-              hide: false,
-              visible: true,
-              filterFramework: PartialMatchFilterComponent
+              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '运单状态',
-              width: 150,
-              field: 'orderState',
-              filter: 'text',
-              hide: false,
-              visible: true,
-              filterFramework: PartialMatchFilterComponent
+              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '开单网点',
+              width: 150,
+              field: 'billBranch',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '开单日期',
+              width: 150,
+              field: 'orderTim',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '发站',
+              width: 150,
+              field: 'startStation',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '到站',
+              width: 150,
+              field: 'arrStation',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '发货方',
               width: 150,
               field: 'shipNam',
               filter: 'text',
               hide: false,
-              visible: true,
-              filterFramework: PartialMatchFilterComponent
+              visible: true
             },
             {
-              headerName: '收货人',
+              headerName: '发货方联系方式',
+              width: 150,
+              field: 'shipTel',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '收货方',
               width: 150,
               field: 'receNam',
               filter: 'text',
               hide: false,
-              visible: true,
-              filterFramework: PartialMatchFilterComponent
+              visible: true
+            },
+            {
+              headerName: '收货方联系方式',
+              width: 150,
+              field: 'receTel',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '品名',
+              width: 150,
+              field: 'goodsNam',
+              hide: true,
+              visible: false
+            },
+            {
+              headerName: '件数',
+              width: 60,
+              field: 'goodsNums',
+              hide: true,
+              visible: false
             },
             {
               headerName: '开单客服',
@@ -575,10 +628,24 @@
               field: 'serviceNam',
               filter: 'text',
               hide: false,
-              visible: true,
-              filterFramework: PartialMatchFilterComponent
+              visible: true
             },
-            {}
+            {
+              headerName: '回单份数',
+              width: 150,
+              field: 'receNums',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '现返金额',
+              width: 150,
+              field: 'feeMoney',
+              filter: 'text',
+              hide: false,
+              visible: true
+            }
           ],
           context: {
             componentParent: this
@@ -588,40 +655,88 @@
           rowData: [],
           columnDefs: [
             {
-              headerName: '运单号',
-              width: 150,
-              field: 'orderId',
-              filter: 'text',
-              hide: false,
-              visible: true,
-              filterFramework: PartialMatchFilterComponent
+              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '运单状态',
-              width: 150,
-              field: 'orderState',
-              filter: 'text',
-              hide: false,
-              visible: true,
-              filterFramework: PartialMatchFilterComponent
+              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '开单网点',
+              width: 150,
+              field: 'billBranch',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '开单日期',
+              width: 150,
+              field: 'orderTim',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '发站',
+              width: 150,
+              field: 'startStation',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '到站',
+              width: 150,
+              field: 'arrStation',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '发货方',
               width: 150,
               field: 'shipNam',
               filter: 'text',
               hide: false,
-              visible: true,
-              filterFramework: PartialMatchFilterComponent
+              visible: true
             },
             {
-              headerName: '收货人',
+              headerName: '发货方联系方式',
+              width: 150,
+              field: 'shipTel',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '收货方',
               width: 150,
               field: 'receNam',
               filter: 'text',
               hide: false,
-              visible: true,
-              filterFramework: PartialMatchFilterComponent
+              visible: true
+            },
+            {
+              headerName: '收货方联系方式',
+              width: 150,
+              field: 'receTel',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '品名',
+              width: 150,
+              field: 'goodsNam',
+              hide: true,
+              visible: false
+            },
+            {
+              headerName: '件数',
+              width: 60,
+              field: 'goodsNums',
+              hide: true,
+              visible: false
             },
             {
               headerName: '开单客服',
@@ -629,10 +744,24 @@
               field: 'serviceNam',
               filter: 'text',
               hide: false,
-              visible: true,
-              filterFramework: PartialMatchFilterComponent
+              visible: true
             },
-            {}
+            {
+              headerName: '回单份数',
+              width: 150,
+              field: 'receNums',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '现返金额',
+              width: 150,
+              field: 'feeMoney',
+              filter: 'text',
+              hide: false,
+              visible: true
+            }
           ],
           context: {
             componentParent: this
@@ -799,9 +928,9 @@
         if (i === 1) {
           const payType = this.filterForm.payType
           if (payType === 'nowPay') {
-            this.gridOptions.columnDefs[16] = this.additionalColumnDefs.nowPay
+            this.gridOptions.columnDefs[18] = this.additionalColumnDefs.nowPay
           } else if (payType === 'inArrears') {
-            this.gridOptions.columnDefs[16] = this.additionalColumnDefs.inArrears
+            this.gridOptions.columnDefs[18] = this.additionalColumnDefs.inArrears
           }
           this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
         } else if (i === 2) {
@@ -827,6 +956,16 @@
           this.gridOptions2.rowData = this.testData2
           this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
         }
+      },
+      // 核销界面，提取库存时，修改类型，清空表格数据
+      typeChange (i) {
+        this.updateGrid(i)
+        this.gridOptions.rowData = []
+        this.gridOptions2.rowData = []
+        this.gridOptions3.rowData = []
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
+        this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
+        this.gridOptions3.api.setRowData(this.gridOptions3.rowData)
       },
       // 切换列的可见性，三个表格，三个参数j
       updateColumnDefsVisible (j, collist) {

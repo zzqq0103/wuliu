@@ -151,11 +151,11 @@
           <el-form :model="filterForm" ref="filterForm" :inline="true">
             <div style="float: right">
               <el-button @click="drawGrid(2)">提取库存</el-button>
-              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                 <template v-for="(collist,i) in gridOptions2.columnDefs">
                   <div class="colVisible">
                     <el-checkbox v-model="collist.visible"
-                                 @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)">
+                                 @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)" style="float: left;width: 180px">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
@@ -203,10 +203,10 @@
           <el-form>
             <el-form-item>
               <el-button @click="confirmSubmit">确认核销</el-button>
-              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                 <template v-for="(collist,i) in gridOptions3.columnDefs">
                   <div class="colVisible">
-                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)">
+                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)" style="float: left;width: 180px">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
@@ -461,7 +461,6 @@
         },
         // 各种费用合计
         totalForm: {
-          transferFeeTotal: 0, // 中转费合计
           totalMoney: 0, // 月结合计
           UActIncome: 0 // 运费异动增款
         },
