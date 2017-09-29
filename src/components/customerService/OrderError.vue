@@ -38,19 +38,17 @@
     </div>
     <div style="margin-top:2%">
       <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue" 
-        :gridOptions="gridOptions" 
-        :suppressMovableColumns="true" 
-        :enableColResize="true" 
-        :enableSorting="true" 
-        :enableFilter="true" 
-        :groupHeaders="true" 
-        :suppressCellSelection="true"
-        :rowHeight=40
-        :headerHeight=40
-        :pagination="true"
-        :paginationPageSize="10"
-        :suppressPaginationPanel="true"
-        :filterChanged="gridfilterChange">
+                   :gridOptions="gridOptions"
+                   :suppressMovableColumns="true"
+                   :enableColResize="true"
+                   :suppressCellSelection="true"
+                   :rowHeight=40
+                   :headerHeight=40
+
+                   :rowDoubleClicked="detailDoubleClick"
+                   :pagination="true"
+                   :paginationPageSize="20"
+                   :suppressPaginationPanel="true">
       </ag-grid-vue>
     </div>
 
@@ -111,7 +109,6 @@
 </template>
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
 export default {
   created () {
     for (var i = 0; i < 50; i++) {
@@ -152,16 +149,16 @@ export default {
         rowData: null,
         columnDefs: [
           {
-            headerName: '订单ID', width: 300, field: 'orderId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '订单ID', width: 300, field: 'orderId', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '开单时间', width: 300, field: 'orderTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '开单时间', width: 300, field: 'orderTim', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '物流状态更改', width: 300, field: 'orderLogiState', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '物流状态更改', width: 300, field: 'orderLogiState', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '订单位置更改', width: 300, field: 'currPosition', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '订单位置更改', width: 300, field: 'currPosition', filter: 'text', hide: false, visible: true
           }
         ]
       },

@@ -38,19 +38,17 @@
     </div>
     <div style="margin-top:2%">
       <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue" 
-        :gridOptions="gridOptions" 
-        :suppressMovableColumns="true" 
-        :enableColResize="true" 
-        :enableSorting="true" 
-        :enableFilter="true" 
-        :groupHeaders="true" 
-        :suppressCellSelection="true"
-        :rowHeight=40
-        :headerHeight=40
-        :pagination="true"
-        :paginationPageSize="10"
-        :suppressPaginationPanel="true"
-        :filterChanged="gridfilterChange">
+                   :gridOptions="gridOptions"
+                   :suppressMovableColumns="true"
+                   :enableColResize="true"
+                   :suppressCellSelection="true"
+                   :rowHeight=40
+                   :headerHeight=40
+
+                   :rowDoubleClicked="detailDoubleClick"
+                   :pagination="true"
+                   :paginationPageSize="20"
+                   :suppressPaginationPanel="true">
       </ag-grid-vue>
     </div>
 
@@ -84,7 +82,6 @@
 </template>
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
 export default {
   created () {
     for (var i = 0; i < 50; i++) {
@@ -124,34 +121,34 @@ export default {
         rowData: null,
         columnDefs: [
           {
-            headerName: '装载单号', width: 150, field: 'loadingId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '装载单号', width: 150, field: 'loadingId', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '司机姓名', width: 150, field: 'driverNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '司机姓名', width: 150, field: 'driverNam', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '装载单号', width: 150, field: 'loadingId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '装载单号', width: 150, field: 'loadingId', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '起始站', width: 150, field: 'startStation', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '起始站', width: 150, field: 'startStation', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '到站', width: 150, field: 'arrStation', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '到站', width: 150, field: 'arrStation', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '发车时间', width: 150, field: 'departTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '发车时间', width: 150, field: 'departTim', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '异动支出', width: 150, field: 'unActExpense', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '异动支出', width: 150, field: 'unActExpense', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '异动时间', width: 150, field: 'unActTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '异动时间', width: 150, field: 'unActTim', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '异动描述', width: 150, field: 'unActDes', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '异动描述', width: 150, field: 'unActDes', filter: 'text', hide: false, visible: true
           }
         ]
       },

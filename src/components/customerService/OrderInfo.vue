@@ -43,20 +43,18 @@
     </div>
     <div style="margin-top:2%">
       <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
-        :gridOptions="gridOptions"
-        :suppressMovableColumns="true"
-        :enableColResize="true"
-        :enableSorting="true"
-        :enableFilter="true"
-        :groupHeaders="true"
-        :suppressCellSelection="true"
-        :rowHeight=40
-        :headerHeight=40
-        :pagination="true"
-        :paginationPageSize="10"
-        :suppressPaginationPanel="true"
-        :filterChanged="gridfilterChange"
-        :rowDoubleClicked="detailDoubleClick">
+                   :gridOptions="gridOptions"
+                   :suppressMovableColumns="true"
+                   :enableColResize="true"
+                   :suppressCellSelection="true"
+                   :rowHeight=40
+                   :headerHeight=40
+
+                   :rowDoubleClicked="detailDoubleClick"
+                   :pagination="true"
+                   :paginationPageSize="20"
+                   :suppressPaginationPanel="true">
+        
       </ag-grid-vue>
     </div>
 
@@ -150,7 +148,6 @@
 <script>
 import { AgGridVue } from 'ag-grid-vue'
 import OrderDetails from '../financialAdministrator/ShowOrderDetails.vue'
-import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
 export default {
   created () {
     for (var i = 0; i < 50; i++) {
@@ -283,31 +280,31 @@ export default {
         rowData: null,
         columnDefs: [
           {
-            headerName: '订单ID', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '订单ID', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '发货单位', width: 150, field: 'shipComp', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '发货单位', width: 150, field: 'shipComp', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '收货单位', width: 150, field: 'receComp', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '收货单位', width: 150, field: 'receComp', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '货物名称', field: 'goodsNam', width: 150, filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '货物名称', field: 'goodsNam', width: 150, filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '件数', field: 'goodsNums', width: 150, filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '件数', field: 'goodsNums', width: 150, filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '体积', field: 'goodsVolume', width: 150, filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '体积', field: 'goodsVolume', width: 150, filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '重量', field: 'goodsWeight', width: 150, filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '重量', field: 'goodsWeight', width: 150, filter: 'text', hide: false, visible: true
           },
           {
             headerName: '操作', field: 'value', width: 150, cellRendererFramework: 'operateComponent', hide: false, visible: true, pinned: 'right', suppressMenu: true, suppressSorting: true

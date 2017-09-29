@@ -27,7 +27,7 @@
     </div>
 
     <!-- 表格 -->
-    <div style="margin-top:2%" v-loading="listLoading">
+    <div v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
@@ -129,7 +129,7 @@
         queryItemOptions: [{
 
           value: 1,
-          label: '营运'
+          label: '全部'
         }, {
           value: 2,
           label: '客服'
@@ -153,9 +153,9 @@
           label: '短途司机'
         }, {
           value: 9,
-          label: '全部'
+          label: '营运'
         }],
-        selectvalue: 9,
+        selectvalue: 1,
         orderlist: [],
         delFormVisible: false,
         pageSize: 20,
