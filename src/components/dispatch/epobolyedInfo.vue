@@ -23,22 +23,22 @@
         <div style="float:left;">
 
           <el-input placeholder="请输入查询数据" icon="search" v-on:keyup.enter="getQueryData" v-model="queryName" :on-icon-click="handleIconClick" style="width:170px;"></el-input>
-          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
+          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:140px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
 
           <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
-          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
+          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
             <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)">
+              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"  style="float: left;width: 180px">
                 {{collist.headerName}}
               </el-checkbox>
             </div>
           </template>
           <template>
-            <div class="colVisible">
+            <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
               <el-button @click="visibleChoice(1)" size="small">全选</el-button>
               <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
             </div>
@@ -114,26 +114,26 @@
         colVisible: false, // 设置弹窗的显示boolean值
         orderId: '', // 运单号
         tableForm: {
-          'id': '',
-          'orderId': '',
-          'orderTim': '',
-          'arrStation': '',
-          'changeStart': '',
-          'rouSelection': '',
-          'changeFee': '',
-          'contractPrice': '',
-          'lineNam': '',
-          'lineTel': '',
-          'shipNam': '',
-          'receNam': '',
-          'goodsNam': '',
-          'package': '',
-          'goodsNums': '',
-          'goodsWeight': '',
-          'goodsVolumn': '',
-          'orderNote': ''
+          'id': '', // 序号
+          'orderId': '', // 订单号
+          'orderTim': '', // 订单时间
+          'shipNam': '', // 发货人姓名
+          'receNam': '', // 收货人姓名
+          'arrStation': '', // 到站
+          'goodsNam': '', // 货物名称
+          'goodsNums': '', // 件数
+          'goodsWeight': '', // 重量
+          'goodsVolumn': '', // 体积
+          'package': '', // 包装
+          'rouSelection': '', // 线路选择
+          'changeStart': '', // 中转起始地
+          'changeFee': '', // 中转费
+          'orderNote': '', // 订单备注
+          'lineTel': '', // 外包企业线路账号（联系方式）
+          'lineNam': '', // 联系人
+          'contractPrice': '' // 合同价格
         },
-        rules: {}, //
+        rules: {},
         formLabelWidth: '120px',
         // Ag-grid 表格组件的data
         gridOptions: {
@@ -141,6 +141,7 @@
             componentParent: this
           },
           rowData: null,
+          rowSelection: 'single',
           columnDefs: [
             {
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
@@ -148,12 +149,6 @@
             {
               headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
-            // {
-            //   headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            // },
-            // {
-            //   headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false, filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            // },
             {
               headerName: '开单时间', width: 120, field: 'orderTim', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
@@ -173,10 +168,10 @@
               headerName: '合同价格', width: 120, field: 'contractPrice', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '外包企业联系人', width: 120, field: 'lineNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '外包企业联系人', width: 140, field: 'lineNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '外包企业联系电话', width: 120, field: 'lineTel', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '外包企业联系电话', width: 150, field: 'lineTel', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
               headerName: '发货人姓名', width: 120, field: 'shipNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
@@ -225,30 +220,60 @@
         // 日期控件data
         pickerOptions: {
           shortcuts: [{
-            text: '最近一周',
+            text: '上周',
             onClick (picker) {
-              const end = new Date()
+              const now = new Date()
               const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              const end = new Date()
+              const nowDayOfWeek = now.getDay()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * (nowDayOfWeek + 6))
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfWeek)
               picker.$emit('pick', [start, end])
             }
           }, {
-            text: '最近一个月',
+            text: '上个月',
             onClick (picker) {
-              const end = new Date()
+              const now = new Date()
               const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              const end = new Date()
+              const nowDayOfMonth = now.getDate()
+              const nowMonth = now.getMonth()
+              start.setDate(1)
+              start.setMonth(nowMonth - 1)
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfMonth)
               picker.$emit('pick', [start, end])
             }
           }, {
-            text: '最近三个月',
+            text: '去年',
             onClick (picker) {
-              const end = new Date()
+              const now = new Date()
               const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              const end = new Date()
+              const nowYear = now.getFullYear()
+              start.setYear(nowYear - 1)
+              start.setMonth(0)
+              start.setDate(1)
+              end.setYear(nowYear - 1)
+              end.setMonth(11)
+              end.setDate(31)
               picker.$emit('pick', [start, end])
             }
-          }]
+          }, {
+            text: '今年',
+            onClick (picker) {
+              const start = new Date()
+              const end = new Date()
+              start.setMonth(0)
+              start.setDate(1)
+              picker.$emit('pick', [start, end])
+            }
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
+          }
         },
         dateValue: '', // 日期值
         detailVisible: false // 订单详情弹框
@@ -259,8 +284,7 @@
       'ag-grid-vue': AgGridVue,
       OrderDetails
     },
-
-    // 实例方法
+// 实例方法
     methods: {
       // 订单详情弹框
       detailDoubleClick (event) {
@@ -354,12 +378,14 @@
     },
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getOrderList()
+      this.$nextTick(function () {
+        this.getOrderList()
+      })
     }
   }
 </script>
-<style scoped>
 
+<style scoped>
   .el-select-css {
     width: 50%;
   }
@@ -372,6 +398,7 @@
     border: 1px solid rgb(191, 217, 216);
     color: rgb(31, 61, 60);
     padding: 5px 10px;
-    font-size: 10px
+    font-size: 10px;
+
   }
 </style>
