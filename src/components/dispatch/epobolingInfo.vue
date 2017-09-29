@@ -385,7 +385,7 @@
       'ag-grid-vue': AgGridVue,
       OrderDetails,
       operateComponent: {
-        template: '<span style="margin-left:5px;"><el-button  class="del-but" @click="edit" type="success" size="mini">编辑</el-button> <el-button  class="del-but" @click="depart" type="danger" size="mini">确认中转</el-button></span>',
+        template: '<span style="margin-left:5px;"><el-button  class="del-but" @click="edit" type="success" size="small">编辑</el-button> <el-button  class="del-but" @click="depart" type="danger" size="mini">确认中转</el-button></span>',
         methods: {
           // 点击发车按钮，显示确认弹框，之后在弹框中将该行数据转移至已中转的页面中显示。
           depart () {
