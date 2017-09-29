@@ -46,9 +46,8 @@
         </template>
       </el-popover>
       <el-button @click="drawGrid()" style="position: absolute;left: 480px;top: 140px">提取</el-button>
-      <el-button style="top: 140px;position: absolute;right: 190px;">导出</el-button>
-      <el-button v-popover:popover1 style="position: absolute; right: 260px;top:140px">设置</el-button>
-      <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged()" style="width: 150px;top: 140px;position: absolute;right: 30px;"></el-input>
+      <el-button style="top: 140px;position: absolute;right: 30px;">导出</el-button>
+      <el-button v-popover:popover1 style="position: absolute; right: 110px;top:140px">设置</el-button>
     </div>
     <div style="clear: both"></div>
     <div style="width: 100%; margin-top: 50px;top: 200px">

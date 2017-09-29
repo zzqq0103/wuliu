@@ -75,9 +75,9 @@
 
     <!-- 添加异常信息弹窗 -->
     <el-dialog title="编辑异常信息:"   :visible.sync="errorEditVisable" size="tiny"
-    :closeOnClickModal="false" 
-    :close-on-click-modal="false" 
-    :close-on-press-escape="false" 
+    :closeOnClickModal="false"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
     :show-close="false">
       <el-form :model='errorForm' :rules="rules" ref="errorForm">
         <el-form-item label="订单ID：" :label-width="formLabelWidth">

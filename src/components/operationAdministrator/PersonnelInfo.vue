@@ -34,8 +34,7 @@
           </el-form-item>
           <el-button @click="drawGrid()">提取</el-button>
         </el-form>
-        <el-button @click="addForm" style="margin-right: 10px">添加</el-button>
-        <!--<el-button @click="setting">设置</el-button>-->
+        <el-button @click="addForm" style="margin-right: 10px;position: absolute;left: 555px;top: 82px">添加</el-button>
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
             <div class="colVisible">
@@ -51,12 +50,11 @@
             </div>
           </template>
         </el-popover>
-        <el-button v-popover:popover1 >设置</el-button>
+        <el-button v-popover:popover1 style="position: absolute;left: 625px;top: 82px">设置</el-button>
       </div>
-
     </div>
     <div style="clear: both;"></div>
-    <div style="margin-top: 10px">
+    <div>
       <ag-grid-vue style="width: 100%;height: 450px;" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
@@ -784,6 +782,10 @@
     text-align: center
   }
 
+  .dropdown-two{
+    width: 50%;
+  }
+
   .dropdown-shenfen li:hover {
     cursor: pointer;
     background-color: #D1E5E5
@@ -834,5 +836,9 @@
 
   .Taddress label{
     float: left;
+  }
+
+  .dropdown-ul-two{
+    width: 100%;
   }
 </style>
