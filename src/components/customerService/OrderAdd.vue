@@ -272,6 +272,7 @@
 
 <script>
 import regionJson from '../../../static/region.json'
+// import api from '../../api/customerService/api.js'
 export default {
   created () {
     this.regionList = regionJson
