@@ -17,11 +17,11 @@
     </div>
     <div style='margin-top:2%;clear:both'/>
     <div class='div-form'>
-      <el-form :model="appointForm" :rules="appointRules" ref="appointForm" >       
+      <el-form :model="appointForm" :rules="appointRules" ref="appointForm" >
         <el-form-item label="发货方：" style="clear:both;width:100%" label-width="100px" prop="shipNam">
           <div class='dropdown_fahuo' style='width:80%'>
               <el-input type="text"  style='width:100%' v-model='appointForm.shipNam' @keyup.native="getSearchFahuo()" @keyup.enter.native="setBlur(1)" placeholder="请输入发货方名称" ></el-input>
-              <div class="dropdown-content" v-show="fahuoShow" style='width:85%;height:140px'> 
+              <div class="dropdown-content" v-show="fahuoShow" style='width:85%;height:140px'>
                 <div class='dropdown-select'>
                   <ul class='dropdown-fahuo'>
                     <li v-bind:key="data" v-for="(data,i) in this.fahuoList" v-on:dblclick="clickFahuo(data)">{{data}}</li>
@@ -36,7 +36,7 @@
         <el-form-item label="提货地址：" style="float:left;width:50%" label-width="100px" prop="baseAddressFa">
           <div id='focus1' class="dropdown2" style='outline:none' contenteditable="false" tabindex="0" @click="getFocus(1)" @blur="addressVisible=false">
             <el-input v-model="appointForm.baseAddressFa" placeholder="请选择提货地址"  readonly="readonly"style="width:73%" ></el-input>
-            <div class="dropdown-content" style='width:80%' v-show="addressVisible"> 
+            <div class="dropdown-content" style='width:80%' v-show="addressVisible">
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
                 <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
@@ -66,11 +66,11 @@
         <el-form-item style="float:left;width:50%"  prop="pickUpAdrDe">
           <el-input style='width:78%' v-model="appointForm.pickUpAdrDe" placeholder="输入详细提货地址" ></el-input>
         </el-form-item>
-      
+
         <el-form-item label="收货方：" style="clear:both;width:100%" label-width="100px" prop="receNam" >
           <div class='dropdown_shouhuo' id='focus_shouhuo' style='width:80%;outline:none' @click="getFocus(3)">
               <el-input type="text"  id="focus_shouhuo_input" style='width:100%' v-model='appointForm.receNam' @keyup.native="getSearchShouhuo()" @keyup.enter.native="setBlur(2)" placeholder="请输入收货方名称" ></el-input>
-              <div class="dropdown-content"  v-show="shouhuoShow" style='width:85%;height:140px;margin-top:1px'> 
+              <div class="dropdown-content"  v-show="shouhuoShow" style='width:85%;height:140px;margin-top:1px'>
                 <div class='dropdown-select' id="focus_shouhuo_dropdown">
                   <ul class='dropdown-fahuo' >
                     <li v-bind:key="data" v-for="(data,i) in this.shouhuoList" v-on:dblclick="clickShouhuo(data)">{{data}}</li>
@@ -372,6 +372,7 @@
     },
     methods: {
       testGet () {
+        console.log('xxx')
         /* api.getAppoint(this.Form)
         .then(res => {
           console.log('成功')
