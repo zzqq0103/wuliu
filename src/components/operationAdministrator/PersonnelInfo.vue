@@ -58,8 +58,6 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
@@ -101,11 +99,11 @@
     <!--添加客户信息-->
     <el-dialog title="添加客户信息:" :visible.sync="addFormVisible" size="tiny" :closeOnClickModal="false" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
       <el-form :model="personnelForm" ref="personnelForm" :rules="rules">
-        <el-form-item label="收货方:" :label-width="formLabelWidth" prop="clientCompNam">
-          <el-input v-model="personnelForm.shipNam" style="width: 80%"></el-input>
+        <el-form-item label="收货方:" :label-width="formLabelWidth" prop="receNam">
+          <el-input v-model="personnelForm.receNam" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="收货方联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="personnelForm.shipTel" :rules="rules" style="width: 50%"></el-input>
+        <el-form-item label="收货方联系电话:" :label-width="formLabelWidth" prop="receTel">
+          <el-input v-model="personnelForm.receTel" :rules="rules" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="企业详细地址：" style="clear:both;width:100%" :label-width="formLabelWidth" prop="compAdr">
           <div id='focus2' class='dropdown2' style='outline:none' tabindex="0"  @click="getFocus(2)" @blur="addressVisible2=false">
@@ -136,18 +134,18 @@
           <el-input v-model="personnelForm.compAdr" style="width: 100px;left: 160px;position: absolute"></el-input>
         </el-form-item>
         <el-form-item label="所属片区:" :label-width="formLabelWidth" prop="area">
-          <el-select v-model="personnelForm.area">
-            <el-option label="A" value="A"></el-option>
-            <el-option label="B" value="B"></el-option>
-            <el-option label="C" value="C"></el-option>
-            <el-option label="D" value="D"></el-option>
+          <el-select v-model="personnelForm.area" placeholder="请选择">
+            <el-option value="A"></el-option>
+            <el-option value="B"></el-option>
+            <el-option value="C"></el-option>
+            <el-option value="D"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="业务员:" :label-width="formLabelWidth">
+        <el-form-item label="业务员:" :label-width="formLabelWidth" prop="salesmanData">
           <el-input v-model="personnelForm.salesmanData" :rules="rules" style="width: 50%" :disabled="true"></el-input>
           <el-button type="primary" @click="createSalesmanData" >选择业务员</el-button>
         </el-form-item>
-        <el-form-item label="是否三方:" :label-width="formLabelWidth">
+        <el-form-item label="是否三方:" :label-width="formLabelWidth" prop="isTril">
           <el-select v-model="personnelForm.isTril" style="width:30%">
             <el-option label="是" value="yes"></el-option>
             <el-option label="否" value="no"></el-option>
@@ -180,14 +178,14 @@
     <!--编辑客户信息-->
     <el-dialog title="编辑:" :visible.sync="editFormVisible" size="tiny" :closeOnClickModal="false" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
       <el-form :model="editForm" :rules="rules" ref="editForm">
-        <el-form-item label="收货方:" :label-width="formLabelWidth" prop="clientCompNam">
-          <el-input v-model="editForm.shipNam" style="width: 80%"></el-input>
+        <el-form-item label="收货方:" :label-width="formLabelWidth" prop="receNam">
+          <el-input v-model="editForm.receNam" style="width: 80%" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="收货方联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="editForm.shipTel" :rules="rules" style="width: 50%"></el-input>
+        <el-form-item label="收货方联系电话:" :label-width="formLabelWidth" prop="receTel">
+          <el-input v-model="editForm.receTel" :rules="rules" style="width: 50%" disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="企业详细地址:" :label-width="formLabelWidth" prop="compAdr">
-          <el-input v-model="editForm.compAdr" style="width: 80%"></el-input>
+          <el-input v-model="editForm.compAdr" style="width: 80%" disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="所属片区:" :label-width="formLabelWidth" prop="area">
           <el-select v-model="editForm.area">
@@ -197,10 +195,10 @@
             <el-option label="D" value="D"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="业务员:" :label-width="formLabelWidth">
-          <el-input v-model="editForm.salesmanId" style="width: 50%"></el-input>
+        <el-form-item label="业务员:" :label-width="formLabelWidth" prop="roleNam">
+          <el-input v-model="editForm.roleNam" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="是否三方:" :label-width="formLabelWidth">
+        <el-form-item label="是否三方:" :label-width="formLabelWidth" prop="isTril">
           <el-select v-model="editForm.isTril" style="width:30%">
             <el-option label="是" value="true"></el-option>
             <el-option label="否" value="falss"></el-option>
@@ -327,8 +325,8 @@
           'receAdr': '' //
         },
         personnelForm: {
-          'shipNam': '',
-          'shipTel': '',
+          'receNam': '', // 收货方
+          'receTel': '', // 收货方电话
           'compAdr': '', // 企业详细地址
           'area': '', // 所属片区
           'isTril': '', // 是否三方
@@ -339,9 +337,8 @@
           'receAdr': ''
         },
         editForm: {
-          'clientCompNam': '', // 客户企业名称
-          'nam': '', // 联系人姓名
-          'ltel': '', // 联系电话
+          'receNam': '', // 联系人姓名
+          'receTel': '', // 联系电话
           'compAdr': '', // 企业详细地址
           'area': '', // 所属片区
           'isTril': '', // 是否三方
@@ -349,7 +346,7 @@
         },
         salesmanReq: '',
         rules: {
-          clientCompNam: [{
+          receNam: [{
             required: true,
             message: '请输入企业名称',
             trigger: 'blur'
@@ -359,7 +356,7 @@
             message: '请输入联系人姓名',
             trigger: 'blur'
           }],
-          tel: [{
+          receTel: [{
             validator: validatePhoneNum,
             trigger: 'blur'
           }],
@@ -379,6 +376,11 @@
             trigger: 'blur'
           }],
           salesmanData: [{
+            required: true,
+            message: '请输入业务员',
+            trigger: 'blur'
+          }],
+          roleNam: [{
             required: true,
             message: '请输入业务员',
             trigger: 'blur'
@@ -440,14 +442,13 @@
           del () {
             let self = this.params.context.componentParent
             self.delFormVisible = true
-            self.personnelForm.clientCompNam = this.params.data.clientCompNam
+            self.editForm.clientCompNam = this.params.data.clientCompNam
 //            self.delFormVisible = true
 //            console.log(this.params.data.clientCompNam)
           },
           edit () {
-            let self = this.params.context.componentParent
-            self.editFormVisible = true
-            self.editForm = this.params.data
+            this.params.context.componentParent.editFormVisible = true
+            this.params.context.componentParent.editForm = this.params.data
           }
         }
       }
@@ -491,16 +492,16 @@
       addForm () {
         this.addFormVisible = true
         this.personnelForm = {
-          clientCompNam: '',
-          nam: '',
-          tel: '',
+          receNam: '',
+          receTel: '',
           compAdr: '',
           area: '',
           salesmanId: '',
           isTril: '',
           shi: '',
           adminRegion: '',
-          shenfen: ''
+          shenfen: '',
+          receAdr: ''
         }
       },
       handleSizeChange (val) {
@@ -700,7 +701,7 @@
         })
       },
       createRowData () {
-        this.gridOptions.rowData = testJson.regionList.list
+        this.gridOptions.rowData = testJson.pesonnelInfo.list
         this.gridOptions.api.setRowData(this.gridOptions.rowData)
       },
       drawGrid () {

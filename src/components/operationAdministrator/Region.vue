@@ -56,8 +56,6 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
@@ -94,12 +92,12 @@
         <el-form-item label="行政区:" :label-width="formLabelWidth" >
           <el-input v-model="regionForm.adminRegion" style="width: 50%" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="所属区域:" :label-width="formLabelWidth" prop="area">
+        <el-form-item label="所属区域:" :label-width="formLabelWidth" prop="regionName">
           <el-select v-model="regionForm.regionName">
-            <el-option label="A" value="A"></el-option>
-            <el-option label="B" value="B"></el-option>
-            <el-option label="C" value="C"></el-option>
-            <el-option label="D" value="D"></el-option>
+            <el-option value="A"></el-option>
+            <el-option value="B"></el-option>
+            <el-option value="C"></el-option>
+            <el-option value="D"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -150,7 +148,7 @@
         },
         rerender: true, // 用于重新刷新添加的弹框
         rules: {
-          area: [{
+          regionName: [{
             required: true, message: '请输入区域', trigger: 'blur'
           }]
         },

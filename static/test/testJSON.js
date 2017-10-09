@@ -20442,6 +20442,28 @@ export default {
       }
     ]
   },
+  //客户信息
+  pesonnelInfo : {
+    list: [
+      {
+        receNam: '小李',
+        receTel: 18288288212,
+        compAdr: '北京市',
+        area: 'A',
+        roleNam: '小张',
+        isTril: '是'
+      },
+      {
+        receNam: '小王',
+        receTel: 18288288212,
+        compAdr: '北京市',
+        area: 'A',
+        roleNam: '小熊',
+        isTril: '否'
+      },
+    ]
+  },
+
   //库存信息
   'stockInfo': {
     'list': [
