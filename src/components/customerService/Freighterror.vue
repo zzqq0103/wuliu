@@ -40,16 +40,14 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
-                   :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
                    :headerHeight=40
+
+                   :rowDoubleClicked="detailDoubleClick"
                    :pagination="true"
-                   :paginationPageSize="10"
-                   :suppressPaginationPanel="true"
-                   :filterChanged="gridfilterChange">
+                   :paginationPageSize="20"
+                   :suppressPaginationPanel="true">
       </ag-grid-vue>
     </div>
 
@@ -89,7 +87,6 @@
 </template>
 <script>
   import { AgGridVue } from 'ag-grid-vue'
-  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   export default {
     created () {
       for (var i = 0; i < 50; i++) {
@@ -193,25 +190,25 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '订单ID', width: 150, field: 'orderID', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '订单ID', width: 150, field: 'orderID', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '开单时间', width: 150, field: 'orderTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '开单时间', width: 150, field: 'orderTim', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '异动支出', width: 150, field: 'unActExpense', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '异动支出', width: 150, field: 'unActExpense', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '异动收入', width: 150, field: 'unActIncome', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '异动收入', width: 150, field: 'unActIncome', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '异动时间', width: 150, field: 'unActTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '异动时间', width: 150, field: 'unActTim', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '异动描述', width: 150, field: 'unActDes', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '异动描述', width: 150, field: 'unActDes', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '客服名称', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '客服名称', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true
             }
           ]
         }

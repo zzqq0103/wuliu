@@ -1,26 +1,6 @@
  <template>
   <div>
     <h2 style="text-align:center;margin-top:0">新建预约单</h2>
-
-   <!-- <div style='margin-top:2%;display:inline-block;width:100%;text-align:center'>
-      <span style='float:left;width:100px'>日期：</span>
-      <span style='float:left;width:150px;margin-top:3px'>{{timeNow}}</span>
-      <span style='width:100px;float:left'>始发站：</span>
-      <el-form-item style="float:left;width:100px">
-        <el-select placeholder="" v-model="appointForm.startStation" @change="handleChange1" style='wdth:100px'>
-          <el-option v-for="item in initForm.stationOptions" :value="item" :key="item" :label="item"></el-option>
-        </el-select>
-      </el-form-item>
-      <span class='order-title-base' style='width:100px'>目的站：</span>
-      <el-form-item style="float:left;width:100px">
-        <el-select placeholder="" v-model="appointForm.arrStation" @change="handleChange2">
-          <el-option v-for="item in initForm.stationOptions" :value="item" :key="item" :label="item"></el-option>
-        </el-select>
-      </el-form-item>
-      <span style='float:left;width:100px'>预约单号：</span>
-      <span style='float:left;width:100px;margin-top:3px'>{{initForm.id}}</span>
-    </div> -->
-
     <div style='margin-top:2%;display:inline-block;width:100%'>
       <span style='float:left;width:80px'>日期：</span>
       <span style='float:left;margin-top:2px;width:200px'>{{timeNow}}</span>
@@ -174,6 +154,7 @@
     <div style='text-align:center'>
       <el-button style='margin-top:2%' type="primary" @click="submitAppoint('appointForm')">保存</el-button>
       <el-button style='margin-left:10%' @click="cancleVisable=true">取消</el-button>
+      <el-button style='margin-left:10%' @click="testGet()">测试</el-button>
     </div>
     <!--提交弹窗-->
     <el-dialog title="" :visible.sync="submitVisable" size="" tiny>
@@ -191,18 +172,36 @@
     <el-dialog title="错误：" :visible.sync="wrongNoteVisable" size="tiny">
       <h2 style="text-align:center;padding: 30px 0 30px 0px">{{wrongNote}}</h2>
     </el-dialog>
+    <!-- 异常弹窗 -->
+    <el-dialog title="" :visible.sync="errorVisable" size="" tiny>
+      <h2 style="text-align:center;padding: 30px 0 30px 0px">{{errorNote}}</h2>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancle_ok">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
   import regionJson from '../../../static/region.json'
+  import api from '../../api/customerService/api.js'
   export default {
     created () {
       this.regionList = regionJson
+      // this.getStationListFro()
     },
     data () {
       return {
+        Form: {
+          // orderId: '170815001'
+          hubNam: '12',
+          branchNam: '23',
+          branchAdr: '23',
+          areaNam: 'sdsd'
+        },
         testLength: '200px',
         wrongNote: '',
+        errorNote: '', // 异常错误提示
+        errorVisable: false, // 异常提示弹窗
         wrongNoteVisable: false, // 错误提示弹窗
         fahuoList: [],
         shouhuoList: [],
@@ -372,6 +371,44 @@
       }
     },
     methods: {
+      testGet () {
+        /* api.getAppoint(this.Form)
+        .then(res => {
+          console.log('成功')
+          console.log(res)
+        })
+        .catch(error => {
+          this.errorVisable = true
+          setTimeout(() => { this.errorVisable = false }, 800)
+          this.errorNote = '网络异常请检查'
+          console.log('失败')
+          console.log(error)
+        }) */
+        api.getBranch(this.Form)
+          .then(res => {
+            console.log('成功')
+            console.log(res)
+          })
+          .catch(error => {
+            console.log('失败')
+            console.log(error)
+          })
+      },
+      // 从后台获取始发站列表并展示
+      getStationListFro () {
+        api.getStationList().then(res => {
+          console.log('成功')
+          console.log(res)
+          this.initForm.stationOptions = res.content
+        })
+        .catch(error => {
+          this.errorVisable = true
+          setTimeout(() => { this.errorVisable = false }, 800)
+          this.errorNote = '网络异常请检查'
+          console.log('失败')
+          console.log(error)
+        })
+      },
      // 根据表单上方始发站选择提货地址
       handleChange1 () {
       /* startStation: '', // 始发站
