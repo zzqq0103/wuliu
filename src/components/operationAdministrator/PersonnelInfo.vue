@@ -12,11 +12,10 @@
           <el-form-item label="企业详细地址:" class="Taddress">
             <div id='focus1' class='dropdown1' style='outline:none' tabindex="0"  @click="getFocus(1)" @blur="addressVisible=false">
               <el-input v-model="filterForm.receAdr" style="width: 142.5px;"></el-input>
-              <div class="dropdown-content" style='width:80%' v-show="addressVisible">
+              <div class="dropdown-content" style='width:100%' v-show="addressVisible">
                 <ul class='dropdown-content-select'>
                   <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
                   <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
-                  <li @click="setQuyu(1)" class='dropdown-li' v-bind:class="{'selectOn':quyu}">区县</li>
                 </ul>
                 <div class='dropdown-select'>
                   <ul class='dropdown-shenfen' v-show="shenfen">
@@ -65,7 +64,6 @@
                    :suppressCellSelection="true"
                    :rowHeight=40
                    :headerHeight=40
-
                    :pagination="true"
                    :paginationPageSize="10"
                    :suppressPaginationPanel="true"
@@ -774,7 +772,7 @@
   .dropdown-li {
     cursor: pointer;
     border-right: 1px solid #C0C0C0;
-    width: 33.33%;
+    width: 50%;
     margin: 0;
     float: left;
     box-sizing: border-box;

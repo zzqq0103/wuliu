@@ -5,34 +5,50 @@
       <!--表格上方操作区域-->
       <div>
         <!--第一行-->
-        <div style="float: right">
-          <el-input type="text" placeholder="请输入搜索内容" @input="onQuickFilterChanged"></el-input>
-        </div>
         <div>
           <el-form v-model="filterForm" ref="filterForm" :inline="true">
+            <div style="float: right">
+              <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+                <template v-for="(collist,i) in gridOptions.columnDefs">
+                  <div class="colVisible">
+                    <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"
+                                 style="float: left;width: 180px">
+                      {{collist.headerName}}
+                    </el-checkbox>
+                  </div>
+                </template>
+                <template>
+                  <div class="colVisible">
+                    <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                    <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+                  </div>
+                </template>
+              </el-popover>
+              <el-button v-popover:popover1>设置</el-button>
+            </div>
             <el-form-item label="订单时间:">
-              <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+              <el-date-picker v-model="filterForm.dateInterval" type="daterange" placeholder="选择日期范围"
                               :picker-options="pickerOptions" range-separator='/' style="width: 200px">
               </el-date-picker>
             </el-form-item>
+            <el-form-item label="区间:">
+              <el-select v-model="filterForm.startPoint" placeholder="起点" style="width: 80px">
+                <el-option label="北京" value="beijing"></el-option>
+                <el-option label="南京" value="nanjing"></el-option>
+                <el-option label="全部" value="all"></el-option>
+              </el-select>
+              <span>--&nbsp</span>
+              <el-select v-model="filterForm.endPoint" placeholder="终点" style="width: 80px">
+                <el-option label="北京" value="beijing"></el-option>
+                <el-option label="南京" value="nanjing"></el-option>
+                <el-option label="全部" value="all"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="装载单ID:">
+              <el-input v-model="filterForm.loadingId" style="width: 80px"></el-input>
+            </el-form-item>
             <el-button @click="search">搜索</el-button>
             <!--<el-button @click="setting">设置</el-button>-->
-            <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-              <template v-for="(collist,i) in gridOptions.columnDefs">
-                <div class="colVisible">
-                  <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
-                    {{collist.headerName}}
-                  </el-checkbox>
-                </div>
-              </template>
-              <template>
-                <div class="colVisible">
-                  <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-                  <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
-                </div>
-              </template>
-            </el-popover>
-            <el-button v-popover:popover1>设置</el-button>
           </el-form>
 
         </div>
@@ -54,9 +70,6 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
-                   :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
                    :headerHeight=40
@@ -125,8 +138,12 @@
     data () {
       return {
         filterForm: {
-          startTime: '',
-          endTime: ''
+          dateInterval: '', // 时间间隔
+          startPoint: '', //  区间起点
+          endPoint: '', //  区间终点
+          loadingID: '', // 运单号
+          pageNum: 1, // 当前页码数
+          pageSize: 20 // 分页大小
         },
         totalGrossCarProfit: 0,
         grossProfitList: [],

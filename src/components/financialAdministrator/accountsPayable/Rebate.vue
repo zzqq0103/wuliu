@@ -3,95 +3,34 @@
     <div style="text-align: center;margin: 10px">
       <h2>返款详情</h2>
     </div>
-    <!--表格筛选区域-->
-    <!--<div style='margin-top:2%;font-size:15px'>
-        <el-form :model="filterForm" ref="filterForm">
-          <span style='float:left;padding:0.6% 1% 0% 0%'>订单时间：</span>
-          <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
-                            :picker-options="pickerOptions" range-separator='/' style='float:left;width:16%'>
-          </el-date-picker>
-           <span style='float:left;padding:0.6% 1% 0% 3%'>区间：</span>
-          <el-form-item style='float:left;width:7%'>
-            <el-select placeholder="起点" style="width:100%" v-model="filterForm.startPoint">
-              <el-option label="北京" value="beijing"></el-option>
-              <el-option label="南京" value="nanjing"></el-option>
-              <el-option label="全部" value="all"></el-option>
-            </el-select>
-          </el-form-item>
-          <span style='float:left;padding:0.8% 0.8%'>--</span>
-          <el-form-item style='float:left;width:7%'>
-            <el-select placeholder="终点" style="width:100%" v-model="filterForm.endPoint">
-              <el-option label="北京" value="beijing"></el-option>
-              <el-option label="南京" value="nanjing"></el-option>
-              <el-option label="全部" value="all"></el-option>
-            </el-select>
-          </el-form-item>
-          <span style='float:left;padding:0.6% 1% 0% 3%'>类型：</span>
-          <el-form-item style='float:left;width:8%'>
-            <el-select v-model="filterForm.payType" placeholder="类型" style="width: 100%">
-              <el-option label="现返" value="nowPay"></el-option>
-              <el-option label="欠返" value="inArrears"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item style="float:right;width:5%;padding-right:3%">
-            <el-button @click="verification">开始核销</el-button>
-          </el-form-item>
-          <el-form-item style="width:5%;float:right;padding-right:1%">
-            <el-button @click="setting">导出</el-button>
-          </el-form-item>
-
-          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-            <template v-for="(collist,i) in gridOptions.columnDefs">
-              <div class="colVisible">
-                <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)"
-                              style="float: left;width: 180px">
-                  {{collist.headerName}}
-                </el-checkbox>
-              </div>
-            </template>
-            <template>
-              <div class="colVisible">
-                <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
-                <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
-              </div>
-            </template>
-          </el-popover>
-          <el-form-item style="float:right;width:5%;padding-right:1%">
-            <el-button  v-popover:popover1>设置</el-button>
-          </el-form-item>
-          <el-form-item style="width:5%;float:right;padding-right:1%">
-            <el-button @click="drawGrid(1)">提取</el-button>
-          </el-form-item>
-
-          <el-form-item label="中转费合计：" style='float:left;width:25%'>
-            <el-input v-model="totalForm.transferFeeTotal" style='width:50%'></el-input>
-          </el-form-item>
-          <div v-if="filterForm.payType === 'nowPay'">
-            <el-form-item label="现返金额合计：" style='float:left;width:25%'>
-              <el-input readonly="readonly" v-model="totalForm.totalMoney" style='width:50%'></el-input>
-            </el-form-item>
-          </div>
-          <div v-else>
-            <el-form-item label="欠返金额合计：" style='float:left;width:25%'>
-              <el-input readonly="readonly" v-model="totalForm.totalMoney" style='width:50%'></el-input>
-            </el-form-item>
-          </div>
-          <el-form-item style="float:left;width:13%;padding-left:0.6%">
-            <el-input  placeholder="输入内容进行搜索" @input="onQuickFilterChanged" style="width:100%"></el-input>
-          </el-form-item>
-        </el-form>
-    </div>-->
     <!--表格上方操作区域-->
     <div>
       <!--第一行右侧按钮-->
       <div style="float: right">
-        <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
+        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+          <template v-for="(collist,i) in gridOptions.columnDefs">
+            <div class="colVisible">
+              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)"
+                           style="float: left;width: 180px">
+                {{collist.headerName}}
+              </el-checkbox>
+            </div>
+          </template>
+          <template>
+            <div class="colVisible">
+              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
+            </div>
+          </template>
+        </el-popover>
+        <el-button v-popover:popover1>设置</el-button>
+        <el-button>导出</el-button>
       </div>
       <!--第一行左侧按钮-->
       <div>
         <el-form :model="filterForm" ref="filterForm" :inline="true">
           <el-form-item label="订单时间:">
-            <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+            <el-date-picker v-model="filterForm.dateInterval" type="daterange" placeholder="选择日期范围"
                             :picker-options="pickerOptions" range-separator='/' style="width: 200px">
             </el-date-picker>
           </el-form-item>
@@ -114,54 +53,31 @@
               <el-option label="欠返" value="inArrears"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="核销状态:">
+            <el-select v-model="filterForm.veriState" style="width: 100px">
+              <el-option label="未核销" value="uncompleted"></el-option>
+              <el-option label="已核销" value="completed"></el-option>
+            </el-select>
+          </el-form-item>
           <el-button @click="drawGrid(1)">提取</el-button>
         </el-form>
       </div>
       <!--第二行开始-->
-      <div>
-        <el-form style="float: left" :model="totalForm" ref="totalForm" :inline="true">
-          <el-form-item label="中转费合计:">
-            <el-input v-model="totalForm.transferFeeTotal" style="width: 100px" readonly="true"></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
       <div style="float: right">
-        <!--<el-button @click="setting">设置</el-button>-->
-        <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-          <template v-for="(collist,i) in gridOptions.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)"
-                           style="float: left;width: 180px">
-                {{collist.headerName}}
-              </el-checkbox>
-            </div>
-          </template>
-          <template>
-            <div class="colVisible">
-              <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
-            </div>
-          </template>
-        </el-popover>
-        <el-button v-popover:popover1>设置</el-button>
-        <el-button>导出</el-button>
         <el-button @click="verification">开始核销</el-button>
       </div>
       <!--判断当前需要显示的label-->
-      <div v-if="this.filterForm.payType === 'nowPay'">
-        <el-form :model="totalForm" ref="totalForm" :inline="true">
-          <el-form-item label="现返金额合计:">
-            <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div v-else>
-        <el-form :model="totalForm" ref="totalForm" :inline="true">
-          <el-form-item label="欠返金额合计:">
-            <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
+      <el-form :model="totalForm" ref="totalForm" :inline="true">
+        <el-form-item label="现返金额合计:" v-if="this.filterForm.payType === 'nowPay'">
+          <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
+        </el-form-item>
+        <el-form-item label="欠返金额合计:" v-else-if="this.filterForm.payType === 'inArrears'">
+          <el-input v-model="totalForm.totalMoney" style="width: 100px" readonly="true"></el-input>
+        </el-form-item>
+        <el-form-item label="中转费合计:">
+          <el-input v-model="totalForm.transferFeeTotal" style="width: 100px" readonly="true"></el-input>
+        </el-form-item>
+      </el-form>
     </div>
 
     <div style="clear: both;"></div>
@@ -171,17 +87,14 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
-                   :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
                    :headerHeight=40
+
                    :rowDoubleClicked="detailDoubleClick"
                    :pagination="true"
                    :paginationPageSize="10"
                    :suppressPaginationPanel="true"
-                   :filterChanged="gridfilterChange"
       ></ag-grid-vue>
     </div>
     <!--分页-->
@@ -196,7 +109,7 @@
         :total="rowCount"></el-pagination>
     </div>
     <!--列表切换显示-->
-   <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false" top="30%">
+    <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false" top="30%">
       <template v-for="(collist,i) in gridOptions.columnDefs">
         <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)">
           {{collist.headerName}}
@@ -230,129 +143,21 @@
         <el-button type="primary" @click="colVisible3 = false">确 定</el-button>
       </div>
     </el-dialog>
-    <!-- 回单核销界面 -->
-    <!--<el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+
+    <!--
+--核销界面
+-->
+    <el-dialog :visible.sync="verVisible" size="full" :closeOnClickModal="false">
       <h2 style='text-align:center;margin-top:-2%'>返款核销</h2>
-      <el-form :model="filterForm" ref="filterForm" style='margin-top:2%'>
-        <div style='clear:float;width:100%'>
-          <span style='float:left;padding:0.4% 1% 0% 0%'>订单时间：</span>
-          <el-form-item  style='float:left;width:18%'>
-            <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
-                              :picker-options="pickerOptions" range-separator='/'>
-            </el-date-picker>
-          </el-form-item>
-
-          <span style='float:left;padding:0.6% 1% 0% 3%'>类型：</span>
-          <el-form-item style='float:left;width:7%'>
-            <el-select v-model="filterForm.payType" placeholder="类型" style="width: 100%">
-              <el-option label="现返" value="nowPay"></el-option>
-              <el-option label="欠返" value="inArrears"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item style="float:right;width:5%;padding-right:3%">
-            <el-button  @click="verVisible = false">取消</el-button>
-          </el-form-item>
-          <el-form-item style="float:right;width:7%;padding-right:2%">
-            <el-button @click="confirmSubmit">确认核销</el-button>
-          </el-form-item>
-          <el-form-item style="float:right;width:5%;padding-right:2%">
-            <el-button @click="drawGrid(2)">提取</el-button>
-          </el-form-item>
-        </div>
-        <el-form-item style="float:left;width:18.5%;clear:left">
-            <el-input placeholder="输入内容进行搜索" @input="onQuickFilterChanged2" style="width:100%"></el-input>
-        </el-form-item>
-        <el-popover ref="popover2" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-          <template v-for="(collist,i) in gridOptions2.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)"
-                            style="float: left;width: 180px">
-                {{collist.headerName}}
-              </el-checkbox>
-            </div>
-          </template>
-          <template>
-            <div class="colVisible">
-              <el-button @click="visibleChoice(1,'grid2')" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2,'grid2')" size="small">全不选</el-button>
-            </div>
-          </template>
-        </el-popover>
-        <el-form-item style="float:left;width:5%;margin-left:4.5%">
-          <el-button v-popover:popover2>设置</el-button>
-        </el-form-item>
-        <el-form-item style="float:left;width:25%;margin-left:14.5%">
-            <el-button @click="leftSelect"> > </el-button>
-            <el-button @click="leftSelectAll"> >> </el-button>
-            <el-button @click="rightSelect"> < </el-button>
-            <el-button @click="rightSelectAll"> << </el-button>
-        </el-form-item>
-         <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-          <template v-for="(collist,i) in gridOptions3.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)"
-                            style="float: left;width: 180px">
-                {{collist.headerName}}
-              </el-checkbox>
-            </div>
-          </template>
-          <template>
-            <div class="colVisible">
-              <el-button @click="visibleChoice(1,'grid3')" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2,'grid3')" size="small">全不选</el-button>
-            </div>
-          </template>
-        </el-popover>
-        <el-form-item style="float:right;width:5%;margin-right:3%">
-          <el-button v-popover:popover3>设置</el-button>
-        </el-form-item>
-        <el-form-item style="float:right;width:18.5%;margin-right:4%">
-            <el-input placeholder="输入内容进行搜索" @input="onQuickFilterChanged3" style="width:100%"></el-input>
-        </el-form-item>
-      </el-form>
-      <div style="margin-top: 10px;float:left;width:100%">
-            <ag-grid-vue style="width:48%;height: 550px;display:inline-block;" class="ag-blue"
-                        :gridOptions="gridOptions2"
-                        :suppressMovableColumns="true"
-                        :enableColResize="true"
-                        :enableSorting="true"
-                        :enableFilter="true"
-                        :groupHeaders="true"
-                        :suppressCellSelection="true"
-                        :rowHeight=40
-                        :headerHeight=40
-                        :gridReady="grid2Ready"
-                        :rowDoubleClicked="leftDoubleClick"
-                        :animateRows="true"
-                        rowSelection="multiple"/>
-            <ag-grid-vue style="display:inline-block;width:48%;margin-left:3%;height: 550px" class="ag-blue"
-                        :gridOptions="gridOptions3"
-                         :suppressMovableColumns="true"
-                         :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
-                         :suppressCellSelection="true"
-                         :rowHeight=40
-                         :headerHeight=40
-                         :rowDoubleClicked="rightDoubleClick"
-                         :animateRows="true"
-                         rowSelection="multiple"/>
-          </div>
-    </el-dialog> -->
-
-        <!--
-    --核销界面
-    -->
-    <el-dialog title="返款核销" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
-      <el-row :gutter="20">
+      <el-row :gutter="20" style="margin-top: 2%">
         <el-col :span="12">
           <el-form :model="filterForm" ref="filterForm" :inline="true">
             <div>
-              <el-form-item label="订单时间">
-                <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
-                                  :picker-options="pickerOptions" style='width:200px' range-separator='/'>
-                </el-date-picker>
+              <el-form-item label="运单号:">
+                <el-input v-model="filterForm.orderId" style="width: 150px"></el-input>
+              </el-form-item>
+              <el-form-item label="发货方:">
+                <el-input v-model="filterForm.shipNam" style="width: 100px"></el-input>
               </el-form-item>
             </div>
             <div>
@@ -379,27 +184,24 @@
                 <el-button v-popover:popover2>设置</el-button>
               </div>
               <el-form-item label="类型:">
-                <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px">
+                <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px" @change="typeChange(2)">
                   <el-option label="现返" value="nowPay"></el-option>
                   <el-option label="欠返" value="inArrears"></el-option>
                 </el-select>
               </el-form-item>
             </div>
           </el-form>
+          <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
           <div style="float: right">
             <el-button @click="leftSelect"> > </el-button>
             <el-button @click="leftSelectAll"> >> </el-button>
           </div>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged2" style="width: 200px"></el-input>
           <!--未核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions2"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
                          :headerHeight=40
@@ -446,9 +248,6 @@
                          :gridOptions="gridOptions3"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
-                         :enableSorting="true"
-                         :enableFilter="true"
-                         :groupHeaders="true"
                          :suppressCellSelection="true"
                          :rowHeight=40
                          :headerHeight=40
@@ -477,7 +276,7 @@
             <el-option label="现金" value="cash"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="摘要:">
+        <el-form-item label="备注:">
           <el-input v-model="confirmSubForm.digest"></el-input>
         </el-form-item>
       </el-form>
@@ -504,7 +303,6 @@
 <script>
   import {AgGridVue} from 'ag-grid-vue'
   import OrderDetails from '../ShowOrderDetails'
-  import PartialMatchFilterComponent from '../../common/PartialMatchFilterComponent'
   export default {
     created () {
       for (let i = 0; i < 100; i++) {
@@ -554,69 +352,184 @@
           rowData: [],
           columnDefs: [
             {
-              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '开单网点', width: 150, field: 'billBranch', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '开单网点',
+              width: 150,
+              field: 'billBranch',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '开单日期', width: 150, field: 'orderTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '开单日期',
+              width: 150,
+              field: 'orderTim',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '发站', width: 150, field: 'startStation', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '发站',
+              width: 150,
+              field: 'startStation',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '到站', width: 150, field: 'arrStation', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '到站',
+              width: 150,
+              field: 'arrStation',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '发货方',
+              width: 150,
+              field: 'shipNam',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '发货人联系方式', width: 150, field: 'shipTel', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '发货方联系方式',
+              width: 150,
+              field: 'shipTel',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '收货方',
+              width: 150,
+              field: 'receNam',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '收货人联系方式', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '收货方联系方式',
+              width: 150,
+              field: 'receTel',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '开单客服', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '品名',
+              width: 150,
+              field: 'goodsNam',
+              hide: true,
+              visible: false
             },
             {
-              headerName: '中转费', width: 150, field: 'changeFee', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '件数',
+              width: 60,
+              field: 'goodsNums',
+              hide: true,
+              visible: false
             },
             {
-              headerName: '中转时间', width: 150, field: 'changeTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '开单客服',
+              width: 150,
+              field: 'serviceNam',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '业务员', width: 150, field: 'salesmanId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '中转费',
+              width: 150,
+              field: 'changeFee',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '备注', width: 150, field: 'trilNote', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '中转时间',
+              width: 150,
+              field: 'changeTim',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '回单份数', width: 150, field: 'receNums', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '备注',
+              width: 150,
+              field: 'trilNote',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '核销状态', width: 150, field: 'veriState', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '回单份数',
+              width: 150,
+              field: 'receNums',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '核销人', width: 150, field: 'veriNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '付款方式',
+              width: 150,
+              field: 'payType',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '核销日期', width: 150, field: 'veriTim', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '现返金额',
+              width: 150,
+              field: 'feeMoney',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '核销网点', width: 150, field: 'veriSite', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '核销状态',
+              width: 150,
+              field: 'veriState',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '支付方式', width: 150, field: 'payMode', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '核销人',
+              width: 150,
+              field: 'veriNam',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
-            {}
+            {
+              headerName: '核销日期',
+              width: 150,
+              field: 'veriTim',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销网点',
+              width: 150,
+              field: 'veriSite',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '支付方式',
+              width: 150,
+              field: 'payMode',
+              filter: 'text',
+              hide: false,
+              visible: true
+            }
           ],
           context: {
             componentParent: this
@@ -626,21 +539,113 @@
           rowData: [],
           columnDefs: [
             {
-              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '开单网点',
+              width: 150,
+              field: 'billBranch',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '开单日期',
+              width: 150,
+              field: 'orderTim',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '开单客服', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '发站',
+              width: 150,
+              field: 'startStation',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
-            {}
+            {
+              headerName: '到站',
+              width: 150,
+              field: 'arrStation',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '发货方',
+              width: 150,
+              field: 'shipNam',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '发货方联系方式',
+              width: 150,
+              field: 'shipTel',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '收货方',
+              width: 150,
+              field: 'receNam',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '收货方联系方式',
+              width: 150,
+              field: 'receTel',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '品名',
+              width: 150,
+              field: 'goodsNam',
+              hide: true,
+              visible: false
+            },
+            {
+              headerName: '件数',
+              width: 60,
+              field: 'goodsNums',
+              hide: true,
+              visible: false
+            },
+            {
+              headerName: '开单客服',
+              width: 150,
+              field: 'serviceNam',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '回单份数',
+              width: 150,
+              field: 'receNums',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '现返金额',
+              width: 150,
+              field: 'feeMoney',
+              filter: 'text',
+              hide: false,
+              visible: true
+            }
           ],
           context: {
             componentParent: this
@@ -650,21 +655,113 @@
           rowData: [],
           columnDefs: [
             {
-              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '运单号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '开单网点',
+              width: 150,
+              field: 'billBranch',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '开单日期',
+              width: 150,
+              field: 'orderTim',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
             {
-              headerName: '开单客服', width: 150, field: 'serviceNam', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+              headerName: '发站',
+              width: 150,
+              field: 'startStation',
+              filter: 'text',
+              hide: false,
+              visible: true
             },
-            {}
+            {
+              headerName: '到站',
+              width: 150,
+              field: 'arrStation',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '发货方',
+              width: 150,
+              field: 'shipNam',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '发货方联系方式',
+              width: 150,
+              field: 'shipTel',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '收货方',
+              width: 150,
+              field: 'receNam',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '收货方联系方式',
+              width: 150,
+              field: 'receTel',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '品名',
+              width: 150,
+              field: 'goodsNam',
+              hide: true,
+              visible: false
+            },
+            {
+              headerName: '件数',
+              width: 60,
+              field: 'goodsNums',
+              hide: true,
+              visible: false
+            },
+            {
+              headerName: '开单客服',
+              width: 150,
+              field: 'serviceNam',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '回单份数',
+              width: 150,
+              field: 'receNums',
+              filter: 'text',
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '现返金额',
+              width: 150,
+              field: 'feeMoney',
+              filter: 'text',
+              hide: false,
+              visible: true
+            }
           ],
           context: {
             componentParent: this
@@ -673,40 +770,38 @@
         // 根据下拉框，表格最后显示不同的列
         additionalColumnDefs: {
           nowPay: {
-            headerName: '现返金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '现返金额',
+            width: 150,
+            field: 'feeMoney',
+            filter: 'text',
+            hide: false,
+            visible: true
           },
           inArrears: {
-            headerName: '欠返金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
-          }
-        },
-        additionalColumnDefs2: {
-          nowPay: {
-            headerName: '现返金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
-          },
-          inArrears: {
-            headerName: '欠返金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
-          }
-        },
-        additionalColumnDefs3: {
-          nowPay: {
-            headerName: '现返金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
-          },
-          inArrears: {
-            headerName: '欠返金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true, filterFramework: PartialMatchFilterComponent
+            headerName: '欠返金额',
+            width: 150,
+            field: 'feeMoney',
+            filter: 'text',
+            hide: false,
+            visible: true
           }
         },
         // 定义筛选条件
         filterForm: {
-          startTime: '', // 开始时间
-          endTime: '', // 截止时间
+          dateInterval: '', // 时间间隔
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          payType: 'nowPay' // 类型（现付，到付，欠付，月结）
+          shipNam: '', //  发货方
+          orderId: '', // 运单号
+          payType: 'nowPay',
+          veriState: '', // 核销状态
+          pageNum: 1, // 当前页码数
+          pageSize: 20 // 分页大小
         },
         // 各种费用合计
         totalForm: {
-          transferFeeTotal: 0, // 中转费合计
-          totalMoney: 0 // 三方收入合计
+          totalMoney: 0, // 欠返金额合计
+          transferFeeTotal: 0 // 现返金额合计
         },
         // 核销完成后提交给后台的数据
         confirmSubForm: {
@@ -726,7 +821,65 @@
         detailVisible: false, // 订单详情弹框
         currentPage: 1, // 分页当前页面
         pageSize: 20, // 每页显示的数据
-        rowCount: 0 // 总数据量（如果有筛选，则是筛选后的）
+        rowCount: 0, // 总数据量（如果有筛选，则是筛选后的）
+        // 设置日期选择器的条件
+        pickerOptions: {
+          shortcuts: [{
+            text: '上周',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfWeek = now.getDay()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * (nowDayOfWeek + 6))
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfWeek)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '上个月',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfMonth = now.getDate()
+              const nowMonth = now.getMonth()
+              start.setDate(1)
+              start.setMonth(nowMonth - 1)
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfMonth)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '去年',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowYear = now.getFullYear()
+              start.setYear(nowYear - 1)
+              start.setMonth(0)
+              start.setDate(1)
+              end.setYear(nowYear - 1)
+              end.setMonth(11)
+              end.setDate(31)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '今年',
+            onClick (picker) {
+              const start = new Date()
+              const end = new Date()
+              start.setMonth(0)
+              start.setDate(1)
+              picker.$emit('pick', [start, end])
+            }
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
+          }
+        }
       }
     },
     components: {
@@ -770,26 +923,25 @@
         this.createRowData(i)
         this.calculateGrid()
       },
-       // 更新列数据
+      // 更新列数据
       updateGrid (i) {
         if (i === 1) {
           const payType = this.filterForm.payType
-          const lenth = (this.gridOptions.columnDefs.length - 1)
           if (payType === 'nowPay') {
-            this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.nowPay
+            this.gridOptions.columnDefs[18] = this.additionalColumnDefs.nowPay
           } else if (payType === 'inArrears') {
-            this.gridOptions.columnDefs[lenth] = this.additionalColumnDefs.inArrears
+            this.gridOptions.columnDefs[18] = this.additionalColumnDefs.inArrears
           }
           this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
         } else if (i === 2) {
           const payType = this.filterForm.payType
           const lenth = (this.gridOptions2.columnDefs.length - 1)
           if (payType === 'nowPay') {
-            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.nowPay
-            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.nowPay
+            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs.nowPay
+            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs.nowPay
           } else if (payType === 'inArrears') {
-            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs2.inArrears
-            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs3.inArrears
+            this.gridOptions2.columnDefs[lenth] = this.additionalColumnDefs.inArrears
+            this.gridOptions3.columnDefs[lenth] = this.additionalColumnDefs.inArrears
           }
           this.gridOptions2.api.setColumnDefs(this.gridOptions2.columnDefs)
           this.gridOptions3.api.setColumnDefs(this.gridOptions3.columnDefs)
@@ -804,6 +956,16 @@
           this.gridOptions2.rowData = this.testData2
           this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
         }
+      },
+      // 核销界面，提取库存时，修改类型，清空表格数据
+      typeChange (i) {
+        this.updateGrid(i)
+        this.gridOptions.rowData = []
+        this.gridOptions2.rowData = []
+        this.gridOptions3.rowData = []
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
+        this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
+        this.gridOptions3.api.setRowData(this.gridOptions3.rowData)
       },
       // 切换列的可见性，三个表格，三个参数j
       updateColumnDefsVisible (j, collist) {
@@ -861,15 +1023,19 @@
       // 显示切换核销界面的弹框
       verification () {
         this.filterForm = {
-          startTime: '', // 开始时间
-          endTime: '', // 截止时间
+          dateInterval: '', // 时间间隔
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          payType: 'nowPay' // 支付类型
+          shipNam: '', //  发货方
+          payType: 'nowPay', // 类型（现付，到付，欠付，月结）
+          orderId: '', // 运单号
+          veriState: '', // 核销状态
+          pageNum: 1, // 当前页码数
+          pageSize: 20 // 分页大小
         }
         this.verVisible = true
-        this.gridOptions2.api.selectAll()
-        this.gridOptions3.api.selectAll()
+        this.gridOptions2.api.selectAllFiltered()
+        this.gridOptions3.api.selectAllFiltered()
         let data2 = this.gridOptions2.api.getSelectedRows()
         let data3 = this.gridOptions3.api.getSelectedRows()
         this.gridOptions2.api.updateRowData({remove: data2})

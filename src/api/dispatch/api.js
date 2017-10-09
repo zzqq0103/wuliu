@@ -2,7 +2,7 @@ import axios from 'axios'
 
 let baseUrl = ''
 
-// -------  已 送 货 订 单 开 始 --------
+// -------  已 送 货 装 载 单 开 始 --------
 
 // 获得当前已经运送的装载单接口
 export const getCurrentDelivered = params => {
@@ -16,7 +16,7 @@ export const getQueryOrderList = params => {
 
 // -------  已 接 货 订 单 开 始 --------
 
-// 获得当前已经接收的订单接口
+// 获得当前已经接收的订单接
 export const getCurrentReceived = params => {
   return axios.get(`${baseUrl}/receivedOrder/getlist`, {params: params})
 }

@@ -1,62 +1,56 @@
 import axios from 'axios'
+// import qs from 'qs'
 
-let baseUrl = ''
+axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8'
+axios.defaults.baseURL = 'http://10.107.10.102:8080/'
+// axios.defaults.withCredentials = true
 
-// -------  已 送 货 订 单 开 始 --------
+// // POST传参序列化
+// axios.interceptors.request.use((config) => {
+//   if (config.method === 'post') {
+//     config.data = qs.parse(config.data)
+//   }
+//   return config
+// }, (error) => {
+//   return Promise.reject(error)
+// })
 
-// 获得当前已经运送的装载单接口
-export const getCurrentDelivered = params => {
-  return axios.get(`${baseUrl}/deliveredOrder/getLoadedlist`, {params: params})
+// // 返回状态判断
+// axios.interceptors.response.use((res) => {
+//   // if (!res.data.success) {
+//   //   console.log('success')
+//   //   return Promise.reject(res)
+//   // }
+//   if (res.data.result) {
+//     console.log('success')
+//     return Promise.reject(res)
+//   }
+//   return res
+// }, (error) => {
+//   console.log(error)
+//   return Promise.reject(error)
+// })
+
+// 实际调用axios的地方，传递url与params获取数据
+export function fetch (url, params) {
+  return new Promise((resolve, reject) => {
+    axios.post(url, params)
+      .then(response => {
+        resolve(response)
+      })
+      .catch(error => {
+        reject(error)
+      })
+  })
 }
 
-// 获取查询的订单接口
-export const getQueryOrderList = params => {
-  return axios.get(`${baseUrl}/deliveredOrder/getQueryOrderList`, {params: params})
-}
-
-// -------  已 接 货 订 单 开 始 --------
-
-// 获得当前已经接收的订单接口
-export const getCurrentReceived = params => {
-  return axios.get(`${baseUrl}/receivedOrder/getlist`, {params: params})
-}
-
-// 获取查询的接收订单接口
-export const getQueryReceiveList = params => {
-  return axios.get(`${baseUrl}/receivedOrder/getQueryOrderList`, {params: params})
-}
-// -------  已 接 货 订 单 结 束 --------
-
-// -------  已 中 转 订 单 开 始 --------
-
-// 获得当前已经中转的订单接口
-export const getCurrentEpiboliedList = params => {
-  return axios.get(`${baseUrl}/epiboliedListOrder/getlist`, {params: params})
-}
-
-// 获取查询的中转订单接口
-export const getQueryEpiboliedList = params => {
-  return axios.get(`${baseUrl}/epiboliedListOrder/getQueryOrderList`, {params: params})
-}
-
-// -------  已 中 转 订 单 结 束 --------
-
-// -------  已 长 途 运 输 订 单 开 始 --------
-
-// 获得当前已经运送的订单接口
-export const getCurrentTransportedData = params => {
-  return axios.get(`${baseUrl}/transportedOrder/getlist`, {params: params})
-}
-
-// 获取查询的订单接口
-export const getQueryTransOrderList = params => {
-  return axios.get(`${baseUrl}/transportedOrder/getQueryOrderList`, {params: params})
-}
-
-// -------  已 长 途 运 输 订 单 结 束 --------
-
-// 获取装载单中的订单列表
-
-export const getOrderList = params => {
-  return axios.get(`${baseUrl}/Loader/getOrderList`, {params: params})
+export default {
+  /**
+   *
+   * 中转费
+   *
+   * **/
+  getTransferFee (params) {
+    return fetch('/logistics/interface/orderFinanceViewManagement/list_change_fee', params)
+  }
 }

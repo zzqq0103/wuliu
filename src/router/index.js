@@ -154,6 +154,10 @@ export default new Router({
           component: resolve => require(['../components/customerService/OrderError.vue'], resolve)
         },
         {
+          path: '/vehicleError',
+          component: resolve => require(['../components/customerService/vehicleError.vue'], resolve)
+        },
+        {
           path: '/logisticsDetail',
           component: resolve => require(['../components/customerService/LogisticsDetail.vue'], resolve)
         },

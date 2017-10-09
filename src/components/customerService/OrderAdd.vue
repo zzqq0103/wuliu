@@ -3,24 +3,35 @@
     <h2 style="text-align:center">网点开单</h2>
     <el-form  :model="form" ref="form">
       <div style='margin-top:2%;display:inline-block;width:100%'>
-        <span style='float:left;padding-top:0.7%;width:5%'>日期：</span>
-        <span style='float:left;padding-top:0.9%;width:13%'>{{timeNow}}</span>
-        <span class='order-title-base' style='width:7%'>始发站：</span>
-        <div style="width: 150px; float: left">
+        <span style='float:left;padding-top:0.7%;width:80px'>日期：</span>
+        <span style='float:left;padding-top:0.9%;width:150px'>{{timeNow}}</span>
+        
+        <span class='order-title-base' style='width:100px'>始发站：</span>
+        <el-form-item style="float:left;width:100px">
+          <el-select placeholder="" v-model="form.startStation" @change="handleChange1">
+            <el-option v-for="item in initForm.stationOptions" :value="item" :key="item" :label="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- <div style="width: 150px; float: left">
             <el-cascader
               expand-trigger="hover"
               :options="initForm.stationOptions"
               @change="handleChange1">
             </el-cascader>
-        </div>
-        <span class='order-title-base' style='width:7%'>目的站：</span>
-        <div style="width: 150px; float: left">
+        </div> -->
+        <span class='order-title-base' style='width:100px'>目的站：</span>
+        <el-form-item style="float:left;width:100px">
+          <el-select placeholder="" v-model="form.arrStation" @change="handleChange2">
+            <el-option v-for="item in initForm.stationOptions" :value="item" :key="item" :label="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- <div style="width: 150px; float: left">
             <el-cascader
               expand-trigger="hover"
               :options="initForm.stationOptions"
               @change="handleChange2">
             </el-cascader>
-        </div>
+        </div> -->
         <span style='float:left;padding:0.7% 0 0 2%;width:7%'>订单号：</span>
         <span style='float:left;padding-top:0.9%;width:15%'>{{initForm.orderId}}</span>
       </div>
@@ -110,11 +121,11 @@
         <span class='label label-mo col-1'>货物名称</span>
         <span class='label label-mo col-1'>包装</span>
         <span class='label col-1 label-mo'>件数</span>
-        <span class='label col-1 label-mo'>重量</span>
-        <span class='label col-1 label-mo'>体积</span>
+        <span class='label col-1 label-mo'>总重量</span>
+        <span class='label col-1 label-mo'>总体积</span>
         <span class='label col-1 label-mo'>送货方式</span>
         <span class='label col-1 label-mo'>交货方式</span>
-        <label class='label col-1 label-mo'>是否控货</label>
+        <label class='label col-1 label-mo'>提货网点</label>
         <label class='label2 col-2' style="height:29px">回单</label>
         <label class='label2 col-1' style="height:29px">回单份数</label>
         <label class='label2 col-1' style="height:29px">回单押款</label>
@@ -136,36 +147,45 @@
           <el-option key="zhixiang" label="普件" value="pujian"></el-option>
           <el-option key="muxiang" label="加急件" value="jiajijian"></el-option>
         </el-select>
-        <el-select placeholder="" class='col-1 select input-mid' v-model="form.sendMode">
-          <el-option key="zhixiang" label="自提" value="ziti"></el-option>
-          <el-option key="muxiang" label="送货上门" value="songhuo"></el-option>
+        <el-select placeholder="" class='col-1 select input-mid' v-model="form.sendMode" @change="setsendMode()">
+          <el-option key="ziti" label="自提" value="ziti"></el-option>
+          <el-option key="songhuo" label="送货上门" value="songhuo"></el-option>
         </el-select>
-        <el-select placeholder="" class='col-1 select input-mid' v-model="form.isListenToRele">
-          <el-option key="yes" label="是" value="yes"></el-option>
-          <el-option key="no" label="否" value="no"></el-option>
-        </el-select>
+        <div v-if="this.form.sendMode === 'ziti'">
+          <el-select placeholder="" class='col-1 select input-mid' v-model="form.branch">
+            <el-option v-for="item in branchList" :value="item" :key="item" :label="item"></el-option>
+          </el-select>
+        </div>
+        <div v-else>
+          <input class='input col-1 input-mid' v-bind:readonly="true"  v-model="form.branch"></input>
+        </div>
         <input list="receList" v-model="form.receNums" v-bind:class="{'error':isreceNums}" @blur="check(9,'receNums')" type="number" @change="setReceMoney" class='input-tishi col-1 select input-mid'/>
         <datalist id="receList">
           <option v-for="item in receList" :value="item" :key="item" />
         </datalist>
         <input class='input input-mid col-1' v-model="form.receMoney" v-bind:class="{'error':isreceMoney}" @blur="check(9,'receMoney')"></input>
+        <label class='label col-1 label-mo'>是否控货</label>
         <span class='label col-1 label-mo'>运费</span>
         <span class='label col-1 label-mo'>提货费</span>
         <span class='label col-1 label-mo'>送货费</span>
         <span class='label col-1 label-mo'>包装费</span>
         <span class='label col-1 label-mo'>卸货费</span>
         <span class='label col-1 label-mo'>保价费</span>
-        <span class='label col-2 label-mo'>代收费</span>
+        <span class='label col-1 label-mo'>代收费</span>
         <label class='label2 col-2' style="height:29px">返款</label>
         <label class='label2 col-1' style="height:29px">金额</label>
         <label class='label2 col-1' style="height:29px">支付方式</label>
+        <el-select placeholder="" class='col-1 select input-mid' v-model="form.isListenToRele">
+          <el-option key="yes" label="是" value="yes"></el-option>
+          <el-option key="no" label="否" value="no"></el-option>
+        </el-select>
         <input class='input col-1 input-mid' @click="baseFeeVisible=true" v-model="form.baseFee" type="number" v-bind:class="{'error':isbaseFee}" @blur="check(9,'baseFee')"></input>
         <input class='input col-1 input-mid' v-model="form.pickUpFee" type="number" v-bind:class="{'error':ispickUpFee}" @blur="check(9,'pickUpFee')"></input>
         <input class='input col-1 input-mid' v-model="form.sendFee" type="number" v-bind:class="{'error':issendFee}" @blur="check(9,'sendFee')"></input>
         <input class='input col-1 input-mid' v-model="form.packFee" type="number" v-bind:class="{'error':ispackFee}" @blur="check(9,'packFee')"></input>
         <input class='input col-1 input-mid' v-model="form.landingFee" type="number" v-bind:class="{'error':islandingFee}" @blur="check(9,'landingFee')"></input>
         <input class='input col-1 input-mid' v-model="insurance" @click="coverageVisible = true" v-bind:readonly="true" type="number" v-bind:class="{'error':isinsurance}"></input>
-        <input class='input col-2 input-mid' v-model="goodsPayment2" @click="goodsPaymentVisible = true" v-bind:readonly="true" type="number" v-bind:class="{'error':isgoodsPayment}"></input>
+        <input class='input col-1 input-mid' v-model="goodsPayment2" @click="goodsPaymentVisible = true" v-bind:readonly="true" type="number" v-bind:class="{'error':isgoodsPayment}"></input>
         <input class='input col-1 input-mid' v-model="form.refuMoney" @change="setRetuPayMode"  type="number" v-bind:class="{'error':isrefuMoney}" @blur="check(9,'refuMoney')"></input>
         <!-- <input class='input col-1 input-mid'></input> -->
         <el-select placeholder="请选择" class='col-1 select input-mid error' v-model="form.retuPayMode" v-bind:style="retuPayModeObject" @change="check(11,'retuPayMode')">
@@ -252,6 +272,7 @@
 
 <script>
 import regionJson from '../../../static/region.json'
+// import api from '../../api/customerService/api.js'
 export default {
   created () {
     this.regionList = regionJson
@@ -328,8 +349,10 @@ export default {
       feeMoney2Ok: false,
       feeMoney3Ok: false,
       feeMoney4Ok: false,
+      branchOk: false,
       StationSelected: false,
       goodsPayment2: 0, // 代收费
+      branchList: [], // 选择自提后的网点列表
       retuPayModeObject: {}, // 支付方式下拉框样式
       fahuoRelated: {
         shenfenSelected: '北京',
@@ -382,30 +405,11 @@ export default {
       // 进入页面时从后台获取数据
       initForm: {
         retuPayModeList: ['无'], // 返款类型数组
-        stationOptions: [{
-          value: '北京',
-          label: '北京',
-          children: [{
-            value: '北京',
-            label: '北京'
-          }]
-        }, {
-          value: '江苏',
-          label: '江苏',
-          children: [{
-            value: '南京',
-            label: '南京'
-          }, {
-            value: '苏州',
-            label: '苏州'
-          }, {
-            value: '无锡',
-            label: '无锡'
-          }]
-        }],
+        stationOptions: ['北京', '无锡', '苏州', '常州', '镇江'],
         orderId: '121212'
       },
       form: {
+        branch: '无', // 选择自提后的网点
         id: '12345',
         billBranch: '',
         startStation: '', // 始发站
@@ -425,7 +429,7 @@ export default {
         isListenToRele: '否',
         orderType: '普件',
         tranMode: '',
-        sendMode: '自提',
+        sendMode: '送货上门',
         baseFee: 0,
         packFee: 0,
         sendFee: 0,
@@ -508,6 +512,16 @@ export default {
     test () {
       alert('sds')
     },
+    // 交货方式改变时设置相关列表
+    setsendMode () {
+      if (this.form.sendMode === 'ziti') {
+        this.branchList = ['网点1', '网点2', '网点2']
+        this.form.branch = this.branchList[0]
+      } else {
+        this.branchList = []
+        this.form.branch = '无'
+      }
+    },
     // 设置弹窗隐藏
     setBlur (num) {
       /*
@@ -572,13 +586,24 @@ export default {
       }
     },
     // 根据表单上方始发站选择提货地址
-    handleChange1 (value) {
-      let data = (value.toString()).split(',')
+    handleChange1 () {
       /* startStation: '', // 始发站
         arrStation: */
-      this.form.startStation = data[1]
-      this.form.shenfenSelected = data[0]
-      this.form.shiSelected = data[1]
+      this.form.shiSelected = this.form.startStation
+      // 处理获得市对应县
+      let regionList = regionJson
+      let beijingList = regionList[0].sub
+      let jiangsuList = regionList[6].sub
+      beijingList.filter(item => {
+        if (item.name === this.form.shiSelected) {
+          this.form.shenfenSelected = '北京'
+        }
+      })
+      jiangsuList.filter(item => {
+        if (item.name === this.form.shiSelected) {
+          this.form.shenfenSelected = '江苏'
+        }
+      })
       this.form.quSelected = ''
       this.form.baseAddressFa = this.form.shenfenSelected + this.form.shiSelected + this.form.quSelected
       this.setShi(1)
@@ -586,10 +611,21 @@ export default {
     },
     // 根据表单上方目的站选择设置收货地址
     handleChange2 (value) {
-      let data = (value.toString()).split(',')
-      this.form.arrStation = data[1]
-      this.form.shenfenSelected2 = data[0]
-      this.form.shiSelected2 = data[1]
+      this.form.shiSelected2 = this.form.arrStation
+      // 处理获得市对应县
+      let regionList = regionJson
+      let beijingList = regionList[0].sub
+      let jiangsuList = regionList[6].sub
+      beijingList.filter(item => {
+        if (item.name === this.form.shiSelected2) {
+          this.form.shenfenSelected2 = '北京'
+        }
+      })
+      jiangsuList.filter(item => {
+        if (item.name === this.form.shiSelected2) {
+          this.form.shenfenSelected2 = '江苏'
+        }
+      })
       this.form.quSelected2 = ''
       this.form.baseAddressShou = this.form.shenfenSelected2 + this.form.shiSelected2 + this.form.quSelected2
       this.setShi(2)
@@ -640,8 +676,10 @@ export default {
         }
       } else if (num === 5) {
         this.addressVisible = false
+        this.baseAddressFaOk = false
         if (this.form.shiSelected === '' && this.form.shenfenSelected === '' && this.form.quSelected === '') {
           this.isbaseAddressFa = true
+          this.baseAddressFaOk = false
           setTimeout(() => { this.isbaseAddressFa = false }, 800)
         } else if (this.form.shiSelected === '' || this.form.shenfenSelected === '' || this.form.quSelected === '') {
           this.isbaseAddressFa = true
@@ -675,16 +713,18 @@ export default {
         }
       } else if (num === 7) {
         this.addressVisible2 = false
+        this.baseAddressShouOk = false
         if (this.form.shiSelected2 === '' && this.form.shenfenSelected2 === '' && this.form.quSelected2 === '') {
           this.isbaseAddressShou = true
+          this.baseAddressShouOk = false
           setTimeout(() => { this.isbaseAddressShou = false }, 800)
         } else if (this.form.shiSelected2 === '' || this.form.shenfenSelected2 === '' || this.form.quSelected2 === '') {
-          this.isbaseAddressShou = true
-          this.baseAddressShouOk = false
           setTimeout(() => { this.isbaseAddressShou = false }, 800)
           this.wrongNote = '请选择收货货完整区域'
           this.wrongNoteVisable = true
           setTimeout(() => { this.wrongNoteVisable = false }, 800)
+          this.isbaseAddressShou = true
+          this.baseAddressShouOk = false
         } else {
           this.isbaseAddressShou = false
           this.baseAddressShouOk = true
@@ -765,9 +805,9 @@ export default {
         this.wrongNote = '地址与所选站点不匹配'
         this.wrongNoteVisable = true
         setTimeout(() => { this.wrongNoteVisable = false }, 800)
-        this.feeHave = false
+        return false
       } else {
-        this.feeHave = true
+        return true
       }
     },
 
@@ -789,8 +829,8 @@ export default {
       let list1 = ['goodsWeight', 'goodsVolumn', 'receNums', 'receMoney', 'baseFee', 'pickUpFee', 'sendFee', 'packFee', 'landingFee', 'coverage', 'goodsPayment', 'refuMoney', 'unActIncome', 'unActExpense']
       // 'feeMoney1', 'feeMoney2', 'feeMoney3', 'feeMoney4'
       let list2 = ['goodsWeight', 'goodsVolumn']
-      let list3 = ['shipNam', 'shipTel', 'pickUpAdr', 'goodsNam', 'baseAddressFa', 'baseAddressShou',
-        'receNam', 'receTel', 'receAdr', 'goodsNam'] // 货物名称
+      let list3 = ['shipNam', 'shipTel', 'pickUpAdr', 'goodsNam',
+        'receNam', 'receTel', 'receAdr', 'goodsNam'] // 货物名称等验证
       let list4 = ['retuPayMode'] // 下拉验证：支返款付方式
       // let list5 = ['feeMoney1', 'feeMoney2', 'feeMoney3', 'feeMoney4'] // 支付费用：现，到，欠，月
       for (let i = 1; i < 9; i++) {
@@ -819,10 +859,9 @@ export default {
       if (this.shipNamOk && this.shipTelOk && this.baseAddressFaOk && this.pickUpAdrOk && this.receNamOk &&
       this.receTelOk && this.baseAddressShouOk && this.receAdrOk && this.goodsNamOk &&
       this.goodsNumsOk && this.goodsWeightOk && this.goodsVolumnOk) {
-        this.isAttSta()
+        // this.isAttSta()
         if (type === 1) {
-          if (this.feeHave) {
-            console.log('可以生成基本费用')
+          if (this.isAttSta()) {
             this.getBaseFee()
           }
         }
@@ -832,8 +871,9 @@ export default {
           this.retuPayModeOk && this.unActIncomeOk && this.unActExpenseOk && this.feeMoney1Ok && this.feeMoney2Ok &&
           this.feeMoney3Ok && this.feeMoney4Ok) {
             console.log('数据已经全部填上')
+            this.isAttSta()
             this.isPayTotal()
-            if (this.isPayTotal()) {
+            if (this.isPayTotal() && this.feeHave) {
               this.submitOrderVisible = true
               console.log('可以提交订单')
               // this.submitOrder()

@@ -1,28 +1,19 @@
- <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
+ <template>
   <div>
     <h2 style="text-align:center;margin-top:0">新建预约单</h2>
-
-    <div style='margin-top:2%;display:inline-block;width:100%;text-align:center'>
-      <span style='float:left;padding-top:0.7%;width:5%'>日期：</span>
-      <span style='float:left;padding-top:0.9%;width:13%'>{{timeNow}}</span>
-      <span style='width:100px;float: left;padding-top: 0.7%;margin-left: 2%'>始发站：</span>
-      <div style="width: 150px; float: left">
-          <el-cascader
-            expand-trigger="hover"
-            :options="initForm.stationOptions"
-            @change="handleChange1">
-          </el-cascader>
-      </div>
-      <span style='width:100px;float: left;padding-top: 0.7%;margin-left: 2%'>目的站：</span>
-      <div style="width: 150px; float: left">
-          <el-cascader
-            expand-trigger="hover"
-            :options="initForm.stationOptions"
-            @change="handleChange2">
-          </el-cascader>
-      </div>
-      <span style='float:left;padding:0.7% 0 0 2%;width:100px'>预约单号：</span>
-      <span style='float:left;padding-top:0.9%;width:100px'>{{initForm.id}}</span>
+    <div style='margin-top:2%;display:inline-block;width:100%'>
+      <span style='float:left;width:80px'>日期：</span>
+      <span style='float:left;margin-top:2px;width:200px'>{{timeNow}}</span>
+      <span  style='width:100px;float:left'>始发站：</span>
+      <el-select placeholder="请选择" style="width:100px;float:left;margin-top:-5px" v-model="appointForm.startStation" @change="handleChange1">
+        <el-option v-for="item in initForm.stationOptions" :value="item" :key="item" :label="item"></el-option>
+      </el-select>
+      <span  style='width:100px;float:left;margin-left:30px'>目的站：</span>
+      <el-select placeholder="请选择" style="width:100px;float:left;margin-top:-5px" v-model="appointForm.arrStation" @change="handleChange2">
+        <el-option v-for="item in initForm.stationOptions" :value="item" :key="item" :label="item"></el-option>
+      </el-select>
+      <span style='float:left;width:100px;margin-left:30px'>订单号：</span>
+      <span style='float:left;width:150px;margin-top:3px'>{{initForm.orderId}}</span>
     </div>
     <div style='margin-top:2%;clear:both'/>
     <div class='div-form'>
@@ -126,19 +117,19 @@
           <el-input style='width:78%' v-model="appointForm.receAdrDe" placeholder="输入详细收货地址" ></el-input>
         </el-form-item>
         <el-form-item label="货物名称：" style="float:left;width:50%" label-width="100px" prop="goodsNam">
-          <el-input v-model="appointForm.goodsNam" style="width:60%"></el-input>
+          <el-input v-model="appointForm.goodsNam" placeholder="请输入货物名称" style="width:60%"></el-input>
         </el-form-item>
         <el-form-item label="件数：" style="float:left;width:50%" label-width="100px" prop="goodsNums">
-          <el-input v-model="appointForm.goodsNums" style="width:60%" type="number"></el-input>
+          <el-input v-model="appointForm.goodsNums" style="width:60%" placeholder="请输入货物件数" type="number"></el-input>
         </el-form-item>
-        <el-form-item label="重量：" style="float:left;width:50%" label-width="100px" prop="goodsWeight">
-          <el-input v-model="appointForm.goodsWeight" style="width:60%"></el-input>
+        <el-form-item label="总重量：" style="float:left;width:50%" label-width="100px" prop="goodsWeight">
+          <el-input v-model="appointForm.goodsWeight" placeholder="请输入货物总重量" style="width:60%"></el-input>
         </el-form-item>
-        <el-form-item label="体积：" style="float:left;width:50%" label-width="100px" prop="goodsVolumn">
-          <el-input v-model="appointForm.goodsVolumn" style="width:60%"></el-input>
+        <el-form-item label="总体积：" style="float:left;width:50%" label-width="100px" prop="goodsVolumn">
+          <el-input v-model="appointForm.goodsVolumn" placeholder="请输入货物总体积" style="width:60%"></el-input>
         </el-form-item>
         <el-form-item label="包装：" style="float:left;width:50%" label-width="100px" prop="package">
-          <el-select placeholder="" style="width:60%" v-model="appointForm.package">
+          <el-select placeholder="请选择" style="width:60%" v-model="appointForm.package">
             <el-option key="zhixiang" label="纸箱" value="zhixiang"></el-option>
             <el-option key="muxiang" label="木箱" value="muxiang"></el-option>
             <el-option key="mukuang" label="木框" value="mukuang"></el-option>
@@ -149,14 +140,21 @@
             <el-option key="no" label="无" value="no"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="敞车是否接送：" label-width='120px' style='clear:both;width:100%;margin-left:-20px' prop="isChangche">
+          <el-radio-group v-model="appointForm.isChangche">
+            <el-radio label="是" name='1'></el-radio>
+            <el-radio label="否" name='0'></el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="货物备注：" style="clear:both;width:100%" label-width="100px">
-          <el-input v-model="appointForm.note" style="width:78%"></el-input>
+          <el-input v-model="appointForm.note" placeholder="请输入货物备注" style="width:78%"></el-input>
         </el-form-item>
       </el-form>
     </div>
     <div style='text-align:center'>
       <el-button style='margin-top:2%' type="primary" @click="submitAppoint('appointForm')">保存</el-button>
       <el-button style='margin-left:10%' @click="cancleVisable=true">取消</el-button>
+      <el-button style='margin-left:10%' @click="testGet()">测试</el-button>
     </div>
     <!--提交弹窗-->
     <el-dialog title="" :visible.sync="submitVisable" size="" tiny>
@@ -174,17 +172,36 @@
     <el-dialog title="错误：" :visible.sync="wrongNoteVisable" size="tiny">
       <h2 style="text-align:center;padding: 30px 0 30px 0px">{{wrongNote}}</h2>
     </el-dialog>
+    <!-- 异常弹窗 -->
+    <el-dialog title="" :visible.sync="errorVisable" size="" tiny>
+      <h2 style="text-align:center;padding: 30px 0 30px 0px">{{errorNote}}</h2>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancle_ok">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
   import regionJson from '../../../static/region.json'
+  import api from '../../api/customerService/api.js'
   export default {
     created () {
       this.regionList = regionJson
+      // this.getStationListFro()
     },
     data () {
       return {
+        Form: {
+          // orderId: '170815001'
+          hubNam: '12',
+          branchNam: '23',
+          branchAdr: '23',
+          areaNam: 'sdsd'
+        },
+        testLength: '200px',
         wrongNote: '',
+        errorNote: '', // 异常错误提示
+        errorVisable: false, // 异常提示弹窗
         wrongNoteVisable: false, // 错误提示弹窗
         fahuoList: [],
         shouhuoList: [],
@@ -214,29 +231,8 @@
         isReadOnly: false,
         isReadOnly2: false,
         initForm: {
-          id: '1234567',
-          stationOptions: [{
-            value: '北京',
-            label: '北京',
-            children: [{
-              value: '北京',
-              label: '北京'
-            }]
-          },
-          {
-            value: '江苏',
-            label: '江苏',
-            children: [{
-              value: '南京',
-              label: '南京'
-            }, {
-              value: '苏州',
-              label: '苏州'
-            }, {
-              value: '无锡',
-              label: '无锡'
-            }]
-          }]
+          orderId: '1234567',
+          stationOptions: ['北京', '无锡', '苏州', '常州', '镇江']
         },
         fahuoRelated: {
           shenfenSelected: '北京',
@@ -261,6 +257,7 @@
           receAdr: '收货方地址'
         },
         appointForm: {
+          isChangche: '否',
           shenfenSelected: '',
           shiSelected: '',
           quSelected: '',
@@ -278,7 +275,7 @@
           goodsNums: '',
           goodsWeight: '',
           goodsVolumn: '',
-          package: '',
+          package: 'muxiang',
           note: '',
           /** 收货人信息 */
           arrStation: '',
@@ -374,28 +371,88 @@
       }
     },
     methods: {
+      testGet () {
+        /* api.getAppoint(this.Form)
+        .then(res => {
+          console.log('成功')
+          console.log(res)
+        })
+        .catch(error => {
+          this.errorVisable = true
+          setTimeout(() => { this.errorVisable = false }, 800)
+          this.errorNote = '网络异常请检查'
+          console.log('失败')
+          console.log(error)
+        }) */
+        api.getBranch(this.Form)
+          .then(res => {
+            console.log('成功')
+            console.log(res)
+          })
+          .catch(error => {
+            console.log('失败')
+            console.log(error)
+          })
+      },
+      // 从后台获取始发站列表并展示
+      getStationListFro () {
+        api.getStationList().then(res => {
+          console.log('成功')
+          console.log(res)
+          this.initForm.stationOptions = res.content
+        })
+        .catch(error => {
+          this.errorVisable = true
+          setTimeout(() => { this.errorVisable = false }, 800)
+          this.errorNote = '网络异常请检查'
+          console.log('失败')
+          console.log(error)
+        })
+      },
      // 根据表单上方始发站选择提货地址
-      handleChange1 (value) {
-        let data = (value.toString()).split(',')
-        /* startStation: '', // 始发站
-          arrStation: */
-        this.appointForm.startStation = data[1]
-        // alert(this.appointForm.startStation)
-        this.appointForm.shenfenSelected = data[0]
-        this.appointForm.shiSelected = data[1]
+      handleChange1 () {
+      /* startStation: '', // 始发站
+        arrStation: */
+        this.appointForm.shiSelected = this.appointForm.startStation
+        // 处理获得市对应县
+        let regionList = regionJson
+        let beijingList = regionList[0].sub
+        let jiangsuList = regionList[6].sub
+        beijingList.filter(item => {
+          if (item.name === this.appointForm.shiSelected) {
+            console.log('qu01：')
+            this.appointForm.shenfenSelected = '北京'
+          }
+        })
+        jiangsuList.filter(item => {
+          if (item.name === this.appointForm.shiSelected) {
+            this.appointForm.shenfenSelected = '江苏'
+          }
+        })
         this.appointForm.quSelected = ''
-        this.appointForm.baseAddressFa = this.appointForm.shenfenSelected + this.appointForm.shiSelected + this.appointForm.quSelected
+        this.appointForm.baseAddressFa = this.appointForm.shenfenSelected + '/' + this.appointForm.shiSelected + '/' + this.appointForm.quSelected
         this.setShi(1)
         this.setQuyu(1)
       },
       // 根据表单上方目的站选择设置收货地址
-      handleChange2 (value) {
-        let data = (value.toString()).split(',')
-        this.appointForm.arrStation = data[1]
-        this.appointForm.shenfenSelected2 = data[0]
-        this.appointForm.shiSelected2 = data[1]
+      handleChange2 () {
+        this.appointForm.shiSelected2 = this.appointForm.arrStation
+        // 处理获得市对应县
+        let regionList = regionJson
+        let beijingList = regionList[0].sub
+        let jiangsuList = regionList[6].sub
+        beijingList.filter(item => {
+          if (item.name === this.appointForm.shiSelected2) {
+            this.appointForm.shenfenSelected2 = '北京'
+          }
+        })
+        jiangsuList.filter(item => {
+          if (item.name === this.appointForm.shiSelected2) {
+            this.appointForm.shenfenSelected2 = '江苏'
+          }
+        })
         this.appointForm.quSelected2 = ''
-        this.appointForm.baseAddressShou = this.appointForm.shenfenSelected2 + this.appointForm.shiSelected2 + this.appointForm.quSelected2
+        this.appointForm.baseAddressShou = this.appointForm.shenfenSelected2 + '/' + this.appointForm.shiSelected2 + '/' + this.appointForm.quSelected2
         this.setShi(2)
         this.setQuyu(2)
       },
@@ -612,6 +669,12 @@
           return true
         }
       },
+    // 重置表单
+      resetForm (formName) {
+        this.$nextTick(function () {
+          this.$refs[formName].resetFields()
+        })
+      },
     // 提交新建预约单
       submitAppoint (formName) {
         const self = this
@@ -620,6 +683,8 @@
             if (this.isAttSta()) {
               this.submitVisable = true
               setTimeout(() => { this.submitVisable = false }, 800)
+              // 重置表单
+              this.resetForm('appointForm')
             } else {
               this.wrongNote = '地址与所选站点不匹配'
               this.wrongNoteVisable = true
@@ -776,6 +841,11 @@
     padding: 3px 10px;
     transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
   }
+  .order-title-base {
+  float: left;
+  padding-top: 0.7%;
+  margin-left: 2%
+}
 </style>
 
 
