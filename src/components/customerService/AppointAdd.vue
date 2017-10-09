@@ -372,26 +372,27 @@
     },
     methods: {
       testGet () {
-        console.log('xxx')
-        /* api.getAppoint(this.Form)
-        .then(res => {
-          console.log('成功')
-          console.log(res)
-        })
-        .catch(error => {
-          this.errorVisable = true
-          setTimeout(() => { this.errorVisable = false }, 800)
-          this.errorNote = '网络异常请检查'
-          console.log('失败')
-          console.log(error)
-        }) */
-        api.getBranch(this.Form)
+        let para = JSON.stringify(this.Form)
+        console.log(para)
+//        api.getAppoint(this.Form)
+//        .then(res => {
+//          console.log('成功')
+//          console.log(res)
+//        })
+//        .catch(error => {
+//          this.errorVisable = true
+//          setTimeout(() => { this.errorVisable = false }, 800)
+//          this.errorNote = '网络异常请检查'
+//          console.log('fail')
+//          console.log(error)
+//        })
+        api.getBranch(para)
           .then(res => {
             console.log('成功')
             console.log(res)
           })
           .catch(error => {
-            console.log('失败')
+            console.log('fail')
             console.log(error)
           })
       },
