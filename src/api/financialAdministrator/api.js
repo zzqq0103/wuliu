@@ -2,7 +2,7 @@ import axios from 'axios'
 // import qs from 'qs'
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8'
-axios.defaults.baseURL = 'http://10.107.10.102:8080/'
+axios.defaults.baseURL = 'http://10.107.10.80:8080/'
 // axios.defaults.withCredentials = true
 
 // // POST传参序列化

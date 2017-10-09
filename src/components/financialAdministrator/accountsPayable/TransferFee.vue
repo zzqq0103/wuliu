@@ -53,6 +53,9 @@
               <el-option label="已核销" value="completed"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="中转企业:">
+            <el-input v-model="filterForm.changeComp" style="width: 100px"></el-input>
+          </el-form-item>
           <el-button @click="drawGrid(1)">提取</el-button>
         </el-form>
       </div>
@@ -173,8 +176,8 @@
               <el-form-item label="运单号:">
                 <el-input v-model="filterForm.orderId" style="width: 150px"></el-input>
               </el-form-item>
-              <el-form-item label="发货方:">
-                <el-input v-model="filterForm.shipNam" style="width: 80px"></el-input>
+              <el-form-item label="中转企业:">
+                <el-input v-model="filterForm.changeComp" style="width: 80px"></el-input>
               </el-form-item>
             </div>
           </el-form>
@@ -777,9 +780,7 @@
           dateInterval: '', // 时间区间
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          shipNam: '', //  发货人
-          payType: 'nowPay', // 类型（现付，到付，欠付，月结）
-          freiVeriState: '', // 运费核销状态
+          changeComp: '', //  中转企业
           orderId: '', // 运单号
           veriState: '', // 核销状态
           pageSize: 20,
@@ -795,51 +796,6 @@
           orderId: [],
           payMode: 'WeChat',
           digest: ''
-        },
-        // 根据下拉框，表格最后显示不同的列
-        additionalColumnDefs: {
-          nowPay: {
-            headerName: '中转费',
-            children: [
-              {
-                headerName: '中转费', width: 150, field: 'totalChanFee ', filter: 'text', hide: false, visible: true
-              },
-              {
-                headerName: '核销状态', width: 150, field: 'veriState', filter: 'text', hide: false, visible: true
-              },
-              {
-                headerName: '核销人', width: 150, field: 'veriNam', filter: 'text', hide: false, visible: true
-              },
-              {
-                headerName: '核销日期', width: 150, field: 'veriTim', filter: 'text', hide: false, visible: true
-              },
-              {
-                headerName: '核销站点', width: 150, field: 'veriSite', filter: 'text', hide: false, visible: true
-              },
-              {
-                headerName: '支付方式', width: 150, field: 'payMode', filter: 'text', hide: false, visible: true
-              }
-            ]
-          }
-        },
-        additionalColumnDefs2: {
-          nowPay: {
-            headerName: '现付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
-          }
-        },
-        additionalColumnDefs3: {
-          nowPay: {
-            headerName: '现付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
-          },
-          cashOnDelivery: {
-            headerName: '到付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
-          },
-          inArrears: {
-            headerName: '欠付金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
-          },
-          monthly: {
-            headerName: '月结金额', width: 150, field: 'feeMoney', filter: 'text', hide: false, visible: true
-          }
         },
         //  表单验证规则
         rules: {},
@@ -931,11 +887,11 @@
       },
       // 获取行数据
       createRowData (i) {
-        this.filterForm.dateInterval = '2017-08-15/2017-08-16'
-        this.filterForm.startPoint = '北京'
-        this.filterForm.endPoint = '南京'
-        this.filterForm.veriState = 0
-        console.log(this.filterForm)
+//        this.filterForm.dateInterval = '2017-08-15/2017-08-16'
+//        this.filterForm.startPoint = '北京'
+//        this.filterForm.endPoint = '南京'
+//        this.filterForm.veriState = 0
+//        console.log(this.filterForm)
         api.getTransferFee(this.filterForm)
           .then(res => {
             console.log('成功')
