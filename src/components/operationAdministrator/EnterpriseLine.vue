@@ -48,8 +48,6 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
                    :groupHeaders="true"
                    :rowHeight="40"
                    :headerHeight="40"

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>
+    <div style="margin-bottom: 1%">
       <h2 style="text-align: center">价格梯度信息管理</h2>
 
       <div style="float: right">
@@ -15,11 +15,12 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
-                   :groupHeaders="true"
+                   :suppressCellSelection="true"
                    :rowHeight=40
-                   :headerHeight=30>
+                   :headerHeight=40
+
+                   :pagination="true"
+                   :suppressPaginationPanel="true">
       </ag-grid-vue>
     </div>
   </div>
