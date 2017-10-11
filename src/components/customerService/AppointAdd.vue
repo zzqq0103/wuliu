@@ -193,10 +193,7 @@
       return {
         Form: {
           // orderId: '170815001'
-          hubNam: '12',
-          branchNam: '23',
-          branchAdr: '23',
-          areaNam: 'sdsd'
+          hubNam: '12'
         },
         testLength: '200px',
         wrongNote: '',
@@ -232,7 +229,8 @@
         isReadOnly2: false,
         initForm: {
           orderId: '1234567',
-          stationOptions: ['北京', '无锡', '苏州', '常州', '镇江']
+          stationOptions: []
+          // stationOptions: ['北京', '无锡', '苏州', '常州', '镇江']
         },
         fahuoRelated: {
           shenfenSelected: '北京',
@@ -376,6 +374,8 @@
         .then(res => {
           console.log('成功')
           console.log(res)
+          console.log('sdsd')
+          console.log(res.data.content)
         })
         .catch(error => {
           this.errorVisable = true
@@ -384,7 +384,8 @@
           console.log('失败')
           console.log(error)
         }) */
-        api.getBranch(this.Form)
+        this.getStationListFro()
+        /* api.getBranch(this.Form)
           .then(res => {
             console.log('成功')
             console.log(res)
@@ -392,14 +393,17 @@
           .catch(error => {
             console.log('失败')
             console.log(error)
-          })
+          }) */
       },
       // 从后台获取始发站列表并展示
       getStationListFro () {
         api.getStationList().then(res => {
           console.log('成功')
           console.log(res)
-          this.initForm.stationOptions = res.content
+          console.log(res.data.content[0].hubNam)
+          for (let i = 0; i < res.data.content.length; i++) {
+            this.initForm.stationOptions.push(res.data.content[i].hubNam)
+          }
         })
         .catch(error => {
           this.errorVisable = true
