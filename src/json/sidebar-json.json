@@ -239,12 +239,22 @@
                 "subs": [
                     {
                         "index": "deliveredInfo",
-                        "title": "已送货",
+                        "title": "送货成功",
                         "icon": ""
                     },
                     {
                         "index": "deliveringInfo",
-                        "title": "待送货",
+                        "title": "正在送货",
+                        "icon": ""
+                    },
+                    {
+                        "index": "deliveringAffirm",
+                        "title": "待确认",
+                        "icon": ""
+                    },
+                    {
+                        "index": "ManualdeliverInfo",
+                        "title": "手动调度",
                         "icon": ""
                     }
                 ]
@@ -262,6 +272,11 @@
                     {
                         "index": "receiveingInfo",
                         "title": "待接货",
+                        "icon": ""
+                    },
+                    {
+                        "index": "ManualReceiveingInfo",
+                        "title": "手动调度",
                         "icon": ""
                     }
                 ]

@@ -12,9 +12,10 @@ let _orderList = orderList
 export default {
   bootstrap () {
     let mock = new MockAdapter(axios)
-    // 获取到已送货订单列表
-    mock.onGet('/deliveredOrder/getLoadedlist').reply(config => {
-      let {page, pageSize} = config.params
+    // 获取到已送货订单列表,Get请求
+    mock.onPost('/deliveredOrder/getLoadedlist').reply(config => {
+      console.log(config)
+      let {page, pageSize} = JSON.parse(config.data)
       let mockList = getListDataBySize(_deliveredLoadedList, pageSize, page)
       let pages = _deliveredLoadedList.length
       return new Promise((resolve, reject) => {
@@ -24,9 +25,9 @@ export default {
       })
     })
 
-    // 获取已送货订单的查询接口
-    mock.onGet('/deliveredOrder/getQueryOrderList').reply(config => {
-      let {queryName, queryClass} = config.params
+    // 获取已送货订单的查询接口，post请求
+    mock.onPost('/deliveredOrder/getQueryOrderList').reply(config => {
+      let {queryName, queryClass} = JSON.parse(config.data)
       let parseclass = parseInt(queryClass)
       let queryData
       // 装载单查询
@@ -53,8 +54,8 @@ export default {
     })
 
     // 获取到已长途运输订单列表
-    mock.onGet('/transportedOrder/getlist').reply(config => {
-      let {page, pageSize} = config.params
+    mock.onPost('/transportedOrder/getlist').reply(config => {
+      let {page, pageSize} = JSON.parse(config.data)
       let mockList = getListDataBySize(_transportedList, pageSize, page)
       let pages = mockList.length
       return new Promise((resolve, reject) => {
@@ -65,8 +66,8 @@ export default {
     })
 
     // 获取已长途订单的查询接口
-    mock.onGet('/transportedOrder/getQueryOrderList').reply(config => {
-      let {queryName, queryClass} = config.params
+    mock.onPost('/transportedOrder/getQueryOrderList').reply(config => {
+      let {queryName, queryClass} = JSON.parse(config.data)
       let parseclass = parseInt(queryClass)
       let queryData
       // 装载单查询
@@ -97,8 +98,8 @@ export default {
     })
 
     // 获取到已接货订单列表
-    mock.onGet('/receivedOrder/getlist').reply(config => {
-      let {page, pageSize} = config.params
+    mock.onPost('/receivedOrder/getlist').reply(config => {
+      let {page, pageSize} = JSON.parse(config.data)
       let mockList = getListDataBySize(_receivedList, pageSize, page)
       let pages = _receivedList.length
       return new Promise((resolve, reject) => {
@@ -109,8 +110,8 @@ export default {
     })
 
     // 获取已接货订单的查询接口
-    mock.onGet('/receivedOrder/getQueryOrderList').reply(config => {
-      let {queryName, queryClass} = config.params
+    mock.onPost('/receivedOrder/getQueryOrderList').reply(config => {
+      let {queryName, queryClass} = JSON.parse(config.data)
       let parseclass = parseInt(queryClass)
       let queryData
       // 单号查询
@@ -137,8 +138,8 @@ export default {
     })
 
     // 获取到已中转订单列表
-    mock.onGet('/epiboliedListOrder/getlist').reply(config => {
-      let {page, pageSize} = config.params
+    mock.onPost('/epiboliedListOrder/getlist').reply(config => {
+      let {page, pageSize} = JSON.parse(config.data)
       let mockList = getListDataBySize(_epibolyList, pageSize, page)
       let pages = _epibolyList.length
       return new Promise((resolve, reject) => {
@@ -149,8 +150,8 @@ export default {
     })
 
     // 获取已中转订单的查询接口
-    mock.onGet('/epiboliedListOrder/getQueryOrderList').reply(config => {
-      let {queryName, queryClass} = config.params
+    mock.onPost('/epiboliedListOrder/getQueryOrderList').reply(config => {
+      let {queryName, queryClass} = JSON.parse(config.data)
       let parseclass = parseInt(queryClass)
       let queryData
       // 外包企业查询(此处采用模糊搜素)
@@ -173,7 +174,7 @@ export default {
     })
 
     // 获取装载单订单列表
-    mock.onGet('/Loader/getOrderList').reply(config => {
+    mock.onPost('/Loader/getOrderList').reply(config => {
       // let {loaderId} = config.params
       // let mockList = _orderList
       let pages = _orderList.length

@@ -3,7 +3,7 @@
   <div>
     <div id="top">
       <!-- 标题 -->
-      <h2 style="text-align:center">已 送 货 订 单 信 息 页</h2>
+      <h2 style="text-align:center">短 途 送 货 手 动 调 度 页</h2>
 
       <!-- 操作栏 -->
       <div style="margin-top:2%">
@@ -25,10 +25,6 @@
           <el-input placeholder="请输入查询数据" icon="search" v-model="queryName" :on-icon-click="handleIconClick" style="width:145px;"></el-input>
           <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
             <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-          <el-select v-model="value_Search" multiple filterable remote placeholder="请输入司机姓名" :remote-method="remoteGetDriverList" :loading="loading" style="width:130px;">
-            <el-option v-for="item in driverNames" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
 
@@ -93,9 +89,9 @@
     </div>
 
     <!-- 装载单订单列表展示 -->
-    <!--<el-dialog :title="已装载单订单列表" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>-->
-      <!--<Dispatched :status="status"> </Dispatched>-->
-    <!--</el-dialog>-->
+    <el-dialog :title="已装载单订单列表" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
+      <Dispatched :status="status"> </Dispatched>
+    </el-dialog>
 
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
     <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
@@ -121,11 +117,6 @@
   export default {
     data () {
       return {
-        value_Search: [],
-        list: [],
-        options: [],
-        loading: false,
-        states: ['张三', '李四', '赵钱', '孙李', '王五', '刘三'],
         titleText: '已送货装载单订单列表',
         status: 1,
         deliveringVisible: false,
@@ -165,14 +156,20 @@
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '单号', width: 120, field: 'loadOrderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '装载单号', width: 120, field: 'loadOrderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
-//            {
-//              headerName: '装载单状态', width: 120, field: 'loadOrderStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-//            },
-//            {
-//              headerName: '调整状态', width: 120, field: 'adjustmentStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-//            },
+            // {
+            //   headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            // },
+            // {
+            //   headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false, filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            // },
+            {
+              headerName: '装载单状态', width: 120, field: 'loadOrderStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
+            {
+              headerName: '调整状态', width: 120, field: 'adjustmentStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+            },
             {
               headerName: '所属仓库', width: 120, field: 'warehouse', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
@@ -204,22 +201,19 @@
               headerName: '调度管理员姓名', field: 'dispatcherName', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '备注', field: 'remarks', width: 200, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '备注', field: 'remarks', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             }
           ]
         },
         // 查询的参数
         queryItemOptions: [{
           value: 1,
-          label: '订单号'
+          label: '装载单号'
         }, {
           value: 2,
-          label: '预约单号'
-        }, {
-          value: 3,
-          label: '子订单号'
+          label: '司机姓名'
         }],
-        selectvalue: 1, // 查询的参数，(订单号、预约单号、子件号、司机姓名)
+        selectvalue: 1, // 查询的参数，(装载单号、订单号、司机)
         orderlist: [], // 订单列表
         totalpages: 1, // 总页数
         pageSize: 25, // 每页展示的个数
@@ -294,20 +288,6 @@
     },
     // 实例方法
     methods: {
-      // 司机多选搜索框中调用的方法
-      remoteGetDriverList (query) {
-        if (query !== '') {
-          this.loading = true
-          setTimeout(() => {
-            this.lading = false
-            this.options = this.list.filter(item => {
-              return item.label.indexOf(query) > -1
-            })
-          }, 200)
-        } else {
-          this.options = []
-        }
-      },
       // 装载单订单列表弹框
       detailDoubleClick (event) {
         this.loadOrderId = event.data.loadOrderId
@@ -370,11 +350,11 @@
           selectvalue: this.selectvalue,
           pageSize: this.pageSize
         }
-        console.log(para)
         this.listLoading = true
         getCurrentDelivered(para).then((res) => {
-          console.log('xxx')
-          this.gridOptions.rowData = res.data.orderlists
+          // console.log('进入getCurrentDelivered')
+          // this.gridOptions.rowData = res.data.orderlists
+          // 使用gridOptions中的api方法设定RowData数据
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
@@ -401,13 +381,9 @@
     // 挂载元素完毕，自执行函数
     mounted () {
       this.getOrderList()
-      this.list = this.states.map(item => {
-        return {value: item, label: item}
-      })
     }
   }
 </script>
-
 <style scoped>
 
   .el-select-css {

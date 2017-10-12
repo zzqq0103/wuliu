@@ -7,8 +7,9 @@
 // 引入axios插件
 import axios from 'axios'
 
-axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8'
-const baseUrl = 'http://10.107.9.102:8080/'
+// axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8'
+// const baseUrl = 'http://10.107.9.102:8080/'
+const baseUrl = ''
 
 // -------  已 送 货 装 载 单 开 始 --------
 
@@ -33,13 +34,14 @@ export const getCurrentReceived = params => {
 export const getQueryReceiveList = params => {
   return axios.post(`${baseUrl}/receivedOrder/getQueryOrderList`, params)
 }
+
 // -------  已 接 货 订 单 结 束 --------
 
 // -------  已 中 转 订 单 开 始 --------
 
 // 获得当前已经中转的订单接口
 export const getCurrentEpiboliedList = params => {
-  return axios.post(`${baseUrl}/interface/dispat_changed_management`, params)
+  return axios.post(`${baseUrl}/epiboliedListOrder/getlist`, params)
 }
 // 获取查询的中转订单接口
 export const getQueryEpiboliedList = params => {
