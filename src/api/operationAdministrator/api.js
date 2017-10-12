@@ -26,14 +26,14 @@ axios.interceptors.response.use((res) => {
 }, (error) => {
   return Promise.reject(error)
 })
-
+axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8'
+axios.defaults.headers['Authorization'] = 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxODA0OTk1MzkwNSIsImlhdCI6MTUwNzY4NTg5Mywic3ViIjoie1wic2l0ZVwiOlwiXCIsXCJyb2xlXCI6XCIyXCIsXCJpZFwiOlwiMTgwNDk5NTM5MDVcIixcInR5cGVcIjpcIjNcIn0iLCJleHAiOjE1MDc2ODk0OTN9.LwpSQWIW5gGjU-QsAGYZ86h2wWp9KCJfBw-1XZwuWZ0'
+axios.defaults.baseURL = 'http://10.107.8.131:8080/'
 export function fetch (url, params) {
   return new Promise((resolve, reject) => {
     axios.post(url, params)
       .then(response => {
         resolve(response.data)
-      }, err => {
-        reject(err)
       })
       .catch((error) => {
         reject(error)
@@ -53,6 +53,13 @@ export default {
    * **/
   getLongInfo (params) {
     return fetch('', params)
+  },
+//  外包企业信息
+  getEnterpriseInfo (params) {
+    return fetch('/logistics/interface/change_logi_management/query_order_info', params)
+  },
+  getEnterpriseLineInfo (params) {
+    return fetch('/logistics/interface/comp_line_management/query_order_info', params)
   }
 
 }
