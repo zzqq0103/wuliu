@@ -162,7 +162,7 @@
           rowData: null,
           columnDefs: [
             {
-              headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
+              headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '单号', width: 120, field: 'loadOrderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
