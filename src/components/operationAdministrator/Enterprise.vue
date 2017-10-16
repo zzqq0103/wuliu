@@ -140,8 +140,10 @@
 
 <script>
   import { AgGridVue } from 'ag-grid-vue'
-  import testJson from '../../../static/test/testJSON.js'
+//  import testJson from '../../../static/test/testJSON.js'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  import api from '../../api/operationAdministrator/api.js'
+//  import api from '../../../api/financialAdministrator/api.js'
 
   export default {
     data () {
@@ -264,8 +266,24 @@
       }
     },
     methods: {
+      drawGrid () {
+        this.updataColumnDefs()
+        this.createRowData()
+        this.onQuickFilterChanged()
+      },
       createRowData () {
-        this.gridOptions.rowData = testJson.enterpriseInfo.list
+//        this.gridOptions.rowData = testJson.enterpriseInfo.list
+        this.filterForm.company = '万达物流'
+        this.filterForm.transfersInhome = '北京'
+        api.getEnterpriseInfo(this.filterForm)
+          .then(res => {
+            console.log('成功')
+            console.log(res)
+          })
+          .catch(error => {
+            console.log('失败。。。')
+            console.log(error)
+          })
       },
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {

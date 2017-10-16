@@ -10,8 +10,8 @@
             </el-form-item>
             <el-form-item label="车辆状态:">
               <el-select v-model="filterForm.carState" style="width: 100px" placeholder="状态">
-                <el-option label="可用" value= 1></el-option>
-                <el-option label="不可用" value=0></el-option>
+                <el-option value="可用"></el-option>
+                <el-option value="不可用"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="车辆位置:">
@@ -89,20 +89,20 @@
         <el-form-item label="车牌号码:" :label-width="formLabelWidth" prop="licePlateNum">
           <el-input v-model="vehicleForm.licePlateNum" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverName">
-          <el-input v-model="vehicleForm.driverName" style="width: 50%"></el-input>
+        <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverNam">
+          <el-input v-model="vehicleForm.driverNam" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="drivertel">
-          <el-input v-model="vehicleForm.drivertel" style="width: 50%"></el-input>
+        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="driverTel">
+          <el-input v-model="vehicleForm.driverTel" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="合同号:" :label-width="formLabelWidth" prop="contractID">
-          <el-input v-model="vehicleForm.contractID" style="width: 50%"></el-input>
+        <el-form-item label="合同号:" :label-width="formLabelWidth" prop="contractId">
+          <el-input v-model="vehicleForm.contractId" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="合同价格:" :label-width="formLabelWidth" prop="contractPrice">
           <el-input v-model="vehicleForm.contractPrice" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="目的枢纽:" :label-width="formLabelWidth" prop="targetHub">
-          <el-input v-model="vehicleForm.targetHub" style="width: 50%"></el-input>
+        <el-form-item label="目的枢纽:" :label-width="formLabelWidth" prop="arrHub">
+          <el-input v-model="vehicleForm.arrHub" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="车辆类型:" :label-width="formLabelWidth" prop="carType">
           <el-select v-model="vehicleForm.carType" style="width: 30%" placeholder="类型">
@@ -123,8 +123,8 @@
         </el-form-item>
         <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
           <el-select v-model="vehicleForm.carState" style="width: 30%">
-            <el-option key="available" label="可用" value= 1></el-option>
-            <el-option key="unavailable" label="不可用" value= 0></el-option>
+            <el-option key="available" label="可用" value= '1'></el-option>
+            <el-option key="unavailable" label="不可用" value= '0'></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="车辆位置:" :label-width="formLabelWidth" prop="carPosition">
@@ -144,20 +144,20 @@
         <el-form-item label="车牌号码:" :label-width="formLabelWidth" prop="licePlateNum">
           <el-input v-model="editForm.licePlateNum" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverName">
-          <el-input v-model="editForm.driverName" style="width: 50%"></el-input>
+        <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverNam">
+          <el-input v-model="editForm.driverNam" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="editForm.drivertel" style="width: 50%"></el-input>
+        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="driverTel">
+          <el-input v-model="editForm.driverTel" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="合同号:" :label-width="formLabelWidth">
-          <el-input v-model="editForm.contractID" style="width: 50%" disabled="true"></el-input>
+          <el-input v-model="editForm.contractId" style="width: 50%" disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="合同价格:" :label-width="formLabelWidth">
           <el-input v-model="editForm.contractPrice" style="width: 50%" disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="目的枢纽:" :label-width="formLabelWidth" prop="targetHub">
-          <el-input v-model="editForm.targetHub" style="width: 50%"></el-input>
+          <el-input v-model="editForm.arrHub" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="车辆类型:" :label-width="formLabelWidth" prop="carType">
           <el-select v-model="editForm.carType" style="width: 30%" placeholder="类型">
@@ -178,8 +178,8 @@
         </el-form-item>
         <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
           <el-select v-model="editForm.carState" style="width: 30%">
-            <el-option key="available" label="可用" value="available"></el-option>
-            <el-option key="unavailable" label="不可用" value="unavailable"></el-option>
+            <el-option key="available" label="可用" value="1"></el-option>
+            <el-option key="unavailable" label="不可用" value="0"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="车辆位置:" :label-width="formLabelWidth" prop="carPosition">
@@ -264,26 +264,26 @@
           'targetHub': '', // 目的枢纽
           'capacity': '', // 车容量
           'tonnage': '', // 吨位
-          'carState': 0, // 车辆状态
+          'carState': '', // 车辆状态
           'carPosition': '' // 车辆位置
         },
         editForm: {
           'licePlateNum': '', // 车牌号
-          'driverName': '', // 司机姓名
-          'drivertel': '', // 司机联系电话
-          'contractID': '', // 合同号
+          'driverNam': '', // 司机姓名
+          'driverTel': '', // 司机联系电话
+          'contractId': '', // 合同号
           'contractPrice': '', // 合同价格
           'carType': '', // 车型
-          'shipmentsNum': '', // 运输次数
-          'targetHub': '', // 目的枢纽
+          'transNums': '', // 运输次数
+          'arrHub': '', // 目的枢纽
           'capacity': '', // 车容量
           'tonnage': '', // 吨位
-          'carState': 0, // 车辆状态
+          'carState': '', // 车辆状态
           'carPosition': '' // 车辆位置
         },
         filterForm: {
           'driverName': '', // 司机姓名
-          'carState': 0, // 车辆状态
+          'carState': '', // 车辆状态
           'carPosition': '', // 车辆位置
           'pageSize': 0, // 分页大小
           'currentPage': 1, // 当前页码
@@ -296,19 +296,19 @@
           licePlateNum: [{
             required: true, message: '请输入车牌号', trigger: 'blur'
           }],
-          driverName: [{
+          driverNam: [{
             required: true, message: '请输入司机姓名', trigger: 'blur'
           }],
-          drivertel: [{
+          driverTel: [{
             required: true, message: '请输入司机联系电话', trigger: 'blur'
           }],
-          contractID: [{
+          contractId: [{
             required: true, message: '请输入合同号', trigger: 'blur'
           }],
           contractPrice: [{
             required: true, message: '请输入合同价格', trigger: 'blur'
           }],
-          targetHub: [{
+          arrHub: [{
             required: true, message: '请输入目的枢纽', trigger: 'blur'
           }],
           capacity: [{
@@ -356,7 +356,7 @@
             {
               headerName: '司机姓名',
               width: 150,
-              field: 'driverName',
+              field: 'driverNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -364,7 +364,7 @@
             {
               headerName: '联系电话',
               width: 150,
-              field: 'drivertel',
+              field: 'driverTel',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -372,7 +372,7 @@
             {
               headerName: '合同号',
               width: 150,
-              field: 'contractID',
+              field: 'contractId',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -396,7 +396,7 @@
             {
               headerName: '运输次数',
               width: 150,
-              field: 'shipmentsNum',
+              field: 'transNums',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -404,7 +404,7 @@
             {
               headerName: '目的枢纽',
               width: 150,
-              field: 'targetHub ',
+              field: 'arrHub ',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -482,16 +482,14 @@
           .then(res => {
             console.log(res)
             console.log('连接成功')
-            console.log(res.content.LongCarInfos[0])
-//            this.vehicleList = res.content.LongCarInfos
-            console.log(this.vehicleList[0])
+            console.log(res.content.LongCarInfos)
+            this.gridOptions.rowData = res.content.LongCarInfos
+            this.gridOptions.api.setRowData(this.gridOptions.rowData)
           })
           .catch(error => {
             console.log('连接失败')
             console.log(error)
           })
-        this.gridOptions.rowData = this.vehicleList
-        this.gridOptions.api.setRowData(this.gridOptions.rowData)
       },
       setting () {
         this.colVisible = true
@@ -561,6 +559,16 @@
                 })
             } else if (formName === 'editForm') {
               alert('编辑成功')
+              api.editLongInfo(this.editForm)
+                .then(res => {
+                  console.log(res)
+                  console.log('连接成功')
+//            console.log(res.content)
+                })
+                .catch(error => {
+                  console.log('连接失败')
+                  console.log(error)
+                })
             }
           } else {
             console.log('error submit!!')
