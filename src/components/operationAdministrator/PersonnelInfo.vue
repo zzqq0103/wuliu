@@ -228,6 +228,7 @@
   import testJson from '../../../static/test/testJSON.js'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   import regionJson from '../../../static/region.json'
+  import api from '../../api/OperationAdministrator/api.js'
 
   export default {
     created () {
@@ -322,7 +323,7 @@
           'shipNam': '', // 联系人姓名,
           'province': '', // 省
           'city': '', // 市
-          'receAdr': '' //
+          'receAdr': '' // 全部地址
         },
         personnelForm: {
           'receNam': '', // 收货方
@@ -331,10 +332,12 @@
           'area': '', // 所属片区
           'isTril': '', // 是否三方
           'salesmanData': '', // 业务员信息
+          'salesmanTel': '', // 业务员电话
+          'salemanNam': '', // 业务员姓名
           'province': '', // 省
           'city': '', // 市
-          'adminRegion': '',
-          'receAdr': ''
+          'adminRegion': '', // 所属片区
+          'receAdr': '' // 全部地址
         },
         editForm: {
           'receNam': '', // 联系人姓名
@@ -345,6 +348,7 @@
           'roleNam': '' // 业务员名字
         },
         salesmanReq: '',
+        salesmanData: '',
         rules: {
           receNam: [{
             required: true,
@@ -687,10 +691,20 @@
         this.personnelForm.receAdr = ''
       },
       submitForm (formName) {
+        this.ToSplit()
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (formName === 'personnelForm') {
               alert('添加成功')
+              api.getPersonnelInfo(this.filterForm)
+                .then(res => {
+                  console.log('成功')
+                  console.log(res)
+                })
+                .catch(err => {
+                  console.log('失败')
+                  console.log(err)
+                })
             } else if (formName === 'editForm') {
               alert('编辑成功')
             }
@@ -711,6 +725,13 @@
       },
       updateGrid () {
         this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
+      },
+      // 拆分字符串
+      ToSplit () {
+        let str = this.personnelForm.salesmanData
+        let arr = str.split('-')
+        this.personnelForm.salesmanNam = arr[0]
+        this.personnelForm.salesmanTel = arr[1]
       }
     },
     beforeMount () {
