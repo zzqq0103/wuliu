@@ -793,9 +793,9 @@
         },
         // 核销完成后提交给后台的数据
         confirmSubForm: {
-          orderId: [],
+          orderIds: [],
           payMode: 'WeChat',
-          digest: ''
+          veriNote: ''
         },
         //  表单验证规则
         rules: {},
@@ -892,18 +892,26 @@
 //        this.filterForm.endPoint = '南京'
 //        this.filterForm.veriState = 0
 //        console.log(this.filterForm)
-        api.getTransferFee(this.filterForm)
-          .then(res => {
-            console.log('成功')
-            console.log(res)
-          })
-          .catch(error => {
-            console.log('失败')
-            console.log(error)
-          })
         if (i === 1) {
-
+          api.getTransferFee(this.filterForm)
+            .then(res => {
+              console.log('成功1')
+              console.log(res)
+            })
+            .catch(error => {
+              console.log('失败')
+              console.log(error)
+            })
         } else if (i === 2) {
+          api.getTransferFee_Ver(this.filterForm)
+            .then(res => {
+              console.log('成功')
+              console.log(res)
+            })
+            .catch(error => {
+              console.log('失败')
+              console.log(error)
+            })
           this.gridOptions2.rowData = testJson.freight.list
           this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
         }
@@ -1073,7 +1081,7 @@
           this.errorVisible = true
         } else {
           for (let i = 0; i < confirmData.length; i++) {
-            this.confirmSubForm.orderId[i] = confirmData[i].orderId
+            this.confirmSubForm.orderIds[i] = confirmData[i].orderId
           }
           this.confirmSubVisible = true
         }
@@ -1081,9 +1089,19 @@
       },
       // 提交后台
       submit () {
-        console.log(this.confirmSubForm)
+//        console.log(this.confirmSubForm)
+        this.confirmSubForm.payMode = '微信'
+        this.confirmSubForm.veriNote = 'haha'
+        this.confirmSubForm.orderIds = ['170815005']
+        api.submitTransferFee(this.confirmSubForm)
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
         this.confirmSubVisible = false
-        this.drawGrid(2)
+//        this.drawGrid(2)
       },
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
@@ -1118,7 +1136,7 @@
     },
     // 数据发生更新时
     updated () {
-      console.log('update')
+//      console.log('update')
       this.calculateMoney
     }
   }

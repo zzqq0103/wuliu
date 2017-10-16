@@ -793,7 +793,7 @@
           endPoint: '', //  区间终点
           shipNam: '', //  发货方
           orderId: '', // 运单号
-          payType: 'nowPay',
+          payType: '', // 欠返，现返
           veriState: '', // 核销状态
           pageNum: 1, // 当前页码数
           pageSize: 20 // 分页大小

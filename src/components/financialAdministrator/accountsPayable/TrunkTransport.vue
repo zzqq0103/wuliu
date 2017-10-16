@@ -55,6 +55,7 @@
           </el-form-item>
           <el-form-item label="类型:">
             <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px" @change="typeChange(1)">
+              <el-option label="全部" value="all"></el-option>
               <el-option label="现付" value="nowPay"></el-option>
               <el-option label="到付" value="cashOnDelivery"></el-option>
               <el-option label="欠付" value="inArrears"></el-option>
@@ -187,7 +188,8 @@
                 <template v-for="(collist,i) in gridOptions2.columnDefs">
                   <div class="colVisible">
                     <el-checkbox v-model="collist.visible"
-                                 @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)" style="float: left;width: 180px">
+                                 @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)"
+                                 style="float: left;width: 180px">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
@@ -242,7 +244,8 @@
                 <template v-for="(collist,i) in gridOptions3.columnDefs">
                   <div class="colVisible">
                     <el-checkbox v-model="collist.visible"
-                                 @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)" style="float: left;width: 180px">
+                                 @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)"
+                                 style="float: left;width: 180px">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
@@ -317,6 +320,132 @@
     <el-dialog title="订单详情:" :visible.sync="detailVisible" :closeOnClickModal="false">
       <order-details :orderId="filterForm.orderId"></order-details>
     </el-dialog>
+
+    <el-dialog title="干线运输费核销" :visible.sync="veriStateVisible" :closeOnclickModal="false">
+      <el-form :model="trunkTransportForm" ref="trunkTransportForm">
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="装载单ID:">
+              <p>{{trunkTransportForm.loadingId}}</p>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="车牌号:">
+              <p>{{trunkTransportForm.licePlateNum}}</p>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="司机姓名:">
+              <p>{{trunkTransportForm.driverNam}}</p>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="区间:">
+              <p>{{trunkTransportForm.startStation}}--{{trunkTransportForm.arrStation}}</p>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="5">
+          <el-col :span="10">
+            <el-form-item label="总金额:">
+              <el-input style="width: 50%" readonly="true"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!--
+        现付
+        -->
+        <el-row>
+          <el-col :span="7">
+            <el-form-item label="现付金额:">
+              <el-input style="width: 50%" readonly="true"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="现付余额:">
+              <el-input style="width: 50%" readonly="true"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="核销金额:">
+              <el-input style="width: 50%"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-button @click="confirmSubmit('nowPay')">核销</el-button>
+          </el-col>
+        </el-row>
+        <!--
+        到付
+        -->
+        <el-row>
+          <el-col :span="7">
+            <el-form-item label="到付金额:">
+              <el-input style="width: 50%" readonly="true"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="到付余额:">
+              <el-input style="width: 50%" readonly="true"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="核销金额:">
+              <el-input style="width: 50%"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-button @click="confirmSubmit('cashOnDelivery')">核销</el-button>
+          </el-col>
+        </el-row>
+        <!--
+        欠付
+        -->
+        <el-row>
+          <el-col :span="7">
+            <el-form-item label="欠付金额:">
+              <el-input style="width: 50%" readonly="true"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="欠付余额:">
+              <el-input style="width: 50%" readonly="true"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="核销金额:">
+              <el-input style="width: 50%"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-button @click="confirmSubmit('inArrears')">核销</el-button>
+          </el-col>
+        </el-row>
+        <!--
+        月结
+        -->
+        <el-row>
+          <el-col :span="7">
+            <el-form-item label="月结金额:">
+              <el-input style="width: 50%" readonly="true"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="月结余额:">
+              <el-input style="width: 50%" readonly="true"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="核销金额:">
+              <el-input style="width: 50%"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-button @click="confirmSubmit('monthly')">核销</el-button>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -325,6 +454,7 @@
   import testJson from '../../../../static/test/testJSON.js'
   import OrderDetails from '../ShowOrderDetails'
   import PartialMatchFilterComponent from '../../common/PartialMatchFilterComponent'
+  import api from '../../../api/financialAdministrator/api.js'
   export default {
     data () {
       return {
@@ -440,6 +570,13 @@
               visible: true
             },
             {
+              headerName: '余额',
+              width: 150,
+              field: 'balance',
+              hide: false,
+              visible: true
+            },
+            {
               headerName: '核销状态',
               width: 150,
               field: 'veriState',
@@ -476,14 +613,6 @@
               width: 150,
               field: 'trilNote',
               filter: 'text',
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '支付方式',
-              width: 150,
-              field: 'payMode',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             }
@@ -759,7 +888,7 @@
           dateInterval: '', // 时间间隔
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          payType: 'nowPay', // 类型（现付，到付，欠付，月结）
+          payType: 'all', // 类型（现付，到付，欠付，月结）
           loadingId: '', // 装载单号
           veriState: '', // 核销状态
           pageNum: 1, // 当前页码数
@@ -775,6 +904,7 @@
           loadingId: [], // 装载单号
           payMode: 'WeChat',
           digest: '',
+          payType: '',
           oilCard: '',
           oilCardMoney: ''
         },
@@ -784,6 +914,7 @@
         colVisible: false, // 切换列可见性的弹窗
         colVisible2: false,
         colVisible3: false,
+        veriStateVisible: false, // 干线运输费核销界面
         verVisible: false, // 进入核销页面的弹框
         confirmSubVisible: false, // 提交核销信息的弹框
         errorVisible: false, // 错误信息弹框
@@ -791,7 +922,19 @@
         currentPage: 1, // 分页当前页面
         pageSize: 20, // 每页显示的数据
         rowCount: 0, // 总数据量（如果有筛选，则是筛选后的）
-        oilShow: false // 油卡号可见性
+        oilShow: false, // 油卡号可见性
+
+        // 干线运输费核销表单
+        trunkTransportForm: {
+          loadingId: '123123', // 装载单ID
+          licePlateNum: '123123', // 车牌号
+          driverNam: '自行车', // 司机姓名
+          startStation: '北京', // 起始站
+          arrStation: '南京', // 终点站
+          totalTrunkTransport: 0, // 总干线运输费
+          nowPayBalance: 0, // 现付余额
+          nowPayVerification: 0 // 现付核销金额
+        }
       }
     },
     components: {
@@ -813,6 +956,16 @@
       // 获取行数据
       createRowData (i) {
         if (i === 1) {
+          this.filterForm.pageSize = 2
+          this.filterForm.pageNum = 1
+          this.filterForm.dateInterval = '2017-08-20/2017-08-21'
+          api.getTrunkTransport(this.filterForm)
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              console.log(err)
+            })
           this.gridOptions.rowData = testJson.freight.list
           this.gridOptions.api.setRowData(this.gridOptions.rowData)
         } else if (i === 2) {
@@ -882,23 +1035,6 @@
           }
         }
       },
-      // 三个表格的快速匹配
-      onQuickFilterChanged (input) {
-        this.gridOptions.api.setQuickFilter(input)
-      },
-      onQuickFilterChanged2 (input) {
-        this.gridOptions2.api.setQuickFilter(input)
-      },
-      onQuickFilterChanged3 (input) {
-        this.gridOptions3.api.setQuickFilter(input)
-      },
-      // 更改hide的值，（已放弃），添加了visible作为切换可见的条件
-//      changeColumnDefsBoolen () {
-//        const columnlist = this.gridOptions.columnDefs
-//        for (let i = 0; i < columnlist.length; i++) {
-//          columnlist[i].hide = !columnlist[i].hide
-//        }
-//      },
 
       // 分页的操作
       // 每页显示数量改变时
@@ -948,8 +1084,10 @@
       },
       // 订单详情弹框
       detailDoubleClick (event) {
-        this.filterForm.orderId = event.data.orderId
-        this.detailVisible = true
+//        this.filterForm.orderId = event.data.orderId
+//        this.detailVisible = true
+        this.trunkTransportForm.loadingId = event.data.loadingId
+        this.veriStateVisible = true
       },
       // 核销界面左侧表格双击事件
       leftDoubleClick (event) {
@@ -993,18 +1131,20 @@
         this.gridOptions3.api.updateRowData({remove: newItems})
       },
       // 打开提交核销结果的窗口
-      confirmSubmit () {
-        this.gridOptions3.api.selectAllFiltered()
-        const confirmData = this.gridOptions3.api.getSelectedRows()
-        if (confirmData.length < 1) {
-          this.errorVisible = true
-        } else {
-          for (let i = 0; i < confirmData.length; i++) {
-            this.confirmSubForm.loadingId[i] = confirmData[i].loadingId
-          }
-          this.confirmSubVisible = true
-        }
-        console.log(confirmData)
+      confirmSubmit (payType) {
+        this.confirmSubForm.payType = payType
+        this.confirmSubVisible = true
+//        this.gridOptions3.api.selectAllFiltered()
+//        const confirmData = this.gridOptions3.api.getSelectedRows()
+//        if (confirmData.length < 1) {
+//          this.errorVisible = true
+//        } else {
+//          for (let i = 0; i < confirmData.length; i++) {
+//            this.confirmSubForm.loadingId[i] = confirmData[i].loadingId
+//          }
+//          this.confirmSubVisible = true
+//        }
+//        console.log(confirmData)
       },
       // 提交后台
       submit () {
@@ -1081,55 +1221,9 @@
     }
   }
 </script>
-<!--//发出请求-->
-<!--filterForm: {-->
-<!--startTime: '', // 开始时间-->
-<!--endTime: '', // 截止时间-->
-<!--startPoint: '', //  区间起点-->
-<!--endPoint: '', //  区间终点-->
-<!--shipNam: '', //  发货人-->
-<!--payType: 'nowPay', // 类型（现付，到付，欠付，月结）-->
-<!--freiVeriState: '', // 运费核销状态-->
-<!--orderId: '' // 运单号-->
-<!--},-->
-<!--//获得响应 filterForm1和filterForm2是不同的获得响应事件q-->
-<!--filterForm1：{-->
-<!--orderState 运单状态-->
-<!--orderId 运单号-->
-<!--billBranch 开单网点-->
-<!--orderTim 开单日期-->
-<!--startStation 发站-->
-<!--arrStation 到站-->
-<!--shipNam 发货人-->
-<!--receNam 收货人-->
-<!--shipTim 发车时间-->
-<!--contractId 合同号-->
-<!--licePlateNum 车牌号-->
-<!--driverNam 司机姓名-->
-<!--driverTel 司机电话-->
-<!--receTel 收货人联系方式-->
-<!--goodsNam 品名-->
-<!--goodsNums 件数-->
-<!--serviceNam 开单客服-->
-<!--companyNam 中转路线-->
-<!--changeFee 中转日期-->
-<!--sendMode 送货方式-->
-<!--payType 付款方式-->
-<!--feeMoney 付款金额-->
-<!--oilMoney 油卡金额-->
-<!--goodsWeight 重量-->
-<!--goodsVolume 体积-->
-<!--}-->
-<!--filterForm2：{-->
-<!--orderState 运单状态-->
-<!--orderId 运单号-->
-<!--orderTim 下单时间-->
-<!--shipTim 发车时间-->
-<!--contractId 合同号-->
-<!--licePlateNum 车牌号-->
-<!--driverNam 司机姓名-->
-<!--payType 付款方式-->
-<!--feeMoney 付款金额-->
-<!--totalFreight 总运费-->
-<!--veriState 核销状态-->
-<!--}-->
+
+<style>
+  .ag-body [colid="payType"] {
+    background-color: #a6e1ec;
+  }
+</style>

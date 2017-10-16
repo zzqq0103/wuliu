@@ -75,7 +75,7 @@
 
     <!--表格-->
     <div style="margin-top: 10px">
-      <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+      <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
@@ -182,6 +182,13 @@
               <el-form-item label="发货方:">
                 <el-input v-model="filterForm.shipNam" style="width: 100px"></el-input>
               </el-form-item>
+              <el-form-item label="起始站:">
+                <el-select v-model="filterForm.startPoint" placeholder="起点" style="width: 100px">
+                  <el-option label="北京" value="beijing"></el-option>
+                  <el-option label="南京" value="nanjing"></el-option>
+                  <el-option label="全部" value="all"></el-option>
+                </el-select>
+              </el-form-item>
             </div>
           </el-form>
           <el-button style="visibility: hidden">不可见的按钮（用于添加一个空行）</el-button>
@@ -192,7 +199,7 @@
           </div>
           <!--未核销处表格-->
           <div style="margin-top: 10px">
-            <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions2"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
@@ -232,7 +239,7 @@
           <el-button @click="rightSelectAll"> <<</el-button>
           <!--待核销处表格-->
           <div style="margin-top: 10px">
-            <ag-grid-vue style="width: 100%;height: 350px" class="ag-blue"
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
                          :gridOptions="gridOptions3"
                          :suppressMovableColumns="true"
                          :enableColResize="true"
@@ -948,9 +955,9 @@
         },
         // 核销完成后提交给后台的数据
         confirmSubForm: {
-          orderId: [],
+          orderIds: [],
           payMode: 'WeChat',
-          digest: ''
+          veriNote: ''
         },
         //  表单验证规则
         rules: {},
@@ -1131,7 +1138,7 @@
           this.errorVisible = true
         } else {
           for (let i = 0; i < confirmData.length; i++) {
-            this.confirmSubForm.orderId[i] = confirmData[i].orderId
+            this.confirmSubForm.orderIds[i] = confirmData[i].orderId
           }
           this.confirmSubVisible = true
         }

@@ -292,7 +292,7 @@
 </template>
 
 <script>
-  import { AgGridVue } from 'ag-grid-vue'
+  import {AgGridVue} from 'ag-grid-vue'
   import testJson from '../../../../static/test/testJSON.js'
   import OrderDetails from '../ShowOrderDetails'
   import PartialMatchFilterComponent from '../../common/PartialMatchFilterComponent'
@@ -1357,28 +1357,18 @@
         //          }
         //        },
         //  表单验证规则
-        rules:
-          {},
+        rules: {},
         // dialog的可见性
         colVisible: false, // 切换列可见性的弹窗
-        colVisible2:
-          false,
-        colVisible3:
-          false,
-        verVisible:
-          false, // 进入核销页面的弹框
-        confirmSubVisible:
-          false, // 提交核销信息的弹框
-        errorVisible:
-          false, // 错误信息弹框
-        detailVisible:
-          false, // 订单详情弹框
-        currentPage:
-          1, // 分页当前页面
-        pageSize:
-          20, // 每页显示的数据
-        rowCount:
-          0 // 总数据量（如果有筛选，则是筛选后的）
+        colVisible2: false,
+        colVisible3: false,
+        verVisible: false, // 进入核销页面的弹框
+        confirmSubVisible: false, // 提交核销信息的弹框
+        errorVisible: false, // 错误信息弹框
+        detailVisible: false, // 订单详情弹框
+        currentPage: 1, // 分页当前页面
+        pageSize: 20, // 每页显示的数据
+        rowCount: 0 // 总数据量（如果有筛选，则是筛选后的）
       }
     },
     components: {

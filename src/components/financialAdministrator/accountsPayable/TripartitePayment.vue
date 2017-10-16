@@ -53,6 +53,15 @@
               <el-option label="已核销" value="completed"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="类型:">
+            <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px" @change="typeChange(1)">
+              <el-option label="全部" value="all"></el-option>
+              <el-option label="现付" value="nowPay"></el-option>
+              <el-option label="到付" value="cashOnDelivery"></el-option>
+              <el-option label="欠付" value="inArrears"></el-option>
+              <el-option label="月结" value="monthly"></el-option>
+            </el-select>
+          </el-form-item>
           <el-button @click="drawGrid(1)">提取</el-button>
         </el-form>
       </div>
@@ -160,7 +169,8 @@
                 <template v-for="(collist,i) in gridOptions2.columnDefs">
                   <div class="colVisible">
                     <el-checkbox v-model="collist.visible"
-                                 @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)" style="float: left;width: 180px">
+                                 @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)"
+                                 style="float: left;width: 180px">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
@@ -180,6 +190,15 @@
               </el-form-item>
               <el-form-item label="发货方:">
                 <el-input v-model="filterForm.shipNam" style="width: 150px"></el-input>
+              </el-form-item>
+              <el-form-item label="类型:">
+                <el-select v-model="filterForm.payType" placeholder="付款方式" style="width: 80px" @change="typeChange(1)">
+                  <el-option label="全部" value="all"></el-option>
+                  <el-option label="现付" value="nowPay"></el-option>
+                  <el-option label="到付" value="cashOnDelivery"></el-option>
+                  <el-option label="欠付" value="inArrears"></el-option>
+                  <el-option label="月结" value="monthly"></el-option>
+                </el-select>
               </el-form-item>
             </div>
           </el-form>
@@ -211,7 +230,8 @@
               <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                 <template v-for="(collist,i) in gridOptions3.columnDefs">
                   <div class="colVisible">
-                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)" style="float: left;width: 180px">
+                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)"
+                                 style="float: left;width: 180px">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
@@ -286,10 +306,11 @@
 </template>
 
 <script>
-  import { AgGridVue } from 'ag-grid-vue'
+  import {AgGridVue} from 'ag-grid-vue'
   import testJson from '../../../../static/test/texttriparte.js'
   import OrderDetails from '../ShowOrderDetails'
   import PartialMatchFilterComponent from '../../common/PartialMatchFilterComponent'
+  import api from '../../../api/financialAdministrator/api.js'
 
   export default {
     data () {
@@ -311,6 +332,13 @@
               width: 100,
               field: 'orderState',
               filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '订单物流状态',
+              width: 100,
+              field: 'orderLogiState',
               hide: false,
               visible: true
             },
@@ -435,41 +463,9 @@
               visible: true
             },
             {
-              headerName: '现付',
+              headerName: '付款金额',
               width: 100,
-              field: 'currMoney',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '到付',
-              width: 100,
-              field: 'comMoney',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '欠付',
-              width: 100,
-              field: 'debtMoney',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '月结',
-              width: 100,
-              field: 'monthMoney',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '返款',
-              width: 100,
-              field: 'refund',
+              field: 'feeMoney',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -595,6 +591,13 @@
               visible: true
             },
             {
+              headerName: '订单物流状态',
+              width: 100,
+              field: 'orderLogiState',
+              hide: false,
+              visible: true
+            },
+            {
               headerName: '开单网点',
               width: 100,
               field: 'billBranch',
@@ -715,41 +718,9 @@
               visible: true
             },
             {
-              headerName: '现付',
+              headerName: '付款金额',
               width: 100,
-              field: 'currMoney',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '到付',
-              width: 100,
-              field: 'comMoney',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '欠付',
-              width: 100,
-              field: 'debtMoney',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '月结',
-              width: 100,
-              field: 'monthMoney',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '返款',
-              width: 100,
-              field: 'refund',
+              field: 'feeMoney',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -875,6 +846,13 @@
               visible: true
             },
             {
+              headerName: '订单物流状态',
+              width: 100,
+              field: 'orderLogiState',
+              hide: false,
+              visible: true
+            },
+            {
               headerName: '开单网点',
               width: 100,
               field: 'billBranch',
@@ -995,41 +973,9 @@
               visible: true
             },
             {
-              headerName: '现付',
+              headerName: '付款金额',
               width: 100,
-              field: 'currMoney',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '到付',
-              width: 100,
-              field: 'comMoney',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '欠付',
-              width: 100,
-              field: 'debtMoney',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '月结',
-              width: 100,
-              field: 'monthMoney',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '返款',
-              width: 100,
-              field: 'refund',
+              field: 'feeMoney',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -1141,6 +1087,7 @@
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
           shipNam: '', //  发货方
+          payType: 'all', // 付款方式
           orderId: '', // 运单号
           veriState: '', // 核销状态
           pageNum: 1, // 当前页码数
@@ -1149,13 +1096,13 @@
         // 各种费用合计
         totalForm: {
           transferFeeTotal: 0, // 中转费合计
-          totalMoney: 0// 月结合计
+          totalMoney: 0// 合计
         },
         // 核销完成后提交给后台的数据
         confirmSubForm: {
-          orderId: [],
+          orderIds: [],
           payMode: 'WeChat',
-          digest: ''
+          veriNote: ''
         },
         //  表单验证规则
         rules: {},
@@ -1248,9 +1195,23 @@
       // 获取行数据
       createRowData (i) {
         if (i === 1) {
+          api.getTripartitePayment(this.filterForm)
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              console.log(err)
+            })
           this.gridOptions.rowData = testJson.tripartitepayment.list
           this.gridOptions.api.setRowData(this.gridOptions.rowData)
         } else if (i === 2) {
+          api.getTripartitePayment_Ver(this.filterForm)
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              console.log(err)
+            })
           this.gridOptions2.rowData = testJson.tripartitepayment.list
           this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
         }
@@ -1392,7 +1353,7 @@
           this.errorVisible = true
         } else {
           for (let i = 0; i < confirmData.length; i++) {
-            this.confirmSubForm.orderId[i] = confirmData[i].orderId
+            this.confirmSubForm.orderIds[i] = confirmData[i].orderId
           }
           this.confirmSubVisible = true
         }
@@ -1400,9 +1361,18 @@
       },
       // 提交后台
       submit () {
-        console.log(this.confirmSubForm)
+        this.confirmSubForm.payMode = 'WeChat'
+        this.confirmSubForm.veriNote = 'haha'
+        this.confirmSubForm.orderIds = ['170815001']
+        api.submitTripartitePayment(this.confirmSubForm)
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
         this.confirmSubVisible = false
-        this.drawGrid(2)
+//        this.drawGrid(2)
       },
       visibleChoice (i, gridnum) {
         let gridCol
@@ -1427,6 +1397,16 @@
           }
         }
         this.updateColumnDefsVisible(num, gridCol.columnDefs)
+      },
+      // 核销界面，提取库存时，修改类型，清空表格数据
+      typeChange (i) {
+        this.updateGrid(i)
+        this.gridOptions.rowData = []
+        this.gridOptions2.rowData = []
+        this.gridOptions3.rowData = []
+        this.gridOptions.api.setRowData(this.gridOptions.rowData)
+        this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
+        this.gridOptions3.api.setRowData(this.gridOptions3.rowData)
       }
     },
     computed: {
