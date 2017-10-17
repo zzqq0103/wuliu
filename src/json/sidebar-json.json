@@ -435,7 +435,7 @@
         },
         {
           "index": "authorityManagement",
-          "title": "删除权限",
+          "title": "角色信息",
           "icon":"authorityManagement"
         }
       ]
