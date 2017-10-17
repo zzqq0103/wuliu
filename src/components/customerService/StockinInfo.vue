@@ -319,6 +319,7 @@
           'startPoint': '起始站' + i,
           'endPoint': '终点站' + i,
           'departTim': '发车时间' + i,
+          'isLock': '是',
           'loadingState': '装载单状态'
         })
         this.testData2.push({
@@ -366,6 +367,9 @@
             },
             {
               headerName: '发车时间', width: 200, field: 'departTim', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '是否加锁', width: 200, field: 'isLock', filter: 'text', hide: false, visible: true
             },
             {
               headerName: '装载单状态', width: 200, field: 'loadingState', filter: 'text', hide: false, visible: true
