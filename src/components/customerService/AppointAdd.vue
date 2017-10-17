@@ -20,11 +20,11 @@
       <el-form :model="appointForm" :rules="appointRules" ref="appointForm" >       
         <el-form-item label="发货方：" style="clear:both;width:100%" label-width="100px" prop="shipNam">
           <div class='dropdown_fahuo' style='width:80%'>
-              <el-input type="text"  style='width:100%' v-model='appointForm.shipNam' @keyup.native="getSearchFahuo()" @keyup.enter.native="setBlur(1)" placeholder="请输入发货方名称" ></el-input>
-              <div class="dropdown-content" v-show="fahuoShow" style='width:85%;height:140px'> 
+              <el-input type="text"  style='width:100%' v-model='appointForm.shipNam' @keyup.native="getSearchFahuoFro()" @keyup.enter.native="setBlur(1)" placeholder="请输入发货方名称" ></el-input>
+              <div class="dropdown-content" v-show="fahuoShow" style='width:85%'> 
                 <div class='dropdown-select'>
                   <ul class='dropdown-fahuo'>
-                    <li v-bind:key="data" v-for="(data,i) in this.fahuoList" v-on:dblclick="clickFahuo(data)">{{data}}</li>
+                    <li v-bind:key="data" v-for="(data,i) in this.fahuoList" v-on:dblclick="getFahuoRelatedFro(data)">{{data}}</li>
                   </ul>
                 </div>
               </div>
@@ -42,7 +42,7 @@
                 <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
                 <li @click="setQuyu(1)" class='dropdown-li' v-bind:class="{'selectOn':quyu}">区县</li>
               </ul>
-              <div class='dropdown-select'>
+              <div class='dropdown-select' style="height: 140px">
                 <ul class='dropdown-shenfen' v-show="shenfen">
                   <li v-for="(data,i) in this.regionList" @click="selectShenfen(1,data.name)" style='text-align:center'
                       :key='data.name'>{{data.name}}
@@ -92,7 +92,7 @@
                 <li @click="setShi(2)" class='dropdown-li' v-bind:class="{'selectOn':shi2}">城市</li>
                 <li @click="setQuyu(2)" class='dropdown-li' v-bind:class="{'selectOn':quyu2}">区县</li>
               </ul>
-              <div class='dropdown-select'>
+              <div class='dropdown-select' style="height: 140px">
                 <ul class='dropdown-shenfen' v-show="shenfen2">
                   <li v-for="(data,i) in this.regionList" @click="selectShenfen(2,data.name)" style='text-align:center'
                       :key='data.name'>{{data.name}}
@@ -188,6 +188,7 @@
     created () {
       this.regionList = regionJson
       // this.getStationListFro()
+      this.getStationListFro()
     },
     data () {
       return {
@@ -233,17 +234,12 @@
           // stationOptions: ['北京', '无锡', '苏州', '常州', '镇江']
         },
         fahuoRelated: {
-          shenfenSelected: '北京',
-          shiSelected: '北京',
-          quSelected: '海淀区',
-          baseAddressFa: '',
+          shenfenSelected: '北京', // 发货方省
+          shiSelected: '北京', // 发后方市
+          quSelected: '海淀区', // 发货方区
           shipNam: '张三发',
-          shipTel: '15003582722',
-          pickUpAdr: '提货地址',
-          goodsNam: '1212',
-          goodsWeight: 1,
-          goodsVolumn: 2,
-          receNums: 3
+          shipTel: '15003582722', // 发货方联系方式
+          pickUpAdrDe: '提货地址' // 发货方详细地址
         },
         shouhuoRelated: {
           shenfenSelected2: '江苏',
@@ -255,32 +251,35 @@
           receAdr: '收货方地址'
         },
         appointForm: {
-          isChangche: '否',
-          shenfenSelected: '',
-          shiSelected: '',
-          quSelected: '',
-          shenfenSelected2: '',
-          shiSelected2: '',
-          quSelected2: '',
-          /** 发货人信息 */
-          startStation: '',
-          shipNam: '',
-          shipTel: '',
-          pickUpAdr: '123',
-          baseAddressFa: '',
+          /** 预约单基本信息 */
+          startStation: '', // 始发站
+          arrStation: '', // 目的站
+          /** 发货方信息 */
+          shipNam: '', // 发货方
+          shipTel: '', // 发货方电话
+          pickUpAdrDe: '123', // 详细提货地址
+          shenfenSelected: '', // 提货地址-省
+          shiSelected: '', // 提货地址-市
+          quSelected: '', // 提货地址-区
+          /** 收货方信息 */
+          receNam: '',
+          receTel: '',
+          receAdrDe: '', // 收货详细地址
+          shenfenSelected2: '', // 收货地址-省
+          shiSelected2: '', // 收货地址-省
+          quSelected2: '', // 收货地址-省
           /** 货物信息 */
           goodsNam: '',
           goodsNums: '',
           goodsWeight: '',
           goodsVolumn: '',
           package: 'muxiang',
-          note: '',
-          /** 收货人信息 */
-          arrStation: '',
-          receNam: '',
-          receTel: '',
-          receAdr: '',
-          baseAddressShou: ''
+          /** 其它信息 */
+          isChangche: '否',
+          note: '', // 预约单备注
+          /** 后台无需处理数据 */
+          baseAddressShou: '',
+          baseAddressFa: ''
         },
         appointRules: {
           goodsNam: [
@@ -384,7 +383,6 @@
           console.log('失败')
           console.log(error)
         }) */
-        this.getStationListFro()
         /* api.getBranch(this.Form)
           .then(res => {
             console.log('成功')
@@ -408,11 +406,34 @@
         .catch(error => {
           this.errorVisable = true
           setTimeout(() => { this.errorVisable = false }, 800)
-          this.errorNote = '网络异常请检查'
+          this.errorNote = '网络异常，请求超时'
           console.log('失败')
           console.log(error)
         })
       },
+
+      // 根据关键词获取发货方/收货方列表
+      getSearchFahuoFro () {
+        if (this.appointForm.shipNam !== '') {
+          this.fahuoShow = true
+          console.log(this.appointForm.shipNam)
+          api.getSearchFahuo({'keywords': this.appointForm.shipNam}).then(res => {
+            console.log('成功')
+            console.log(res.data.content)
+            this.fahuoList = res.data.content
+          })
+          .catch(error => {
+            this.errorVisable = true
+            setTimeout(() => { this.errorVisable = false }, 800)
+            this.errorNote = '网络异常，请求超时'
+            console.log('失败')
+            console.log(error)
+          })
+        } else if (this.appointForm.shipNam === '') {
+          this.fahuoShow = false
+        }
+      },
+
      // 根据表单上方始发站选择提货地址
       handleChange1 () {
       /* startStation: '', // 始发站
@@ -473,17 +494,29 @@
           this.shouhuoShow = false
         }
       },
-      // 补全发货列表
-      clickFahuo (data) {
+      // 补全发货方相关信息
+      getFahuoRelatedFro (data) {
         this.fahuoShow = false
         this.appointForm.shipNam = data
-        let list = ['shipTel', 'pickUpAdr', 'shenfenSelected', 'shiSelected', 'quSelected', 'baseAddressFa']
-        for (let i = 0; i < list.length; i++) {
-          this.appointForm[list[i]] = this.fahuoRelated[list[i]]
-        }
-        this.appointForm.baseAddressFa = this.appointForm.shenfenSelected + '/' + this.appointForm.shiSelected + '/' + this.appointForm.quSelected
-        this.setShi(1)
-        this.setQuyu(1)
+        let list = ['shipTel', 'pickUpAdrDe', 'shenfenSelected', 'shiSelected', 'quSelected']
+        api.getFahuoRelated().then(res => {
+          console.log('成功')
+          console.log(res)
+          console.log(res.data.content)
+          for (let i = 0; i < list.length; i++) {
+            this.appointForm[list[i]] = this.res.data.content[list[i]]
+          }
+          this.appointForm.baseAddressFa = this.appointForm.shenfenSelected + '/' + this.appointForm.shiSelected + '/' + this.appointForm.quSelected
+          this.setShi(1)
+          this.setQuyu(1)
+        })
+        .catch(error => {
+          this.errorVisable = true
+          setTimeout(() => { this.errorVisable = false }, 800)
+          this.errorNote = '网络异常，请求超时'
+          console.log('失败')
+          console.log(error)
+        })
       },
       // 补全收货列表
       clickShouhuo (data) {
@@ -504,16 +537,6 @@
           this.shouhuoList = ['收货方1', '收货方2', '收货方3', '收货方4']
         } else {
           this.shouhuoShow = false
-        }
-      },
-      // 实时搜索发货方列表
-      getSearchFahuo () {
-        if (this.appointForm.shipNam !== '') {
-          this.fahuoShow = true
-          this.fahuoList = ['发货方1', '发货方2', '发货方3', '发货方4']
-          console.log(this.fahuoList[0])
-        } else if (this.appointForm.shipNam === '') {
-          this.fahuoShow = false
         }
       },
       getFocus (num) {
@@ -753,7 +776,6 @@
   }
 
   .dropdown-content {
-    height: 180px;
     position: absolute;
     background-color: #fff;
     margin-left: -1%;
@@ -765,7 +787,6 @@
 
   .dropdown-select {
     clear: both;
-    height: 140px;
     overflow-y: scroll
   }
 
