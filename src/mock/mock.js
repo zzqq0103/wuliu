@@ -12,6 +12,7 @@ let _orderList = orderList
 export default {
   bootstrap () {
     let mock = new MockAdapter(axios)
+
     // 获取到已送货订单列表,Get请求
     mock.onPost('/deliveredOrder/getLoadedlist').reply(config => {
       console.log(config)

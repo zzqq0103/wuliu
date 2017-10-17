@@ -8,8 +8,8 @@
 import axios from 'axios'
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8'
-const baseUrl = 'http://10.107.8.131:8080/' // 聚才的电脑接口
-// const baseUrl = ''
+// const baseUrl = 'http://10.107.8.131:8080/' // 聚才的电脑接口
+const baseUrl = ''
 
 // -------  已 送 货 装 载 单 开 始 --------
 
@@ -41,7 +41,8 @@ export const getQueryReceiveList = params => {
 
 // 获得当前已经运送的订单接口
 export const getCurrentTransportedData = params => {
-  return axios.post(`${baseUrl}/logistics/interface/long_transported_management/query_loading_info`, params)
+  // return axios.post(`${baseUrl}/logistics/interface/long_transported_management/query_loading_info`, params)
+  return axios.post(`${baseUrl}/transportedOrder/getlist`, params)
 }
 
 // 获取查询的订单接口

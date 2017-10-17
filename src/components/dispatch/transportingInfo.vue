@@ -8,53 +8,57 @@
       <!-- 操作栏 -->
       <div style="margin-top:2%">
 
-        <!-- 日期选择器 -->
-        <div class="block" style="float:right;">
-          <el-date-picker
-            v-model="dateValue"
-            type="daterange"
-            align="right"
-            placeholder="选择日期范围"
-            :picker-options="pickerOptions">
-          </el-date-picker>
+      <!-- 查询菜单 -->
+      <div style="margin-top:2%;float:left;">
+          <el-form :inline="true" :model="formQuery" class="demo-form-inline">
+            <el-form-item label="订单时间:">
+              <el-date-picker v-model="formQuery.dateInterval" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions" range-separator='/' style="width: 150px">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="装载单号:">
+              <el-input v-model="formQuery.orderId" placeholder="请输入订单号" style="width:124px;margin-right:5px;"></el-input>
+            </el-form-item>
+            <el-form-item label="司机姓名:">
+              <el-input v-model="formQuery.driverNam" placeholder="请输入司机姓名" style="width:165px;margin-right:5px;"></el-input>
+            </el-form-item>
+            <!--<el-form-item label="装载单状态:">-->
+            <!--<el-input v-model="formQuery.shipNam" placeholder="请输入发货人姓名" style="width:140px;margin-right:5px;"></el-input>-->
+            <!--</el-form-item>-->
+            <el-form-item>
+              <el-button type="primary" @click="submitQuery">查询</el-button>
+            </el-form-item>
+          </el-form>
         </div>
 
-        <!-- 查询 & 设置 -->
-        <div style="float:left;">
-
-          <el-input placeholder="请输入查询数据" icon="search" v-model="queryName" :on-icon-click="handleIconClick"
-                    style="width:145px;"></el-input>
-          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
-            <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-
-          <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
-          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-            <template v-for="(collist,i) in gridOptions.columnDefs">
-              <div class="colVisible">
-                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
-                  {{collist.headerName}}
-                </el-checkbox>
-              </div>
-            </template>
-            <template>
-              <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
-                <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-                <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
-              </div>
-            </template>
-          </el-popover>
-          <el-button v-popover:popover1>设置</el-button>
-        </div>
-
-
-        <div>
-          <!-- 导出 -->
+      <!-- 导出 & 设置 & 新增装载单 -->
+      <div style="float:right;margin-top:2%;">
           <el-button style="float:right; margin-right:10px;" @click="createLoaderList">新增装载单</el-button>
-          <!-- 新增装载单 -->
+
           <el-button style="float:right; margin-right:10px;">导出</el-button>
+
+          <!-- 设置div -->
+          <div style="float:right;margin-right:10px;">
+            <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
+            <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+              <template v-for="(collist,i) in gridOptions.columnDefs">
+                <div class="colVisible">
+                  <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"  style="float: left;width: 180px">
+                    {{collist.headerName}}
+                  </el-checkbox>
+                </div>
+              </template>
+              <template>
+                <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
+                  <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                  <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+                </div>
+              </template>
+            </el-popover>
+            <el-button v-popover:popover1>设置</el-button>
+          </div>
         </div>
+
+
 
         <!-- 是否发车对话框 -->
         <el-dialog title="" :visible.sync="departVisible" size="tiny" top="30%">
@@ -128,6 +132,11 @@
   export default {
     data () {
       return {
+        formQuery: {
+          dateInterval: '', // 时间间隔
+          loadingId: '', // 装载单号
+          driverNam: '' // 司机姓名
+        },
         titleText: '待长途装载单订单列表',
         dialogVisible: false, // 装载单订单列表弹窗的显示真值
         deliveringVisible: false, // 装载单订单列表弹窗显示真值
@@ -136,7 +145,6 @@
         flag: false, // flag = true 表示是新增装载单
         currentpage: 1, // 当前页数
         colVisible: false, // 设置弹窗的显示boolean值
-        loadOrderId: '', // 装载单
         tableForm: {
           'id': '',
           'loadOrderId': '',
@@ -169,6 +177,7 @@
             componentParent: this
           },
           rowData: null,
+          rowSelection: 'single',
           columnDefs: [
             {
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
@@ -366,15 +375,6 @@
             }
           ]
         },
-        // 查询的参数
-        queryItemOptions: [{
-          value: 1,
-          label: '装载单号'
-        }, {
-          value: 2,
-          label: '司机姓名'
-        }],
-        selectvalue: 1, // 查询的参数，(装载单号、订单号、司机)
         orderlist: [], // 订单列表
         totalpages: 1, // 总页数
         pageSize: 25, // 每页展示的个数

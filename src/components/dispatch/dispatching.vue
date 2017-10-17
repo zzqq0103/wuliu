@@ -70,6 +70,7 @@ export default {
           componentParent: this
         },
         rowData: null,
+        rowSelection: 'single',
         columnDefs: [
           {
             headerName: '#',

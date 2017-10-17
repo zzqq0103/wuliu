@@ -5,53 +5,53 @@
       <!-- 标题 -->
       <h2 style="text-align:center">已 中 转 订 单 信 息 页</h2>
 
-      <!-- 操作栏 -->
-      <div style="margin-top:2%">
-
-        <!-- 日期选择器 -->
-        <div class="block" style="float:right;">
-          <el-date-picker
-            v-model="dateValue"
-            type="daterange"
-            align="right"
-            placeholder="选择日期范围"
-            :picker-options="pickerOptions">
-          </el-date-picker>
-        </div>
-
-        <!-- 查询 & 设置 -->
-        <div style="float:left;">
-
-          <el-input placeholder="请输入查询数据" icon="search" v-on:keyup.enter="getQueryData" v-model="queryName" :on-icon-click="handleIconClick" style="width:170px;"></el-input>
-          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:140px;">
-            <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-
+      <!-- 查询菜单 -->
+      <div style="margin-top:2%;float:left;">
+          <el-form :inline="true" :model="formQuery" class="demo-form-inline">
+            <el-form-item label="订单时间:">
+              <el-date-picker v-model="formQuery.dateInterval" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions" range-separator='/' style="width: 150px">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="订单号:">
+              <el-input v-model="formQuery.orderId" placeholder="请输入订单号" style="width:124px;margin-right:5px;"></el-input>
+            </el-form-item>
+            <el-form-item label="中转外包公司">
+              <el-input v-model="formQuery.rouSelection" placeholder="请输入中转外包公司名" style="width:165px;margin-right:5px;"></el-input>
+            </el-form-item>
+            <el-form-item label="发货人姓名:">
+              <el-input v-model="formQuery.shipNam" placeholder="请输入发货人姓名" style="width:140px;margin-right:5px;"></el-input>
+            </el-form-item>
+            <el-form-item label="收货人姓名:">
+              <el-input v-model="formQuery.receNam" placeholder="请输入收货人姓名" style="width:140px;"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="submitQuery">查询</el-button>
+            </el-form-item>
+          </el-form>
+      </div>
+      <!-- 导出 -->
+      <div style="float:right;margin-top:2%;">
+        <el-button style="float:right; margin-right:10px;">导出</el-button>
+        <!-- 设置div -->
+        <div style="float:right;margin-right:10px;">
           <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-          <template v-for="(collist,i) in gridOptions.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"  style="float: left;width: 180px">
-                {{collist.headerName}}
-              </el-checkbox>
-            </div>
-          </template>
-          <template>
-            <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
-              <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
-            </div>
-          </template>
-        </el-popover>
-        <el-button v-popover:popover1>设置</el-button>
+            <template v-for="(collist,i) in gridOptions.columnDefs">
+              <div class="colVisible">
+                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"  style="float: left;width: 180px">
+                  {{collist.headerName}}
+                </el-checkbox>
+              </div>
+            </template>
+            <template>
+              <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
+                <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+              </div>
+            </template>
+          </el-popover>
+          <el-button v-popover:popover1>设置</el-button>
         </div>
-
-        <!-- 导出 -->
-        <div>
-          <el-button style="float:right; margin-right:10px;">导出</el-button>
-        </div>
-
       </div>
     </div>
 
@@ -105,14 +105,21 @@
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  import ElButton from '../../../node_modules/element-ui/packages/button/src/button'
   export default {
     data () {
       return {
+        formQuery: {
+          dateInterval: '', // 时间间隔
+          orderId: '', // 订单号
+          rouSelection: '', // 中转外包公司名
+          shipNam: '', // 发货人姓名
+          receNam: '' // 收货人姓名
+        },
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
         colVisible: false, // 设置弹窗的显示boolean值
-        orderId: '', // 运单号
         tableForm: {
           'id': '', // 序号
           'orderId': '', // 订单号
@@ -200,20 +207,6 @@
           ]
         },
         // 查询的参数
-        queryItemOptions: [{
-          value: 1,
-          label: '订单号'
-        }, {
-          value: 2,
-          label: '发货人姓名'
-        }, {
-          value: 3,
-          label: '收货人姓名'
-        }, {
-          value: 4,
-          label: '中转外包公司'
-        }],
-        selectvalue: 1, // 查询的参数，(装载单号、订单号、司机)
         orderlist: [], // 订单列表
         totalpages: 1, // 总页数
         pageSize: 25, // 每页展示的个数
@@ -281,11 +274,16 @@
     },
     // 实例组件
     components: {
+      ElButton,
       'ag-grid-vue': AgGridVue,
       OrderDetails
     },
 // 实例方法
     methods: {
+      // 查询按钮点击
+      submitQuery () {
+        console.log('click submitQuery function')
+      },
       // 订单详情弹框
       detailDoubleClick (event) {
         console.log(event.data.orderId)
