@@ -75,10 +75,10 @@
       ></ag-grid-vue>
     </div>
 
-    <!-- 装载单订单列表展示 -->
-    <el-dialog :title="已装载单订单列表" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
-      <Dispatched :status="status"> </Dispatched>
-    </el-dialog>
+    <!--&lt;!&ndash; 装载单订单列表展示 &ndash;&gt;-->
+    <!--<el-dialog :title="已装载单订单列表" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>-->
+      <!--<Dispatched :status="status"> </Dispatched>-->
+    <!--</el-dialog>-->
 
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
@@ -364,19 +364,15 @@
       // 获取订单列表
       getOrderList () {
         let para = {
-          page: this.currentpage,
-          orderId: this.orderId,
-          driverName: this.driverName,
-          deliverOrderId: this.deliverOrderId,
-          selectvalue: this.selectvalue,
+          pageNum: this.currentpage,
+          startStation: '北京',
+          arrStation: '南京',
           pageSize: this.pageSize
         }
         this.listLoading = true
-        getCurrentTransportedData(para).then((res) => {
-          // console.log('进入getCurrentDelivered')
-          // this.gridOptions.rowData = res.data.orderlists
-          // 使用gridOptions中的api方法设定RowData数据
-          this.gridOptions.api.setRowData(res.data.orderlists)
+        getCurrentTransportedData(JSON.stringify(para)).then((res) => {
+          console.log(res.data.content.loadingInfos)
+          this.gridOptions.api.setRowData(res.data.content.loadingInfos)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
           this.listLoading = false
@@ -392,6 +388,7 @@
         }
         this.listLoading = true
         getQueryTransOrderList(para).then(res => {
+          console.log(res.data.content.loadingInfos)
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
