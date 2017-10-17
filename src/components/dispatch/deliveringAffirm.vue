@@ -287,6 +287,10 @@
     },
     // 实例方法
     methods: {
+      // 查询按钮点击
+      submitQuery () {
+        console.log('click submitQuery function')
+      },
       // 装载单订单列表弹框
       detailDoubleClick (event) {
         this.loadOrderId = event.data.loadOrderId

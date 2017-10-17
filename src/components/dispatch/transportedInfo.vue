@@ -79,7 +79,7 @@
     </div>
 
     <!-- 装载单订单列表展示 -->
-    <el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
+    <el-dialog  :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
       <deliver-order-list></deliver-order-list>
     </el-dialog>
 
@@ -308,6 +308,10 @@
 
     // 实例方法
     methods: {
+      // 查询按钮点击
+      submitQuery () {
+        console.log('click submitQuery function')
+      },
       // 订单详情弹框
       detailDoubleClick (event) {
         console.log(event.data.orderId)
@@ -316,11 +320,7 @@
       },
       // 装载单订单列表弹框
       changeDialogVisible (event) {
-        this.loadOrderId = event.data.loadOrderId
-        console.log(this.deliveringVisible)
         this.deliveringVisible = true
-//        this.dialogVisible = true
-//        this.flag = false
       },
       // 改变每页显示的个数
       handleSizeChange (val) {

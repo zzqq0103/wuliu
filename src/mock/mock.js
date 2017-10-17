@@ -176,8 +176,6 @@ export default {
 
     // 获取装载单订单列表
     mock.onPost('/Loader/getOrderList').reply(config => {
-      // let {loaderId} = config.params
-      // let mockList = _orderList
       let pages = _orderList.length
       return new Promise((resolve, reject) => {
         setTimeout(() => {

@@ -402,11 +402,15 @@
     },
     computed: {
       comtract_Price () {
-        return this.tableForm.contractPrice + '元'
+        return this.tableForm.contractPrice
       }
     },
     // 实例方法
     methods: {
+      // 查询按钮点击
+      submitQuery () {
+        console.log('click submitQuery function')
+      },
       // 点击修改表单，确定按钮的操作
       editEpolyForm () {
         this.editFormVisible = false
@@ -527,7 +531,6 @@
           this.listLoading = false
         })
       },
-
       // 获取服务端的外包公司数据
       loadEpolyComp () {
         return [
@@ -553,8 +556,8 @@
 
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getOrderList()
       this.selectEpolyCompsOptions = this.loadEpolyComp()
+      this.getOrderList()
     }
   }
 </script>

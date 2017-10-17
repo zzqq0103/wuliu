@@ -31,13 +31,18 @@
       <h3 style="text-align: center;color:red;" v-if="flag">新增新的装载单列表</h3>
       <el-button @click="rightSelect" style="float:left;"> < </el-button>
       <el-button @click="rightSelectAll" style="float:left;"> << </el-button>
+      <el-form :inline="true" class="demo-form-inline">
+         <el-form-item label="总运费:"  style="float:right;">
+              <el-input v-model="CostFee" size="small"></el-input>
+          </el-form-item>
+      </el-form> 
       <ag-grid-vue style="width: 100%; height: 700px; margin-top:20px; float:right;" class="ag-blue"
                    :gridOptions="gridOptions_right"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
                    :enableSorting="true"
-                   :suppressRowClickSelection="true"
                    :enableFilter="true"
+                   :suppressRowClickSelection="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight="40"
@@ -70,6 +75,7 @@ export default {
   // 数据模型
   data () {
     return {
+      CostFee: '', // 大车总运费的确定
       detailVisible: false, // 订单详情弹框
       orderId: '',
       orderlist: null,
@@ -394,10 +400,7 @@ export default {
       }
       let _flag = this.flag
       getOrderList(params).then((res) => {
-        // console.log('进入getCurrentDelivered')
-        // this.gridOptions.rowData = res.data.orderlists
-        // 使用gridOptions中的api方法设定RowData数据
-        // this.gridOptions.rowData = res.data.orderlists
+        console.log(res)
         if (_flag) {
           this.gridOptions_left.api.setRowData(res.data.orderlists)
         } else {
@@ -420,5 +423,7 @@ export default {
 </script>
 
 <style scoped>
-
+.el-form-item{
+  margin-bottom: 0px !important;
+}
 </style>

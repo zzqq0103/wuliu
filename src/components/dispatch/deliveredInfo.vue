@@ -33,6 +33,8 @@
           </el-form>
         </div>
 
+      
+      
       <!-- 导出 -->
       <div style="float:right;margin-top:2%;">
           <el-button style="float:right; margin-right:10px;">导出</el-button>
@@ -94,11 +96,6 @@
       </el-pagination>
     </div>
 
-    <!-- 装载单订单列表展示 -->
-    <!--<el-dialog :title="已装载单订单列表" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>-->
-      <!--<Dispatched :status="status"> </Dispatched>-->
-    <!--</el-dialog>-->
-
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
     <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
       <order-details :orderId="orderId"></order-details>
@@ -143,7 +140,6 @@
         currentpage: 1, // 当前页数
         colVisible: false, // 设置弹窗的显示boolean值
         orderId: '', // 运单号
-        dispatchVisible: false, // 设置装载单列表的订单信息的boolean值
         tableForm: {
           'id': '',
           'loadOrderId': '',
@@ -177,12 +173,7 @@
             {
               headerName: '单号', width: 120, field: 'loadOrderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
-//            {
-//              headerName: '装载单状态', width: 120, field: 'loadOrderStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-//            },
-//            {
-//              headerName: '调整状态', width: 120, field: 'adjustmentStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-//            },
+
             {
               headerName: '所属仓库', width: 120, field: 'warehouse', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
@@ -292,6 +283,10 @@
     },
     // 实例方法
     methods: {
+      // 查询按钮点击
+      submitQuery () {
+        console.log('click submitQuery function')
+      },
       // 司机多选搜索框中调用的方法
       remoteGetDriverList (query) {
         if (query !== '') {

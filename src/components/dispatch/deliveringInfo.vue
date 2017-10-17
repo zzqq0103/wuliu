@@ -406,6 +406,10 @@
 
     // 实例方法
     methods: {
+      // 查询按钮点击
+      submitQuery () {
+        console.log('click submitQuery function')
+      },
       // 订单详情弹框
       detailDoubleClick (event) {
         console.log(event.data.loadOrderId)
