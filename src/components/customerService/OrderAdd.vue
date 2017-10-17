@@ -3,11 +3,12 @@
     <h2 style="text-align:center">网点开单</h2>
     <el-form  :model="form" ref="form">
       <div style='margin-top:2%;display:inline-block;width:100%'>
-        <span style='float:left;padding-top:0.7%;width:80px'>日期：</span>
-        <span style='float:left;padding-top:0.9%;width:150px'>{{timeNow}}</span>
-        
-        <span class='order-title-base' style='width:100px'>始发站：</span>
-        <el-form-item style="float:left;width:100px">
+        <!-- <span style='float:left;padding-top:0.7%;width:80px'>日期：</span>
+        <span style='float:left;padding-top:0.9%;width:150px'>{{timeNow}}</span> -->
+        <span style='float:left;padding:0.7% 0 0 2%;width:100px'>订单号：</span>
+        <span style='float:left;padding-top:0.9%;width:150px'>{{initForm.orderId}}</span>
+        <span class='order-title-base' style='width:80px'>始发站：</span>
+        <el-form-item style="float:left;width:150px">
           <el-select placeholder="" v-model="form.startStation" @change="handleChange1">
             <el-option v-for="item in initForm.stationOptions" :value="item" :key="item" :label="item"></el-option>
           </el-select>
@@ -19,8 +20,8 @@
               @change="handleChange1">
             </el-cascader>
         </div> -->
-        <span class='order-title-base' style='width:100px'>目的站：</span>
-        <el-form-item style="float:left;width:100px">
+        <span class='order-title-base' style='width:80px'>目的站：</span>
+        <el-form-item style="float:left;width:150px">
           <el-select placeholder="" v-model="form.arrStation" @change="handleChange2">
             <el-option v-for="item in initForm.stationOptions" :value="item" :key="item" :label="item"></el-option>
           </el-select>
@@ -32,13 +33,11 @@
               @change="handleChange2">
             </el-cascader>
         </div> -->
-        <span style='float:left;padding:0.7% 0 0 2%;width:7%'>订单号：</span>
-        <span style='float:left;padding-top:0.9%;width:15%'>{{initForm.orderId}}</span>
       </div>
       <div style='margin-top:2%;clear:both'>
         <span class='label col-1'>发货方</span>
         <div class='dropdown_fahuo col-4'>
-            <input type="text"  class='input' style='width:100%' v-model='form.shipNam' @keyup="getSearchFahuo()" @keyup.enter="setBlur(1)" v-bind:class="{'error':isshipNam}" placeholder="请输入发货方名称"  @blur="check(10, 'shipNam')"></input>
+            <input type="text"  class='input' style='width:100%' v-model='form.shipNam' @keyup="getSearchFahuoFro()" @keyup.enter="setBlur(1)" v-bind:class="{'error':isshipNam}" placeholder="请输入发货方名称"  @blur="check(10, 'shipNam')"></input>
             <div class="dropdown-content" v-show="fahuoShow" style='width:39%'> 
               <div class='dropdown-select'>
                 <ul class='dropdown-fahuo'>
@@ -221,7 +220,7 @@
       <el-button style='margin-top:2%' type="primary" @click="submitValidate(2)">提交订单</el-button>
     </div>
     
-    <!-- 错误输入提示弹窗 -->
+    <!-- 订单列表错误输入提示弹窗 -->
     <el-dialog title="错误：" :visible.sync="wrongNoteVisable" size="tiny">
       <h2 style="text-align:center;padding: 30px 0 30px 0px">{{wrongNote}}</h2>
     </el-dialog>
@@ -267,12 +266,18 @@
         <el-button type="primary" @click="submitDialog(1, 'form', 'goodsPayment')">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 请求数据提示弹窗 -->
+    <el-dialog title="" :visible.sync="pointVisible" size="" tiny>
+      <h2 style="text-align:center;padding: 30px 0 30px 0px">{{Note}}</h2>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import regionJson from '../../../static/region.json'
-// import api from '../../api/customerService/api.js'
+import api from '../../api/customerService/api.js'
 export default {
   created () {
     this.regionList = regionJson
@@ -284,6 +289,8 @@ export default {
       feeHave: false, // 可生成基本费用的内容已全部填上
       wrongNote: '',
       receList: [1, 2, 3],
+      pointVisible: false, // 向后台提交数据提示弹窗
+      Note: '', // 向后台提交数据提示
       submitOrderVisible: false, // 确认提交订单弹窗
       wrongNoteVisable: false, // 错误提示弹窗
       coverageVisible: false, // 保额输入弹窗
@@ -406,58 +413,64 @@ export default {
       initForm: {
         retuPayModeList: ['无'], // 返款类型数组
         stationOptions: ['北京', '无锡', '苏州', '常州', '镇江'],
-        orderId: '121212'
+        orderId: '170815004'
       },
       form: {
-        branch: '无', // 选择自提后的网点
-        id: '12345',
-        billBranch: '',
+        /** 订单基本信息 */
+        id: '170815004', // 订单ID
+        orderTim: new Date(), // 下单时间
         startStation: '', // 始发站
         arrStation: '', // 目的站
-        serviceNam: '',
+        serviceNam: '弓莉', // 客服名称
+        /** 发货方信息 */
         shipNam: '',
         shipTel: '',
-        pickUpAdr: '',
+        pickUpAdr: '', // 详细提货地址
+        shenfenSelected: '', // 提货地址-省
+        shiSelected: '', // 提货地址-市
+        quSelected: '', // 提货地址-区
+        /** 收货方信息 */
         receNam: '',
         receTel: '',
-        receAdr: '',
-        goodsNam: '',
+        receAdr: '', // 详细收货地址
+        shenfenSelected2: '', // 收货地址-省
+        shiSelected2: '', // 收货地址-市
+        quSelected2: '', // 收货地址-区
+        /** 货物信息 */
+        goodsNam: '', // 货物名称
+        package: '纸箱', // 包装
         goodsNums: 1,
         goodsWeight: '',
         goodsVolumn: '',
-        package: '纸箱',
-        isListenToRele: '否',
-        orderType: '普件',
-        tranMode: '',
-        sendMode: '送货上门',
-        baseFee: 0,
-        packFee: 0,
-        sendFee: 0,
-        pickUpFee: 0,
-        landingFee: 0,
+        orderType: '普件', // 送货方式
+        sendMode: '送货上门', // 交货方式
+        branch: '无', // 提货网点
+        isListenToRele: '否', // 是否听通知放货
+        /** 回单信息 */
+        receNums: 0, // 回单份数
+        receMoney: 0, // 回单押款
+        /** 费用信息 */
+        baseFee: 0, // 基础运费
+        pickUpFee: 0, // 提货费
+        sendFee: 0, // 送货费
+        packFee: 0, // 包装费
+        landingFee: 0, // 卸货费
+        coverage: 0.00, // 保额
         goodsPayment: 3, // 代收货款
-        procedureFee: '',
-        coverage: 0.00,
-        isReceipt: '',
-        receNums: 0,
-        receMoney: 0,
-        refuMoney: 0, // 返款
-        retuPayMode: '无', // 返款类型
+        refuMoney: 0, // 返款金额
+        retuPayMode: '无', // 返款支付方式
+        /** 异动信息 */
         unActIncome: 0, // 异动收入
         unActExpense: 0, // 异动支出
-        totalFreight: 0,
+        /** 总运费及支付信息 */
+        totalFreight: 0, // 总运费
         feeMoney: [0, 0, 0, 0], // 现付，到付，欠付，月结
-        orderNote: '',
-        baseAddressFa: '',
-        baseAddressShou: '',
-        shenfenSelected: '',
-        shiSelected: '',
-        quSelected: '',
-        shenfenSelected2: '',
-        shiSelected2: '',
-        quSelected2: '',
+        /** 备注信息 */
         note1: '', // 附属约定
-        note2: '' // 情况说明
+        note2: '', // 情况说明
+        /** 后台无需处理 */
+        baseAddressFa: '',
+        baseAddressShou: ''
       },
       forminit: {},
       ruleDialog: {
@@ -489,8 +502,8 @@ export default {
     getbaseAddressShou: function () {
       this.form.baseAddressShou = this.form.shenfenSelected2 + this.form.shiSelected2 + this.form.quSelected2
       return this.form.baseAddressShou
-    },
-    timeNow: function () {
+    }
+    /* timeNow: function () {
       let date = new Date()
       let seperator1 = '-'
       let seperator2 = ':'
@@ -506,7 +519,7 @@ export default {
               ' ' + date.getHours() + seperator2 + date.getMinutes() +
               seperator2 + date.getSeconds()
       return currentdate
-    }
+    } */
   },
   methods: {
     test () {
@@ -516,6 +529,7 @@ export default {
     setsendMode () {
       if (this.form.sendMode === 'ziti') {
         this.branchList = ['网点1', '网点2', '网点2']
+        this.branchList.push('枢纽')
         this.form.branch = this.branchList[0]
       } else {
         this.branchList = []
@@ -544,9 +558,12 @@ export default {
       if (type === 1) {
         if (data === 'coverage') {
           this.insurance = (this.form[data] * 0.005).toFixed(2)
+          // this.insurance = Number(this.form.insurance)
+          this.form.coverage = Number(this.form.coverage)
         }
         if (data === 'goodsPayment') {
           this.goodsPayment2 = (this.form[data] * 0.005).toFixed(2)
+          this.form.goodsPayment = Number(this.form.goodsPayment)
         }
         self.$refs[formName].validate((valid) => {
           if (valid) {
@@ -711,6 +728,9 @@ export default {
           this[data1] = false
           this[data2] = true
         }
+        for (let i = 0; i < 4; i++) {
+          this.form.feeMoney[data] = Number(this.form.feeMoney[data])
+        }
       } else if (num === 7) {
         this.addressVisible2 = false
         this.baseAddressShouOk = false
@@ -747,6 +767,7 @@ export default {
           this[data1] = false
           this[data2] = true
         }
+        this.form.goodsNums = Number(this.form.goodsNums)
       } else if (num === 9 || num === 10) {
         let data1 = 'is' + data
         let data2 = data + 'Ok'
@@ -771,6 +792,7 @@ export default {
               this[data1] = false
               this[data2] = true
             }
+            this.form[data] = Number(this.form[data])
           } else {
             this[data1] = false
             this[data2] = true
@@ -794,6 +816,9 @@ export default {
     // 向服务器提交订单数据
     submitOrder () {
       this.submitOrderVisible = false
+      this.form.orderTim = new Date()
+      console.log(this.form)
+      this.setOrderFro()
     },
     // 从服务器获取基本运费
     getBaseFee () {
@@ -872,8 +897,9 @@ export default {
           this.feeMoney3Ok && this.feeMoney4Ok) {
             console.log('数据已经全部填上')
             this.isAttSta()
-            this.isPayTotal()
-            if (this.isPayTotal() && this.feeHave) {
+            // this.isPayTotal()
+            if (this.isPayTotal()) {
+              console.log('sds')
               this.submitOrderVisible = true
               console.log('可以提交订单')
               // this.submitOrder()
@@ -882,15 +908,28 @@ export default {
         }
       }
     },
-    // 实时搜索发货方列表
-    getSearchFahuo () {
+    // 根据关键词获取发货方/收货方列表
+    getSearchFahuoFro () {
       if (this.form.shipNam !== '') {
         this.fahuoShow = true
-        this.fahuoList = ['发货方1', '发货方2', '发货方3', '发货方4']
+        console.log(this.form.shipNam)
+        api.getSearchFahuo({'keywords': this.form.shipNam}).then(res => {
+          console.log('成功')
+          console.log(res.data.content)
+          this.fahuoList = res.data.content
+        })
+        .catch(error => {
+          this.errorVisable = true
+          setTimeout(() => { this.errorVisable = false }, 800)
+          this.errorNote = '网络异常，请求超时'
+          console.log('失败')
+          console.log(error)
+        })
       } else if (this.form.shipNam === '') {
         this.fahuoShow = false
       }
     },
+
     // 获取对应收货方列表
     getSearchShouhuo () {
       if (this.form.receNam !== '') {
@@ -899,11 +938,6 @@ export default {
       } else {
         this.shouhuoShow = false
       }
-    },
-    // 根据保额设置保价费
-    setInsurance () {
-      this.insurance = (this.form.coverage * 0.005).toFixed(2)
-      this.coverageVisible = false
     },
     // 双击发货方列表补充数据
     clickFahuo (data) {
@@ -1052,6 +1086,23 @@ export default {
           })
         }
       }
+    },
+    /** 提交后台相关函数 */
+    // 查看订单列表
+    setOrderFro () {
+      // 入参：筛选条件，第几个页面（默认为0）
+      // 回参：对应页面表格数据，对应筛选条件下的页数
+      api.setOrder(this.form).then(res => {
+        console.log('成功')
+        console.log(res)
+      })
+      .catch(error => {
+        this.pointVisible = true
+        setTimeout(() => { this.pointVisible = false }, 800)
+        this.Note = '提交失败，网络异常请检查'
+        console.log('失败')
+        console.log(error)
+      })
     }
   },
   mounted () {
