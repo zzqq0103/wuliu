@@ -118,7 +118,7 @@
         </el-form-item>
         <el-form-item label="联系方式:" :label-width="formLabelWidth" prop="id">
           <!--<el-input v-model="enterpriseeditForm.id" style="width: 50%" disabled="true"></el-input>-->
-          <el-input v-model="enterpriseeditForm.id" :disabled="true"  style="width: 50%"></el-input>
+          <el-input v-model="enterpriseeditForm.id" :disabled="true" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="合同号:" :label-width="formLabelWidth" prop="contractId">
           <!--<el-input v-model="enterpriseeditForm.contractId" style="width: 50%" disabled="true"></el-input>-->
@@ -126,7 +126,7 @@
         </el-form-item>
         <el-form-item label="合同价格:" :label-width="formLabelWidth" prop="contractPrice">
           <!--<el-input v-model="enterpriseeditForm.contractPrice" style="width: 50%" disabled="true"></el-input>-->
-          <el-input v-model="enterpriseeditForm.contractPrice" :disabled="true"  style="width: 50%"></el-input>
+          <el-input v-model="enterpriseeditForm.contractPrice" :disabled="true" style="width: 50%"></el-input>
 
         </el-form-item>
       </el-form>
@@ -165,8 +165,9 @@
 
 <script>
   import { AgGridVue } from 'ag-grid-vue'
-  import testJson from '../../../static/test/testJSON.js'
+//  import testJson from '../../../static/test/testJSON.js'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  import api from '../../api/financialAdministrator/api.js'
 
   export default {
     data () {
@@ -334,7 +335,20 @@
     },
     methods: {
       createRowData () {
-        this.gridOptions.rowData = testJson.enterpriseInfo.list
+//        this.gridOptions.rowData = testJson.enterpriseInfo.list
+        this.filterForm.companyName = '万达'
+        this.filterForm.transfersInhome = '北京'
+        this.filterForm.transfersIndestination = '上海'
+        console.log(this.filterForm)
+        api.getEnterpriseLineInfo(this.filterForm)
+          .then(res => {
+            console.log('成功')
+            console.log(res)
+          })
+          .catch(error => {
+            console.log('失败')
+            console.log(error)
+          })
       },
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
