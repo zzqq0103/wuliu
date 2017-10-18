@@ -55,20 +55,132 @@
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
-                   :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
                    :headerHeight=40
 
-                   :rowDoubleClicked="detailDoubleClick"
-                   :pagination="true"
-                   :paginationPageSize="10"
-                   :suppressPaginationPanel="true"
-                   :filterChanged="gridfilterChange"
+                   :rowDoubleClicked="leftDoubleClick"
+                   :animateRows="true"
+                   rowSelection="multiple"
       ></ag-grid-vue>
     </div>
+
+    <!--入库界面-->
+    <el-dialog title="订单长途入库" :visible.sync="verVisible" size="full" :closeOnClickModal="false">
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form :model="filterForm2" ref="filterForm" :inline="true">
+            <div>
+              <el-form-item label="下单时间：">
+                <el-date-picker v-model="filterForm2.startTime" type="daterange" placeholder="选择日期范围"
+                                :picker-options="pickerOptions" style='width:200px' range-separator='/'>
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item label="订单号：">
+                <el-input  v-model="filterForm2.orderId" placeholder="输入订单号" style='width:150px'></el-input>
+              </el-form-item>
+            </div>
+            <div>
+              <div style="float: right">
+                <el-button @click="drawGrid(2)">提取库存</el-button>
+                <!--<el-button @click="colVisible2 = true">设置</el-button>-->
+                <el-popover ref="popover2" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+                  <template v-for="(collist,i) in gridOptions2.columnDefs">
+                    <div class="colVisible">
+                      <el-checkbox v-model="collist.visible"
+                                   @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)"
+                                   style="float: left;width: 180px">
+                        {{collist.headerName}}
+                      </el-checkbox>
+                    </div>
+                  </template>
+                  <template>
+                    <div class="colVisible">
+                      <el-button @click="visibleChoice(1,'grid2')" size="small">全选</el-button>
+                      <el-button @click="visibleChoice(2,'grid2')" size="small">全不选</el-button>
+                    </div>
+                  </template>
+                </el-popover>
+                <el-button v-popover:popover2>设置</el-button>
+              </div>
+              <el-form-item>
+                <el-button style="visibility: hidden"></el-button>
+              </el-form-item>
+            </div>
+          </el-form>
+          <div style="float: right">
+            <el-button @click="leftSelect"> > </el-button>
+            <el-button @click="leftSelectAll"> >> </el-button>
+          </div>
+          <el-input style="visibility: hidden;width: 200px"></el-input>
+          <!--未核销处表格-->
+          <div style="margin-top: 10px">
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
+                         :gridOptions="gridOptions2"
+                         :suppressMovableColumns="true"
+                         :enableColResize="true"
+                         :suppressCellSelection="true"
+                         :rowHeight=40
+                         :headerHeight=40
+
+                         :rowDoubleClicked="leftDoubleClick"
+                         :animateRows="true"
+                         rowSelection="multiple"
+            ></ag-grid-vue>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <el-form>
+            <el-form-item>
+              <el-button style="visibility: hidden"></el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button @click="confirmSubmit(1)">确认入库</el-button>
+              <el-button @click="confirmSubmit(0)">入库异常</el-button>
+              <!--<el-button @click="colVisible3 = true">设置</el-button>-->
+              <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+                <template v-for="(collist,i) in gridOptions3.columnDefs">
+                  <div class="colVisible">
+                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)"
+                                 style="float: left;width: 180px">
+                      {{collist.headerName}}
+                    </el-checkbox>
+                  </div>
+                </template>
+                <template>
+                  <div class="colVisible">
+                    <el-button @click="visibleChoice(1,'grid3')" size="small">全选</el-button>
+                    <el-button @click="visibleChoice(2,'grid3')" size="small">全不选</el-button>
+                  </div>
+                </template>
+              </el-popover>
+              <el-button v-popover:popover3>设置</el-button>
+            </el-form-item>
+          </el-form>
+          <el-button @click="rightSelect"> < </el-button>
+          <el-button @click="rightSelectAll"> << </el-button>
+          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
+          <!--待核销处表格-->
+          <div style="margin-top: 10px">
+            <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
+                         :gridOptions="gridOptions3"
+                         :suppressMovableColumns="true"
+                         :enableColResize="true"
+                         :suppressCellSelection="true"
+                         :rowHeight=40
+                         :headerHeight=40
+
+                         :rowDoubleClicked="rightDoubleClick"
+                         :animateRows="true"
+                         rowSelection="multiple"
+            ></ag-grid-vue>
+          </div>
+        </el-col>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="verVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
 
     <!--分页-->
     <div style="text-align: right">
@@ -90,7 +202,6 @@
 <script>
   import {AgGridVue} from 'ag-grid-vue'
   import testJson from '../../../static/test/testJSON.js'
-  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   export default {
     data () {
@@ -98,77 +209,110 @@
         gridOptions: {
           rowData: null,
           columnDefs: [
+            {
+              headerName: '序号', width: 100, field: 'index', suppressMenu: true, hide: false, visible: true
+            },
+            {
+              headerName: '订单编号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '子键号', width: 150, field: 'subId', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '发货方电话', width: 150, field: 'shipTel', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '收货方电话', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '货物名称', width: 150, field: 'goodsNam', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '件数', width: 150, field: 'cargoPieces', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '重量', width: 150, field: 'cargoWeight', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '体积', width: 150, field: 'cargoVolume', filter: 'text', hide: false, visible: true
+            }
           ],
           context: {
             componentParent: this
           }
         },
-        NewGridOptions: {
+        gridOptions2: {
+          rowData: [],
           columnDefs: [
             {
               headerName: '序号', width: 100, field: 'index', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '订单编号', width: 150, field: 'orderId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '订单编号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '装载编号', width: 150, field: 'transId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '子键号', width: 150, field: 'subId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '入库时间', width: 150, field: 'inDepotTim', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '发货方电话', width: 150, field: 'shipTel', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '出库时间', width: 150, field: 'outDepotTim', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '收货方电话', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '发货方电话', width: 150, field: 'shipTel', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '货物名称', width: 150, field: 'goodsNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '收货方电话', width: 150, field: 'receTel', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '件数', width: 150, field: 'cargoPieces', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '货物名称', width: 150, field: 'goodsNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '重量', width: 150, field: 'cargoWeight', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '件数', width: 150, field: 'cargoPieces', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            {
-              headerName: '重量', width: 150, field: 'cargoWeight', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            {
-              headerName: '体积', width: 150, field: 'cargoVolume', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '体积', width: 150, field: 'cargoVolume', filter: 'text', hide: false, visible: true
             }
-          ]
+          ],
+          context: {
+            componentParent: this
+          }
         },
-        LongGridOptions: {
+        gridOptions3: {
+          rowData: [],
           columnDefs: [
             {
               headerName: '序号', width: 100, field: 'index', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '装载单号', width: 150, field: 'loadingId', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '订单编号', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '是否已分配', width: 150, field: 'isAllocat', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '子键号', width: 150, field: 'subId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '是否已确认', width: 150, field: 'isConfirm', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '发货方电话', width: 150, field: 'shipTel', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '起始站', width: 150, field: 'startStation', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '收货方电话', width: 150, field: 'receTel', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '到达站', width: 150, field: 'arrStation', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '货物名称', width: 150, field: 'goodsNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '司机姓名', width: 150, field: 'driverNam', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '件数', width: 150, field: 'cargoPieces', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '司机电话', width: 150, field: 'driverTel', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '重量', width: 150, field: 'cargoWeight', filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '体积', width: 150, field: 'cargoVolume', filter: 'text', hide: false, visible: true
             }
-          ]
+          ],
+          context: {
+            componentParent: this
+          }
         },
         rules: {},
+        verVisible: true,
         colVisible: false,
         selectFormVisible: false,
         formLabelWidth: '150px',
@@ -186,6 +330,10 @@
           orderId: '', // 运单号
           loadingId: '', // 装载单号
           depotSite: '' // 仓库站点
+        },
+        filterForm2: {
+          orderId: '', // 订单号
+          startTime: [] // 下单时间区域 startTime[0]为起，startTime[1]终
         },
         pickerOptions: {
           shortcuts: [{
@@ -248,7 +396,27 @@
     },
     components: {
       OrderDetails,
-      'ag-grid-vue': AgGridVue
+      'ag-grid-vue': AgGridVue,
+      operateComponent: {
+        template: '<el-button class="del-but" type="info" style="margin-left:20px" size="small" @click="addError">编辑大车异常</el-button>',
+        methods: {
+          addError () {
+            let self = this.params.context.componentParent
+            self.errorEditVisable = true
+            self.errorForm = {
+              'licePlateNum': '',
+              'loadingId': '',
+              'unActExpense': '',
+              'unActTim': new Date(),
+              'unActDes': '',
+              'serviceNam': '弓莉'
+            }
+            self.errorForm.loadingId = this.params.data.loadingId
+            self.errorForm.licePlateNum = this.params.data.licePlateNum
+          }
+        }
+      }
+
     },
     methods: {
       updataColumnDefs (collist) {
@@ -259,36 +427,34 @@
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)
       },
-      changeColumnDefsBoolen () {
-        var columnlist = this.gridOptions.columnDefs
-        for (let i = 0; i < columnlist.length; i++) {
-          columnlist[i].hide = !columnlist[i].hide
-        }
-      },
       setting () {
         this.colVisible = true
       },
       // 更新列数据
       updateGrid () {
-        const depotType = this.filterForm.depotType
-//        const lenth = (this.gridOptions.columnDefs.length - 1)
-        if (depotType === 'newDepot') {
-          this.gridOptions.columnDefs = this.NewGridOptions.columnDefs
-        } else if (depotType === 'longDepot') {
-          this.gridOptions.columnDefs = this.LongGridOptions.columnDefs
-        }
         this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
       },
-      drawGrid () {
-        this.updateGrid()
-        this.createRowData()
+      // 绘制表格，包括更新列信息与行信息
+      drawGrid (i) {
+        if (i === 2) {
+          this.gridOptions3.api.selectAll()
+          this.delChoose(this.gridOptions3.api.getSelectedRows())
+        }
+        this.createRowData(i)
         this.calculateGrid()
-//        this.changeColumnDefsBoolen()
-//        console.log(this.gridOptions.columnDefs)
       },
-      createRowData () {
-        this.gridOptions.rowData = testJson.freight.list
-        this.gridOptions.api.setRowData(this.gridOptions.rowData)
+      // 获取行数据
+      createRowData (i) {
+        if (i === 1) {
+          console.log(this.filterForm1)
+          this.getLongLoadFro()
+          this.gridOptions.rowData = testJson.freight.list
+          this.gridOptions.api.setRowData(this.gridOptions.rowData)
+        } else if (i === 2) {
+          console.log(this.filterForm2)
+          this.gridOptions2.rowData = testJson.freight.list
+          this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
+        }
       },
       // 分页的操作
       // 每页显示数量改变时
@@ -328,6 +494,52 @@
           }
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
+      },
+      onQuickFilterChanged3 (input) {
+        this.gridOptions3.api.setQuickFilter(input)
+      },
+//      入库表格操作
+      // 核销界面左侧表格双击时间
+      leftDoubleClick (event) {
+        // this.leftSelect(event.data)
+        this.filterForm2.orderId = event.data.orderId
+        this.detailVisible = true
+      },
+      // 核销界面右侧表格双击时间
+      rightDoubleClick (event) {
+        this.rightSelect(event.data)
+      },
+      // 核销界面左侧表格多选切换至右侧
+      leftSelect () {
+        const selectedData = this.gridOptions2.api.getSelectedRows()
+        this.leftSelect(selectedData)
+      },
+      // 核销界面左侧表格全选切换至右侧
+      leftSelectAll () {
+        this.gridOptions2.api.selectAllFiltered()
+        const selectedData = this.gridOptions2.api.getSelectedRows()
+        this.addChoose(selectedData)
+      },
+      // 核销界面右侧表格多选切换至左侧
+      rightSelect () {
+        const selectedData = this.gridOptions3.api.getSelectedRows()
+        this.delChoose(selectedData)
+      },
+      // 核销界面右侧表格全选切换至左侧
+      rightSelectAll () {
+        this.gridOptions3.api.selectAllFiltered()
+        const selectedData = this.gridOptions3.api.getSelectedRows()
+        this.delChoose(selectedData)
+      },
+      // 核销界面右侧添加行数据，左侧删除行数据
+      addChoose (newItems) {
+        this.gridOptions3.api.updateRowData({add: newItems})
+        this.gridOptions2.api.updateRowData({remove: newItems})
+      },
+      // 核销界面左侧添加行数据，右侧删除行数据
+      delChoose (newItems) {
+        this.gridOptions2.api.updateRowData({add: newItems})
+        this.gridOptions3.api.updateRowData({remove: newItems})
       }
     },
     beforeMount () {
@@ -340,67 +552,3 @@
     }
   }
 </script>
-
- <!--//用户请求-->
-<!--filterForm: {-->
-<!--startTime: '', // 开始时间-->
-<!--endTime: '', // 截止时间-->
-<!--depotType: '', // 入库类型-->
-<!--orderId: '', // 运单号-->
-<!--loadingId: '', // 装载单号-->
-<!--depotSite: '' // 仓库站点-->
-<!--}-->
-<!--//用户获得响应-->
-<!--表1(新货入库)-->
-<!--{-->
- <!--'订单编号' 'orderId'-->
-<!--},-->
-<!--{-->
- <!--'装载编号' 'transId'-->
-<!--},-->
-<!--{-->
-<!--'入库时间' 'inDepotTim'-->
-<!--},-->
-<!--{-->
- <!--'出库时间' 'outDepotTim'-->
-<!--},-->
-<!--{-->
- <!--'发货方电话'  'shipTel'-->
-<!--},-->
-<!--{-->
-<!--'收货方电话' 'receTel'-->
-<!--},-->
-<!--{-->
-<!--'货物名称' 'goodsNam'-->
-<!--},-->
-<!--{-->
- <!--'件数 ''cargoPieces'-->
-<!--},-->
-<!--{-->
-<!--'重量'  'cargoWeight',-->
-<!--},-->
-<!--{-->
- <!--'体积'  'cargoVolume'-->
-<!--}-->
-<!--表2(长途入库)-->
-<!--{-->
-<!--'装载单号' 'loadingId'-->
-<!--},-->
-<!--{-->
-<!--'是否已分配' 'isAllocat'-->
-<!--},-->
-<!--{-->
-<!--'是否已确认' 'isConfirm'-->
-<!--},-->
-<!--{-->
- <!--'起始站' 'startStation'-->
-<!--},-->
-<!--{-->
-<!--'到达站' 'arrStation'-->
-<!--},-->
-<!--{-->
-<!--'司机姓名' 'driverNam'-->
-<!--},-->
-<!--{-->
- <!--'司机电话' 'driverTel'-->
-<!--}-->
