@@ -57,14 +57,11 @@
                 <el-button v-popover:popover1>设置</el-button>
               </div>
             </div>
-
       </div>
        </div>
-
       <!-- 清除浮动 -->
       <div style="clear: both;">
       </div>
-
       <!-- 表格 -->
       <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
@@ -81,7 +78,6 @@
                    :colWidth="120"
       ></ag-grid-vue>
     </div>
-
       <!-- 分页 -->
       <div id="bottom" class="block" style="float:right; margin-top:30px;">
       <el-pagination
@@ -201,6 +197,7 @@
   export default {
     data () {
       return {
+        // 查询参数值表单数据
         formQuery: {
           dateInterval: '', // 时间间隔
           orderId: '', // 订单号
@@ -210,11 +207,8 @@
         },
         selectEpolyComp: '',
         selectEpolyCompsOptions: [],
-        editFormVisible: false, // 编辑待中转弹窗的显示与否
-        listLoading: false, // 加载圆圈（默认不显示）
-        queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
-        colVisible: false, // 设置弹窗的显示boolean值
+        // 编辑表单 和 表格表单的数据
         tableForm: {
           'id': '', // 序号
           'orderId': '', // 订单号
@@ -235,8 +229,7 @@
           'lineNam': '', // 联系人
           'contractPrice': '' // 合同价格
         },
-        rules: {},
-        formLabelWidth: '120px',
+        formLabelWidth: '120px', // 编辑表格的每一行的宽度
         // Ag-grid 表格组件的data
         gridOptions: {
           context: {
@@ -308,7 +301,14 @@
         orderlist: [], // 订单列表
         totalpages: 1, // 总页数
         pageSize: 25, // 每页展示的个数
-        // 日期控件data
+        dateValue: '', // 日期值
+        detailVisible: false, // 订单详情弹框
+        departVisible: false, // 确定中转弹框表单
+        editVisible: false, // 编辑中转列表信息的弹框表单
+        editFormVisible: false, // 编辑待中转弹窗的显示与否
+        listLoading: false, // 加载圆圈（默认不显示）
+        colVisible: false, // 设置弹窗的显示boolean值
+        // 日期控件的数据
         pickerOptions: {
           shortcuts: [{
             text: '上周',
@@ -365,14 +365,9 @@
             const nowYear = now.getFullYear()
             return timeYear < (nowYear - 1)
           }
-        },
-        dateValue: '', // 日期值
-        detailVisible: false, // 订单详情弹框
-        departVisible: false, // 确定中转弹框表单
-        editVisible: false // 编辑中转列表信息的弹框表单
+        }
       }
     },
-
     // 实例组件
     components: {
       ElOption,
@@ -400,22 +395,16 @@
         }
       }
     },
-    computed: {
-//      comtract_Price () {
-//        return this.tableForm.contractPrice
-//      }
-    },
     // 实例方法
     methods: {
       // 查询按钮点击
       submitQuery () {
-        console.log('click submitQuery function')
       },
       // 修改表单中的合同价格和合同外包公司，确定按钮的操作
       editEpolyForm () {
-        console.log(this.tableForm.contractPrice)
         this.editFormVisible = false
       },
+      // 点击“确认中转“ 按钮的”提示“信息bar
       message (result) {
         this.$message({
           message: `订单号：  ${result}    的订单，中转成功！`,
@@ -431,45 +420,30 @@
         this.departVisible = false
         this.message(res.remove[0].data.orderId)
       },
-
       // 订单详情弹框
       detailDoubleClick (event) {
         this.tableForm.orderId = event.data.orderId
         this.detailVisible = true
       },
-
       // 改变每页显示的个数
       handleSizeChange (val) {
         this.pageSize = val
         this.getOrderList()
       },
-
       // 点击当前选中的第几页
       handleCurrentChange (val) {
         this.currentpage = val
         this.getOrderList()
       },
-
-      // 点击查询的Icon，进行查询
-      handleIconClick (input) {
-        this.getQueryData()
-      },
-
-      onQuickFilterChanged (input) {
-        this.gridOptions.api.setQuickFilter(input)
-      },
-
       changeColumnDefsBoolen () {
         var columnlist = this.gridOptions.columnDefs
         for (let i = 0; i < columnlist.length; i++) {
           columnlist[i].hide = !columnlist[i].hide
         }
       },
-
       setting () {
         this.colVisible = true
       },
-
       // 点击设置按钮之后，显示需要弹出的属性名列表，选择checkbox属性
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
@@ -477,7 +451,6 @@
           this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
         }
       },
-
       // 全选  与  全不选 执行函数
       visibleChoice (i) {
         if (i === 1) {
@@ -491,7 +464,6 @@
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
       },
-
       // 获取订单列表
       getOrderList () {
         let para = {
@@ -511,7 +483,6 @@
         })
         return null
       },
-
       // 获取查询数据
       getQueryData () {
         let para = {
@@ -549,7 +520,6 @@
         ]
       }
     },
-
     // 挂载元素完毕，自执行函数
     mounted () {
       this.selectEpolyCompsOptions = this.loadEpolyComp()
@@ -557,9 +527,7 @@
     }
   }
 </script>
-
 <style scoped>
-
   .el-form-item__label{
     text-align: center;
   }
