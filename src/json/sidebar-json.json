@@ -1,467 +1,479 @@
 {
-    "test1": {
-        "items": [
-            {
-                "icon": "el-icon-setting",
-                "index": "readme",
-                "title": "自述"
-            },
-            {
-                "icon": "el-icon-menu",
-                "index": "2",
-                "title": "表格",
-                "subs": [
-                    {
-                        "index": "basetable",
-                        "title": "基础表格"
-                    },
-                    {
-                        "index": "vuetable",
-                        "title": "Vue表格组件"
-                    }
-                ]
-            },
-            {
-                "icon": "el-icon-date",
-                "index": "3",
-                "title": "表单",
-                "subs": [
-                    {
-                        "index": "baseform",
-                        "title": "基本表单"
-                    },
-                    {
-                        "index": "vueeditor",
-                        "title": "编辑器"
-                    },
-                    {
-                        "index": "markdown",
-                        "title": "markdown"
-                    },
-                    {
-                        "index": "upload",
-                        "title": "文件上传"
-                    }
-                ]
-            },
-            {
-                "icon": "el-icon-star-on",
-                "index": "basecharts",
-                "title": "图表"
-            },
-            {
-                "icon": "el-icon-upload2",
-                "index": "drag",
-                "title": "拖拽"
-            }
+  "test1": {
+    "items": [
+      {
+        "icon": "el-icon-setting",
+        "index": "readme",
+        "title": "自述"
+      },
+      {
+        "icon": "el-icon-menu",
+        "index": "2",
+        "title": "表格",
+        "subs": [
+          {
+            "index": "basetable",
+            "title": "基础表格"
+          },
+          {
+            "index": "vuetable",
+            "title": "Vue表格组件"
+          }
         ]
-    },
-    "operationAdmin": {
-        "items": [
-            {
-                "icon": "car",
-                "index": "1",
-                "title": "车辆信息管理",
-                "subs":[
-                {
-                  "index":"shortvehicle",
-                  "title":"接送货车辆"
-                },
-                {
-                  "index":"longvehicle",
-                  "title":"长途车辆"
-                 }
-                ]
-            },
-            {
-                "icon": "person",
-                "index": "2",
-                "title": "客户信息管理",
-              "subs":[
-                {
-                  "index":"personnel",
-                  "title":"客户信息"
-                },
-                {
-                  "index":"familiarPersonnel",
-                  "title":"常用联系人信息"
-                }
-              ]
-            },
-            {
-                "icon": "price",
-                "index": "cargoprice",
-                "title": "价格梯度信息管理"
-            },
-            {
-                "icon":"region",
-                "index":"3",
-                "title":"区域及计价管理",
-                "subs":[
-                {
-                   "index":"region",
-                   "title":"区域管理"
-                },
-                {
-                    "index":"regionprice",
-                    "title":"区域价格管理"
-                }
-                ]
-            },
-            {
-                "icon": "enterprise",
-                "index": "4",
-                "title": "外包企业",
-                "subs":[
-                {
-                  "index":"enterprise",
-                  "title":"外包企业信息管理"
-                },
-                {
-                  "index":"enterpriseline",
-                  "title":"外包企业路线管理"
-                }
-                ]
-            }
+      },
+      {
+        "icon": "el-icon-date",
+        "index": "3",
+        "title": "表单",
+        "subs": [
+          {
+            "index": "baseform",
+            "title": "基本表单"
+          },
+          {
+            "index": "vueeditor",
+            "title": "编辑器"
+          },
+          {
+            "index": "markdown",
+            "title": "markdown"
+          },
+          {
+            "index": "upload",
+            "title": "文件上传"
+          }
         ]
-    },
-    "financialAdmin": {
-        "items": [
-            {
-                "icon": "receipt",
-                "index": "1",
-                "title": "应收款项",
-                "subs": [
-                    {
-                        "index": "freight",
-                        "title": "运费核销"
-                    },
-                    {
-                        "index": "receipt",
-                        "title": "回单押款"
-                    },
-                    {
-                        "index": "additional",
-                        "title": "附加费"
-                    },
-                    {
-                        "index": "tripartiteIncome",
-                        "title": "三方收入"
-                    },
-                    {
-                        "index": "otherIncome",
-                        "title": "异动收入"
-                    }
-                ]
-            },
-            {
-                "icon": "payment",
-                "index": "2",
-                "title": "应付款项",
-                "subs": [
-                    {
-                        "index": "transferFee",
-                        "title": "中转费"
-                    },
-                    {
-                        "index": "trunkTransport",
-                        "title": "干线运输费"
-                    },
-                    {
-                        "index": "shortTransport",
-                        "title": "短驳运输费"
-                    },
-                    {
-                        "index": "tripartitePayment",
-                        "title": "三方运输费"
-                    },
-                    {
-                        "index": "rebate",
-                        "title": "返款"
-                    },
-                    {
-                        "index": "otherPayment",
-                        "title": "异动支出"
-                    },
-                    {
-                        "index": "staffSalary",
-                        "title": "人员支出"
-                    }
-                ]
-            },
-            {
-                "icon": "price",
-                "index": "3",
-                "title": "货款中心",
-                "subs": [
-                    {
-                        "index": "paymentCollection",
-                        "title": "货款代收"
-                    },
-                    {
-                        "index": "paymentReturn",
-                        "title": "货款归还"
-                    }
-                ]
-            }
+      },
+      {
+        "icon": "el-icon-star-on",
+        "index": "basecharts",
+        "title": "图表"
+      },
+      {
+        "icon": "el-icon-upload2",
+        "index": "drag",
+        "title": "拖拽"
+      }
+    ]
+  },
+  "operationAdmin": {
+    "items": [
+      {
+        "icon": "car",
+        "index": "1",
+        "title": "车辆信息管理",
+        "subs": [
+          {
+            "index": "shortvehicle",
+            "title": "接送货车辆"
+          },
+          {
+            "index": "longvehicle",
+            "title": "长途车辆"
+          }
         ]
-    },
-    "financialDirector": {
-        "items": [
-            {
-                "icon": "price",
-                "index": "paymentCenter",
-                "title": "货款中心"
-            },
-            {
-                "icon": "tripartite",
-                "index": "tripartiteSettlement",
-                "title": "三方盈收"
-            },
-            {
-                "icon": "finance",
-                "index": "financialLedger",
-                "title": "财务总账"
-            },
-            {
-                "icon": "car",
-                "index": "grossProfit",
-                "title": "大车毛利"
-            }
+      },
+      {
+        "icon": "person",
+        "index": "2",
+        "title": "客户信息管理",
+        "subs": [
+          {
+            "index": "personnel",
+            "title": "客户信息"
+          },
+          {
+            "index": "familiarPersonnel",
+            "title": "常用联系人信息"
+          }
         ]
-    },
-    "logitstiAdmin": {
-        "items": [
-            {
-                "icon": "deliver",
-                "index": "deliver",
-                "title": "短途送货管理",
-                "subs": [
-                    {
-                        "index": "deliveredInfo",
-                        "title": "送货成功",
-                        "icon": ""
-                    },
-                    {
-                        "index": "deliveringInfo",
-                        "title": "正在送货",
-                        "icon": ""
-                    },
-                    {
-                        "index": "deliveringAffirm",
-                        "title": "待确认",
-                        "icon": ""
-                    },
-                    {
-                        "index": "ManualdeliverInfo",
-                        "title": "手动调度",
-                        "icon": ""
-                    }
-                ]
-            },
-            {
-                "icon": "receive",
-                "index": "receive",
-                "title": "短途接货管理",
-                "subs": [
-                    {
-                        "index": "receivedInfo",
-                        "title": "已接货",
-                        "icon": ""
-                    },
-                    {
-                        "index": "receiveingInfo",
-                        "title": "待接货",
-                        "icon": ""
-                    },
-                    {
-                        "index": "ManualReceiveingInfo",
-                        "title": "手动调度",
-                        "icon": ""
-                    }
-                ]
-            },
-            {
-                "icon": "car",
-                "index": "long-distance",
-                "title": "长途运输管理",
-                "subs": [
-                    {
-                        "index": "transportedInfo",
-                        "title": "已运输",
-                        "icon": ""
-                    },
-                    {
-                        "index": "transportingInfo",
-                        "title": "待运输",
-                        "icon": ""
-                    },
-                    {
-                        "index": "transportDirect",
-                        "title": "长途直送",
-                        "icon": ""
-                    }
-                ]
-            },
-            {
-                "icon": "epobolyed",
-                "index": "2",
-                "title": "中转外包管理",
-                "subs": [
-                    {
-                        "index": "epobolyedInfo",
-                        "title": "已中转",
-                        "icon": ""
-                    },
-                    {
-                        "index": "epobolingInfo",
-                        "title": "待中转",
-                        "icon": ""
-                    }
-                ]
-            }
+      },
+      {
+        "icon": "price",
+        "index": "cargoprice",
+        "title": "价格梯度信息管理"
+      },
+      {
+        "icon": "region",
+        "index": "3",
+        "title": "区域及计价管理",
+        "subs": [
+          {
+            "index": "region",
+            "title": "区域管理"
+          },
+          {
+            "index": "regionprice",
+            "title": "区域价格管理"
+          }
         ]
-    },
-    "customerService": {
-        "items": [
-            {
-                "index": "1",
-                "title": "订单",
-                "icon": "order",
-                "subs": [
-                    {
-                        "index": "orderInfo",
-                        "title": "查看订单",
-                        "icon": ""
-                    },
-                    {
-                        "index": "appointToOrder",
-                        "title": "预约单生成订单",
-                        "icon": ""
-                    },
-                    {
-                        "index": "orderAdd",
-                        "title": "网点开单",
-                        "icon": ""
-                    },
-                    {
-                        "index": "orderDetail",
-                        "title": "订单详情",
-                        "icon": ""
-                    }
-                ]
-            },
-            {
-                "index": "appointInfo",
-                "title": "预约单",
-                "icon": "appointInfo",
-                "subs": [
-                    {
-                        "index": "appointInfo",
-                        "title": "查看预约单",
-                        "icon": ""
-                    },
-                    {
-                        "index": "appointAdd",
-                        "title": "新建预约单",
-                        "icon": ""
-                    },
-                    {
-                        "index": "appointDetail",
-                        "title": "预约单详情",
-                        "icon": ""
-                    }
-                ]
-            },
-            {
-                "index": "logisticsInfo",
-                "title": "物流信息",
-                "icon": "car",
-                "subs": [
-                     {
-                        "index": "logisticsInfo",
-                        "title": "查看物流信息",
-                        "icon": ""
-                    },
-                    {
-                        "index": "logisticsDetail",
-                        "title": "查看物流详情信息",
-                        "icon": ""
-                    }
-                ]
-            },
-            {
-                "index": "2",
-                "title": "库存",
-                "icon": "reserveCheck",
-                "subs": [
-                    {
-                        "index": "reserveCheck",
-                        "title": "查看库存",
-                        "icon": ""
-                    },
-                    {
-                        "index": "stockinInfo",
-                        "title": "长途入库",
-                        "icon": "",
-                        "subs": [
-                            {
-                                "index": "stockinInfo",
-                                "title": "入库信息",
-                                "icon": ""
-                            },
-                            {
-                                "index": "stockinChange",
-                                "title": "入库更新",
-                                "icon": ""
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "index": "transfer",
-                "title": "回单管理",
-                "icon": "transfer"
-            },
-            {
-                "index": "freightError",
-                "title": "运费异常",
-                "icon":"freightError"
-            },
-            {
-                "index": "orderError",
-                "title": "订单异常",
-                "icon":"orderError"
-            },
-            {
-                "index": "vehicleError",
-                "title": "大车异常",
-                "icon":"orderError"
-            }
+      },
+      {
+        "icon": "enterprise",
+        "index": "4",
+        "title": "外包企业",
+        "subs": [
+          {
+            "index": "enterprise",
+            "title": "外包企业信息管理"
+          },
+          {
+            "index": "enterpriseline",
+            "title": "外包企业路线管理"
+          }
         ]
-    },
-    "systemAdmin": {
-      "items": [
-        {
-          "index": "register",
-          "title": "账号注册",
-          "icon":"register"
-        },
-        {
-          "index": "authorityManagement",
-          "title": "删除权限",
-          "icon":"authorityManagement"
-        }
-      ]
-    },
-    "outsourcingAdmin": {
-      "items":[
-        {
-          "index":"orderform",
-          "title":"订单查询",
-          "icon":"order"
-        }
-      ]
-    }
+      }
+    ]
+  },
+  "financialAdmin": {
+    "items": [
+      {
+        "icon": "receipt",
+        "index": "1",
+        "title": "应收款项",
+        "subs": [
+          {
+            "index": "freight",
+            "title": "运费核销"
+          },
+          {
+            "index": "receipt",
+            "title": "回单押款"
+          },
+          {
+            "index": "additional",
+            "title": "附加费"
+          },
+          {
+            "index": "tripartiteIncome",
+            "title": "三方收入"
+          },
+          {
+            "index": "otherIncome",
+            "title": "异动收入"
+          }
+        ]
+      },
+      {
+        "icon": "payment",
+        "index": "2",
+        "title": "应付款项",
+        "subs": [
+          {
+            "index": "transferFee",
+            "title": "中转费"
+          },
+          {
+            "index": "trunkTransport",
+            "title": "干线运输费"
+          },
+          {
+            "index": "shortTransport",
+            "title": "短驳运输费"
+          },
+          {
+            "index": "tripartitePayment",
+            "title": "三方运输费"
+          },
+          {
+            "index": "rebate",
+            "title": "返款"
+          },
+          {
+            "index": "otherPayment",
+            "title": "异动支出"
+          },
+          {
+            "index": "staffSalary",
+            "title": "人员支出"
+          }
+        ]
+      },
+      {
+        "icon": "price",
+        "index": "3",
+        "title": "货款中心",
+        "subs": [
+          {
+            "index": "paymentCollection",
+            "title": "货款代收"
+          },
+          {
+            "index": "paymentReturn",
+            "title": "货款归还"
+          }
+        ]
+      }
+    ]
+  },
+  "financialDirector": {
+    "items": [
+      {
+        "icon": "price",
+        "index": "paymentCenter",
+        "title": "货款中心"
+      },
+      {
+        "icon": "tripartite",
+        "index": "tripartiteSettlement",
+        "title": "三方盈收"
+      },
+      {
+        "icon": "finance",
+        "index": "financialLedger",
+        "title": "财务总账"
+      },
+      {
+        "icon": "car",
+        "index": "grossProfit",
+        "title": "大车毛利"
+      }
+    ]
+  },
+  "logitstiAdmin": {
+    "items": [
+      {
+        "icon": "deliver",
+        "index": "deliver",
+        "title": "短途送货管理",
+        "subs": [
+          {
+            "index": "deliveredInfo",
+            "title": "送货成功",
+            "icon": ""
+          },
+          {
+            "index": "deliveringInfo",
+            "title": "正在送货",
+            "icon": ""
+          },
+          {
+            "index": "deliveringAffirm",
+            "title": "待确认",
+            "icon": ""
+          },
+          {
+            "index": "ManualdeliverInfo",
+            "title": "手动调度",
+            "icon": ""
+          }
+        ]
+      },
+      {
+        "icon": "receive",
+        "index": "receive",
+        "title": "短途接货管理",
+        "subs": [
+          {
+            "index": "receivedInfo",
+            "title": "已接货",
+            "icon": ""
+          },
+          {
+            "index": "receiveingInfo",
+            "title": "待接货",
+            "icon": ""
+          },
+          {
+            "index": "ManualReceiveingInfo",
+            "title": "手动调度",
+            "icon": ""
+          }
+        ]
+      },
+      {
+        "icon": "car",
+        "index": "long-distance",
+        "title": "长途运输管理",
+        "subs": [
+          {
+            "index": "transportedInfo",
+            "title": "已运输",
+            "icon": ""
+          },
+          {
+            "index": "transportingInfo",
+            "title": "待运输",
+            "icon": ""
+          },
+          {
+            "index": "transportDirect",
+            "title": "长途直送",
+            "icon": ""
+          }
+        ]
+      },
+      {
+        "icon": "epobolyed",
+        "index": "epoboly",
+        "title": "中转外包管理",
+        "subs": [
+          {
+            "index": "epobolyedInfo",
+            "title": "已中转",
+            "icon": ""
+          },
+          {
+            "index": "epobolingInfo",
+            "title": "待中转",
+            "icon": ""
+          }
+        ]
+      },
+      {
+        "icon": "warehouse",
+        "index": "warehouse",
+        "title": "库存订单管理",
+        "subs": [
+          {
+            "index": "warehouseOperation",
+            "title": "库存页面管理",
+            "icon": ""
+          }
+        ]
+      }
+    ]
+  },
+  "customerService": {
+    "items": [
+      {
+        "index": "1",
+        "title": "订单",
+        "icon": "order",
+        "subs": [
+          {
+            "index": "orderInfo",
+            "title": "查看订单",
+            "icon": ""
+          },
+          {
+            "index": "appointToOrder",
+            "title": "预约单生成订单",
+            "icon": ""
+          },
+          {
+            "index": "orderAdd",
+            "title": "网点开单",
+            "icon": ""
+          },
+          {
+            "index": "orderDetail",
+            "title": "订单详情",
+            "icon": ""
+          }
+        ]
+      },
+      {
+        "index": "appointInfo",
+        "title": "预约单",
+        "icon": "appointInfo",
+        "subs": [
+          {
+            "index": "appointInfo",
+            "title": "查看预约单",
+            "icon": ""
+          },
+          {
+            "index": "appointAdd",
+            "title": "新建预约单",
+            "icon": ""
+          },
+          {
+            "index": "appointDetail",
+            "title": "预约单详情",
+            "icon": ""
+          }
+        ]
+      },
+      {
+        "index": "logisticsInfo",
+        "title": "物流信息",
+        "icon": "car",
+        "subs": [
+          {
+            "index": "logisticsInfo",
+            "title": "查看物流信息",
+            "icon": ""
+          },
+          {
+            "index": "logisticsDetail",
+            "title": "查看物流详情信息",
+            "icon": ""
+          }
+        ]
+      },
+      {
+        "index": "2",
+        "title": "库存",
+        "icon": "reserveCheck",
+        "subs": [
+          {
+            "index": "reserveCheck",
+            "title": "查看库存",
+            "icon": ""
+          },
+          {
+            "index": "stockinInfo",
+            "title": "长途入库",
+            "icon": "",
+            "subs": [
+              {
+                "index": "stockinInfo",
+                "title": "入库信息",
+                "icon": ""
+              },
+              {
+                "index": "stockinChange",
+                "title": "入库更新",
+                "icon": ""
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "index": "transfer",
+        "title": "回单管理",
+        "icon": "transfer"
+      },
+      {
+        "index": "freightError",
+        "title": "运费异常",
+        "icon": "freightError"
+      },
+      {
+        "index": "orderError",
+        "title": "订单异常",
+        "icon": "orderError"
+      },
+      {
+        "index": "vehicleError",
+        "title": "大车异常",
+        "icon": "orderError"
+      }
+    ]
+  },
+  "systemAdmin": {
+    "items": [
+      {
+        "index": "register",
+        "title": "账号注册",
+        "icon": "register"
+      },
+      {
+        "index": "authorityManagement",
+        "title": "删除权限",
+        "icon": "authorityManagement"
+      }
+    ]
+  },
+  "outsourcingAdmin": {
+    "items": [
+      {
+        "index": "orderform",
+        "title": "订单查询",
+        "icon": "order"
+      }
+    ]
+  }
 }

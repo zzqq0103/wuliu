@@ -135,7 +135,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="合同价格:" :label-width="formLabelWidth">
-            <el-input v-model="comtract_Price" ></el-input>
+            <el-input v-model="tableForm.contractPrice" ></el-input>
           </el-form-item>
           <el-form-item label="外包联系人:" :label-width="formLabelWidth">
             <el-input v-model="tableForm.lineNam"  :disabled="true"></el-input>
@@ -401,9 +401,9 @@
       }
     },
     computed: {
-      comtract_Price () {
-        return this.tableForm.contractPrice
-      }
+//      comtract_Price () {
+//        return this.tableForm.contractPrice
+//      }
     },
     // 实例方法
     methods: {
@@ -411,11 +411,11 @@
       submitQuery () {
         console.log('click submitQuery function')
       },
-      // 点击修改表单，确定按钮的操作
+      // 修改表单中的合同价格和合同外包公司，确定按钮的操作
       editEpolyForm () {
+        console.log(this.tableForm.contractPrice)
         this.editFormVisible = false
       },
-
       message (result) {
         this.$message({
           message: `订单号：  ${result}    的订单，中转成功！`,
@@ -423,7 +423,6 @@
           duration: 1500
         })
       },
-
       // 点击确认中转 按钮
       transfer () {
         console.log(this)
@@ -435,7 +434,7 @@
 
       // 订单详情弹框
       detailDoubleClick (event) {
-        this.orderId = event.data.orderId
+        this.tableForm.orderId = event.data.orderId
         this.detailVisible = true
       },
 
@@ -497,7 +496,7 @@
       getOrderList () {
         let para = {
           page: this.currentpage,
-          orderId: this.orderId,
+          orderId: this.tableForm.orderId,
           driverName: this.driverName,
           deliverOrderId: this.deliverOrderId,
           selectvalue: this.selectvalue,
@@ -505,9 +504,6 @@
         }
         this.listLoading = true
         getCurrentEpiboliedList(para).then((res) => {
-          // console.log('进入getCurrentDelivered')
-          // this.gridOptions.rowData = res.data.orderlists
-          // 使用gridOptions中的api方法设定RowData数据
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
