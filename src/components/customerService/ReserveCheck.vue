@@ -4,29 +4,23 @@
     <p style="margin-top: 2%"></p>
     <div style="width: 100%">
         <el-form :model="filterForm" ref="filterForm" :inline="true">
-          <el-form-item label="出入库时间:">
-            <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
-                            :picker-options="pickerOptions" range-separator='/' style="width: 200px">
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="入库类型:">
-            <el-select v-model="filterForm.depotType" style="width: 100px">
-              <el-option label="新货入库" value="newDepot"></el-option>
-              <el-option label="长途入库" value="longDepot"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="仓库站点:">
-            <el-select v-model="filterForm.depotSite" placeholder="请选择仓库站点" style="width: 100px">
-              <el-option label="南京" value="南京"></el-option>
-              <el-option label="北京" value="北京"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="装载单号:" style="position: absolute;top: 140px;left: 0px">
-            <el-input v-model="filterForm.orderId" type="text" placeholder="请输入查找的订单号" style="width: 150px" @input="onQuickFilterChanged"></el-input>
-          </el-form-item>
-          <el-form-item label="订单号:" style="position: absolute;top: 140px;left: 244px">
-            <el-input v-model="filterForm.loadingId" type="text" placeholder="请输入查找的装载单号" style="width: 150px" @input="onQuickFilterChanged"></el-input>
-          </el-form-item>
+          <div>
+            <el-form-item label="开单时间：">
+              <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
+                              :picker-options="pickerOptions" style='width:200px' range-separator='/'>
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="订单号：">
+              <el-input  v-model="filterForm.orderId" placeholder="输入订单号" style='width:150px'></el-input>
+            </el-form-item>
+            <el-form-item label="开单网点：">
+              <el-select v-model="filterForm.depotSite" placeholder="请选择仓库站点" style="width: 100px">
+                <el-option label="南京" value="南京"></el-option>
+                <el-option label="北京" value="北京"></el-option>
+                <el-option label="南京" value="苏州"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
         </el-form>
       </div>
     <div style="">
@@ -40,14 +34,15 @@
         </template>
         <template>
           <div class="colVisible">
-            <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-            <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+            <el-button @click="visibleChoice(1,'grid1')" size="small">全选</el-button>
+            <el-button @click="visibleChoice(2,'grid1')" size="small">全不选</el-button>
           </div>
         </template>
       </el-popover>
-      <el-button @click="drawGrid()" style="position: absolute;left: 480px;top: 140px">提取</el-button>
-      <el-button style="top: 140px;position: absolute;right: 30px;">导出</el-button>
-      <el-button v-popover:popover1 style="position: absolute; right: 110px;top:140px">设置</el-button>
+      <el-button style="top: 140px;position: absolute;right: 270px;" @click="changeVer()">入 库</el-button>
+      <el-button @click="drawGrid(1)" style="position: absolute;right: 190px;top: 140px">提 取</el-button>
+      <el-button style="top: 140px;position: absolute;right: 30px;">导 出</el-button>
+      <el-button v-popover:popover1 style="position: absolute; right: 110px;top:140px">设 置</el-button>
     </div>
     <div style="clear: both"></div>
     <div style="width: 100%; margin-top: 50px;top: 200px">
@@ -71,13 +66,20 @@
         <el-col :span="12">
           <el-form :model="filterForm2" ref="filterForm" :inline="true">
             <div>
-              <el-form-item label="下单时间：">
+              <el-form-item label="开单时间：">
                 <el-date-picker v-model="filterForm2.startTime" type="daterange" placeholder="选择日期范围"
                                 :picker-options="pickerOptions" style='width:200px' range-separator='/'>
                 </el-date-picker>
               </el-form-item>
               <el-form-item label="订单号：">
                 <el-input  v-model="filterForm2.orderId" placeholder="输入订单号" style='width:150px'></el-input>
+              </el-form-item>
+              <el-form-item label="开单网点：" style="position: absolute;z-index:99999;">
+                <el-select v-model="filterForm2.depotSite" placeholder="请选择仓库站点" style="width: 100px">
+                  <el-option label="南京" value="南京"></el-option>
+                  <el-option label="北京" value="北京"></el-option>
+                  <el-option label="南京" value="苏州"></el-option>
+                </el-select>
               </el-form-item>
             </div>
             <div>
@@ -324,16 +326,14 @@
         visible: true,
         //    定义筛选条件
         filterForm: {
-          startTime: '', // 开始时间
-          endTime: '', // 截止时间
-          depotType: 'newDepot', // 入库类型
-          orderId: '', // 运单号
-          loadingId: '', // 装载单号
-          depotSite: '' // 仓库站点
+          orderId: '', // 订单号
+          startTime: [], // 下单时间区域 startTime[0]为起，startTime[1]终
+          depotSite: ''
         },
         filterForm2: {
           orderId: '', // 订单号
-          startTime: [] // 下单时间区域 startTime[0]为起，startTime[1]终
+          startTime: [], // 下单时间区域 startTime[0]为起，startTime[1]终
+          depotSite: ''
         },
         pickerOptions: {
           shortcuts: [{
@@ -447,13 +447,28 @@
       createRowData (i) {
         if (i === 1) {
           console.log(this.filterForm1)
-          this.getLongLoadFro()
           this.gridOptions.rowData = testJson.freight.list
           this.gridOptions.api.setRowData(this.gridOptions.rowData)
         } else if (i === 2) {
           console.log(this.filterForm2)
           this.gridOptions2.rowData = testJson.freight.list
           this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
+        }
+      },
+      // 切换列的可见性，三个表格，三个参数j
+      updateColumnDefsVisible (j, collist) {
+        if (j === 1) {
+          for (let i = 0; i < collist.length; i++) {
+            this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
+          }
+        } else if (j === 2) {
+          for (let i = 0; i < collist.length; i++) {
+            this.gridOptions2.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
+          }
+        } else if (j === 3) {
+          for (let i = 0; i < collist.length; i++) {
+            this.gridOptions3.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
+          }
         }
       },
       // 分页的操作
@@ -483,17 +498,29 @@
         this.filterForm.orderId = event.data.orderId
         this.detailVisible = true
       },
-      visibleChoice (i) {
+      visibleChoice (i, gridnum) {
+        let gridCol
+        let num
+        if (gridnum === 'grid1') {
+          gridCol = this.gridOptions
+          num = 1
+        } else if (gridnum === 'grid2') {
+          gridCol = this.gridOptions2
+          num = 2
+        } else if (gridnum === 'grid3') {
+          gridCol = this.gridOptions3
+          num = 3
+        }
         if (i === 1) {
-          for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
-            this.gridOptions.columnDefs[j].visible = true
+          for (let j = 0; j < gridCol.columnDefs.length; j++) {
+            gridCol.columnDefs[j].visible = true
           }
         } else if (i === 2) {
-          for (let j = 0; j < this.gridOptions.columnDefs.length; j++) {
-            this.gridOptions.columnDefs[j].visible = false
+          for (let j = 0; j < gridCol.columnDefs.length; j++) {
+            gridCol.columnDefs[j].visible = false
           }
         }
-        this.updataColumnDefs(this.gridOptions.columnDefs)
+        this.updateColumnDefsVisible(num, gridCol.columnDefs)
       },
       onQuickFilterChanged3 (input) {
         this.gridOptions3.api.setQuickFilter(input)
@@ -512,7 +539,7 @@
       // 核销界面左侧表格多选切换至右侧
       leftSelect () {
         const selectedData = this.gridOptions2.api.getSelectedRows()
-        this.leftSelect(selectedData)
+        this.addChoose(selectedData)
       },
       // 核销界面左侧表格全选切换至右侧
       leftSelectAll () {
@@ -540,6 +567,9 @@
       delChoose (newItems) {
         this.gridOptions2.api.updateRowData({add: newItems})
         this.gridOptions3.api.updateRowData({remove: newItems})
+      },
+      changeVer () {
+        this.verVisible = true
       }
     },
     beforeMount () {
