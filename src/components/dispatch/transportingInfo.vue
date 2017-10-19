@@ -65,7 +65,7 @@
           <h2 style="padding:30px">确认发车吗？</h2>
           <div slot="footer" class="dialog-footer">
             <el-button @click="departVisible = false">取 消</el-button>
-            <el-button @click="departVisible = false" type="danger">确 定</el-button>
+            <el-button @click=depart" type="danger">确 定</el-button>
           </div>
         </el-dialog>
 
@@ -459,6 +459,12 @@
     },
     // 实例方法
     methods: {
+      // 点击发车按钮，显示确认弹框，之后在弹框中将该行数据转移至已中转的页面中显示。
+      depart () {
+        console.log(this)
+        let self = this.params.context.componentParent
+        self.departVisible = true
+      },
       // 装载单订单列表弹框
       changeDialogVisible (event) {
         this.loadOrderId = event.data.loadOrderId
