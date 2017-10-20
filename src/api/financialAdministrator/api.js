@@ -2,11 +2,13 @@ import axios from 'axios'
 // import qs from 'qs'
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8'
-axios.defaults.baseURL = 'http://10.107.10.80:8080/'
+axios.defaults.baseURL = 'http://10.107.10.80:8080/'  // wang
+// axios.defaults.baseURL = 'http://10.107.10.48:8080/' // han
+// axios.defaults.baseURL = 'http://10.110.15.42:9090' // 服务器
 // axios.defaults.withCredentials = true
 
 // token值，登陆时获取，保存在本地，
-const token = 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMzgzNTM1NjY2NiIsImlhdCI6MTUwNzc3NTMzMSwic3ViIjoie1wic2l0ZVwiOlwi5YyX5LqsXCIsXCJpZFwiOlwiMTM4MzUzNTY2NjZcIixcInJvbGVcIjpcIui0ouWKoeaguOmUgOS6uuWRmFwiLFwidHlwZVwiOlwiM1wifSIsImV4cCI6MTUwNzc3ODkzMX0.46iOEhEyeklexw2OUmOwT7Wc3C_P6dYdjba-I4HAq_k'
+const token = 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMzgzNTM1NjY2NiIsImlhdCI6MTUwODQ2NzEzOSwic3ViIjoie1wic2l0ZVwiOlwi5YyX5LqsXCIsXCJpZFwiOlwiMTM4MzUzNTY2NjZcIixcInJvbGVcIjpcIui0ouWKoeWuoeaguFwiLFwidHlwZVwiOlwiM1wifSIsImV4cCI6MTUwODQ3MDczOX0.-wQMhGEUytSzRbo46lg1s19-L0dDn4MyfqkLnDRhe9w'
 // 发送axios前拦截
 axios.interceptors.request.use((config) => {
   config.headers.Authorization = `${token}`
@@ -68,8 +70,13 @@ export default {
    * 干线运输费
    *
    * **/
+  // 获取干线运输费表格数据
   getTrunkTransport (params) {
     return fetch('/logistics/interface/longViewManageMent/list_long_fee', params)
+  },
+  // 获取核销界面表单数据
+  getTrunkTransport_Form (params) {
+    return fetch('/logistics/interface/longViewManageMent/verify_long_fee_ready', params)
   },
 
   /**
@@ -88,6 +95,16 @@ export default {
   // 核销界面，提交需要核销的订单号列表等
   submitTripartitePayment (params) {
     return fetch('/logistics/interface/orderFinanceManagement/verify_tril_transfee', params)
+  },
+
+  /**
+   *
+   * 货款
+   *
+   * **/
+  // 货款代收表格获取
+  getPaymenCollection (parmas) {
+    return fetch('/logistics/interface/orderGoodsViewManagement/queryOrderGoodsPayment', parmas)
   }
 
 }

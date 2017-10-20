@@ -92,7 +92,7 @@
 
     <!--表格-->
     <div style="margin-top: 10px">
-      <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
+      <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue" v-loading.body="loading"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
@@ -321,7 +321,8 @@
       <order-details :orderId="filterForm.orderId"></order-details>
     </el-dialog>
 
-    <el-dialog title="干线运输费核销" :visible.sync="veriStateVisible" :closeOnclickModal="false">
+    <el-dialog :visible.sync="veriStateVisible" :closeOnclickModal="false" :custom-class="'dialogShow'">
+      <h2 style='text-align:center;margin-top:-2%'>干线运输费核销</h2>
       <el-form :model="trunkTransportForm" ref="trunkTransportForm">
         <el-row>
           <el-col :span="6">
@@ -348,102 +349,140 @@
         <el-row :gutter="5">
           <el-col :span="10">
             <el-form-item label="总金额:">
-              <el-input style="width: 50%" readonly="true"></el-input>
+              <el-input style="width: 50%" readonly="true" v-model="trunkTransportForm.totalTrunkTransport"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <!--
         现付
         -->
-        <el-row>
-          <el-col :span="7">
-            <el-form-item label="现付金额:">
-              <el-input style="width: 50%" readonly="true"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-form-item label="现付余额:">
-              <el-input style="width: 50%" readonly="true"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-form-item label="核销金额:">
-              <el-input style="width: 50%"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="3">
-            <el-button @click="confirmSubmit('nowPay')">核销</el-button>
-          </el-col>
-        </el-row>
+        <div class="boxShadow">
+          <p class="boxTitle">现付</p>
+          <el-row>
+            <el-col :span="1">
+              <el-form-item></el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="现付金额:">
+                <el-input style="width: 50%" readonly="true" v-model="trunkTransportForm.nowPay"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="现付余额:">
+                <el-input style="width: 50%" readonly="true" v-model="trunkTransportForm.nowPayBalance"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="核销金额:">
+                <el-input style="width: 50%" v-model="trunkTransportForm.nowPayVerification"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="1">
+              <el-form-item></el-form-item>
+            </el-col>
+            <el-col :span="3">
+              <el-button @click="confirmSubmit('nowPay')">核销</el-button>
+            </el-col>
+          </el-row>
+        </div>
+
         <!--
         到付
         -->
-        <el-row>
-          <el-col :span="7">
-            <el-form-item label="到付金额:">
-              <el-input style="width: 50%" readonly="true"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-form-item label="到付余额:">
-              <el-input style="width: 50%" readonly="true"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-form-item label="核销金额:">
-              <el-input style="width: 50%"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="3">
-            <el-button @click="confirmSubmit('cashOnDelivery')">核销</el-button>
-          </el-col>
-        </el-row>
+        <div class="boxShadow">
+          <p class="boxTitle">到付</p>
+          <el-row>
+            <el-col :span="1">
+              <el-form-item></el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="到付金额:">
+                <el-input style="width: 50%" readonly="true" v-model="trunkTransportForm.cashOnDelivery"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="到付余额:">
+                <el-input style="width: 50%" readonly="true"
+                          v-model="trunkTransportForm.cashOnDeliveryBalance"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="核销金额:">
+                <el-input style="width: 50%" v-model="trunkTransportForm.cashOnDeliveryVerification"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="1">
+              <el-form-item></el-form-item>
+            </el-col>
+            <el-col :span="3">
+              <el-button @click="confirmSubmit('cashOnDelivery')">核销</el-button>
+            </el-col>
+          </el-row>
+        </div>
         <!--
         欠付
         -->
-        <el-row>
-          <el-col :span="7">
-            <el-form-item label="欠付金额:">
-              <el-input style="width: 50%" readonly="true"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-form-item label="欠付余额:">
-              <el-input style="width: 50%" readonly="true"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-form-item label="核销金额:">
-              <el-input style="width: 50%"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="3">
-            <el-button @click="confirmSubmit('inArrears')">核销</el-button>
-          </el-col>
-        </el-row>
+        <div class="boxShadow">
+          <p class="boxTitle">欠付</p>
+          <el-row>
+            <el-col :span="1">
+              <el-form-item></el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="欠付金额:">
+                <el-input style="width: 50%" readonly="true" v-model="trunkTransportForm.inArrears"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="欠付余额:">
+                <el-input style="width: 50%" readonly="true" v-model="trunkTransportForm.inArrearsBalance"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="核销金额:">
+                <el-input style="width: 50%" v-model="trunkTransportForm.inArrearsVerification"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="1">
+              <el-form-item></el-form-item>
+            </el-col>
+            <el-col :span="3">
+              <el-button @click="confirmSubmit('inArrears')">核销</el-button>
+            </el-col>
+          </el-row>
+        </div>
         <!--
         月结
         -->
-        <el-row>
-          <el-col :span="7">
-            <el-form-item label="月结金额:">
-              <el-input style="width: 50%" readonly="true"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-form-item label="月结余额:">
-              <el-input style="width: 50%" readonly="true"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-form-item label="核销金额:">
-              <el-input style="width: 50%"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="3">
-            <el-button @click="confirmSubmit('monthly')">核销</el-button>
-          </el-col>
-        </el-row>
+        <div class="boxShadow">
+          <p class="boxTitle">月结</p>
+          <el-row>
+            <el-col :span="1">
+              <el-form-item></el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="月结金额:">
+                <el-input style="width: 50%" readonly="true" v-model="trunkTransportForm.monthly"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="月结余额:">
+                <el-input style="width: 50%" readonly="true" v-model="trunkTransportForm.monthlyBalance"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="核销金额:">
+                <el-input style="width: 50%" v-model="trunkTransportForm.monthlyVerification"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="1">
+              <el-form-item></el-form-item>
+            </el-col>
+            <el-col :span="3">
+              <el-button @click="confirmSubmit('monthly')">核销</el-button>
+            </el-col>
+          </el-row>
+        </div>
       </el-form>
     </el-dialog>
   </div>
@@ -888,7 +927,7 @@
           dateInterval: '', // 时间间隔
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          payType: 'all', // 类型（现付，到付，欠付，月结）
+          payType: '', // 付款类型
           loadingId: '', // 装载单号
           veriState: '', // 核销状态
           pageNum: 1, // 当前页码数
@@ -908,8 +947,67 @@
           oilCard: '',
           oilCardMoney: ''
         },
+        pickerOptions: {
+          shortcuts: [{
+            text: '上周',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfWeek = now.getDay()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * (nowDayOfWeek + 6))
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfWeek)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '上个月',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowDayOfMonth = now.getDate()
+              const nowMonth = now.getMonth()
+              start.setDate(1)
+              start.setMonth(nowMonth - 1)
+              end.setTime(end.getTime() - 3600 * 1000 * 24 * nowDayOfMonth)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '去年',
+            onClick (picker) {
+              const now = new Date()
+              const start = new Date()
+              const end = new Date()
+              const nowYear = now.getFullYear()
+              start.setYear(nowYear - 1)
+              start.setMonth(0)
+              start.setDate(1)
+              end.setYear(nowYear - 1)
+              end.setMonth(11)
+              end.setDate(31)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '今年',
+            onClick (picker) {
+              const start = new Date()
+              const end = new Date()
+              start.setMonth(0)
+              start.setDate(1)
+              picker.$emit('pick', [start, end])
+            }
+          }],
+          disabledDate (time) {
+            const now = new Date()
+            const timeYear = time.getFullYear()
+            const nowYear = now.getFullYear()
+            return timeYear < (nowYear - 1)
+          }
+        },
+
         //  表单验证规则
         rules: {},
+        loading: false,
         // dialog的可见性
         colVisible: false, // 切换列可见性的弹窗
         colVisible2: false,
@@ -932,8 +1030,18 @@
           startStation: '北京', // 起始站
           arrStation: '南京', // 终点站
           totalTrunkTransport: 0, // 总干线运输费
+          nowPay: 0, // 现付金额
+          cashOnDelivery: 0, // 到付金额
+          inArrears: 0, // 欠付金额
+          monthly: 0, // 月结金额
           nowPayBalance: 0, // 现付余额
-          nowPayVerification: 0 // 现付核销金额
+          cashOnDeliveryBalance: 0, // 到付余额
+          inArrearsBalance: 0, // 欠付余额
+          monthlyBalance: 0, // 月结余额
+          nowPayVerification: 0, // 现付核销金额(输入框输入)
+          cashOnDeliveryVerification: 0, // 到付(输入框金额)
+          inArrearsVerification: 0, // 欠付（输入框金额）
+          monthlyVerification: 0 // 月结（输入框金额）
         }
       }
     },
@@ -944,6 +1052,7 @@
     methods: {
       // 绘制表格，包括更新列信息与行信息
       drawGrid (i) {
+        this.loading = true
         if (i === 2) {
           this.gridOptions3.api.selectAll()
           const selectedData = this.gridOptions3.api.getSelectedRows()
@@ -961,13 +1070,16 @@
           this.filterForm.dateInterval = '2017-08-20/2017-08-21'
           api.getTrunkTransport(this.filterForm)
             .then(res => {
+              this.loading = false
               console.log(res)
+              this.gridOptions.rowData = res.data.content.longList
+              this.gridOptions.api.setRowData(this.gridOptions.rowData)
             })
             .catch(err => {
               console.log(err)
             })
-          this.gridOptions.rowData = testJson.freight.list
-          this.gridOptions.api.setRowData(this.gridOptions.rowData)
+//          this.gridOptions.rowData = testJson.freight.list
+//          this.gridOptions.api.setRowData(this.gridOptions.rowData)
         } else if (i === 2) {
           this.gridOptions2.rowData = testJson.freight.list
           this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
@@ -1084,9 +1196,18 @@
       },
       // 订单详情弹框
       detailDoubleClick (event) {
-//        this.filterForm.orderId = event.data.orderId
-//        this.detailVisible = true
-        this.trunkTransportForm.loadingId = event.data.loadingId
+        let loadingId = event.data.loadingId
+        let form = {
+          loadingId: loadingId
+        }
+//        this.trunkTransportForm.loadingId = '1001'
+        api.getTrunkTransport_Form(form)
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
         this.veriStateVisible = true
       },
       // 核销界面左侧表格双击事件
@@ -1192,19 +1313,19 @@
     },
     computed: {
       // 计算合计金额
-      calculateMoney () {
-        if (this.verVisible === false) {
-          this.totalForm.transferFeeTotal = 0
-          this.totalForm.totalMoney = 0
-          let model = this.gridOptions.api.getModel()
-          let arr = model.rootNode.childrenAfterFilter
-          console.log(arr[0].data)
-          for (let i = 0; i < arr.length; i++) {
-            this.totalForm.transferFeeTotal += arr[i].data.changeFee
-            this.totalForm.totalMoney += arr[i].data.feeMoney
-          }
-        }
-      }
+//      calculateMoney () {
+//        if (this.verVisible === false) {
+//          this.totalForm.transferFeeTotal = 0
+//          this.totalForm.totalMoney = 0
+//          let model = this.gridOptions.api.getModel()
+//          let arr = model.rootNode.childrenAfterFilter
+//          console.log(arr[0].data)
+//          for (let i = 0; i < arr.length; i++) {
+//            this.totalForm.transferFeeTotal += arr[i].data.changeFee
+//            this.totalForm.totalMoney += arr[i].data.feeMoney
+//          }
+//        }
+//      }
     },
 //    beforeMount () {
 //      this.createRowData()
@@ -1217,7 +1338,6 @@
     // 数据发生更新时
     updated () {
       console.log('update')
-      this.calculateMoney
     }
   }
 </script>
@@ -1226,4 +1346,32 @@
   .ag-body [colid="payType"] {
     background-color: #a6e1ec;
   }
+
+  .boxShadow {
+    padding-left: 15px;
+    border-radius: 8px;
+    border: 2px solid #e7e7e7;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .boxTitle {
+    width: 60px;
+    height: 20px;
+    text-align: center;
+    top: -10px;
+    position: relative;
+    background: white;
+  }
+
+  /*.dialogShow {*/
+  /*background: #f9f9f9;*/
+  /*}*/
+  /*.dialogShow input{*/
+  /*background: #f9f9f9;*/
+  /*}*/
+
+  /*.dialogShow button{*/
+  /*background: #f9f9f9;*/
+  /*}*/
 </style>

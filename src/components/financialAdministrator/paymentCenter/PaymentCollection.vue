@@ -10,7 +10,8 @@
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
             <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)" style="float: left;width: 180px">
+              <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(1,gridOptions.columnDefs)"
+                           style="float: left;width: 180px">
                 {{collist.headerName}}
               </el-checkbox>
             </div>
@@ -114,7 +115,8 @@
                   <template v-for="(collist,i) in gridOptions2.columnDefs">
                     <div class="colVisible">
                       <el-checkbox v-model="collist.visible"
-                                   @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)" style="float: left;width: 180px">
+                                   @change="updateColumnDefsVisible(2,gridOptions2.columnDefs)"
+                                   style="float: left;width: 180px">
                         {{collist.headerName}}
                       </el-checkbox>
                     </div>
@@ -165,7 +167,8 @@
               <el-popover ref="popover3" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
                 <template v-for="(collist,i) in gridOptions3.columnDefs">
                   <div class="colVisible">
-                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)" style="float: left;width: 180px">
+                    <el-checkbox v-model="collist.visible" @change="updateColumnDefsVisible(3,gridOptions3.columnDefs)"
+                                 style="float: left;width: 180px">
                       {{collist.headerName}}
                     </el-checkbox>
                   </div>
@@ -218,7 +221,8 @@
         <el-form-item label="备注:">
           <el-input v-model="confirmSubForm.digest" style="width: 200px"></el-input>
         </el-form-item>
-      </el-form>      <div slot="footer" class="dialog-footer">
+      </el-form>
+      <div slot="footer" class="dialog-footer">
         <el-button @click="confirmSubVisible = false">取 消</el-button>
         <el-button type="primary" @click="submit">确 定</el-button>
       </div>
@@ -243,6 +247,7 @@
   import testJson from '../../../../static/test/testJSON.js'
   import OrderDetails from '../ShowOrderDetails'
   import PartialMatchFilterComponent from '../../common/PartialMatchFilterComponent'
+  import api from '../../../api/financialAdministrator/api.js'
   export default {
     data () {
       return {
@@ -307,7 +312,7 @@
               visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '发货方',
               width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
@@ -315,7 +320,7 @@
               visible: true
             },
             {
-              headerName: '发货人联系方式',
+              headerName: '发货方联系方式',
               width: 150,
               field: 'shipTel',
               filterFramework: PartialMatchFilterComponent,
@@ -323,7 +328,7 @@
               visible: false
             },
             {
-              headerName: '收货人',
+              headerName: '收货方',
               width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
@@ -331,7 +336,7 @@
               visible: true
             },
             {
-              headerName: '收货人联系方式',
+              headerName: '收货方联系方式',
               width: 150,
               field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
@@ -358,14 +363,6 @@
               headerName: '开单客服',
               width: 100,
               field: 'serviceNam',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '类型',
-              width: 150,
-              field: 'payType',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -488,7 +485,7 @@
               visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '发货方',
               width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
@@ -496,7 +493,7 @@
               visible: true
             },
             {
-              headerName: '发货人联系方式',
+              headerName: '发货方联系方式',
               width: 150,
               field: 'shipTel',
               filterFramework: PartialMatchFilterComponent,
@@ -504,7 +501,7 @@
               visible: false
             },
             {
-              headerName: '收货人',
+              headerName: '收货方',
               width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
@@ -512,7 +509,7 @@
               visible: true
             },
             {
-              headerName: '收货人联系方式',
+              headerName: '收货方联系方式',
               width: 150,
               field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
@@ -544,14 +541,6 @@
               visible: true
             },
             {
-              headerName: '类型',
-              width: 150,
-              field: 'payType',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
               headerName: '代收日期',
               width: 150,
               field: 'collDate',
@@ -563,6 +552,46 @@
               headerName: '货款代收金额',
               width: 150,
               field: 'goodsPayment',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销状态',
+              width: 150,
+              field: 'goodsPayVeriStat',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销人',
+              width: 150,
+              field: 'goodsPayVeriNam',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销日期',
+              width: 150,
+              field: 'goodsPayVeriTim',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销网点',
+              width: 150,
+              field: 'goodsPayVeriSite',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '支付方式',
+              width: 150,
+              field: 'goodsPayMode',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -629,7 +658,7 @@
               visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '发货方',
               width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
@@ -637,7 +666,7 @@
               visible: true
             },
             {
-              headerName: '发货人联系方式',
+              headerName: '发货方联系方式',
               width: 150,
               field: 'shipTel',
               filterFramework: PartialMatchFilterComponent,
@@ -645,7 +674,7 @@
               visible: false
             },
             {
-              headerName: '收货人',
+              headerName: '收货方',
               width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
@@ -653,7 +682,7 @@
               visible: true
             },
             {
-              headerName: '收货人联系方式',
+              headerName: '收货方联系方式',
               width: 150,
               field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
@@ -685,14 +714,6 @@
               visible: true
             },
             {
-              headerName: '类型',
-              width: 150,
-              field: 'payType',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
               headerName: '代收日期',
               width: 150,
               field: 'collDate',
@@ -707,6 +728,46 @@
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
+            },
+            {
+              headerName: '核销状态',
+              width: 150,
+              field: 'goodsPayVeriStat',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销人',
+              width: 150,
+              field: 'goodsPayVeriNam',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销日期',
+              width: 150,
+              field: 'goodsPayVeriTim',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销网点',
+              width: 150,
+              field: 'goodsPayVeriSite',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '支付方式',
+              width: 150,
+              field: 'goodsPayMode',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             }
           ]
         },
@@ -716,7 +777,6 @@
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
           shipNam: '', //  发货方
-          payType: 'nowPay', // 类型（现付，到付，欠付，月结）
           orderId: '', // 运单号
           veriState: '', // 核销状态
           pageNum: 1, // 当前页码数
@@ -812,7 +872,6 @@
     methods: {
       // 绘制表格，包括更新列信息与行信息
       drawGrid (i) {
-        console.log(this.filterForm)
         if (i === 2) {
           this.gridOptions3.api.selectAll()
           const selectedData = this.gridOptions3.api.getSelectedRows()
@@ -825,8 +884,18 @@
       // 获取行数据
       createRowData (i) {
         if (i === 1) {
-          this.gridOptions.rowData = testJson.financialDirectorPayment.list
-          this.gridOptions.api.setRowData(this.gridOptions.rowData)
+          api.getPaymenCollection(this.filterForm)
+            .then(res => {
+              console.log(res)
+              this.gridOptions.rowData = res.data.content.orderGoodsView
+              console.log(this.gridOptions.rowData)
+              this.gridOptions.api.setRowData(this.gridOptions.rowData)
+            })
+            .catch(err => {
+              console.log(err)
+            })
+//          this.gridOptions.rowData = testJson.financialDirectorPayment.list
+//          this.gridOptions.api.setRowData(this.gridOptions.rowData)
         } else if (i === 2) {
           this.gridOptions2.rowData = testJson.financialDirectorPayment.list
           this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
