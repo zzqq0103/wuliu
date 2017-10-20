@@ -383,7 +383,7 @@
     },
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getOrderList()
+      this.()
     }
   }
 </script>

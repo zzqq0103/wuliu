@@ -33,8 +33,8 @@
           </el-form>
         </div>
 
-      
-      
+
+
       <!-- 导出 -->
       <div style="float:right;margin-top:2%;">
           <el-button style="float:right; margin-right:10px;">导出</el-button>
@@ -108,7 +108,7 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {getCurrentDelivered, getQueryOrderList} from '../../api/dispatch/api'
+  import {getCurrentDeliveredList, getCurrentDeliveredSubOrderList} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
@@ -125,7 +125,8 @@
           orderId: '', // 订单号
           driverNam: '', // 中转外包公司名
           shipNam: '', // 发货人姓名
-          receNam: '' // 收货人姓名
+          receNam: '', // 收货人姓名
+          currentpage: 1 // 当前页数
         },
         value_Search: [],
         list: [],
@@ -136,10 +137,7 @@
         status: 1,
         deliveringVisible: false,
         listLoading: false, // 加载圆圈（默认不显示）
-        queryName: '', // 查询参数值
-        currentpage: 1, // 当前页数
         colVisible: false, // 设置弹窗的显示boolean值
-        orderId: '', // 运单号
         tableForm: {
           'id': '',
           'loadOrderId': '',
@@ -270,7 +268,6 @@
             return timeYear < (nowYear - 1)
           }
         },
-        dateValue: '', // 日期值
         detailVisible: false // 订单详情弹框
       }
     },
@@ -353,47 +350,69 @@
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
       },
-      // 获取订单列表
-      getOrderList () {
+      // 当前已送货的订单列表接口
+      queryCurrentDeliveredList () {
         let para = {
-          page: this.currentpage,
-          orderId: this.orderId,
-          driverName: this.driverName,
-          deliverOrderId: this.deliverOrderId,
-          selectvalue: this.selectvalue,
-          pageSize: this.pageSize
+          // 页码
+          pageNum: this.currentpage, // required
+          // 每页记录数
+          recordNum: this.pageSize, // required
+          // 开始时间
+          startTime: '', // required
+          // 结束时间
+          endTime: '', // required
+          // 需要查询的订单Id
+          orderId: this.orderId, // optional
+          // 查询的司机姓名
+          driverName: '', // optional
+          // 查询的发货方姓名
+          shipNam: '', // optional
+          // 查询的收货方姓名
+          receNam: '' // optional
         }
         console.log(para)
-        this.listLoading = true
-        getCurrentDelivered(para).then((res) => {
-          console.log('xxx')
+        // this.listLoading = true
+        getCurrentDeliveredList(para).then((res) => {
           this.gridOptions.rowData = res.data.orderlists
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
-          this.listLoading = false
+          // this.listLoading = false
         })
         return null
       },
-      // 获取查询数据
-      getQueryData () {
+      // 查询已送货的子件列表
+      queryCurrentDeliveredSubOrderList () {
         let para = {
-          queryName: this.queryName,
-          queryClass: this.selectvalue,
-          pageSize: this.pageSize
+          // 页码
+          pageNum: this.currentpage, // required
+          // 每页记录数
+          recordNum: this.pageSize, // required
+          // 开始时间
+          startTime: '', // required
+          // 结束时间
+          endTime: '', // required
+          // 需要查询的订单Id
+          orderId: this.orderId, // optional
+          // 查询的司机姓名
+          driverName: '', // optional
+          // 查询的发货方姓名
+          shipNam: '', // optional
+          // 查询的收货方姓名
+          receNam: '' // optional
         }
-        this.listLoading = true
-        getQueryOrderList(para).then(res => {
+        // this.listLoading = true
+        getCurrentDeliveredSubOrderList(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
-          this.listLoading = false
+          // this.listLoading = false
         })
       }
     },
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getOrderList()
+      this.queryCurrentDeliveredList()
       this.list = this.states.map(item => {
         return {value: item, label: item}
       })

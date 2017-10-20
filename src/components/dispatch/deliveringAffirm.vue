@@ -111,7 +111,7 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {getCurrentDelivered, getQueryOrderList} from '../../api/dispatch/api'
+  import {queryDeliveringCar, queryDeliveringDispatch, updateDeliveringDispatch, updateDeliveringSuccess} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
@@ -343,47 +343,78 @@
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
       },
-      // 获取订单列表
-      getOrderList () {
+      // 送货司机列表显示
+      getDeliveringCar () {
         let para = {
-          page: this.currentpage,
-          orderId: this.orderId,
-          driverName: this.driverName,
-          deliverOrderId: this.deliverOrderId,
-          selectvalue: this.selectvalue,
-          pageSize: this.pageSize
+          // 页码
+          pageNum: this.currentpage, // required
+          // 每页记录数
+          recordNum: this.pageSize, // required
+          // 需要查询的订单Id
+          orderId: '', // optional
+          // 查询的司机姓名
+          driverName: '', // optional
+          // 查询的发货方姓名
+          shipNam: '', // optional
+          // 查询的收货方姓名
+          receNam: '' // optional
         }
         console.log(para)
-        this.listLoading = true
-        getCurrentDelivered(para).then((res) => {
-          console.log('xxx')
+        // this.listLoading = true
+        queryDeliveringCar(para).then((res) => {
           this.gridOptions.rowData = res.data.orderlists
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
-          this.listLoading = false
+          // this.listLoading = false
         })
         return null
       },
-      // 获取查询数据
-      getQueryData () {
+      // 双击后查看司机送货订单和子件列表及仓库中的订单和子件列表
+      getQueryDeliveringDispatch () {
         let para = {
-          queryName: this.queryName,
-          queryClass: this.selectvalue,
-          pageSize: this.pageSize
+          driverTel: this.driverPhone
         }
-        this.listLoading = true
-        getQueryOrderList(para).then(res => {
+        // this.listLoading = true
+        queryDeliveringDispatch(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
-          this.listLoading = false
+          // this.listLoading = false
+        })
+      },
+      // 调整后点击确认
+      getUpdateDeliveringDispatch () {
+        let para = {
+          driverTel: this.driverPhone,
+          addList: [],
+          delList: []
+        }
+        // this.listLoading = true
+        updateDeliveringDispatch(para).then(res => {
+          this.gridOptions.api.setRowData(res.data.querylists)
+          this.orderlist = res.data.querylists
+          this.totalpages = res.data.totalpages
+          // this.listLoading = false
+        })
+      },
+      // 调整完，点击司机列表后边的确认
+      getUpdateDeliveringSuccess () {
+        let para = {
+          driverTel: this.driverPhone
+        }
+        // this.listLoading = true
+        updateDeliveringSuccess(para).then(res => {
+          this.gridOptions.api.setRowData(res.data.querylists)
+          this.orderlist = res.data.querylists
+          this.totalpages = res.data.totalpages
+          // this.listLoading = false
         })
       }
     },
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getOrderList()
+      this.getDeliveringCar()
     }
   }
 </script>

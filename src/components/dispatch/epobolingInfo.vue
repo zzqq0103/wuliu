@@ -182,7 +182,7 @@
   import {AgGridVue} from 'ag-grid-vue'
 
   // 引入axios后台接口
-  import {getCurrentEpiboliedList, getQueryEpiboliedList} from '../../api/dispatch/api'
+  import {getCurrentEpibolingList} from '../../api/dispatch/api'
 
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
@@ -464,39 +464,27 @@
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
       },
-      // 获取订单列表
+      // 获取 “待运输” 订单列表方法
       getOrderList () {
+        console.log(`页数：${this.currentpage}，页数大小：${this.pageSize}`)
         let para = {
-          page: this.currentpage,
-          orderId: this.tableForm.orderId,
-          driverName: this.driverName,
-          deliverOrderId: this.deliverOrderId,
-          selectvalue: this.selectvalue,
-          pageSize: this.pageSize
+          pageNum: this.currentpage, // required
+          pageSize: this.pageSize // required
+          // queryTime: '', // optional
+          // orderId: this.tableForm.orderId, // optional
+          // changeCompany: '', // optional
+          // shipNam: '', // optional
+          // receNam: '' // optional
         }
-        this.listLoading = true
-        getCurrentEpiboliedList(para).then((res) => {
-          this.gridOptions.api.setRowData(res.data.orderlists)
+        // this.listLoading = true
+        getCurrentEpibolingList(JSON.stringify(para)).then((res) => {
+          console.log(`响应数据：${JSON.stringify(res)}`)
+          this.gridOptions.api.setRowData(res)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
-          this.listLoading = false
+          // this.listLoading = false
         })
         return null
-      },
-      // 获取查询数据
-      getQueryData () {
-        let para = {
-          queryName: this.queryName,
-          queryClass: this.selectvalue,
-          pageSize: this.pageSize
-        }
-        this.listLoading = true
-        getQueryEpiboliedList(para).then(res => {
-          this.gridOptions.api.setRowData(res.data.querylists)
-          this.orderlist = res.data.querylists
-          this.totalpages = res.data.totalpages
-          this.listLoading = false
-        })
       },
       // 获取服务端的外包公司数据
       loadEpolyComp () {

@@ -125,7 +125,7 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {getCurrentDelivered, getQueryOrderList} from '../../api/dispatch/api'
+  import {getCurrentDeliveringList, getCurrentDeliveringSubOrderList} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
@@ -467,52 +467,71 @@
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
       },
-      // 获取订单列表
-      getOrderList () {
+      // 当前已送货的订单列表接口
+      queryCurrentDeliveringList () {
         let para = {
-          page: this.currentpage,
-          orderId: this.orderId,
-          driverName: this.driverName,
-          deliverOrderId: this.deliverOrderId,
-          selectvalue: this.selectvalue,
-          pageSize: this.pageSize
+          // 页码
+          pageNum: this.currentpage, // required
+          // 每页记录数
+          recordNum: this.pageSize, // required
+          // 开始时间
+          startTime: '', // required
+          // 结束时间
+          endTime: '', // required
+          // 需要查询的订单Id
+          orderId: this.orderId, // optional
+          // 查询的司机姓名
+          driverName: '', // optional
+          // 查询的发货方姓名
+          shipNam: '', // optional
+          // 查询的收货方姓名
+          receNam: '' // optional
         }
-        this.listLoading = true
-        getCurrentDelivered(para).then((res) => {
-          // console.log('进入getCurrentDelivered')
-          // this.gridOptions.rowData = res.data.orderlists
-          // 使用gridOptions中的api方法设定RowData数据
+        // this.listLoading = true
+        getCurrentDeliveringList(para).then((res) => {
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
-          this.listLoading = false
+          // this.listLoading = false
         })
         return null
       },
-      // 获取查询数据
-      getQueryData () {
+      // 查询已送货的子件列表
+      queryCurrentDeliveringSubOrderList () {
         let para = {
-          queryName: this.queryName,
-          queryClass: this.selectvalue,
-          pageSize: this.pageSize
+          // 页码
+          pageNum: this.currentpage, // required
+          // 每页记录数
+          recordNum: this.pageSize, // required
+          // 开始时间
+          startTime: '', // required
+          // 结束时间
+          endTime: '', // required
+          // 需要查询的订单Id
+          orderId: this.orderId, // optional
+          // 查询的司机姓名
+          driverName: '', // optional
+          // 查询的发货方姓名
+          shipNam: '', // optional
+          // 查询的收货方姓名
+          receNam: '' // optional
         }
-        this.listLoading = true
-        getQueryOrderList(para).then(res => {
+        // this.listLoading = true
+        getCurrentDeliveringSubOrderList(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
-          this.listLoading = false
+          // this.listLoading = false
         })
       }
     },
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getOrderList()
+      this.queryCurrentDeliveringList()
     }
   }
 </script>
 <style scoped>
-
   .el-select-css {
     width: 50%;
   }
