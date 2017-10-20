@@ -10,11 +10,10 @@
           <el-form-item label="企业详细地址:" class="Taddress">
             <div id='focus1' class='dropdown1' style='outline:none' tabindex="0"  @click="getFocus(1)" @blur="addressVisible=false">
               <el-input v-model="filterForm.receAdr" style="width: 142.5px;"></el-input>
-              <div class="dropdown-content" style='width:80%' v-show="addressVisible">
+              <div class="dropdown-content" style='width:142.5px' v-show="addressVisible">
                 <ul class='dropdown-content-select'>
-                  <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
-                  <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
-                  <li @click="setQuyu(1)" class='dropdown-li' v-bind:class="{'selectOn':quyu}">区县</li>
+                  <li @click="setShenfen(1)" class='dropdown-li dropdown-two' v-bind:class="{'selectOn':shenfen}">省份</li>
+                  <li @click="setShi(1)" class='dropdown-li dropdown-two' v-bind:class="{'selectOn':shi}">城市</li>
                 </ul>
                 <div class='dropdown-select'>
                   <ul class='dropdown-shenfen' v-show="shenfen">
@@ -30,10 +29,8 @@
                 </div>
               </div>            </div></el-input>
           </el-form-item>
-          <el-button @click="drawGrid()">提取</el-button>
-        </el-form>
+          <el-button @click="drawGrid()" style="margin-right: 8px">提取</el-button>
 
-        <div>
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">
@@ -51,18 +48,14 @@
             </template>
           </el-popover>
           <el-button v-popover:popover1>设置</el-button>
-        </div>
+        </el-form>
       </div>
     </div>
-    <div style="clear: both;">
-    </div>
-    <div style="margin-top:2%">
+    <div>
       <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
@@ -639,6 +632,10 @@
 
   .Taddress label{
     float: left;
+  }
+
+  .dropdown-two{
+    width: 50%;
   }
 </style>
 

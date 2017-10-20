@@ -63,9 +63,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage"
+        :current-page="filterForm.currentPage"
         :page-sizes="[10,20,50,100,200]"
-        :page-size="pageSize"
+        :page-size="filterForm.pageSize"
         layout="total,sizes,prev,pager,next"
         :total="rowCount">
       </el-pagination>
@@ -143,11 +143,17 @@
     <el-dialog title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
       <order-details :orderId="orderList.orderId"></order-details>
     </el-dialog>
+
+    <!-- 请求数据提示弹窗 -->
+    <el-dialog title="" :visible.sync="pointVisible" size="" tiny>
+      <h2 style="text-align:center;padding: 30px 0 30px 0px">{{Note}}</h2>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { AgGridVue } from 'ag-grid-vue'
 import OrderDetails from '../financialAdministrator/ShowOrderDetails.vue'
+import api from '../../api/customerService/api.js'
 export default {
   created () {
     for (var i = 0; i < 50; i++) {
@@ -167,12 +173,13 @@ export default {
   data () {
     return {
       orderList: [],
+      Note: '', // 向后台发送数据后的相关提示
+      pointVisible: false,
       colVisible: false,
       detailVisible: false,
       errorEditVisable: false,
       orderVisable: false,
       moneyVisable: true,
-      currentPage: 1,
       errorType: 'money',
       errorForm: {
         'errorType': 'money',
@@ -186,10 +193,11 @@ export default {
         'currPosition': ''
       },
       filterForm: {
-        startTime: '', // 开始时间
-        endTime: '', // 截止时间
+        startTime: [], // 筛选区间, startTime[0]为起始时间，startTime[1]为终止时间[1]
         orderId: '', // 运单号
-        shipNam: '' // 发货方
+        shipNam: '', // 发货方
+        currentPage: 1, // 当前页数
+        pageSize: 20 // 页面大小
       },
       pickerOptions: {
         shortcuts: [{
@@ -271,7 +279,6 @@ export default {
         ]
       },
       rowCount: 0,
-      pageSize: 10,
       formLabelWidth: '30%',
       gridOptions: {
         context: {
@@ -385,6 +392,8 @@ export default {
       this.detailVisible = true
     },
     createRowData () {
+      console.log(this.filterForm)
+      this.getOrderListFro()
       this.gridOptions.rowData = this.orderList
       this.gridOptions.api.setRowData(this.gridOptions.rowData)
     },
@@ -411,10 +420,21 @@ export default {
     },
     // 分页大小改变，提交后台发送数据
     handleSizeChange (val) {
+      console.log('分页大小改变')
+      this.filterForm.pageSize = val
+      this.filterForm.currentPage = 1
+      // 向后台发送数据
+      console.log(this.filterForm.pageSize)
+      this.getOrderListFro()
       this.gridOptions.api.paginationSetPageSize(Number(val))
     },
-    // 跳转页数发生变化，提交后台发送数据
+    // 切换不同分页
     handleCurrentChange (val) {
+      console.log('切换页数为：')
+      this.filterForm.currentPage = val
+      // 向后台发送数据
+      this.getOrderListFro()
+      console.log(this.filterForm.currentPage)
       this.gridOptions.api.paginationGoToPage(val - 1)
     },
     gridfilterChange () {
@@ -422,7 +442,7 @@ export default {
     },
     // 设置分页组件数据总数
     calculateGrid () {
-      this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
+      this.gridOptions.api.paginationSetPageSize(Number(this.filterForm.pageSize))
       this.rowCount = this.gridOptions.api.getModel().getRowCount()
     },
     // 绘制表格
@@ -433,6 +453,23 @@ export default {
     },
     updateGrid () {
       this.gridOptions.api.setColumnDefs(this.gridOptions.columnDefs)
+    },
+    /** 提交后台相关函数 */
+    // 查看订单列表
+    getOrderListFro () {
+      // 入参：筛选条件，第几个页面（默认为0）
+      // 回参：对应页面表格数据，对应筛选条件下的页数
+      api.getOrderList(this.filterForm).then(res => {
+        console.log('成功')
+        console.log(res)
+      })
+      .catch(error => {
+        this.pointVisible = true
+        setTimeout(() => { this.pointVisible = false }, 800)
+        this.Note = '获取数据失败，网络异常请检查'
+        console.log('失败')
+        console.log(error)
+      })
     }
   },
   beforeMount () {

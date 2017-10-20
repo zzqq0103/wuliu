@@ -1,70 +1,8 @@
 import axios from 'axios'
-
-let baseUrl = ''
-
-// -------  已 送 货 订 单 开 始 --------
-
-// 获得当前已经运送的装载单接口
-export const getCurrentDelivered = params => {
-  return axios.get(`${baseUrl}/deliveredOrder/getLoadedlist`, {params: params})
-}
-
-// 获取查询的订单接口
-export const getQueryOrderList = params => {
-  return axios.get(`${baseUrl}/deliveredOrder/getQueryOrderList`, {params: params})
-}
-
-// -------  已 接 货 订 单 开 始 --------
-
-// 获得当前已经接收的订单接口
-export const getCurrentReceived = params => {
-  return axios.get(`${baseUrl}/receivedOrder/getlist`, {params: params})
-}
-
-// 获取查询的接收订单接口
-export const getQueryReceiveList = params => {
-  return axios.get(`${baseUrl}/receivedOrder/getQueryOrderList`, {params: params})
-}
-// -------  已 接 货 订 单 结 束 --------
-
-// -------  已 中 转 订 单 开 始 --------
-
-// 获得当前已经中转的订单接口
-export const getCurrentEpiboliedList = params => {
-  return axios.get(`${baseUrl}/epiboliedListOrder/getlist`, {params: params})
-}
-
-// 获取查询的中转订单接口
-export const getQueryEpiboliedList = params => {
-  return axios.get(`${baseUrl}/epiboliedListOrder/getQueryOrderList`, {params: params})
-}
-
-// -------  已 中 转 订 单 结 束 --------
-
-// -------  已 长 途 运 输 订 单 开 始 --------
-
-// 获得当前已经运送的订单接口
-export const getCurrentTransportedData = params => {
-  return axios.get(`${baseUrl}/transportedOrder/getlist`, {params: params})
-}
-
-// 获取查询的订单接口
-export const getQueryTransOrderList = params => {
-  return axios.get(`${baseUrl}/transportedOrder/getQueryOrderList`, {params: params})
-}
-
-// -------  已 长 途 运 输 订 单 结 束 --------
-
-// 获取装载单中的订单列表
-
-export const getOrderList = params => {
-  return axios.get(`${baseUrl}/Loader/getOrderList`, {params: params})
-}
-
 axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8'
 axios.defaults.baseURL = 'http://10.107.8.46:8080/'
+axios.defaults.timeout = 6000
 // http://10.107.8.46:8080/logistics/interface/hubManagement/queryHub
-
 export function fetch (url, params) {
   return new Promise((resolve, reject) => {
     axios.post(url, params)
@@ -78,9 +16,31 @@ export function fetch (url, params) {
 }
 
 export default {
+  /** 新建预约单页面 */
+
   // 获取预约单列表（测试）
   getAppoint (params) {
     return fetch('/logistics/interface/reservationManagement/queryReservationByOrderId', params)
+  },
+
+  // 根据关键词返回发货方列表
+  getSearchFahuo (params) {
+    return fetch('/logistics/interface/clientManagemnent/query_client_by_keywords', params)
+  },
+
+ // 根据关键词返回发货方列表
+  getFahuoRelated (params) {
+    return fetch('/logistics/interface/clientManagemnent/query_client_by_keywords', params)
+  },
+
+ // 根据关键词返回收货方列表
+  getSearchShouhuo (params) {
+    return fetch('/logistics/interface/clientManagemnent/query_client_by_keywords', params)
+  },
+
+ // 根据关键词返回收货方列表
+  getShouhuoRelated (params) {
+    return fetch('/logistics/interface/clientManagemnent/query_client_by_keywords', params)
   },
 
   // 获取始发站/到站列表
@@ -88,8 +48,38 @@ export default {
     return fetch('/logistics/interface/hubManagement/queryHub')
   },
 
+  /** 网点开单页面 */
+
+  // 查看订单列表
+  getOrderList (params) {
+    return fetch('/logistics/interface/reservationManagement/queryReservationByOrderId', params)
+  },
   // 获取网点列表
   getBranch (params) {
     return fetch('/logistics/interface/netBranchesManagement/addBranch', params)
+  },
+
+  // 提交订单
+  setOrder (params) {
+    return fetch('/logistics/interface/netBranchesManagement/addOrder', params)
+  },
+
+  /** 长途入库页面 */
+
+  // 获取长途入库列表（筛选，分页）
+  getLongLoad (params) {
+    return fetch('/logistics/interface/netBranchesManagement/addOrder', params)
+  },
+  // 编辑提交大车异常
+  setDaError (params) {
+    return fetch('/logistics/interface/netBranchesManagement/addOrder', params)
+  },
+  // 根据筛选条件获取某一装载单的所有订单（筛选，无分页）
+  getLoadingOrder (params) {
+    return fetch('/logistics/interface/netBranchesManagement/addOrder', params)
+  },
+  // 修改订单状态：正常入库/入库异常
+  setOrderStatus (params) {
+    return fetch('/logistics/interface/netBranchesManagement/addOrder', params)
   }
 }

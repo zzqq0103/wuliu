@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align:center">角 色 信 息 表</h2>
+      <h2 style="text-align:center">角色信息管理</h2>
       <div style="margin-top:2%">
 
         <div>
