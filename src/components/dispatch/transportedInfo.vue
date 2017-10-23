@@ -57,11 +57,9 @@
 
       </div>
     </div>
-
     <!-- 清除浮动 -->
     <div style="clear: both;">
     </div>
-
     <!-- 表格 -->
     <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
@@ -77,12 +75,10 @@
                    :rowDoubleClicked="changeDialogVisible"
       ></ag-grid-vue>
     </div>
-
     <!-- 装载单订单列表展示 -->
     <el-dialog  :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
       <deliver-order-list></deliver-order-list>
     </el-dialog>
-
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
       <el-pagination
@@ -95,7 +91,6 @@
         :total="totalpages">
       </el-pagination>
     </div>
-
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
     <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
       <order-details :orderId="orderId"></order-details>
@@ -108,7 +103,7 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {getCurrentTransportedData, getQueryTransOrderList} from '../../api/dispatch/api'
+  import {queryCurrentTransportedData, queryTransOrderList, queryOrderListInTransport} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
@@ -305,7 +300,6 @@
       Dispatched,
       DeliverOrderList
     },
-
     // 实例方法
     methods: {
       // 查询按钮点击
@@ -368,72 +362,94 @@
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
       },
-      // 获取订单列表
-      getOrderList () {
+      // 获得当前已运输的订单接口
+      getQueryCurrentTransportedData () {
           // 真实接口的数据入参
-//        let para = {
-//          pageNum: this.currentpage,
-//          startStation: '北京',
-//          arrStation: '南京',
-//          pageSize: this.pageSize
-//        }
-
-        // mock.js 假数据
         let para = {
-          page: this.currentpage,
-          orderId: this.orderId,
-          driverName: this.driverName,
-          deliverOrderId: this.deliverOrderId,
-          selectvalue: this.selectvalue,
+          pageNum: this.currentpage,
+          startStation: '北京',
+          arrStation: '南京',
           pageSize: this.pageSize
         }
-        this.listLoading = true
+        // mock.js 假数据
+        // let para = {
+        //   page: this.currentpage,
+        //   orderId: this.orderId,
+        //   driverName: this.driverName,
+        //   deliverOrderId: this.deliverOrderId,
+        //   selectvalue: this.selectvalue,
+        //   pageSize: this.pageSize
+        // }
+        // this.listLoading = true
         // 真实接口的数据入参
-//        getCurrentTransportedData(para).then((res) => {
-//          res.data.content.loadingInfos.forEach((val, index, arr) => {
-//            console.log(index + ' ' + val)
-//            let tempArrTim = new Date(arr[index])
-//            console.log(tempArrTim.getFullYear())
-//            arr[index].arrTim = `${tempArrTim.getFullYear()}年 ${tempArrTim.getMonth() + 1}月 ${tempArrTim.getDate()}日`
-//          })
-//          this.gridOptions.api.setRowData(res.data.content.loadingInfos)
-//          this.orderlist = res.data.orderlists
-//          this.totalpages = res.data.totalPages
-//          this.listLoading = false
-//        })
-
-        // mock.js
-        getCurrentTransportedData(para).then((res) => {
-          // console.log('进入getCurrentDelivered')
-          // this.gridOptions.rowData = res.data.orderlists
-          // 使用gridOptions中的api方法设定RowData数据
-          this.gridOptions.api.setRowData(res.data.orderlists)
+        queryCurrentTransportedData(para).then((res) => {
+          res.data.content.loadingInfos.forEach((val, index, arr) => {
+            console.log(index + ' ' + val)
+            let tempArrTim = new Date(arr[index])
+            console.log(tempArrTim.getFullYear())
+            arr[index].arrTim = `${tempArrTim.getFullYear()}年 ${tempArrTim.getMonth() + 1}月 ${tempArrTim.getDate()}日`
+          })
+          this.gridOptions.api.setRowData(res.data.content.loadingInfos)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
-          this.listLoading = false
+          //  this.listLoading = false
         })
+        // mock.js
+        // getCurrentTransportedData(para).then((res) => {
+        //   // console.log('进入getCurrentDelivered')
+        //   // this.gridOptions.rowData = res.data.orderlists
+        //   // 使用gridOptions中的api方法设定RowData数据
+        //   this.gridOptions.api.setRowData(res.data.orderlists)
+        //   this.orderlist = res.data.orderlists
+        //   this.totalpages = res.data.totalPages
+        //   this.listLoading = false
+        // })
         return null
       },
-      // 获取查询数据
-      getQueryData () {
+      // // 获得当前已运输的订单接口
+      // getQueryCurrentTransportedData () {
+      //   let para = {
+      //     queryName: this.queryName,
+      //     queryClass: this.selectvalue,
+      //     pageSize: this.pageSize
+      //   }
+      //   this.listLoading = true
+      //   queryCurrentTransportedData(para).then(res => {
+      //     console.log(res.data.content.loadingInfos)
+      //     this.gridOptions.api.setRowData(res.data.querylists)
+      //     this.orderlist = res.data.querylists
+      //     this.totalpages = res.data.totalpages
+      //     this.listLoading = false
+      //   })
+      // },
+      // 查询已运输订单接口
+      getQueryTransOrderList () {
         let para = {
-          queryName: this.queryName,
-          queryClass: this.selectvalue,
-          pageSize: this.pageSize
+          loadId: this.loadId
         }
-        this.listLoading = true
-        getQueryTransOrderList(para).then(res => {
-          console.log(res.data.content.loadingInfos)
-          this.gridOptions.api.setRowData(res.data.querylists)
-          this.orderlist = res.data.querylists
-          this.totalpages = res.data.totalpages
-          this.listLoading = false
+        // this.listloading = true
+        queryTransOrderList(para).then(res => {
+          this.gridOptions.setRowData(res.data.orderLists)
+          this.orderList = res.data.orderLists
+          this.totalpages = res.data.totalPages
+          // this.listloading = false
+        })
+      },
+      // 获取装载单中的订单列表
+      getQueryOrderListInTransport () {
+        let para = {
+          orderId: this.orderId
+        }
+        // this.listloading = true
+        queryOrderListInTransport(para).then(res => {
+          this.gridOptions.setRowData(res.data)
+          // this.listloading = false
         })
       }
     },
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getOrderList()
+      this.getQueryCurrentTransportedData()
     }
   }
 </script>

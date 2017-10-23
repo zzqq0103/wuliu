@@ -2,7 +2,6 @@
 <!-- 组件必须头元素被一个div容器包括 -->
   <div>
       <div id="top">
-
           <!-- 标题 -->
           <h2 style="text-align:center">待 中 转 订 单 信 息 页</h2>
 
@@ -180,13 +179,10 @@
 <script>
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
-
   // 引入axios后台接口
-  import {getCurrentEpibolingList} from '../../api/dispatch/api'
-
+  import {queryCurrentEpibolingList, queryOrderDetail, setCurrentEpibolingEdit, setCurrentEpibolingTransfer} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
-
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   import ElForm from '../../../node_modules/element-ui/packages/form/src/form'
@@ -464,27 +460,67 @@
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
       },
-      // 获取 “待运输” 订单列表方法
-      getOrderList () {
-        console.log(`页数：${this.currentpage}，页数大小：${this.pageSize}`)
+      // 获得当前已中转的订单列表
+      getQueryCurrentEpibolingList () {
         let para = {
-          pageNum: this.currentpage, // required
-          pageSize: this.pageSize // required
-          // queryTime: '', // optional
-          // orderId: this.tableForm.orderId, // optional
-          // changeCompany: '', // optional
-          // shipNam: '', // optional
-          // receNam: '' // optional
+          page: this.currentpage,
+          orderId: this.orderId,
+          driverName: this.driverName,
+          deliverOrderId: this.deliverOrderId,
+          selectvalue: this.selectvalue,
+          pageSize: this.pageSize
         }
         // this.listLoading = true
-        getCurrentEpibolingList(JSON.stringify(para)).then((res) => {
-          console.log(`响应数据：${JSON.stringify(res)}`)
-          this.gridOptions.api.setRowData(res)
+        queryCurrentEpibolingList(para).then((res) => {
+          this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
           // this.listLoading = false
         })
         return null
+      },
+      // 查看订单详情
+      getQueryOrderDetail () {
+        let para = {
+          queryName: this.queryName,
+          queryClass: this.selectvalue,
+          pageSize: this.pageSize
+        }
+        // this.listLoading = true
+        queryOrderDetail(para).then(res => {
+          this.gridOptions.api.setRowData(res.data.querylists)
+          this.orderlist = res.data.querylists
+          this.totalpages = res.data.totalpages
+          // this.listLoading = false
+        })
+      },
+      // 编辑中转订单
+      updateEpibolingOrder () {
+        let para = {
+          order: this.order,
+          changeFee: this.tableForm.changeFee,
+          changeCompany: this.tableForm.rowSelection
+        }
+        // this.listLoading = true
+        setCurrentEpibolingEdit(para).then(res => {
+          this.gridOptions.api.setRowData(res.data.querylists)
+          this.orderlist = res.data.querylists
+          this.totalpages = res.data.totalpages
+          // this.listLoading = false
+        })
+      },
+      // 编辑中转订单
+      updateEpibolingTransfer () {
+        let para = {
+          order: this.order
+        }
+        // this.listLoading = true
+        setCurrentEpibolingTransfer(para).then(res => {
+          this.gridOptions.api.setRowData(res.data.querylists)
+          this.orderlist = res.data.querylists
+          this.totalpages = res.data.totalpages
+          // this.listLoading = false
+        })
       },
       // 获取服务端的外包公司数据
       loadEpolyComp () {
@@ -511,7 +547,7 @@
     // 挂载元素完毕，自执行函数
     mounted () {
       this.selectEpolyCompsOptions = this.loadEpolyComp()
-      this.getOrderList()
+      this.getQueryCurrentEpibolingList()
     }
   }
 </script>

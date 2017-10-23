@@ -4,10 +4,8 @@
     <div id="top">
       <!-- 标题 -->
       <h2 style="text-align:center">已 送 货 订 单 信 息 页</h2>
-
       <!-- 操作栏 -->
       <div style="margin-top:2%">
-
       <!-- 查询菜单 -->
       <div style="margin-top:2%;float:left;">
           <el-form :inline="true" :model="formQuery" class="demo-form-inline">
@@ -15,7 +13,12 @@
               <el-date-picker v-model="formQuery.dateInterval" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions" range-separator='/' style="width: 150px">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="订单号:">
+            <el-form-item>
+              <el-select v-model="formQuery.selectClass" placeholder="订单" style="width: 100px">
+                  <el-option label="订单" value="1"></el-option>
+                  <el-option label="子件" value="2"></el-option>
+                  <el-option label="预约单" value="3"></el-option>
+              </el-select>
               <el-input v-model="formQuery.orderId" placeholder="请输入订单号" style="width:124px;margin-right:5px;"></el-input>
             </el-form-item>
             <el-form-item label="司机姓名:">
@@ -62,11 +65,9 @@
 
       </div>
     </div>
-
     <!-- 清除浮动 -->
     <div style="clear: both;">
     </div>
-
     <!-- 表格 -->
     <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
@@ -82,7 +83,6 @@
                    :rowDoubleClicked="detailDoubleClick"
       ></ag-grid-vue>
     </div>
-
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
       <el-pagination
@@ -95,12 +95,10 @@
         :total="totalpages">
       </el-pagination>
     </div>
-
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
     <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
       <order-details :orderId="orderId"></order-details>
     </el-dialog>
-
   </div>
 </template>
 
@@ -109,7 +107,7 @@
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
   import {getCurrentDeliveredList, getCurrentDeliveredSubOrderList} from '../../api/dispatch/api'
-  // 引入外部 “订单详情接口"
+  // 引入外部 “订单详情" 页面
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
@@ -126,7 +124,8 @@
           driverNam: '', // 中转外包公司名
           shipNam: '', // 发货人姓名
           receNam: '', // 收货人姓名
-          currentpage: 1 // 当前页数
+          currentpage: 1, // 当前页数
+          selectClass: '' // 订单、子件、预约单的分类
         },
         value_Search: [],
         list: [],

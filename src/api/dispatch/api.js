@@ -61,12 +61,12 @@ export const queryDeliveringReservation = params => {
 }
 
 // 点击手动调度
-export const manualDispatch = params => {
+export const manualDeliveringDispatch = params => {
   return axios.post(`${baseUrlXiaohui}/interface/short_delivering_dispatch/manual_dispatch`)
 }
 
 // 点击编辑
-export const queryManualDispatch = params => {
+export const queryManualDeliveringDispatch = params => {
   return axios.post(`${baseUrlXiaohui}/interface/short_delivering_dispatch/query_manual_dispatch`)
 }
 
@@ -157,18 +157,18 @@ export const queryManualReceivingDispatch = params => {
 // **************************  已 长 途 运 输 订 单 开 始 (transportedInfo.vue) **************************
 
 // 获得当前已运输的订单接口
-export const getCurrentTransportedData = params => {
+export const queryCurrentTransportedData = params => {
   // return axios.post(`${baseUrl}/logistics/interface/long_transported_management/query_loading_info`, params)
   return axios.post(`${baseUrlJucai}/transportedOrder/getlist`, params)
 }
 
 // 查询已运输订单接口
-export const getQueryTransOrderList = params => {
+export const queryTransOrderList = params => {
   return axios.post(`${baseUrlJucai}/transportedOrder/getQueryOrderList`, params)
 }
 
 // 获取装载单中的订单列表
-export const getOrderList = params => {
+export const queryOrderListInTransport = params => {
   return axios.post(`${baseUrlJucai}/Loader/getOrderList`, params)
 }
 
@@ -177,7 +177,7 @@ export const getOrderList = params => {
 // **************************  待 长 途 运 输 订 单 开 始 (transportingInfo.vue) **************************
 
 // 查询待运输装载单
-export const getCurrentTransportingList = params => {
+export const queryCurrentTransportingList = params => {
   return axios.post(`${baseUrlJucai}/interface/long_transporting_management/query_loading_info`)
 }
 
@@ -187,21 +187,34 @@ export const updateTransportListInfo = params => {
 }
 
 // 查询装载单中订单信息
-export const getQueryOrderInfo = params => {
+export const QueryOrderInfo = params => {
   return axios.post(`${baseUrlJucai}/interface/long_transporting_management/query_order_info`)
 }
 
 // **************************  待 长 途 运 输 订 单 结 束  (transportingInfo.vue) **************************
+// **************************  待 长 途 直 送 订 单 开 始 (transportingInfo.vue) **************************
+
+// 查询长途直送装载单列表
+export const queryCurrentTransportDirectList = params => {
+  return axios.post(`${baseUrlJucai}/interface/long_transporting_management/query_loading_info`)
+}
+
+// 修改长途直送装载单信息
+export const updateTransportDirectListInfo = params => {
+  return axios.post(`${baseUrlJucai}/interface/long_transporting_management/update_loading_state`)
+}
+
+// **************************  待 长 途 直 送 订 单 结 束  (transportingInfo.vue) **************************
 
 // **************************  已 中 转 订 单 开 始 (epobolyedInfo.vue)      **************************
 
 // 获得当前已中转的订单列表
-export const getCurrentEpiboliedList = params => {
+export const queryCurrentEpiboliedList = params => {
   return axios.post(`${baseUrlJucai}/interface/changed_management/query_order_info`, params)
 }
 
 // 查看订单详情
-export const getOrderDetail = params => {
+export const queryOrderDetail = params => {
   return axios.post(`${baseUrlJucai}/interface/changed_management/query_order_info`, params)
 }
 
@@ -210,18 +223,18 @@ export const getOrderDetail = params => {
 // **************************  待 中 转 订 单 开 始 (epobolingInfo.vue)  **************************
 
 // 查询待运输订单
-export const getCurrentEpibolingList = params => {
+export const queryCurrentEpibolingList = params => {
   console.log(`传进来的参数值：${params}`)
   return axios.post(`${baseUrlJucai}/interface/changing_management/query_order_info`, params)
 }
 
 // 编辑
-export const getCurrentEpibolingEdit = params => {
+export const setCurrentEpibolingEdit = params => {
   return axios.post(`${baseUrlJucai}/interface/changing_management/edit_order`, params)
 }
 
 // 确认中转
-export const getCurrentEpibolingTransfer = params => {
+export const setCurrentEpibolingTransfer = params => {
   return axios.post(`${baseUrlJucai}/interface/changing_management/transfer_order`, params)
 }
 

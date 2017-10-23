@@ -369,7 +369,7 @@
         return null
       },
       // 点击手动调度
-      getmanualReceivingDispatch () {
+      getManualReceivingDispatch () {
         let para = {
           orderId: this.orderId,
           dispatchList: []
@@ -388,7 +388,7 @@
           orderId: this.orderId
         }
         // this.listLoading = true
-        queryManualReceivingDispatch(para).then(res =>{
+        queryManualReceivingDispatch(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
