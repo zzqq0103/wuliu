@@ -27,7 +27,7 @@ import { AgGridVue } from 'ag-grid-vue'
 // 引入 OrderList 订单详情
 import OrderDetails from '../financialAdministrator/ShowOrderDetails.vue'
 // 引入 axios 的后台请求接口
-import { getOrderList } from '../../api/dispatch/api'
+// import { getOrderList } from '../../api/dispatch/api'
 // 引入dispatchLoaderInfo 组件页面
 import DeliverOrderList from './deliverOrderList'
 
@@ -351,22 +351,6 @@ export default {
     detailDoubleClick (event) {
       this.orderId = event.data.OrderId
       this.detailVisible = true
-    },
-    loadOrderList () {
-      let params = {
-        loaderId: this.loaderId
-      }
-      getOrderList(params).then((res) => {
-        // console.log('进入getCurrentDelivered')
-        // this.gridOptions.rowData = res.data.orderlists
-        // 使用gridOptions中的api方法设定RowData数据
-        // this.gridOptions.rowData = res.data.orderlists
-        this.gridOptions_left.api.setRowData(res.data.orderlists)
-        this.gridOptions_right.api.setRowData(res.data.orderlists)
-        this.gridOptions_new.api.setRowData(null)
-      }).catch((err) => {
-        console.log(err)
-      })
     }
   },
   // 计算属性

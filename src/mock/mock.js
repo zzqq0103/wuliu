@@ -7,14 +7,14 @@ let _transportedList = transportedList
 let _receivedList = receivedList
 let _epibolyList = epibolyList
 let _orderList = orderList
-// console.log(typeof _deliveredLoadedList[0].orderId)
+const host = ''
 
 export default {
   bootstrap () {
     let mock = new MockAdapter(axios)
 
     // 获取到已送货订单列表,Get请求
-    mock.onPost('/deliveredOrder/getLoadedlist').reply(config => {
+    mock.onPost(`${host}/interface/short_delivered_management/getCurrentDeliveredList`).reply(config => {
       console.log(config)
       let {page, pageSize} = JSON.parse(config.data)
       let mockList = getListDataBySize(_deliveredLoadedList, pageSize, page)

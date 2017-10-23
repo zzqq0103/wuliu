@@ -35,7 +35,7 @@
          <el-form-item label="总运费:"  style="float:right;">
               <el-input v-model="CostFee" size="small"></el-input>
           </el-form-item>
-      </el-form> 
+      </el-form>
       <ag-grid-vue style="width: 100%; height: 700px; margin-top:20px; float:right;" class="ag-blue"
                    :gridOptions="gridOptions_right"
                    :suppressMovableColumns="true"
@@ -69,7 +69,7 @@ import { AgGridVue } from 'ag-grid-vue'
 // 引入 OrderList 订单详情
 import OrderDetails from '../financialAdministrator/ShowOrderDetails.vue'
 // 引入 axios 的后台请求接口
-import { getOrderList } from '../../api/dispatch/api'
+// import { getOrderList } from '../../api/dispatch/api'
 
 export default {
   // 数据模型
@@ -393,31 +393,31 @@ export default {
     detailDoubleClick (event) {
       this.orderId = event.data.OrderId
       this.detailVisible = true
-    },
-    loadOrderList () {
-      let params = {
-        loaderId: this.loaderId
-      }
-      let _flag = this.flag
-      getOrderList(params).then((res) => {
-        console.log(res)
-        if (_flag) {
-          this.gridOptions_left.api.setRowData(res.data.orderlists)
-        } else {
-          this.gridOptions_left.api.setRowData(res.data.orderlists)
-          this.gridOptions_right.api.setRowData(res.data.orderlists)
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
     }
+//    loadOrderList () {
+//      let params = {
+//        loaderId: this.loaderId
+//      }
+//      let _flag = this.flag
+//      getOrderList(params).then((res) => {
+//        console.log(res)
+//        if (_flag) {
+//          this.gridOptions_left.api.setRowData(res.data.orderlists)
+//        } else {
+//          this.gridOptions_left.api.setRowData(res.data.orderlists)
+//          this.gridOptions_right.api.setRowData(res.data.orderlists)
+//        }
+//      }).catch((err) => {
+//        console.log(err)
+//      })
+//    }
   },
   // 计算属性
   computed: {},
   // 监视器
   watch: {},
   mounted () {
-    this.loadOrderList()
+//    this.loadOrderList()
   }
 }
 </script>
