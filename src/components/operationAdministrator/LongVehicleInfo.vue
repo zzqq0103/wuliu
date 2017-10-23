@@ -151,10 +151,10 @@
           <el-input v-model="editForm.driverTel" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="合同号:" :label-width="formLabelWidth">
-          <el-input v-model="editForm.contractId" style="width: 50%" disabled="true"></el-input>
+          <el-input v-model="editForm.contractId" style="width: 50%" disabled=true></el-input>
         </el-form-item>
         <el-form-item label="合同价格:" :label-width="formLabelWidth">
-          <el-input v-model="editForm.contractPrice" style="width: 50%" disabled="true"></el-input>
+          <el-input v-model="editForm.contractPrice" style="width: 50%" disabled=true></el-input>
         </el-form-item>
         <el-form-item label="目的枢纽:" :label-width="formLabelWidth" prop="targetHub">
           <el-input v-model="editForm.arrHub" style="width: 50%"></el-input>
@@ -169,11 +169,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="车容量:" :label-width="formLabelWidth">
-          <el-input v-model="editForm.capacity" style="width: 30%" disabled="true"></el-input>
+          <el-input v-model="editForm.capacity" style="width: 30%" disabled=true></el-input>
           &nbsp/立方
         </el-form-item>
         <el-form-item label="吨位:" :label-width="formLabelWidth">
-          <el-input v-model="editForm.tonnage" style="width: 30%" disabled="true"></el-input>
+          <el-input v-model="editForm.tonnage" style="width: 30%" disabled=true></el-input>
           &nbsp/吨
         </el-form-item>
         <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
@@ -480,9 +480,7 @@
         this.filterForm.currentPage = this.currentPage
         api.getLongInfo(this.filterForm)
           .then(res => {
-            console.log(res)
             console.log('连接成功')
-            console.log(res.content.LongCarInfos)
             this.gridOptions.rowData = res.content.LongCarInfos
             this.gridOptions.api.setRowData(this.gridOptions.rowData)
           })
@@ -551,24 +549,26 @@
                 .then(res => {
                   console.log(res)
                   console.log('连接成功')
-//            console.log(res.content)
                 })
                 .catch(error => {
                   console.log('连接失败')
                   console.log(error)
                 })
+              this.vehicleVisable = false
+              this.createRowData()
             } else if (formName === 'editForm') {
               alert('编辑成功')
               api.editLongInfo(this.editForm)
                 .then(res => {
                   console.log(res)
                   console.log('连接成功')
-//            console.log(res.content)
                 })
                 .catch(error => {
                   console.log('连接失败')
                   console.log(error)
                 })
+              this.editVisable = false
+              this.createRowData()
             }
           } else {
             console.log('error submit!!')
@@ -594,7 +594,7 @@
           console.log(res)
           console.log('连接成功')
           this.vehicleDelVisable = false
-//            console.log(res.content)
+          this.createRowData()
         })
           .catch(error => {
             console.log('连接失败')
