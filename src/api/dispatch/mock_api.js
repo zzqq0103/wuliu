@@ -9,12 +9,12 @@ import axios from 'axios'
 const baseUrl = ''
 //  **************************  已 送 货 订 单 列 表 开 始  (deliveredInfo.vue) **************************
 
-// 当前已送货的订单列表接口
+// 已送货 （订单）
 export const getCurrentDeliveredList = params => {
   return axios.post(`${baseUrl}/interface/short_delivered_management/query_delivered_order`, params)
 }
 
-// 查询已送货的子件列表
+// 已送货（子件订单）
 export const getCurrentDeliveredSubOrderList = params => {
   return axios.post(`${baseUrl}/interface/short_delivered_management/query_delivered_sub`, params)
 }
@@ -23,13 +23,13 @@ export const getCurrentDeliveredSubOrderList = params => {
 
 //  **************************   待 送 货 订 单 列 表 开 始    (deliveringInfo.vue) **************************
 
-// 查询待送货订单列表
+// 待送货（订单）
 export const getCurrentDeliveringList = params => {
   // return axios.post(`${baseUrl}/deliveredOrder/getLoadedlist`, params) // mock.js 假数据的接口
   return axios.post(`${baseUrl}/interface/short_delivering_management/query_delivered_order`, params)
 }
 
-// 查询待送货的子件列表
+// 待送货（子件）
 export const getCurrentDeliveringSubOrderList = params => {
   return axios.post(`${baseUrl}/interface/short_delivering_management/query_delivering_sub`, params)
 }
@@ -38,7 +38,7 @@ export const getCurrentDeliveringSubOrderList = params => {
 
 // **************************    送 货 手 动 调 度 页 面 接 口 开 始 (manualDeliverlingInfo.vue)  **************************
 
-// 查询接货需要手动调度的预约单列表
+// 送货手动调度
 export const queryDeliveringReservation = params => {
   return axios.post(`${baseUrl}/interface/short_delivering_dispatch/query_delivering_reservation`)
 }
@@ -81,18 +81,18 @@ export const updateDeliveringSuccess = params => {
 
 // **************************   已 接 货 订 单 列 表     (receivedInfo.vue)   **************************
 
-// 查询已接货订单列表
+// 已接货 （订单）
 export const getCurrentReceivedList = params => {
   // return axios.post(`${baseUrl}/receivedOrder/getlist`, params) // mock.js 假数据的接口
   return axios.post(`${baseUrl}/interface/short_received_management/query_received_order`, params)
 }
 
-// 查询已接货的预约单列表
+// 已接货 （预约单）
 export const getCurrentReceivedReservationList = params => {
   return axios.post(`${baseUrl}/interface/short_received_management/query_received_reservation`, params)
 }
 
-// 查询已接货的子件列表
+// 已接货（子件）
 export const getCurrentReceivedSubOrderList = params => {
   return axios.post(`${baseUrl}/interface/short_received_management/query_received_sub`, params)
 }
@@ -101,17 +101,17 @@ export const getCurrentReceivedSubOrderList = params => {
 
 // **************************   待 接 货 订 单 开 始      (receiveingInfo.vue) **************************
 
-// 查询待接货订单列表
+// 待接货 （订单）
 export const getCurrentReceivingList = params => {
   return axios.post(`${baseUrl}/interface/short_receiving_management/query_receiving_order`, params)
 }
 
-// 查询待接货的预约单列表
+// 待接货 （预约单）
 export const getCurrentReceivingReservationList = params => {
   return axios.post(`${baseUrl}/interface/short_receiving_management/query_receiving_reservation`, params)
 }
 
-// 查询待接货的子件列表
+// 待接货 （子件）
 export const getCurrentReceivingSubOrderList = params => {
   return axios.post(`${baseUrl}/interface/short_receiving_management/query_receiving_sub`, params)
 }
@@ -120,7 +120,7 @@ export const getCurrentReceivingSubOrderList = params => {
 
 // **************************  接 货 手 动 调 度 页 面 接 口 开 始 (manualDeliverlingInfo.vue) **************************
 
-// 查询接货需要手动调度的预约单列表
+// 接货手动调度
 export const queryReceivingReservation = params => {
   return axios.post(`${baseUrl}/interface/short_receiving_dispatch/query_receiving_dispatch`)
 }
@@ -139,18 +139,13 @@ export const queryManualReceivingDispatch = params => {
 
 // **************************  已 长 途 运 输 订 单 开 始 (transportedInfo.vue) **************************
 
-// 获得当前已运输的订单接口
+// 已长途运输装载单
 export const queryCurrentTransportedData = params => {
   // return axios.post(`${baseUrl}/logistics/interface/long_transported_management/query_loading_info`, params)
   return axios.post(`${baseUrl}/transportedOrder/getlist`, params)
 }
 
-// 查询已运输订单接口
-export const queryTransOrderList = params => {
-  return axios.post(`${baseUrl}/transportedOrder/getQueryOrderList`, params)
-}
-
-// 获取装载单中的订单列表
+// 长途装载单中的订单列表
 export const queryOrderListInTransport = params => {
   return axios.post(`${baseUrl}/Loader/getOrderList`, params)
 }
@@ -159,7 +154,7 @@ export const queryOrderListInTransport = params => {
 
 // **************************  待 长 途 运 输 订 单 开 始 (transportingInfo.vue) **************************
 
-// 查询待运输装载单
+// 待长途运输装载单
 export const queryCurrentTransportingList = params => {
   return axios.post(`${baseUrl}/interface/long_transporting_management/query_loading_info`)
 }
@@ -191,7 +186,7 @@ export const updateTransportDirectListInfo = params => {
 
 // **************************  已 中 转 订 单 开 始 (epobolyedInfo.vue)      **************************
 
-// 获得当前已中转的订单列表
+// 已中转 （订单）
 export const queryCurrentEpiboliedList = params => {
   return axios.post(`${baseUrl}/interface/changed_management/query_order_info`, params)
 }
@@ -205,7 +200,7 @@ export const queryOrderDetail = params => {
 
 // **************************  待 中 转 订 单 开 始 (epobolingInfo.vue)  **************************
 
-// 查询待运输订单
+// 待运输 （订单）
 export const queryCurrentEpibolingList = params => {
   console.log(`传进来的参数值：${params}`)
   return axios.post(`${baseUrl}/interface/changing_management/query_order_info`, params)
@@ -221,4 +216,6 @@ export const setCurrentEpibolingTransfer = params => {
   return axios.post(`${baseUrl}/interface/changing_management/transfer_order`, params)
 }
 
-// **************************  待 中 转 订 单 结 束 (epobolingInfo.vue)  **************************
+// **************************  待 中 转 订 单 结 束 (epobolingInfo.vue)  ******************************
+// **************************  库 存 管 理 页 面 开 始  ************************************************
+// **************************  库 存 管 理 页 面 结 束  *************************************************

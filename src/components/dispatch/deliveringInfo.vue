@@ -108,10 +108,10 @@
       <order-details :orderId="orderId"></order-details>
     </el-dialog>
 
-    <!-- 待长途装载单订单对话框  -->
-    <el-dialog :title="titleText" :visible.sync="dialogVisible" size="full" :modal=false :modal-append-to-body=false>
-      <deliver-order-list :loaderId="loadOrderId" :flag="flag"></deliver-order-list>
-    </el-dialog>
+    <!--&lt;!&ndash; 待长途装载单订单对话框  &ndash;&gt;-->
+    <!--<el-dialog :title="titleText" :visible.sync="dialogVisible" size="full" :modal=false :modal-append-to-body=false>-->
+      <!--<deliver-order-list :loaderId="loadOrderId" :flag="flag"></deliver-order-list>-->
+    <!--</el-dialog>-->
 
     <!-- 装载单订单列表展示 -->
     <el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
