@@ -108,14 +108,9 @@
     </div>
 
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
-    <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
+    <el-dialog title="订单详情" :visible.sync="detailVisible" size="small" :closeOnClickModal="false" top="10%">
       <order-details :orderId="orderId"></order-details>
     </el-dialog>
-
-    <!--&lt;!&ndash; 订单列表 &ndash;&gt;-->
-    <!--<el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>-->
-      <!--<Dispatched></Dispatched>-->
-    <!--</el-dialog>-->
   </div>
 </template>
 
@@ -137,6 +132,8 @@
 
   // 引入装载单订单页面 （deliverOrderList.vue） 页面
   import DeliverOrderList from './deliverOrderList'
+//  import ElDialog from "../../../node_modules/element-ui/packages/dialog/src/component";
+//  import ElFormItem from "../../../node_modules/element-ui/packages/form/src/form-item";
   export default {
     data () {
       return {

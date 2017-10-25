@@ -3,7 +3,7 @@
   <div>
     <div id="top">
       <!-- 标题 -->
-      <h2 style="text-align:center">待 发 货 装 载 单 信 息 页</h2>
+      <h2 style="text-align:center">正 在 送 货 装 载 单 信 息 页</h2>
 
       <!-- 操作栏 -->
       <div style="margin-top:2%">
@@ -58,15 +58,6 @@
           </div>
         </div>
 
-        <!-- 是否发车对话框 -->
-        <el-dialog title="" :visible.sync="departVisible" size="tiny" top="30%">
-            <h2 style="padding:30px">确认发车吗？</h2>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="departVisible = false">取 消</el-button>
-                <el-button @click="departVisible = false" type="danger">确 定</el-button>
-            </div>
-        </el-dialog>
-
       </div>
     </div>
 
@@ -104,19 +95,14 @@
     </div>
 
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
-    <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small">
+    <el-dialog title="订单详情" :visible.sync="detailVisible" size="small">
       <order-details :orderId="orderId"></order-details>
     </el-dialog>
 
-    <!--&lt;!&ndash; 待长途装载单订单对话框  &ndash;&gt;-->
-    <!--<el-dialog :title="titleText" :visible.sync="dialogVisible" size="full" :modal=false :modal-append-to-body=false>-->
-      <!--<deliver-order-list :loaderId="loadOrderId" :flag="flag"></deliver-order-list>-->
+    <!--&lt;!&ndash; 装载单订单列表展示 &ndash;&gt;-->
+    <!--<el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>-->
+      <!--<deliver-order-list :flag="flag"></deliver-order-list>-->
     <!--</el-dialog>-->
-
-    <!-- 装载单订单列表展示 -->
-    <el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
-      <deliver-order-list :flag="flag"></deliver-order-list>
-    </el-dialog>
 
   </div>
 </template>
@@ -128,8 +114,6 @@
   import {getCurrentDeliveringList, getCurrentDeliveringSubOrderList} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
-  // 引入外部筛选函数组件系统
-  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   // 引入dispatchLoaderInfo 组件页面
   import DeliverOrderList from './deliverOrderList'
 
@@ -143,7 +127,6 @@
           shipNam: '', // 发货人姓名
           receNam: '' // 收货人姓名
         },
-        titleText: '待送货装载单列表',
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
@@ -186,7 +169,6 @@
               width: 120,
               field: 'loadOrderId',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -195,7 +177,6 @@
               width: 120,
               field: 'loadOrderStatus',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -204,7 +185,6 @@
               width: 120,
               field: 'adjustmentStatus',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -213,7 +193,6 @@
               width: 120,
               field: 'warehouse',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -222,7 +201,6 @@
               width: 120,
               field: 'driverName',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -231,7 +209,6 @@
               width: 120,
               field: 'driverPhone',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -240,7 +217,6 @@
               width: 120,
               field: 'deliverTime',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -249,7 +225,6 @@
               width: 120,
               field: 'deliveRemarks',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -258,7 +233,6 @@
               width: 120,
               field: 'allWeights',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -267,7 +241,6 @@
               width: 120,
               field: 'allVolumes',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -276,7 +249,6 @@
               width: 120,
               field: 'allNumbers',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -285,7 +257,6 @@
               width: 120,
               field: 'dispatcherId',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -294,7 +265,6 @@
               field: 'dispatcherName',
               width: 120,
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -303,7 +273,6 @@
               field: 'remarks',
               width: 120,
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -312,7 +281,6 @@
               field: 'operator',
               width: 60,
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true,
               cellRendererFramework: 'operateComponent',
@@ -391,17 +359,7 @@
     components: {
       'ag-grid-vue': AgGridVue,
       OrderDetails,
-      DeliverOrderList,
-      operateComponent: {
-        template: '<span style="margin-left:5px;"><el-button  class="del-but" @click="depart" type="info" size="small">发车</el-button></span>',
-        methods: {
-          // 点击发车按钮，进行操作
-          depart () {
-            let self = this.params.context.componentParent
-            self.departVisible = true
-          }
-        }
-      }
+      DeliverOrderList
     },
 
     // 实例方法
@@ -471,31 +429,45 @@
       queryCurrentDeliveringList () {
         let para = {
           // 页码
-          pageNum: this.currentpage, // required
+          pageNum: this.formQuery.currentpage, // required
           // 每页记录数
           recordNum: this.pageSize, // required
           // 开始时间
-          startTime: '', // required
+          startTime: this.formQuery.dateInterval, // required
           // 结束时间
-          endTime: '', // required
+          endTime: this.formQuery.dateInterval, // required
           // 需要查询的订单Id
-          orderId: this.orderId, // optional
+          orderId: this.formQuery.queryOrderId, // optional
           // 查询的司机姓名
-          driverName: '', // optional
+          driverName: this.formQuery.driverNam, // optional
           // 查询的发货方姓名
-          shipNam: '', // optional
+          shipNam: this.formQuery.shipNam, // optional
           // 查询的收货方姓名
-          receNam: '' // optional
+          receNam: this.formQuery.receNam // optional
         }
-        // this.listLoading = true
-        getCurrentDeliveringList(para).then((res) => {
-          this.gridOptions.api.setRowData(res.data.orderlists)
-          this.orderlist = res.data.orderlists
-          this.totalpages = res.data.totalPages
-          // this.listLoading = false
-        })
+        this.listLoading = true
+        if (this.formQuery.selectClass === '1') {
+          getCurrentDeliveringList(para).then((res) => {
+            console.log(res)
+            this.gridOptions.rowData = res.data.orderlists
+            this.gridOptions.api.setRowData(res.data.orderlists)
+            this.orderlist = res.data.orderlists
+            this.totalpages = res.data.totalPages
+            this.listLoading = false
+          })
+        } else {
+          getCurrentDeliveringSubOrderList(para).then((res) => {
+            console.log(res)
+            this.gridOptions.rowData = res.data.orderlists
+            this.gridOptions.api.setRowData(res.data.orderlists)
+            this.orderlist = res.data.orderlists
+            this.totalpages = res.data.totalPages
+            this.listLoading = false
+          })
+        }
         return null
       },
+
       // 查询已送货的子件列表
       queryCurrentDeliveringSubOrderList () {
         let para = {
