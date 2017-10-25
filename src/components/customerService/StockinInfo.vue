@@ -310,6 +310,10 @@
   import api from '../../api/customerService/api.js'
   export default {
     created () {
+      /**         // 初始
+        initForm: {
+          startStationList: ['始发站1', '始发站2', '始发站3', '始发站4', '始发站5']
+        }, */
       for (let i = 0; i < 100; i++) {
         this.testData1.push({
           'loadingId': '装载单ID' + i,
@@ -623,6 +627,7 @@
       },
       // 绘制表格，包括更新列信息与行信息
       drawGrid (i) {
+        console.log(typeof (this.filterForm1.departTimStart[0]))
         if (i === 2) {
           this.gridOptions3.api.selectAll()
           this.delChoose(this.gridOptions3.api.getSelectedRows())
@@ -634,7 +639,7 @@
       createRowData (i) {
         if (i === 1) {
           console.log(this.filterForm1)
-          this.getLongLoadFro()
+          // this.getLongLoadFro()
           this.gridOptions.rowData = this.testData1
           this.gridOptions.api.setRowData(this.gridOptions.rowData)
         } else if (i === 2) {
@@ -678,7 +683,7 @@
         this.filterForm1.currentPage = 1
         // 向后台发送数据
         console.log(this.filterForm1.pageSize)
-        this.getLongLoadFro()
+        // this.getLongLoadFro()
         this.gridOptions.api.paginationSetPageSize(Number(val))
       },
       // 切换不同分页时
@@ -686,7 +691,7 @@
         console.log('切换页数为：')
         this.filterForm1.currentPage = val
         // 向后台发送数据
-        this.getLongLoadFro()
+        // this.getLongLoadFro()
         console.log(this.filterForm1.currentPage)
         this.gridOptions.api.paginationGoToPage(val - 1)
       },

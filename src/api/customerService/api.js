@@ -1,8 +1,18 @@
 import axios from 'axios'
 axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8'
-axios.defaults.baseURL = 'http://10.107.8.46:8080/'
+axios.defaults.baseURL = 'http://10.107.8.131:8080/'
 axios.defaults.timeout = 6000
 // http://10.107.8.46:8080/logistics/interface/hubManagement/queryHub
+
+const token = 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMzg1NDI0NTQyNCIsImlhdCI6MTUwODkwMDQxMiwic3ViIjoie1wic2l0ZVwiOlwi5Y2X5LqsXCIsXCJyb2xlXCI6XCJcIixcImlkXCI6XCIxMzg1NDI0NTQyNFwiLFwidHlwZVwiOlwiMVwifSIsImV4cCI6MTUwODkzNjQxMn0.x4RVJAC--1HRvkCu-yubvlhsKgdkW9rxtNfIuW7o1IE'
+// 发送axios前拦截，进行验证
+axios.interceptors.request.use((config) => {
+  config.headers.Authorization = `${token}`
+  return config
+}, (error) => {
+  return Promise.reject(error)
+})
+
 export function fetch (url, params) {
   return new Promise((resolve, reject) => {
     axios.post(url, params)
@@ -76,18 +86,18 @@ export default {
 
   // 获取长途入库列表（筛选，分页）
   getLongLoad (params) {
-    return fetch('/logistics/interface/netBranchesManagement/addOrder', params)
+    return fetch('/logistics/interface/in_storage_management/query_loading_info', params)
   },
   // 编辑提交大车异常
   setDaError (params) {
-    return fetch('/logistics/interface/netBranchesManagement/addOrder', params)
+    return fetch('/logistics/interface/in_storage_management/edit_abnormal', params)
   },
   // 根据筛选条件获取某一装载单的所有订单（筛选，无分页）
   getLoadingOrder (params) {
-    return fetch('/logistics/interface/netBranchesManagement/addOrder', params)
+    return fetch('/logistics/interface/in_storage_management/query_order_info', params)
   },
-  // 修改订单状态：正常入库/入库异常
+  // 修改订单状态：正常入库
   setOrderStatus (params) {
-    return fetch('/logistics/interface/netBranchesManagement/addOrder', params)
+    return fetch('/logistics/interface/in_storage_management/put_in_storage', params)
   }
 }
