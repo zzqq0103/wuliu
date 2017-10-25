@@ -3,7 +3,7 @@
   <div>
     <div id="top">
       <!-- 标题 -->
-      <h2 style="text-align:center">待 接 货 订 单 信 息 页</h2>
+      <h2 style="text-align:center">短 途 送 货 手 动 调 度 页</h2>
 
       <!-- 操作栏 -->
       <div style="margin-top:2%">
@@ -94,6 +94,11 @@
       </el-pagination>
     </div>
 
+    <!-- 装载单订单列表展示 -->
+    <el-dialog :title="已装载单订单列表" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
+      <Dispatched :status="status"> </Dispatched>
+    </el-dialog>
+
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
     <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
       <order-details :orderId="orderId"></order-details>
@@ -106,11 +111,15 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {getCurrentReceivingList, getCurrentReceivingReservationList, getCurrentReceivingSubOrderList} from '../../api/dispatch/api'
+  import {queryDeliveringReservation, manualDeliveringDispatch, queryManualDeliveringDispatch} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  // 引入装载单页面的 （dispatched.vue）页面
+  import Dispatched from './dispatched'
+  // 引入装载单订单页面 （deliverOrderList.vue） 页面
+  import DeliverOrderList from './deliverOrderList'
   export default {
     data () {
       return {
@@ -121,30 +130,30 @@
           shipNam: '', // 发货人姓名
           receNam: '' // 收货人姓名
         },
+        titleText: '已送货装载单订单列表',
+        status: 1,
+        deliveringVisible: false,
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
         colVisible: false, // 设置弹窗的显示boolean值
         orderId: '', // 运单号
+        dispatchVisible: false, // 设置装载单列表的订单信息的boolean值
         tableForm: {
           'id': '',
-          'orderId': '',
-          'orderDate': '',
-          'forwarding': '',
-          'shipper': '',
-          'phone': '',
-          'receivedAddr': '',
-          'receivedArea': '',
-          'goodsName': '',
-          'pack': '',
-          'numbers': '',
-          'weight': '',
-          'volume': '',
+          'loadOrderId': '',
+          'loadOrderStatus': '',
+          'adjustmentStatus': '',
+          'warehouse': '',
           'driverName': '',
           'driverPhone': '',
-          'carLicence': '',
-          'carTon': '',
-          'carVolume': '',
+          'deliverTime': '',
+          'deliveRemarks': '',
+          'allWeights': '',
+          'allVolumes': '',
+          'allNumbers': '',
+          'dispatcherId': '',
+          'dispatcherName': '',
           'remarks': ''
         },
         rules: {}, //
@@ -161,64 +170,46 @@
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            // {
-            //   headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            // },
-            // {
-            //   headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false, filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            // },
-            {
-              headerName: '开单时间', width: 120, field: 'orderDate', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '装载单号', width: 120, field: 'loadOrderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '发货单位', width: 120, field: 'forwarding', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '装载单状态', width: 120, field: 'loadOrderStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '发货人姓名', width: 120, field: 'shipper', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调整状态', width: 120, field: 'adjustmentStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '发货人联系电话', width: 120, field: 'phone', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '所属仓库', width: 120, field: 'warehouse', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '取货地址', width: 120, field: 'receivedAddr', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '司机姓名', width: 120, field: 'driverName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '取货货物区域', width: 120, field: 'receivedArea', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '司机电话', width: 120, field: 'driverPhone', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '货物名称', width: 120, field: 'goodsName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '送货时间', width: 120, field: 'deliverTime', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '接货司机姓名', field: 'driverName', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '送货备注', width: 120, field: 'deliveRemarks', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '接货司机电话', field: 'driverPhone', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总重量', width: 120, field: 'allWeights', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '接货司机车牌号', field: 'carLicence', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总体积', width: 120, field: 'allVolumes', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '包装', width: 120, field: 'pack', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总件数', width: 120, field: 'allNumbers', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '件数', width: 120, field: 'numbers', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调度管理员编号', width: 120, field: 'dispatcherId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '重量', width: 120, field: 'weight', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调度管理员姓名', field: 'dispatcherName', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
             {
-              headerName: '体积', width: 120, field: 'volume', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            {
-              headerName: '车载吨位', field: 'carTon', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            {
-              headerName: '车载容量', field: 'carVolume', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            },
-            {
-              headerName: '订单备注', field: 'remarks', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '备注', field: 'remarks', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             }
           ]
         },
@@ -290,20 +281,21 @@
     // 实例组件
     components: {
       'ag-grid-vue': AgGridVue,
-      OrderDetails
+      OrderDetails,
+      Dispatched,
+      DeliverOrderList
     },
-
     // 实例方法
     methods: {
       // 查询按钮点击
       submitQuery () {
         console.log('click submitQuery function')
       },
-      // 订单详情弹框
+      // 装载单订单列表弹框
       detailDoubleClick (event) {
-        console.log(event.data.orderId)
-        this.orderId = event.data.orderId
-        this.detailVisible = true
+        this.loadOrderId = event.data.loadOrderId
+        console.log(event.data.loadOrderId)
+        this.deliveringVisible = true
       },
       // 改变每页显示的个数
       handleSizeChange (val) {
@@ -351,19 +343,15 @@
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
       },
-      // 查询待接货订单列表
-      getReceivingOrderList () {
+      // 查询接货需要手动调度的预约单列表
+      getQueryDeliveringReservation () {
         let para = {
           // 页码
           pageNum: this.currentpage, // required
           // 每页记录数
           recordNum: this.pageSize, // required
-          // 开始时间
-          startTime: '', // required
-          // 结束时间
-          endTime: '', // required
           // 需要查询的订单Id
-          orderId: this.orderId, // optional
+          orderId: '', // optional
           // 查询的司机姓名
           driverName: '', // optional
           // 查询的发货方姓名
@@ -372,7 +360,7 @@
           receNam: '' // optional
         }
         // this.listLoading = true
-        getCurrentReceivingList(para).then((res) => {
+        queryDeliveringReservation(para).then((res) => {
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
@@ -380,56 +368,27 @@
         })
         return null
       },
-      // 查询待接货的子件列表
-      queryCurrentReceivingSubOrderList () {
+      // 点击手动调度
+      getManualDeliveringDispatch () {
         let para = {
-          // 页码
-          pageNum: this.currentpage, // required
-          // 每页记录数
-          recordNum: this.pageSize, // required
-          // 开始时间
-          startTime: '', // required
-          // 结束时间
-          endTime: '', // required
-          // 需要查询的订单Id
-          orderId: this.orderId, // optional
-          // 查询的司机姓名
-          driverName: '', // optional
-          // 查询的发货方姓名
-          shipNam: '', // optional
-          // 查询的收货方姓名
-          receNam: '' // optional
+          orderId: this.orderId,
+          dispatchList: []
         }
         // this.listLoading = true
-        getCurrentReceivingSubOrderList(para).then(res => {
+        manualDeliveringDispatch(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
           // this.listLoading = false
         })
       },
-      // 查询待接货的预约单列表
-      queryCurrentReceivingReservation () {
+      // 点击编辑
+      setQueryMaunalDeliveringDispatch () {
         let para = {
-          // 页码
-          pageNum: this.currentpage, // required
-          // 每页记录数
-          recordNum: this.pageSize, // required
-          // 开始时间
-          startTime: '', // required
-          // 结束时间
-          endTime: '', // required
-          // 需要查询的订单Id
-          orderId: this.orderId, // optional
-          // 查询的司机姓名
-          driverName: '', // optional
-          // 查询的发货方姓名
-          shipNam: '', // optional
-          // 查询的收货方姓名
-          receNam: '' // optional
+          orderId: this.orderId
         }
         // this.listLoading = true
-        getCurrentReceivingReservationList(para).then(res => {
+        queryManualDeliveringDispatch(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
@@ -439,7 +398,7 @@
     },
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getReceivingOrderList()
+      this.getQueryDeliveringReservation()
     }
   }
 </script>

@@ -358,6 +358,13 @@
               headerName: '运单状态', width: 150, field: 'orderState', filter: 'text', hide: false, visible: true
             },
             {
+              headerName: '订单物流状态',
+              width: 100,
+              field: 'orderLogiState',
+              hide: false,
+              visible: true
+            },
+            {
               headerName: '开单网点',
               width: 150,
               field: 'billBranch',
@@ -483,7 +490,7 @@
               visible: true
             },
             {
-              headerName: '现返金额',
+              headerName: '返款金额',
               width: 150,
               field: 'feeMoney',
               filter: 'text',
@@ -793,7 +800,7 @@
           endPoint: '', //  区间终点
           shipNam: '', //  发货方
           orderId: '', // 运单号
-          payType: 'nowPay',
+          payType: '', // 欠返，现返
           veriState: '', // 核销状态
           pageNum: 1, // 当前页码数
           pageSize: 20 // 分页大小
@@ -801,7 +808,7 @@
         // 各种费用合计
         totalForm: {
           totalMoney: 0, // 欠返金额合计
-          transferFeeTotal: 0 // 现返金额合计
+          transferFeeTotal: 0 //
         },
         // 核销完成后提交给后台的数据
         confirmSubForm: {

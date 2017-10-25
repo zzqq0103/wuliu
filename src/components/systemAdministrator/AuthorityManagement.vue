@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h2 style="text-align:center">角 色 信 息 表</h2>
+      <h2 style="text-align:center">角色信息管理</h2>
       <div style="margin-top:2%">
 
         <div>
@@ -71,7 +71,7 @@
 
 <script>
   import {AgGridVue} from 'ag-grid-vue'
-  import {getCurrentDelivered, getQueryOrderList} from '../../api/dispatch/api'
+  // import {getCurrentDelivered, getQueryOrderList} from '../../api/dispatch/api'
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   export default {
     data () {
@@ -204,39 +204,39 @@
           this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].hide)
         }
       },
-      getOrderList () {
-        let para = {
-          page: this.currentpage,
-          orderId: this.orderId,
-          driverName: this.driverName,
-          deliverOrderId: this.deliverOrderId,
-          selectvalue: this.selectvalue,
-          pageSize: this.pageSize
-        }
-        this.listLoading = true
-        getCurrentDelivered(para).then((res) => {
-          // console.log('进入getCurrentDelivered')
-          // this.gridOptions.rowData = res.data.orderlists
-          // 使用gridOptions中的api方法设定RowData数据
-          this.gridOptions.api.setRowData(res.data.orderlists)
-          this.orderlist = res.data.orderlists
-          this.listLoading = false
-        })
-      },
+      // getOrderList () {
+      //   let para = {
+      //     page: this.currentpage,
+      //     orderId: this.orderId,
+      //     driverName: this.driverName,
+      //     deliverOrderId: this.deliverOrderId,
+      //     selectvalue: this.selectvalue,
+      //     pageSize: this.pageSize
+      //   }
+      //   this.listLoading = true
+      //   getCurrentDelivered(para).then((res) => {
+      //     // console.log('进入getCurrentDelivered')
+      //     // this.gridOptions.rowData = res.data.orderlists
+      //     // 使用gridOptions中的api方法设定RowData数据
+      //     this.gridOptions.api.setRowData(res.data.orderlists)
+      //     this.orderlist = res.data.orderlists
+      //     this.listLoading = false
+      //   })
+      // },
       // 获取查询数据
-      getQueryData () {
-        let para = {
-          queryName: this.queryName,
-          queryClass: this.selectvalue,
-          pageSize: this.pageSize
-        }
-        this.listLoading = true
-        getQueryOrderList(para).then(res => {
-          this.gridOptions.api.setRowData(res.data.querylists)
-          this.orderlist = res.data.querylists
-          this.listLoading = false
-        })
-      },
+      // getQueryData () {
+      //   let para = {
+      //     queryName: this.queryName,
+      //     queryClass: this.selectvalue,
+      //     pageSize: this.pageSize
+      //   }
+      //   this.listLoading = true
+      //   getQueryOrderList(para).then(res => {
+      //     this.gridOptions.api.setRowData(res.data.querylists)
+      //     this.orderlist = res.data.querylists
+      //     this.listLoading = false
+      //   })
+      // },
       drawGrid () {
         this.getOrderList()
 //        this.updateGrid()

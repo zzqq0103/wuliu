@@ -31,13 +31,18 @@
       <h3 style="text-align: center;color:red;" v-if="flag">新增新的装载单列表</h3>
       <el-button @click="rightSelect" style="float:left;"> < </el-button>
       <el-button @click="rightSelectAll" style="float:left;"> << </el-button>
+      <el-form :inline="true" class="demo-form-inline">
+         <el-form-item label="总运费:"  style="float:right;">
+              <el-input v-model="CostFee" size="small"></el-input>
+          </el-form-item>
+      </el-form>
       <ag-grid-vue style="width: 100%; height: 700px; margin-top:20px; float:right;" class="ag-blue"
                    :gridOptions="gridOptions_right"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
                    :enableSorting="true"
-                   :suppressRowClickSelection="true"
                    :enableFilter="true"
+                   :suppressRowClickSelection="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight="40"
@@ -64,12 +69,13 @@ import { AgGridVue } from 'ag-grid-vue'
 // 引入 OrderList 订单详情
 import OrderDetails from '../financialAdministrator/ShowOrderDetails.vue'
 // 引入 axios 的后台请求接口
-import { getOrderList } from '../../api/dispatch/api'
+// import { getOrderList } from '../../api/dispatch/api'
 
 export default {
   // 数据模型
   data () {
     return {
+      CostFee: '', // 大车总运费的确定
       detailVisible: false, // 订单详情弹框
       orderId: '',
       orderlist: null,
@@ -104,6 +110,7 @@ export default {
           componentParent: this
         },
         rowData: null,
+        rowSelection: 'single',
         columnDefs: [
           {
             headerName: '#',
@@ -386,38 +393,37 @@ export default {
     detailDoubleClick (event) {
       this.orderId = event.data.OrderId
       this.detailVisible = true
-    },
-    loadOrderList () {
-      let params = {
-        loaderId: this.loaderId
-      }
-      let _flag = this.flag
-      getOrderList(params).then((res) => {
-        // console.log('进入getCurrentDelivered')
-        // this.gridOptions.rowData = res.data.orderlists
-        // 使用gridOptions中的api方法设定RowData数据
-        // this.gridOptions.rowData = res.data.orderlists
-        if (_flag) {
-          this.gridOptions_left.api.setRowData(res.data.orderlists)
-        } else {
-          this.gridOptions_left.api.setRowData(res.data.orderlists)
-          this.gridOptions_right.api.setRowData(res.data.orderlists)
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
     }
+//    loadOrderList () {
+//      let params = {
+//        loaderId: this.loaderId
+//      }
+//      let _flag = this.flag
+//      getOrderList(params).then((res) => {
+//        console.log(res)
+//        if (_flag) {
+//          this.gridOptions_left.api.setRowData(res.data.orderlists)
+//        } else {
+//          this.gridOptions_left.api.setRowData(res.data.orderlists)
+//          this.gridOptions_right.api.setRowData(res.data.orderlists)
+//        }
+//      }).catch((err) => {
+//        console.log(err)
+//      })
+//    }
   },
   // 计算属性
   computed: {},
   // 监视器
   watch: {},
   mounted () {
-    this.loadOrderList()
+//    this.loadOrderList()
   }
 }
 </script>
 
 <style scoped>
-
+.el-form-item{
+  margin-bottom: 0px !important;
+}
 </style>

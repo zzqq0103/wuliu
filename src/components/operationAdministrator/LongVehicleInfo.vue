@@ -123,8 +123,8 @@
         </el-form-item>
         <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
           <el-select v-model="vehicleForm.carState" style="width: 30%">
-            <el-option key="available" label="可用" value= '1'></el-option>
-            <el-option key="unavailable" label="不可用" value= '0'></el-option>
+            <el-option label="可用" value= 1></el-option>
+            <el-option label="不可用" value= 0></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="车辆位置:" :label-width="formLabelWidth" prop="carPosition">
@@ -151,10 +151,10 @@
           <el-input v-model="editForm.driverTel" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="合同号:" :label-width="formLabelWidth">
-          <el-input v-model="editForm.contractId" style="width: 50%" disabled="true"></el-input>
+          <el-input v-model="editForm.contractId" style="width: 50%" disabled=true></el-input>
         </el-form-item>
         <el-form-item label="合同价格:" :label-width="formLabelWidth">
-          <el-input v-model="editForm.contractPrice" style="width: 50%" disabled="true"></el-input>
+          <el-input v-model="editForm.contractPrice" style="width: 50%" disabled=true></el-input>
         </el-form-item>
         <el-form-item label="目的枢纽:" :label-width="formLabelWidth" prop="targetHub">
           <el-input v-model="editForm.arrHub" style="width: 50%"></el-input>
@@ -169,17 +169,17 @@
           </el-select>
         </el-form-item>
         <el-form-item label="车容量:" :label-width="formLabelWidth">
-          <el-input v-model="editForm.capacity" style="width: 30%" disabled="true"></el-input>
+          <el-input v-model="editForm.capacity" style="width: 30%" disabled=true></el-input>
           &nbsp/立方
         </el-form-item>
         <el-form-item label="吨位:" :label-width="formLabelWidth">
-          <el-input v-model="editForm.tonnage" style="width: 30%" disabled="true"></el-input>
+          <el-input v-model="editForm.tonnage" style="width: 30%" disabled=true></el-input>
           &nbsp/吨
         </el-form-item>
         <el-form-item label="车辆状态:" :label-width="formLabelWidth" prop="carState">
           <el-select v-model="editForm.carState" style="width: 30%">
-            <el-option key="available" label="可用" value="1"></el-option>
-            <el-option key="unavailable" label="不可用" value="0"></el-option>
+            <el-option label="可用" value=1></el-option>
+            <el-option label="不可用" value=0></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="车辆位置:" :label-width="formLabelWidth" prop="carPosition">
@@ -197,12 +197,12 @@
       <el-form>
         <el-form-item>
           <el-input v-model="deletForm.deletForm" style="display: none"></el-input>
-          <h2 style="text-align:center">确认删除车牌号为<{{vehicleForm.drivertel}}>的车吗？</h2>
+          <h2 style="text-align:center">确认删除车牌号为<{{vehicleForm.licePlateNum}}>的车吗？</h2>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="vehicleDelVisable = false">取 消</el-button>
-        <el-button @click="deletSubmit(vehicleForm.drivertel)" type="primary">确 定</el-button>
+        <el-button @click="deletSubmit(vehicleForm.licePlateNum)" type="primary">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -290,7 +290,7 @@
           'targetHub': '' // 目的枢纽
         },
         deletForm: {
-          'drivertel': '15888886667'
+          'licePlateNum': ''
         },
         rules: {
           licePlateNum: [{
@@ -463,7 +463,7 @@
         methods: {
           vehicleDel () {
             this.params.context.componentParent.vehicleDelVisable = true
-            this.params.context.componentParent.vehicleForm.drivertel = this.params.data.drivertel
+            this.params.context.componentParent.vehicleForm.licePlateNum = this.params.data.licePlateNum
           },
           vehicleEdit () {
             /* var vehicleform = this.params.context.componentParent.vehicleForm
@@ -480,9 +480,7 @@
         this.filterForm.currentPage = this.currentPage
         api.getLongInfo(this.filterForm)
           .then(res => {
-            console.log(res)
             console.log('连接成功')
-            console.log(res.content.LongCarInfos)
             this.gridOptions.rowData = res.content.LongCarInfos
             this.gridOptions.api.setRowData(this.gridOptions.rowData)
           })
@@ -551,24 +549,26 @@
                 .then(res => {
                   console.log(res)
                   console.log('连接成功')
-//            console.log(res.content)
                 })
                 .catch(error => {
                   console.log('连接失败')
                   console.log(error)
                 })
+              this.vehicleVisable = false
+              this.createRowData()
             } else if (formName === 'editForm') {
               alert('编辑成功')
               api.editLongInfo(this.editForm)
                 .then(res => {
                   console.log(res)
                   console.log('连接成功')
-//            console.log(res.content)
                 })
                 .catch(error => {
                   console.log('连接失败')
                   console.log(error)
                 })
+              this.editVisable = false
+              this.createRowData()
             }
           } else {
             console.log('error submit!!')
@@ -588,12 +588,13 @@
         this.vehicleVisable = false
         this.editVisable = false
       },
-      deletSubmit (tel) {
-        this.deletForm.drivertel = tel
+      deletSubmit (lice) {
+        this.deletForm.licePlateNum = lice
         api.deleteLongInfo(this.deletForm).then(res => {
           console.log(res)
           console.log('连接成功')
-//            console.log(res.content)
+          this.vehicleDelVisable = false
+          this.createRowData()
         })
           .catch(error => {
             console.log('连接失败')

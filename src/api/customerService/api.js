@@ -50,17 +50,17 @@ export default {
     return fetch('/logistics/interface/clientManagemnent/query_client_by_keywords', params)
   },
 
- // 根据关键词返回发货方列表
+  // 根据关键词返回发货方列表
   getFahuoRelated (params) {
     return fetch('/logistics/interface/clientManagemnent/query_client_by_keywords', params)
   },
 
- // 根据关键词返回收货方列表
+  // 根据关键词返回收货方列表
   getSearchShouhuo (params) {
     return fetch('/logistics/interface/clientManagemnent/query_client_by_keywords', params)
   },
 
- // 根据关键词返回收货方列表
+  // 根据关键词返回收货方列表
   getShouhuoRelated (params) {
     return fetch('/logistics/interface/clientManagemnent/query_client_by_keywords', params)
   },

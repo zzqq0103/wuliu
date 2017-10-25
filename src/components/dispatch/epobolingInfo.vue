@@ -2,64 +2,65 @@
 <!-- 组件必须头元素被一个div容器包括 -->
   <div>
       <div id="top">
-
           <!-- 标题 -->
           <h2 style="text-align:center">待 中 转 订 单 信 息 页</h2>
 
           <!-- 操作栏 -->
           <div style="margin-top:2%">
 
-          <!-- 日期选择器 -->
-          <div class="block" style="float:right;">
-          <el-date-picker
-            v-model="dateValue"
-            type="daterange"
-            align="right"
-            placeholder="选择日期范围"
-            :picker-options="pickerOptions">
-          </el-date-picker>
-        </div>
-
-          <!-- 查询 & 设置 -->
-          <div style="float:left;">
-
-              <el-input placeholder="请输入查询数据" icon="search" v-model="queryName" :on-icon-click="handleIconClick" style="width:170px;"></el-input>
-              <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:140px;">
-                  <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
-                  </el-option>
-              </el-select>
-
-              <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
-          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-          <template v-for="(collist,i) in gridOptions.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
-                {{collist.headerName}}
-              </el-checkbox>
+          <!-- 查询菜单 -->
+          <div style="margin-top:2%;float:left;">
+              <el-form :inline="true" :model="formQuery" class="demo-form-inline">
+                <el-form-item label="订单时间:">
+                  <el-date-picker v-model="formQuery.dateInterval" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions" range-separator='/' style="width: 150px">
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item label="订单号:">
+                  <el-input v-model="formQuery.orderId" placeholder="请输入订单号" style="width:124px;margin-right:5px;"></el-input>
+                </el-form-item>
+                <el-form-item label="中转外包公司">
+                  <el-input v-model="formQuery.rouSelection" placeholder="请输入中转外包公司名" style="width:165px;margin-right:5px;"></el-input>
+                </el-form-item>
+                <el-form-item label="发货人姓名:">
+                  <el-input v-model="formQuery.shipNam" placeholder="请输入发货人姓名" style="width:140px;margin-right:5px;"></el-input>
+                </el-form-item>
+                <el-form-item label="收货人姓名:">
+                  <el-input v-model="formQuery.receNam" placeholder="请输入收货人姓名" style="width:140px;"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="submitQuery">查询</el-button>
+                </el-form-item>
+              </el-form>
             </div>
-          </template>
-          <template>
-            <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
-              <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+          <!-- 导出 -->
+          <div style="float:right;margin-top:2%;">
+              <el-button style="float:right; margin-right:10px;">导出</el-button>
+              <!-- 设置div -->
+              <div style="float:right;margin-right:10px;">
+                <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
+                <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+                  <template v-for="(collist,i) in gridOptions.columnDefs">
+                    <div class="colVisible">
+                      <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"  style="float: left;width: 180px">
+                        {{collist.headerName}}
+                      </el-checkbox>
+                    </div>
+                  </template>
+                  <template>
+                    <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
+                      <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                      <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+                    </div>
+                  </template>
+                </el-popover>
+                <el-button v-popover:popover1>设置</el-button>
+              </div>
             </div>
-          </template>
-        </el-popover>
-        <el-button v-popover:popover1>设置</el-button>
-        </div>
-
-        <!-- 导出 -->
-        <div>
-          <el-button style="float:right; margin-right:10px;">导出</el-button>
-        </div>
-
       </div>
        </div>
-
       <!-- 清除浮动 -->
       <div style="clear: both;">
       </div>
-
       <!-- 表格 -->
       <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
@@ -76,7 +77,6 @@
                    :colWidth="120"
       ></ag-grid-vue>
     </div>
-
       <!-- 分页 -->
       <div id="bottom" class="block" style="float:right; margin-top:30px;">
       <el-pagination
@@ -130,7 +130,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="合同价格:" :label-width="formLabelWidth">
-            <el-input v-model="comtract_Price" ></el-input>
+            <el-input v-model="tableForm.contractPrice" ></el-input>
           </el-form-item>
           <el-form-item label="外包联系人:" :label-width="formLabelWidth">
             <el-input v-model="tableForm.lineNam"  :disabled="true"></el-input>
@@ -179,13 +179,10 @@
 <script>
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
-
   // 引入axios后台接口
-  import {getCurrentEpiboliedList, getQueryEpiboliedList} from '../../api/dispatch/api'
-
+  import {queryCurrentEpibolingList, queryOrderDetail, setCurrentEpibolingEdit, setCurrentEpibolingTransfer} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
-
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   import ElForm from '../../../node_modules/element-ui/packages/form/src/form'
@@ -196,14 +193,18 @@
   export default {
     data () {
       return {
+        // 查询参数值表单数据
+        formQuery: {
+          dateInterval: '', // 时间间隔
+          orderId: '', // 订单号
+          rouSelection: '', // 中转外包公司名
+          shipNam: '', // 发货人姓名
+          receNam: '' // 收货人姓名
+        },
         selectEpolyComp: '',
         selectEpolyCompsOptions: [],
-        editFormVisible: false, // 编辑待中转弹窗的显示与否
-        listLoading: false, // 加载圆圈（默认不显示）
-        queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
-        colVisible: false, // 设置弹窗的显示boolean值
-        orderId: '', // 运单号
+        // 编辑表单 和 表格表单的数据
         tableForm: {
           'id': '', // 序号
           'orderId': '', // 订单号
@@ -224,8 +225,7 @@
           'lineNam': '', // 联系人
           'contractPrice': '' // 合同价格
         },
-        rules: {},
-        formLabelWidth: '120px',
+        formLabelWidth: '120px', // 编辑表格的每一行的宽度
         // Ag-grid 表格组件的data
         gridOptions: {
           context: {
@@ -294,24 +294,17 @@
           ]
         },
         // 查询的参数
-        queryItemOptions: [{
-          value: 1,
-          label: '订单号'
-        }, {
-          value: 2,
-          label: '发货人姓名'
-        }, {
-          value: 3,
-          label: '收货人姓名'
-        }, {
-          value: 4,
-          label: '中转外包公司'
-        }],
-        selectvalue: 1, // 查询的参数，(装载单号、订单号、司机)
         orderlist: [], // 订单列表
         totalpages: 1, // 总页数
         pageSize: 25, // 每页展示的个数
-        // 日期控件data
+        dateValue: '', // 日期值
+        detailVisible: false, // 订单详情弹框
+        departVisible: false, // 确定中转弹框表单
+        editVisible: false, // 编辑中转列表信息的弹框表单
+        editFormVisible: false, // 编辑待中转弹窗的显示与否
+        listLoading: false, // 加载圆圈（默认不显示）
+        colVisible: false, // 设置弹窗的显示boolean值
+        // 日期控件的数据
         pickerOptions: {
           shortcuts: [{
             text: '上周',
@@ -368,14 +361,9 @@
             const nowYear = now.getFullYear()
             return timeYear < (nowYear - 1)
           }
-        },
-        dateValue: '', // 日期值
-        detailVisible: false, // 订单详情弹框
-        departVisible: false, // 确定中转弹框表单
-        editVisible: false // 编辑中转列表信息的弹框表单
+        }
       }
     },
-
     // 实例组件
     components: {
       ElOption,
@@ -385,7 +373,7 @@
       'ag-grid-vue': AgGridVue,
       OrderDetails,
       operateComponent: {
-        template: '<span style="margin-left:5px;"><el-button  class="del-but" @click="edit" type="success" size="mini">编辑</el-button> <el-button  class="del-but" @click="depart" type="danger" size="mini">确认中转</el-button></span>',
+        template: '<span style="margin-left:5px;"><el-button  class="del-but" @click="edit" type="success" size="small">编辑</el-button> <el-button  class="del-but" @click="depart" type="danger" size="mini">确认中转</el-button></span>',
         methods: {
           // 点击发车按钮，显示确认弹框，之后在弹框中将该行数据转移至已中转的页面中显示。
           depart () {
@@ -403,18 +391,16 @@
         }
       }
     },
-    computed: {
-      comtract_Price () {
-        return this.tableForm.contractPrice + '元'
-      }
-    },
     // 实例方法
     methods: {
-      // 点击修改表单，确定按钮的操作
+      // 查询按钮点击
+      submitQuery () {
+      },
+      // 修改表单中的合同价格和合同外包公司，确定按钮的操作
       editEpolyForm () {
         this.editFormVisible = false
       },
-
+      // 点击“确认中转“ 按钮的”提示“信息bar
       message (result) {
         this.$message({
           message: `订单号：  ${result}    的订单，中转成功！`,
@@ -422,7 +408,6 @@
           duration: 1500
         })
       },
-
       // 点击确认中转 按钮
       transfer () {
         console.log(this)
@@ -431,45 +416,30 @@
         this.departVisible = false
         this.message(res.remove[0].data.orderId)
       },
-
       // 订单详情弹框
       detailDoubleClick (event) {
-        this.orderId = event.data.orderId
+        this.tableForm.orderId = event.data.orderId
         this.detailVisible = true
       },
-
       // 改变每页显示的个数
       handleSizeChange (val) {
         this.pageSize = val
         this.getOrderList()
       },
-
       // 点击当前选中的第几页
       handleCurrentChange (val) {
         this.currentpage = val
         this.getOrderList()
       },
-
-      // 点击查询的Icon，进行查询
-      handleIconClick (input) {
-        this.getQueryData()
-      },
-
-      onQuickFilterChanged (input) {
-        this.gridOptions.api.setQuickFilter(input)
-      },
-
       changeColumnDefsBoolen () {
         var columnlist = this.gridOptions.columnDefs
         for (let i = 0; i < columnlist.length; i++) {
           columnlist[i].hide = !columnlist[i].hide
         }
       },
-
       setting () {
         this.colVisible = true
       },
-
       // 点击设置按钮之后，显示需要弹出的属性名列表，选择checkbox属性
       updataColumnDefs (collist) {
         for (let i = 0; i < collist.length; i++) {
@@ -477,7 +447,6 @@
           this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
         }
       },
-
       // 全选  与  全不选 执行函数
       visibleChoice (i) {
         if (i === 1) {
@@ -491,9 +460,8 @@
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
       },
-
-      // 获取订单列表
-      getOrderList () {
+      // 获得当前已中转的订单列表
+      getQueryCurrentEpibolingList () {
         let para = {
           page: this.currentpage,
           orderId: this.orderId,
@@ -502,35 +470,58 @@
           selectvalue: this.selectvalue,
           pageSize: this.pageSize
         }
-        this.listLoading = true
-        getCurrentEpiboliedList(para).then((res) => {
-          // console.log('进入getCurrentDelivered')
-          // this.gridOptions.rowData = res.data.orderlists
-          // 使用gridOptions中的api方法设定RowData数据
+        // this.listLoading = true
+        queryCurrentEpibolingList(para).then((res) => {
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
-          this.listLoading = false
+          // this.listLoading = false
         })
         return null
       },
-
-      // 获取查询数据
-      getQueryData () {
+      // 查看订单详情
+      getQueryOrderDetail () {
         let para = {
           queryName: this.queryName,
           queryClass: this.selectvalue,
           pageSize: this.pageSize
         }
-        this.listLoading = true
-        getQueryEpiboliedList(para).then(res => {
+        // this.listLoading = true
+        queryOrderDetail(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
-          this.listLoading = false
+          // this.listLoading = false
         })
       },
-
+      // 编辑中转订单
+      updateEpibolingOrder () {
+        let para = {
+          order: this.order,
+          changeFee: this.tableForm.changeFee,
+          changeCompany: this.tableForm.rowSelection
+        }
+        // this.listLoading = true
+        setCurrentEpibolingEdit(para).then(res => {
+          this.gridOptions.api.setRowData(res.data.querylists)
+          this.orderlist = res.data.querylists
+          this.totalpages = res.data.totalpages
+          // this.listLoading = false
+        })
+      },
+      // 编辑中转订单
+      updateEpibolingTransfer () {
+        let para = {
+          order: this.order
+        }
+        // this.listLoading = true
+        setCurrentEpibolingTransfer(para).then(res => {
+          this.gridOptions.api.setRowData(res.data.querylists)
+          this.orderlist = res.data.querylists
+          this.totalpages = res.data.totalpages
+          // this.listLoading = false
+        })
+      },
       // 获取服务端的外包公司数据
       loadEpolyComp () {
         return [
@@ -553,17 +544,14 @@
         ]
       }
     },
-
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getOrderList()
       this.selectEpolyCompsOptions = this.loadEpolyComp()
+      this.getQueryCurrentEpibolingList()
     }
   }
 </script>
-
 <style scoped>
-
   .el-form-item__label{
     text-align: center;
   }

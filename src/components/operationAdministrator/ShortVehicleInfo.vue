@@ -208,8 +208,8 @@
       for (var i = 0; i < 100; i++) {
         this.vehicleList.push({
           'licePlateNum': 'num' + i,
-          'driverName': 'test' + i,
-          'drivertel': '电话号码' + i,
+          'driverNam': 'test' + i,
+          'driverTel': '电话号码' + i,
           'contractID': '合同ID' + i,
           'contractPrice': '合同价格' + i,
           'capacity': '车容量' + i,
@@ -442,8 +442,8 @@
       vehicleAdd () {
         this.vehicleVisable = true
         this.vehicleForm.licePlateNum = ''
-        this.vehicleForm.driverName = ''
-        this.vehicleForm.tel = ''
+        this.vehicleForm.driverNam = ''
+        this.vehicleForm.driverTel = ''
         this.vehicleForm.capacity = ''
         this.vehicleForm.carType = ''
         this.vehicleForm.tonnage = ''

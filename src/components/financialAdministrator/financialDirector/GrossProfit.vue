@@ -141,7 +141,7 @@
           dateInterval: '', // 时间间隔
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
-          loadingID: '', // 运单号
+          loadingId: '', // 装载单ID
           pageNum: 1, // 当前页码数
           pageSize: 20 // 分页大小
         },

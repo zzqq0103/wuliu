@@ -4,61 +4,59 @@
     <div id="top">
       <!-- 标题 -->
       <h2 style="text-align:center">长 途 直 送 装 载 单 信 息 页</h2>
-
       <!-- 操作栏 -->
       <div style="margin-top:2%">
-
-        <!-- 日期选择器 -->
-        <div class="block" style="float:right;">
-          <el-date-picker
-            v-model="dateValue"
-            type="daterange"
-            align="right"
-            placeholder="选择日期范围"
-            :picker-options="pickerOptions">
-          </el-date-picker>
+      <!-- 查询菜单 -->
+      <div style="margin-top:2%;float:left;">
+          <el-form :inline="true" :model="formQuery" class="demo-form-inline">
+            <el-form-item label="订单时间:">
+              <el-date-picker v-model="formQuery.dateInterval" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions" range-separator='/' style="width: 150px">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="装载单号:">
+              <el-input v-model="formQuery.orderId" placeholder="请输入订单号" style="width:124px;margin-right:5px;"></el-input>
+            </el-form-item>
+            <el-form-item label="司机姓名:">
+              <el-input v-model="formQuery.driverNam" placeholder="请输入司机姓名" style="width:165px;margin-right:5px;"></el-input>
+            </el-form-item>
+            <!--<el-form-item label="装载单状态:">-->
+            <!--<el-input v-model="formQuery.shipNam" placeholder="请输入发货人姓名" style="width:140px;margin-right:5px;"></el-input>-->
+            <!--</el-form-item>-->
+            <el-form-item>
+              <el-button type="primary" @click="submitQuery">查询</el-button>
+            </el-form-item>
+          </el-form>
         </div>
-
-        <!-- 查询 & 设置 -->
-        <div style="float:left;">
-
-          <el-input placeholder="请输入查询数据" icon="search" v-model="queryName" :on-icon-click="handleIconClick" style="width:145px;"></el-input>
-          <el-select v-model="selectvalue" :placeholder="queryItemOptions[0].label" style="width:105px;">
-            <el-option v-for="item in queryItemOptions" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-
-          <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
-          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-          <template v-for="(collist,i) in gridOptions.columnDefs">
-            <div class="colVisible">
-              <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)" style="float: left;width: 180px">
-                {{collist.headerName}}
-              </el-checkbox>
-            </div>
-          </template>
-          <template>
-            <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
-              <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-              <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
-            </div>
-          </template>
-        </el-popover>
-        <el-button v-popover:popover1>设置</el-button>
+      <!-- 导出 -->
+      <div style="float:right;margin-top:2%;">
+        <el-button style="float:right; margin-right:10px;">导出</el-button>
+        <el-button style="float:right; margin-right:10px;" @click="createLoaderList">新增装载单</el-button>
+        <!-- 设置div -->
+          <div style="float:right;margin-right:10px;">
+            <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
+            <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+              <template v-for="(collist,i) in gridOptions.columnDefs">
+                <div class="colVisible">
+                  <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"  style="float: left;width: 180px">
+                    {{collist.headerName}}
+                  </el-checkbox>
+                </div>
+              </template>
+              <template>
+                <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
+                  <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                  <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+                </div>
+              </template>
+            </el-popover>
+            <el-button v-popover:popover1>设置</el-button>
+          </div>
         </div>
-
-        <!-- 导出 -->
-        <div>
-          <el-button style="float:right; margin-right:10px;">导出</el-button>
-        </div>
-
       </div>
     </div>
-
     <!-- 清除浮动 -->
     <div style="clear: both;">
     </div>
-
     <!-- 表格 -->
     <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
@@ -71,10 +69,9 @@
                    :suppressCellSelection="true"
                    :rowHeight="40"
                    :headerHeight="40"
-                   :rowDoubleClicked="detailDoubleClick"
+                   :rowDoubleClicked="changeDialogVisible"
       ></ag-grid-vue>
     </div>
-
     <!-- 分页 -->
     <div id="bottom" class="block" style="float:right; margin-top:30px;">
       <el-pagination
@@ -87,12 +84,14 @@
         :total="totalpages">
       </el-pagination>
     </div>
-
-    <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
-    <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
-      <order-details :orderId="orderId"></order-details>
+    <!-- 待长途装载单订单对话框  -->
+    <el-dialog :title="titleText" :visible.sync="dialogVisible" size="full" :modal=false :modal-append-to-body=false>
+      <deliver-order-list :loaderId="loadOrderId" :flag="flag"></deliver-order-list>
     </el-dialog>
-
+    <!-- 装载单订单列表展示 -->
+    <el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
+      <deliver-order-list></deliver-order-list>
+    </el-dialog>
   </div>
 </template>
 
@@ -100,16 +99,26 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {getCurrentTransportedData, getQueryTransOrderList} from '../../api/dispatch/api'
-  // 引入外部 “订单详情接口"
-  import OrderDetails from '../financialAdministrator/ShowOrderDetails'
+  import {queryCurrentTransportDirectList, updateTransportDirectListInfo} from '../../api/dispatch/api'
   // 引入外部筛选函数组件系统
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  // 引入dispatchLoaderInfo 组件页面
+  import DeliverOrderList from './deliverOrderList'
+  // 引入装载单页面的 （dispatched.vue）页面
+  import Dispatching from './dispatching'
   export default {
     data () {
       return {
+        formQuery: {
+          dateInterval: '', // 时间间隔
+          loadingId: '', // 装载单号
+          driverNam: '' // 司机姓名
+        },
+        dialogVisible: false, // 装载单订单列表弹窗的显示真值
+        deliveringVisible: false, // 装载单订单列表弹窗显示真值
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
+        flag: false, // flag = true 表示是新增装载单
         currentpage: 1, // 当前页数
         colVisible: false, // 设置弹窗的显示boolean值
         orderId: '', // 运单号
@@ -144,6 +153,7 @@
             componentParent: this
           },
           rowData: null,
+          rowSelection: 'single',
           columnDefs: [
             {
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
@@ -151,12 +161,6 @@
             {
               headerName: '装载单号', width: 120, field: 'loadOrderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
-            // {
-            //   headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            // },
-            // {
-            //   headerName: '调整状态', width: 120, field: 'adjustment', filter: 'text', hide: false, filterFramework: PartialMatchFilterComponent, hide: false, visible: true
-            // },
             {
               headerName: '装载单状态', width: 120, field: 'loadOrderStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
             },
@@ -216,15 +220,6 @@
             }
           ]
         },
-        // 查询的参数
-        queryItemOptions: [{
-          value: 1,
-          label: '装载单号'
-        }, {
-          value: 2,
-          label: '司机姓名'
-        }],
-        selectvalue: 1, // 查询的参数，(装载单号、订单号、司机)
         orderlist: [], // 订单列表
         totalpages: 1, // 总页数
         pageSize: 25, // 每页展示的个数
@@ -293,16 +288,27 @@
     // 实例组件
     components: {
       'ag-grid-vue': AgGridVue,
-      OrderDetails
+      DeliverOrderList,
+      Dispatching
     },
-
     // 实例方法
     methods: {
-      // 订单详情弹框
-      detailDoubleClick (event) {
-        console.log(event.data.orderId)
-        this.orderId = event.data.orderId
-        this.detailVisible = true
+      // 查询按钮点击
+      submitQuery () {
+        console.log('click submitQuery function')
+      },
+      // 装载单订单列表弹框
+      changeDialogVisible (event) {
+        this.loadOrderId = event.data.loadOrderId
+        console.log(this.deliveringVisible)
+        this.deliveringVisible = true
+//        this.dialogVisible = true
+//        this.flag = false
+      },
+      // 新增装载单
+      createLoaderList () {
+        this.flag = true
+        this.dialogVisible = true
       },
       // 改变每页显示的个数
       handleSizeChange (val) {
@@ -350,8 +356,8 @@
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
       },
-      // 获取订单列表
-      getOrderList () {
+      // 查询长途直送装载单列表
+      getQueryCurrentTransportDirectList () {
         let para = {
           page: this.currentpage,
           orderId: this.orderId,
@@ -360,27 +366,24 @@
           selectvalue: this.selectvalue,
           pageSize: this.pageSize
         }
-        this.listLoading = true
-        getCurrentTransportedData(para).then((res) => {
-          // console.log('进入getCurrentDelivered')
-          // this.gridOptions.rowData = res.data.orderlists
-          // 使用gridOptions中的api方法设定RowData数据
+        // this.listLoading = true
+        queryCurrentTransportDirectList(para).then((res) => {
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
-          this.listLoading = false
+          // this.listLoading = false
         })
         return null
       },
-      // 获取查询数据
-      getQueryData () {
+       // 修改长途直送装载单信息
+      setTransportDirectListInfo () {
         let para = {
           queryName: this.queryName,
           queryClass: this.selectvalue,
           pageSize: this.pageSize
         }
-        this.listLoading = true
-        getQueryTransOrderList(para).then(res => {
+        // this.listLoading = true
+        updateTransportDirectListInfo(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
@@ -390,12 +393,11 @@
     },
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getOrderList()
+      this.getQueryCurrentTransportDirectList()
     }
   }
 </script>
 <style scoped>
-
   .el-select-css {
     width: 50%;
   }

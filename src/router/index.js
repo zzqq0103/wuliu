@@ -204,6 +204,16 @@ export default new Router({
           path: '/deliveringInfo',
           component: resolve => require(['../components/dispatch/deliveringInfo.vue'], resolve)
         },
+        // 手动调整（送货）
+        {
+          path: '/ManualdeliverInfo',
+          component: resolve => require(['../components/dispatch/manualDeliverlingInfo.vue'], resolve)
+        },
+        // 待确认（送货）
+        {
+          path: '/deliveringAffirm',
+          component: resolve => require(['../components/dispatch/deliveringAffirm.vue'], resolve)
+        },
         // 3、已接货
         {
           path: '/receivedInfo',
@@ -213,6 +223,11 @@ export default new Router({
         {
           path: '/receiveingInfo',
           component: resolve => require(['../components/dispatch/receiveingInfo.vue'], resolve)
+        },
+        // 手动调整（接货）
+        {
+          path: '/ManualReceiveingInfo',
+          component: resolve => require(['../components/dispatch/manualReceiveingInfo.vue'], resolve)
         },
         // 5、已运输
         {

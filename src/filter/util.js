@@ -28,7 +28,7 @@ function searchByRegExp (arr, keyWord, statement) {
   return tempArr
 }
 
-// 通过传入三个参数：第一个是数组，第二个是页数显示设置，第三个是页数， 得到符合的数组
+// 通过传入三个参数：第一个是数组，第二个是页数显示设置，第三个是页数，得到符合的数组
 function getListDataBySize (arr, pagesize, page) {
   if (!(arr instanceof Array)) {
     return

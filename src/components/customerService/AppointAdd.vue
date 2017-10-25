@@ -1,4 +1,4 @@
- <template>
+<template>
   <div>
     <h2 style="text-align:center;margin-top:0">新建预约单</h2>
     <div style='margin-top:2%;display:inline-block;width:100%'>
@@ -17,17 +17,17 @@
     </div>
     <div style='margin-top:2%;clear:both'/>
     <div class='div-form'>
-      <el-form :model="appointForm" :rules="appointRules" ref="appointForm" >       
+      <el-form :model="appointForm" :rules="appointRules" ref="appointForm" >
         <el-form-item label="发货方：" style="clear:both;width:100%" label-width="100px" prop="shipNam">
           <div class='dropdown_fahuo' style='width:80%'>
-              <el-input type="text"  style='width:100%' v-model='appointForm.shipNam' @keyup.native="getSearchFahuoFro()" @keyup.enter.native="setBlur(1)" placeholder="请输入发货方名称" ></el-input>
-              <div class="dropdown-content" v-show="fahuoShow" style='width:85%'> 
-                <div class='dropdown-select'>
-                  <ul class='dropdown-fahuo'>
-                    <li v-bind:key="data" v-for="(data,i) in this.fahuoList" v-on:dblclick="getFahuoRelatedFro(data)">{{data}}</li>
-                  </ul>
-                </div>
+            <el-input type="text"  style='width:100%' v-model='appointForm.shipNam' @keyup.native="getSearchFahuoFro()" @keyup.enter.native="setBlur(1)" placeholder="请输入发货方名称" ></el-input>
+            <div class="dropdown-content" v-show="fahuoShow" style='width:85%'>
+              <div class='dropdown-select'>
+                <ul class='dropdown-fahuo'>
+                  <li v-bind:key="data" v-for="(data,i) in this.fahuoList" v-on:dblclick="getFahuoRelatedFro(data)">{{data}}</li>
+                </ul>
               </div>
+            </div>
           </div>
         </el-form-item>
         <el-form-item label="手机：" style="clear:both;width:60%" label-width="100px" prop="shipTel">
@@ -36,7 +36,7 @@
         <el-form-item label="提货地址：" style="float:left;width:50%" label-width="100px" prop="baseAddressFa">
           <div id='focus1' class="dropdown2" style='outline:none' contenteditable="false" tabindex="0" @click="getFocus(1)" @blur="addressVisible=false">
             <el-input v-model="appointForm.baseAddressFa" placeholder="请选择提货地址"  readonly="readonly"style="width:73%" ></el-input>
-            <div class="dropdown-content" style='width:80%' v-show="addressVisible"> 
+            <div class="dropdown-content" style='width:80%' v-show="addressVisible">
               <ul class='dropdown-content-select'>
                 <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
                 <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
@@ -66,17 +66,17 @@
         <el-form-item style="float:left;width:50%"  prop="pickUpAdrDe">
           <el-input style='width:78%' v-model="appointForm.pickUpAdrDe" placeholder="输入详细提货地址" ></el-input>
         </el-form-item>
-      
+
         <el-form-item label="收货方：" style="clear:both;width:100%" label-width="100px" prop="receNam" >
           <div class='dropdown_shouhuo' id='focus_shouhuo' style='width:80%;outline:none' @click="getFocus(3)">
-              <el-input type="text"  id="focus_shouhuo_input" style='width:100%' v-model='appointForm.receNam' @keyup.native="getSearchShouhuo()" @keyup.enter.native="setBlur(2)" placeholder="请输入收货方名称" ></el-input>
-              <div class="dropdown-content"  v-show="shouhuoShow" style='width:85%;height:140px;margin-top:1px'> 
-                <div class='dropdown-select' id="focus_shouhuo_dropdown">
-                  <ul class='dropdown-fahuo' >
-                    <li v-bind:key="data" v-for="(data,i) in this.shouhuoList" v-on:dblclick="clickShouhuo(data)">{{data}}</li>
-                  </ul>
-                </div>
+            <el-input type="text"  id="focus_shouhuo_input" style='width:100%' v-model='appointForm.receNam' @keyup.native="getSearchShouhuo()" @keyup.enter.native="setBlur(2)" placeholder="请输入收货方名称" ></el-input>
+            <div class="dropdown-content"  v-show="shouhuoShow" style='width:85%;height:140px;margin-top:1px'>
+              <div class='dropdown-select' id="focus_shouhuo_dropdown">
+                <ul class='dropdown-fahuo' >
+                  <li v-bind:key="data" v-for="(data,i) in this.shouhuoList" v-on:dblclick="clickShouhuo(data)">{{data}}</li>
+                </ul>
               </div>
+            </div>
           </div>
         </el-form-item>
         <el-form-item label="手机：" style="clear:both;width:60%" label-width="100px" prop="receTel">
@@ -370,28 +370,28 @@
     methods: {
       testGet () {
         /* api.getAppoint(this.Form)
-        .then(res => {
-          console.log('成功')
-          console.log(res)
-          console.log('sdsd')
-          console.log(res.data.content)
-        })
-        .catch(error => {
-          this.errorVisable = true
-          setTimeout(() => { this.errorVisable = false }, 800)
-          this.errorNote = '网络异常请检查'
-          console.log('失败')
-          console.log(error)
-        }) */
+         .then(res => {
+         console.log('成功')
+         console.log(res)
+         console.log('sdsd')
+         console.log(res.data.content)
+         })
+         .catch(error => {
+         this.errorVisable = true
+         setTimeout(() => { this.errorVisable = false }, 800)
+         this.errorNote = '网络异常请检查'
+         console.log('失败')
+         console.log(error)
+         }) */
         /* api.getBranch(this.Form)
-          .then(res => {
-            console.log('成功')
-            console.log(res)
-          })
-          .catch(error => {
-            console.log('失败')
-            console.log(error)
-          }) */
+         .then(res => {
+         console.log('成功')
+         console.log(res)
+         })
+         .catch(error => {
+         console.log('失败')
+         console.log(error)
+         }) */
       },
       // 从后台获取始发站列表并展示
       getStationListFro () {
@@ -403,13 +403,13 @@
             this.initForm.stationOptions.push(res.data.content[i].hubNam)
           }
         })
-        .catch(error => {
-          this.errorVisable = true
-          setTimeout(() => { this.errorVisable = false }, 800)
-          this.errorNote = '网络异常，请求超时'
-          console.log('失败')
-          console.log(error)
-        })
+          .catch(error => {
+            this.errorVisable = true
+            setTimeout(() => { this.errorVisable = false }, 800)
+            this.errorNote = '网络异常，请求超时'
+            console.log('失败')
+            console.log(error)
+          })
       },
 
       // 根据关键词获取发货方/收货方列表
@@ -422,22 +422,22 @@
             console.log(res.data.content)
             this.fahuoList = res.data.content
           })
-          .catch(error => {
-            this.errorVisable = true
-            setTimeout(() => { this.errorVisable = false }, 800)
-            this.errorNote = '网络异常，请求超时'
-            console.log('失败')
-            console.log(error)
-          })
+            .catch(error => {
+              this.errorVisable = true
+              setTimeout(() => { this.errorVisable = false }, 800)
+              this.errorNote = '网络异常，请求超时'
+              console.log('失败')
+              console.log(error)
+            })
         } else if (this.appointForm.shipNam === '') {
           this.fahuoShow = false
         }
       },
 
-     // 根据表单上方始发站选择提货地址
+      // 根据表单上方始发站选择提货地址
       handleChange1 () {
-      /* startStation: '', // 始发站
-        arrStation: */
+        /* startStation: '', // 始发站
+         arrStation: */
         this.appointForm.shiSelected = this.appointForm.startStation
         // 处理获得市对应县
         let regionList = regionJson
@@ -484,10 +484,10 @@
       // 设置弹窗隐藏
       setBlur (num) {
         /*
-        document.getElementById('focus2').blur()
-        document.getElementById('inputfocus2').focus() */
+         document.getElementById('focus2').blur()
+         document.getElementById('inputfocus2').focus() */
         /* document.getElementById('focus_shouhuo').focus()
-        document.getElementById('focus_shouhuo').blur() */
+         document.getElementById('focus_shouhuo').blur() */
         if (num === 1) {
           this.fahuoShow = false
         } else {
@@ -510,13 +510,13 @@
           this.setShi(1)
           this.setQuyu(1)
         })
-        .catch(error => {
-          this.errorVisable = true
-          setTimeout(() => { this.errorVisable = false }, 800)
-          this.errorNote = '网络异常，请求超时'
-          console.log('失败')
-          console.log(error)
-        })
+          .catch(error => {
+            this.errorVisable = true
+            setTimeout(() => { this.errorVisable = false }, 800)
+            this.errorNote = '网络异常，请求超时'
+            console.log('失败')
+            console.log(error)
+          })
       },
       // 补全收货列表
       clickShouhuo (data) {
@@ -607,9 +607,9 @@
           this.appointForm.baseAddressFa = this.appointForm.shenfenSelected + '/' + this.appointForm.shiSelected + '/' + this.appointForm.quSelected
         }
         /* document.getElementById('focus2').focus()
-        document.getElementById('focus2').blur()
-        this.addressVisible2 = false
-        document.getElementById('inputfocus2').focus() */
+         document.getElementById('focus2').blur()
+         this.addressVisible2 = false
+         document.getElementById('inputfocus2').focus() */
       },
       setShenfen (num) {
         if (num === 1) {
@@ -688,7 +688,7 @@
         this.cancleVisable = false
       },
 
-    // 判断站点与表单区域是否一致
+      // 判断站点与表单区域是否一致
       isAttSta () {
         if ((this.appointForm.startStation !== this.appointForm.shiSelected) || (this.appointForm.arrStation !== this.appointForm.shiSelected2)) {
           return false
@@ -696,13 +696,13 @@
           return true
         }
       },
-    // 重置表单
+      // 重置表单
       resetForm (formName) {
         this.$nextTick(function () {
           this.$refs[formName].resetFields()
         })
       },
-    // 提交新建预约单
+      // 提交新建预约单
       submitAppoint (formName) {
         const self = this
         self.$refs['appointForm'].validate((valid) => {
@@ -738,8 +738,8 @@
           strDate = '0' + strDate
         }
         let currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate +
-                ' ' + date.getHours() + seperator2 + date.getMinutes() +
-                seperator2 + date.getSeconds()
+          ' ' + date.getHours() + seperator2 + date.getMinutes() +
+          seperator2 + date.getSeconds()
         return currentdate
       }
     }
@@ -867,10 +867,10 @@
     transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
   }
   .order-title-base {
-  float: left;
-  padding-top: 0.7%;
-  margin-left: 2%
-}
+    float: left;
+    padding-top: 0.7%;
+    margin-left: 2%
+  }
 </style>
 
 
