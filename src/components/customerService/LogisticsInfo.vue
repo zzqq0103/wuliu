@@ -2,11 +2,10 @@
   <div>
     <div>
       <h2 style="text-align: center">物流信息查看</h2>
-      <div style="width: 100%;margin-top:1%">
+      <div style="width: 100%;margin-top:2%">
         <div style="float: right">
           <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged" style="width: 150px"></el-input>
           <el-button @click="createRowData()">提取</el-button>
-          <!--<el-button @click="setting">设置</el-button>-->
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="200" trigger="hover">
             <template v-for="(collist,i) in gridOptions.columnDefs">
               <div class="colVisible">
@@ -45,7 +44,7 @@
         </div>
       </div>
       <div style="clear: both"></div>
-      <div style="width: 100%; margin-top: 2%">
+      <div style="width: 100%;">
         <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
                      :gridOptions="gridOptions"
                      :suppressMovableColumns="true"

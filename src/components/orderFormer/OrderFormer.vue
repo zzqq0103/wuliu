@@ -29,7 +29,7 @@
           <el-form-item label="订单号:">
             <el-input v-model="orderformerForm.transactioncode" style="width: 150px"></el-input>
           </el-form-item>
-          <el-button @click="vehicleVisable = true" style="margin-right:2%">查询</el-button>
+          <el-button style="margin-right:2%" @click="drawGrid()">查询</el-button>
         </el-form>
       </div>
       <div style="float:left; margin-top:1%">
@@ -108,49 +108,49 @@
           <el-input v-model="orderForm.number"></el-input>
         </el-form-item>
         <el-form-item label="订单号:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.transactioncode"></el-input>
+          <el-input v-model="orderForm.orderId"></el-input>
         </el-form-item>
         <el-form-item label="订单物流状态:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.deliverStatus"></el-input>
+          <el-input v-model="orderForm.orderLogiState"></el-input>
         </el-form-item>
         <el-form-item label="下单时间:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.ordertime"></el-input>
+          <el-input v-model="orderForm.orderTim"></el-input>
         </el-form-item>
         <el-form-item label="中转起始地:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.home"></el-input>
+          <el-input v-model="orderForm.changeStart"></el-input>
         </el-form-item>
         <el-form-item label="中转目的地:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.bourn"></el-input>
+          <el-input v-model="orderForm.changeEnd"></el-input>
         </el-form-item>
         <el-form-item label="发货方:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.shipper"></el-input>
+          <el-input v-model="orderForm.shipNam"></el-input>
         </el-form-item>
         <el-form-item label="发货方联系方式:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.shippertel"></el-input>
+          <el-input v-model="orderForm.shipTel"></el-input>
         </el-form-item>
         <el-form-item label="收货方:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.recipient"></el-input>
+          <el-input v-model="orderForm.receNam"></el-input>
         </el-form-item>
         <el-form-item label="收货方联系电话:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.recipienttel"></el-input>
+          <el-input v-model="orderForm.receTel"></el-input>
         </el-form-item>
         <el-form-item label="收货地址:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.receiveraddr"></el-input>
+          <el-input v-model="orderForm.receAdr"></el-input>
         </el-form-item>
         <el-form-item label="货物名称:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.commodityname"></el-input>
+          <el-input v-model="orderForm.goodsNam"></el-input>
         </el-form-item>
         <el-form-item label="件数:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.totalpackages"></el-input>
+          <el-input v-model="orderForm.goodsNums"></el-input>
         </el-form-item>
         <el-form-item label="重量:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.weight"></el-input>
+          <el-input v-model="orderForm.goodsWeight"></el-input>
         </el-form-item>
         <el-form-item label="体积:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.volume"></el-input>
+          <el-input v-model="orderForm.goodsVolume"></el-input>
         </el-form-item>
         <el-form-item label="包装:" :label-width="formLabelWidth">
-          <el-input v-model="orderForm.pack"></el-input>
+          <el-input v-model="orderForm.goodsPackage"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -159,78 +159,78 @@
       </div>
     </el-dialog>
     <!--<el-dialog title="" :visible.sync="verVisible" size="full" :closeOnClickModal="false">-->
-      <!--<h2 style="text-align:center;margin-top:-2%">订 单 详 情</h2>-->
-      <!--<el-form ref="form" :model="form">-->
-        <!--<div style='margin-top:0.5%;display:inline-block;width:100%'>-->
-          <!--<span style='float:left;padding-top:0.7%' class='col-1'>订单号：</span>-->
-          <!--<span style='float:left;padding-top:0.9%;width:auto'>{{form.id}}</span>-->
-        <!--</div>-->
-        <!--<div style='margin-top:2%;clear:both' class='test'>-->
-          <!--<span class='col-11 label-title'>基本信息</span>-->
-          <!--<span class='col-1'>订单号</span>-->
-          <!--<span class='col-1 label-content' style='color:#00d1b2'>{{form.id}}</span>-->
-          <!--<span class='col-1'>订单时间</span>-->
-          <!--<span class='col-2 label-content'>{{form.orderTim}}</span>-->
-          <!--<span class='col-1'>订单状态</span>-->
-          <!--<span class='col-1 label-content'>{{form.state}}</span>-->
-          <!--<span class='col-1'>开单网点</span>-->
-          <!--<span class='col-1 label-content'>{{form.billBranch}}</span>-->
-          <!--<span class='col-1'>目的网点</span>-->
-          <!--<span class='col-1 label-content'>{{form.arrBranch}}</span>-->
-          <!--<span class='col-1'>发货单位</span>-->
-          <!--<span class='col-2 label-content'>{{form.shipComp}}</span>-->
-          <!--<span class='col-1'>发货人</span>-->
-          <!--<span class='col-1 label-content'>{{form.shipNam}}</span>-->
-          <!--<span class='col-1'>联系电话</span>-->
-          <!--<span class='col-1 label-content'>{{form.shipTel}}</span>-->
-          <!--<span class='col-1'>提货地址</span>-->
-          <!--<span class='col-3 label-content'>{{form.pickUpAdr}}</span>-->
-          <!--<span class='col-1'>收货单位</span>-->
-          <!--<span class='col-2 label-content'>{{form.receComp}}</span>-->
-          <!--<span class='col-1'>收货人</span>-->
-          <!--<span class='col-1 label-content'>{{form.receNam}}</span>-->
-          <!--<span class='col-1'>联系电话</span>-->
-          <!--<span class='col-1 label-content'>{{form.receTel}}</span>-->
-          <!--<span class='col-1'>收货地址</span>-->
-          <!--<span class='col-3 label-content'>{{form.receAdr}}</span>-->
-          <!--<span class='col-1' v-for="(data,i) in datalist1" :key='data'>{{data}}</span>-->
-          <!--<span class='col-1 label-content' v-for="(value, key, i) in form" :key='key' v-if="i>4&&i<16">{{value}}</span>-->
-          <!--<span class='col-1'>订单类型</span>-->
-          <!--<span class='col-1 label-content'>{{form.orderType}}</span>-->
-          <!--<span class='col-1'>送货方式</span>-->
-          <!--<span class='col-1 label-content'>{{form.sendMode}}</span>-->
-          <!--<span class='col-2'>听通知放货(无</span>-->
-          <!--<span class='col-1 label-content'>{{form.isListenToRele}}</span>-->
-          <!--<span class='col-1'>可放货(无</span>-->
-          <!--<span class='col-1 label-content'>{{form.isRelease}}</span>-->
-          <!--<span class='col-1'>订单物流状态</span>-->
-          <!--<span class='col-1 label-content'>{{form.orderLogiState}}</span>-->
-          <!--<span class='col-11 label-title'>运输信息</span>-->
-          <!--<span class='col-1 label-title'>送货</span>-->
-          <!--<span class='col-1'>送货司机</span>-->
-          <!--<span class='col-2 label-content'>{{form.sendDriverNam}}</span>-->
-          <!--<span class='col-1'>联系电话</span>-->
-          <!--<span class='col-2 label-content'>{{form.sendDriverTel}}</span>-->
-          <!--<span class='col-2'>送货时间</span>-->
-          <!--<span class='col-2 label-content'>{{form.sendTim}}</span>-->
-          <!--<span class='col-2 label-title'>中转信息</span>-->
-          <!--<span class='col-1'>起始地点</span>-->
-          <!--<span class='col-2 label-content'>{{form.changeStart}}</span>-->
-          <!--<span class='col-1'>目的地点</span>-->
-          <!--<span class='col-2 label-content'>{{form.changeEnd}}</span>-->
-          <!--<span class='col-1'>中转时间</span>-->
-          <!--<span class='col-2 label-content'>{{form.changeTim}}</span>-->
-          <!--<span class='col-2 label-title'>其它信息</span>-->
-          <!--<span class='col-1'>审核状态</span>-->
-          <!--<span class='col-1 label-content'>{{form.auditState}}</span>-->
-          <!--<span class='col-1'>审核人</span>-->
-          <!--<span class='col-1 label-content'>{{form.auditor}}</span>-->
-          <!--<span class='col-1'>审核时间</span>-->
-          <!--<span class='col-2 label-content'>{{form.unActTim}}</span>-->
-          <!--<span class='col-1'>订单备注</span>-->
-          <!--<span class='col-1 label-content'>{{form.orderNote}}</span>-->
-        <!--</div>-->
-      <!--</el-form>-->
+    <!--<h2 style="text-align:center;margin-top:-2%">订 单 详 情</h2>-->
+    <!--<el-form ref="form" :model="form">-->
+    <!--<div style='margin-top:0.5%;display:inline-block;width:100%'>-->
+    <!--<span style='float:left;padding-top:0.7%' class='col-1'>订单号：</span>-->
+    <!--<span style='float:left;padding-top:0.9%;width:auto'>{{form.id}}</span>-->
+    <!--</div>-->
+    <!--<div style='margin-top:2%;clear:both' class='test'>-->
+    <!--<span class='col-11 label-title'>基本信息</span>-->
+    <!--<span class='col-1'>订单号</span>-->
+    <!--<span class='col-1 label-content' style='color:#00d1b2'>{{form.id}}</span>-->
+    <!--<span class='col-1'>订单时间</span>-->
+    <!--<span class='col-2 label-content'>{{form.orderTim}}</span>-->
+    <!--<span class='col-1'>订单状态</span>-->
+    <!--<span class='col-1 label-content'>{{form.state}}</span>-->
+    <!--<span class='col-1'>开单网点</span>-->
+    <!--<span class='col-1 label-content'>{{form.billBranch}}</span>-->
+    <!--<span class='col-1'>目的网点</span>-->
+    <!--<span class='col-1 label-content'>{{form.arrBranch}}</span>-->
+    <!--<span class='col-1'>发货单位</span>-->
+    <!--<span class='col-2 label-content'>{{form.shipComp}}</span>-->
+    <!--<span class='col-1'>发货人</span>-->
+    <!--<span class='col-1 label-content'>{{form.shipNam}}</span>-->
+    <!--<span class='col-1'>联系电话</span>-->
+    <!--<span class='col-1 label-content'>{{form.shipTel}}</span>-->
+    <!--<span class='col-1'>提货地址</span>-->
+    <!--<span class='col-3 label-content'>{{form.pickUpAdr}}</span>-->
+    <!--<span class='col-1'>收货单位</span>-->
+    <!--<span class='col-2 label-content'>{{form.receComp}}</span>-->
+    <!--<span class='col-1'>收货人</span>-->
+    <!--<span class='col-1 label-content'>{{form.receNam}}</span>-->
+    <!--<span class='col-1'>联系电话</span>-->
+    <!--<span class='col-1 label-content'>{{form.receTel}}</span>-->
+    <!--<span class='col-1'>收货地址</span>-->
+    <!--<span class='col-3 label-content'>{{form.receAdr}}</span>-->
+    <!--<span class='col-1' v-for="(data,i) in datalist1" :key='data'>{{data}}</span>-->
+    <!--<span class='col-1 label-content' v-for="(value, key, i) in form" :key='key' v-if="i>4&&i<16">{{value}}</span>-->
+    <!--<span class='col-1'>订单类型</span>-->
+    <!--<span class='col-1 label-content'>{{form.orderType}}</span>-->
+    <!--<span class='col-1'>送货方式</span>-->
+    <!--<span class='col-1 label-content'>{{form.sendMode}}</span>-->
+    <!--<span class='col-2'>听通知放货(无</span>-->
+    <!--<span class='col-1 label-content'>{{form.isListenToRele}}</span>-->
+    <!--<span class='col-1'>可放货(无</span>-->
+    <!--<span class='col-1 label-content'>{{form.isRelease}}</span>-->
+    <!--<span class='col-1'>订单物流状态</span>-->
+    <!--<span class='col-1 label-content'>{{form.orderLogiState}}</span>-->
+    <!--<span class='col-11 label-title'>运输信息</span>-->
+    <!--<span class='col-1 label-title'>送货</span>-->
+    <!--<span class='col-1'>送货司机</span>-->
+    <!--<span class='col-2 label-content'>{{form.sendDriverNam}}</span>-->
+    <!--<span class='col-1'>联系电话</span>-->
+    <!--<span class='col-2 label-content'>{{form.sendDriverTel}}</span>-->
+    <!--<span class='col-2'>送货时间</span>-->
+    <!--<span class='col-2 label-content'>{{form.sendTim}}</span>-->
+    <!--<span class='col-2 label-title'>中转信息</span>-->
+    <!--<span class='col-1'>起始地点</span>-->
+    <!--<span class='col-2 label-content'>{{form.changeStart}}</span>-->
+    <!--<span class='col-1'>目的地点</span>-->
+    <!--<span class='col-2 label-content'>{{form.changeEnd}}</span>-->
+    <!--<span class='col-1'>中转时间</span>-->
+    <!--<span class='col-2 label-content'>{{form.changeTim}}</span>-->
+    <!--<span class='col-2 label-title'>其它信息</span>-->
+    <!--<span class='col-1'>审核状态</span>-->
+    <!--<span class='col-1 label-content'>{{form.auditState}}</span>-->
+    <!--<span class='col-1'>审核人</span>-->
+    <!--<span class='col-1 label-content'>{{form.auditor}}</span>-->
+    <!--<span class='col-1'>审核时间</span>-->
+    <!--<span class='col-2 label-content'>{{form.unActTim}}</span>-->
+    <!--<span class='col-1'>订单备注</span>-->
+    <!--<span class='col-1 label-content'>{{form.orderNote}}</span>-->
+    <!--</div>-->
+    <!--</el-form>-->
     <!--</el-dialog>-->
 
     <el-dialog title="" :visible.sync="orderFormDelVisable" size="tiny">
@@ -259,8 +259,10 @@
 
 <script>
   import { AgGridVue } from 'ag-grid-vue'
-  import testJson from '../../../static/test/testJSON.js'
+//  import testJson from '../../../static/test/testJSON.js'
   import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  import api from '../../api/orderFormer/api.js'
+  //  import api from '../../../api/financialAdministrator/api.js'
 
   export default {
     data: function () {
@@ -456,7 +458,7 @@
         //   { desc: '纸箱', id: 'zx' }
         // ],
         orderForm: {
-          'number': '',
+          number: '1',
           'transactioncode': '',
           'deliverStatus': '',
           'ordertime': '',
@@ -492,7 +494,7 @@
             {
               headerName: '订单号',
               width: 120,
-              field: 'transactioncode',
+              field: 'orderId',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -500,7 +502,7 @@
             {
               headerName: '订单物流状态',
               width: 150,
-              field: 'deliverStatus',
+              field: 'orderLogiState',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -508,7 +510,7 @@
             {
               headerName: '下单时间',
               width: 120,
-              field: 'ordertime',
+              field: 'orderTim',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -516,7 +518,7 @@
             {
               headerName: '中转起始地',
               width: 150,
-              field: 'home',
+              field: 'changeStart',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -524,7 +526,7 @@
             {
               headerName: '中转目的地',
               width: 150,
-              field: 'bourn',
+              field: 'changeEnd',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -532,7 +534,7 @@
             {
               headerName: '发货方',
               width: 80,
-              field: 'shipper',
+              field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -540,7 +542,7 @@
             {
               headerName: '发货方联系方式',
               width: 150,
-              field: 'shippertel',
+              field: 'shipTel',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -548,7 +550,7 @@
             {
               headerName: '收货方',
               width: 80,
-              field: 'recipient',
+              field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -556,7 +558,7 @@
             {
               headerName: '收货方联系电话',
               width: 150,
-              field: 'recipienttel',
+              field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -564,7 +566,7 @@
             {
               headerName: '收货地址',
               width: 150,
-              field: 'receiveraddr',
+              field: 'receAdr',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -572,7 +574,7 @@
             {
               headerName: '货物名称',
               width: 120,
-              field: 'commodityname',
+              field: 'goodsNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -580,7 +582,7 @@
             {
               headerName: '件数',
               width: 80,
-              field: 'totalpackages',
+              field: 'goodsNums',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -588,7 +590,7 @@
             {
               headerName: '重量',
               width: 80,
-              field: 'weight',
+              field: 'goodsWeight',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -596,7 +598,7 @@
             {
               headerName: '体积',
               width: 80,
-              field: 'volume',
+              field: 'goodsVolume',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -604,7 +606,7 @@
             {
               headerName: '包装',
               width: 80,
-              field: 'pack',
+              field: 'goodsPackage',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -659,8 +661,40 @@
       }
     },
     methods: {
+      drawGrid () {
+//        this.onQuickFilterChanged ()
+//        this.changeColumnDefsBoolen ()
+        this.createRowData()
+      },
       createRowData () {
-        this.gridOptions.rowData = testJson.orderformInfo.list
+        this.orderformerForm.startTime = '2017-08-1/2017-09-10'
+        this.orderformerForm.deliverStatus = ''
+        this.orderformerForm.transactioncode = ''
+        console.log(this.orderformerForm)
+        api.getTransferFee(this.orderformerForm)
+          .then(res => {
+            console.log('成功')
+//            console.log(res)
+//            console.log(res.data.content)
+            let allLen = res.data.content.length
+            console.log(allLen)
+            this.gridOptions.rowData = res.data.content
+            console.log(res.data.content)
+            this.gridOptions.api.setRowData(this.gridOptions.rowData)
+//            if (allLen > 0) {
+//              for (var i = 0; i < allLen; i++) {
+//                let transactioncode = res.data.content[i].orderId
+//                console.log(transactioncode)
+//                this.orderformerForm.transactioncode = transactioncode
+//              }
+//            }
+//            console.log(res.data.content())
+          })
+          .catch(error => {
+            console.log('失败')
+            console.log(error)
+          })
+//        this.gridOptions.rowData = testJson.orderformInfo.list
       },
       onQuickFilterChanged (input) {
         this.gridOptions.api.setQuickFilter(input)

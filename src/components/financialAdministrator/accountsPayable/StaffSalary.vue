@@ -749,8 +749,8 @@
         },
 
         filterForm: {
-          employeeNam: '',
-          workPosition: ''
+          employeeNam: '', // 员工姓名
+          workPosition: '' // 工作岗位
         },
         staffForm: {
           employeeNam: '',
