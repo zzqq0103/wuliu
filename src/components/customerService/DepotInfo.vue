@@ -2,20 +2,29 @@
   <div>
     <div>
       <div style="text-align: center;margin: 10px">
-        <h2>查看订单列表</h2>
+        <h2>查看库存</h2>
       </div>
       <div>
-        <el-form v-model="filterForm" ref="filterForm" style='margin-top:20px' :inline="true">
+        <el-form v-model="filterForm" style='margin-top:20px' :inline="true">
           <el-form-item label="出入库时间:">
             <el-date-picker v-model="filterForm.startTime" type="daterange" placeholder="选择日期范围"
                             :picker-options="pickerOptions" range-separator='/' style="width: 200px">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="发货方:">
-            <el-input v-model="filterForm.shipNam" placeholder="输入发货方名称" style="width: 150px"></el-input>
-          </el-form-item>
-          <el-form-item label="订单号:">
+          <el-form-item label="订单号：">
             <el-input v-model="filterForm.orderId" placeholder="输入订单号" style="width: 150px"></el-input>
+          </el-form-item>
+          <el-form-item label="始发站：">
+            <el-select style='width:100px' v-model="filterForm.startStation">
+              <el-option value="北京"></el-option>
+              <el-option value='南京'></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否加锁：">
+            <el-select style='width:100px' v-model="filterForm.isLock">
+              <el-option value="是"></el-option>
+              <el-option value='否'></el-option>
+            </el-select>
           </el-form-item>
           <!-- 设置列 -->
           <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
@@ -33,9 +42,9 @@
               </div>
             </template>
           </el-popover>
-          <el-button v-popover:popover1 style='margin-left:10px;float:right'>设 置</el-button>
-          <el-button @click="toOrderAdd" style='float:right'>添 加</el-button>
           <el-button @click="drawGrid" style='float:right'>提 取</el-button>
+          <el-button v-popover:popover1 style='margin-left:10px;float:right'>设 置</el-button>
+          <el-button @click="" style='float:right'>导 出</el-button>
        </el-form>
       </div>
     </div>
@@ -70,61 +79,6 @@
         :total="rowCount">
       </el-pagination>
     </div>
-
-    <!-- 添加异常信息弹窗 -->
-    <el-dialog title="编辑异常信息:"   :visible.sync="errorEditVisable" size="tiny"
-        :closeOnClickModal="false" 
-        :close-on-click-modal="false" 
-        :close-on-press-escape="false" 
-        :show-close="false">
-      <el-form :model='errorForm' :rules="rules" ref="errorForm">
-        <el-form-item label="订单ID：" :label-width="formLabelWidth">
-          <el-label v-model='errorForm.orderId' style='width:80%'>{{errorForm.orderId}}</el-label>
-        </el-form-item>
-        <el-form-item label="异常类型：" :label-width="formLabelWidth">
-          <el-select  placeholder="请选择"  v-model='errorForm.errorType' @change="resetError('errorForm')" style='float:left;width:80%'>
-            <el-option key="yes" label="订单异常" value=0></el-option>
-            <el-option key="no" label="运费异常" value=1></el-option>
-          </el-select>
-        </el-form-item>
-        <div v-if="this.errorForm.errorType === '0'">
-          <el-form-item label="订单物流状态：" :label-width="formLabelWidth" prop="orderLogiState">
-            <!-- <el-input  style='width:80%' v-model='errorForm.orderLogiState'></el-input> -->
-            <el-select placeholder="选择物流状态"  v-model='errorForm.orderLogiState' style='float:left;width:80%'>
-              <el-option key="kaidan" label="新开单" value="kaidan"></el-option>
-              <el-option key="fache" label="发车" value="fache"></el-option>
-              <el-option key="daozhan" label="到站" value="daozhan"></el-option>
-              <el-option key="zhongzhuan" label="已中转外包" value="zhongzhuan"></el-option>
-              <el-option key="paisong" label="正在派送" value="paisong"></el-option>
-              <el-option key="qianshou" label="已签收" value="qianshou"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="订单当前位置：" :label-width="formLabelWidth" prop="currPosition">
-            <el-input style='width:80%'  v-model='errorForm.currPosition'></el-input>
-          </el-form-item>
-        </div>
-        <div v-else-if="this.errorForm.errorType === '1'">
-          <el-form-item label="异动支出：" :label-width="formLabelWidth" prop="unActExpense">
-            <el-input style='width:80%' v-model='errorForm.unActExpense' type="number"></el-input>
-          </el-form-item>
-          <el-form-item label="异动收入：" :label-width="formLabelWidth" prop="unActIncome">
-            <el-input style='width:80%' v-model='errorForm.unActIncome' type="number"></el-input>
-          </el-form-item>
-          <el-form-item label="异动时间：" :label-width="formLabelWidth" prop="unActTim">
-            <el-date-picker type="date" placeholder="选择日期" v-model='errorForm.unActTim' @focus="test(errorForm.unActTim)" style="width: 80%"></el-date-picker>
-          </el-form-item>
-          <el-form-item label="异动原因：" :label-width="formLabelWidth" prop="unActDes">
-            <el-input style='width:80%' v-model='errorForm.unActDes'></el-input>
-          </el-form-item>
-        </div>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="cancleError('errorForm')">取 消</el-button>
-        <el-button type="primary" @click="resetError('errorForm')">重 置</el-button>
-        <el-button type="primary" @click="submitError('errorForm')">确 定</el-button>
-      </div>
-    </el-dialog>
-
     <!-- 列表显示弹窗 -->
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
       <template v-for="(collist,i) in gridOptions.columnDefs">
@@ -144,6 +98,11 @@
       <order-details :orderId="orderList.orderId"></order-details>
     </el-dialog>
 
+    <!-- 加锁/减锁提示弹窗 -->
+    <el-dialog title="" :visible.sync="lockVisible" size="tiny">
+      <h2 style="text-align:center;padding: 30px 0 30px 0px">{{lockNote}}</h2>
+    </el-dialog>
+
     <!-- 请求数据提示弹窗 -->
     <el-dialog title="" :visible.sync="pointVisible" size="" tiny>
       <h2 style="text-align:center;padding: 30px 0 30px 0px">{{Note}}</h2>
@@ -158,43 +117,53 @@ export default {
   created () {
     for (var i = 0; i < 50; i++) {
       this.orderList.push({
-        'orderId': 'asasas' + i,
-        'shipComp': '发货单位' + i,
-        'shipNam': '发货人' + i,
-        'receComp': '收货单位' + i,
-        'receNam': '收货人' + i,
+        'orderId': '订单号' + i,
+        'subId': '子件号' + i,
+        'startStation': '始发站' + i,
+        'startTime': '入库时间' + i,
         'goodsNam': '货物名称' + i,
+        'isLock': 1,
         'goodsNums': i,
         'goodsVolume': '货物体积' + i,
         'goodsWeight': '货物重量' + i
       })
+      if (i % 2 === 0) {
+        this.orderList[i].isLock = 0
+      }
     }
   },
   data () {
     return {
+      testLock: '测试按钮',
       orderList: [],
       Note: '', // 向后台发送数据后的相关提示
+      lockVisible: false, // 加锁/取消加锁提示弹窗
+      lockNote: '', // 加锁/取消加锁提示文字
       pointVisible: false,
       colVisible: false,
       detailVisible: false,
       errorEditVisable: false,
       orderVisable: false,
       moneyVisable: true,
-      errorType: '1',
+      errorType: 'money',
       errorForm: {
-        'errorType': '1', // 1为运费异常，0为订单异常
-        'orderId': '', // 订单ID
-        'unActExpense': '', // 异动支出
-        'unActIncome': '', // 异动收入
-        'unActTim': new Date(), // 异动时间
-        'unActDes': '', // 异动原因
-        'orderLogiState': '', // 订单物流状态
-        'currPosition': '' // 订单当前位置
+        'errorType': 'money',
+        'orderId': '',
+        'unActExpense': '',
+        'unActIncome': '',
+        'unActTim': new Date(),
+        'unActDes': '',
+        'serviceNam': '',
+        'orderLogiState': '',
+        'currPosition': ''
       },
       filterForm: {
         startTime: [], // 筛选区间, startTime[0]为起始时间，startTime[1]为终止时间[1]
         orderId: '', // 运单号
+        subId: '', // 子订单ID
         shipNam: '', // 发货方
+        startStation: '', // 始发站
+        isLock: '', // 是否加锁
         currentPage: 1, // 当前页数
         pageSize: 20 // 页面大小
       },
@@ -289,16 +258,16 @@ export default {
             headerName: '订单ID', width: 150, field: 'orderId', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '发货单位', width: 150, field: 'shipComp', filter: 'text', hide: false, visible: true
+            headerName: '子件号', width: 150, field: 'subId', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true
+            headerName: '始发站', width: 150, field: 'startStation', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '收货单位', width: 150, field: 'receComp', filter: 'text', hide: false, visible: true
+            headerName: '是否加锁', width: 150, field: 'isLock', filter: 'text', hide: false, visible: true
           },
           {
-            headerName: '收货人', width: 150, field: 'receNam', filter: 'text', hide: false, visible: true
+            headerName: '入库时间', width: 150, field: 'startTime', filter: 'text', hide: false, visible: true
           },
           {
             headerName: '货物名称', field: 'goodsNam', width: 150, filter: 'text', hide: false, visible: true
@@ -323,22 +292,56 @@ export default {
     OrderDetails,
     'ag-grid-vue': AgGridVue,
     operateComponent: {
-      template: '<el-button class="del-but" type="info" style="margin-left:25%" size="small" @click="addError">编辑异常</el-button>',
-      methods: {
-        addError () {
+      template: '<el-button class="del-but" type="info" style="margin-left:25px;width:100px" size="small" @click="lock">{{Template}}</el-button>',
+      data () {
+        return {
+        }
+      },
+      computed: {
+        Template: function () {
           let self = this.params.context.componentParent
-          self.errorEditVisable = true
-          self.errorForm = {
-            'errorType': '1',
-            'orderId': '',
-            'unActExpense': '',
-            'unActIncome': '',
-            'unActTim': new Date(),
-            'unActDes': '',
-            'orderLogiState': '',
-            'currPosition': ''
+          let data = self.gridOptions.rowData
+          if (data[this.params.rowIndex].isLock === 0) {
+            return '加锁'
+          } else {
+            return '取消加锁'
           }
-          self.errorForm.orderId = this.params.data.orderId
+          /* for (let i = 0; i < data.length; i++) {
+            if (data[i].isLock === 1) {
+              this.initArray.push(i)
+            }
+          } */
+          /* console.log('template:')
+          let flag = 0
+          for (let i = 0; i < this.initArray.length; i++) {
+            if (this.params.rowIndex === this.initArray[i]) {
+              flag = 1
+              break
+            }
+          }
+          if (flag) {
+            return '加锁'
+          } else {
+            return '取消加锁'
+          } */
+        }
+      },
+      methods: {
+        lock () {
+          let self = this.params.context.componentParent
+          let data = self.gridOptions.rowData
+          self.lockVisible = true
+          // 原来是加锁
+          if (!this.params.data.isLock) {
+            data[this.params.rowIndex].isLock = 1
+            self.lockNote = '加锁成功'
+            setTimeout(() => { self.lockVisible = false }, 800)
+          } else {
+            data[this.params.rowIndex].isLock = 0
+            self.lockNote = '已经取消加锁'
+            setTimeout(() => { self.lockVisible = false }, 800)
+          }
+          self.gridOptions.api.setRowData(self.gridOptions.rowData)
         }
       }
     }
@@ -346,7 +349,6 @@ export default {
   methods: {
     test (data) {
       console.log('选择时间类型是：')
-      console.log(typeof (data))
     },
     visibleChoice (i) {
       if (i === 1) {
@@ -371,29 +373,13 @@ export default {
         this.$refs[formName].resetFields()
       })
     },
-    // 提交异常
+    // 提交订单异常
     submitError (formName) {
       const self = this
       self.$refs[formName].validate((valid) => {
         if (valid) {
-          let toInt = ['errorType', 'unActExpense', 'unActIncome']
           this.errorEditVisable = false
-          for (let i = 0; i < toInt.length; i++) {
-            this.errorForm[toInt[i]] = parseInt(this.errorForm[toInt[i]])
-          }
-          console.log(this.errorForm)
           // 向服务器提交数据
-          api.setOrderError(this.errorForm).then(res => {
-            console.log('成功')
-            console.log(res)
-          })
-          .catch(error => {
-            this.pointVisible = true
-            setTimeout(() => { this.pointVisible = false }, 1000)
-            this.Note = '提交失败，网络异常请检查'
-            console.log('失败')
-            console.log(error)
-          })
         } else {
           console.log('error submit!!!')
           return false
@@ -406,7 +392,7 @@ export default {
       this.detailVisible = true
     },
     createRowData () {
-      console.log(this.filterForm)
+      // console.log(this.filterForm)
       this.getOrderListFro()
       this.gridOptions.rowData = this.orderList
       this.gridOptions.api.setRowData(this.gridOptions.rowData)

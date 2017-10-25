@@ -186,6 +186,10 @@ export default new Router({
           component: resolve => require(['../components/customerService/StockinInfo.vue'], resolve)
         },
         {
+          path: '/depotInfo',
+          component: resolve => require(['../components/customerService/DepotInfo.vue'], resolve)
+        },
+        {
           path: '/transfer',
           component: resolve => require(['../components/customerService/Transfer.vue'], resolve)
         },

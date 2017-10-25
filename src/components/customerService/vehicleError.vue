@@ -11,7 +11,6 @@
         <el-form-item label="司机姓名：">
           <el-input v-model="filterForm.orderId" placeholder="输入司机姓名" style="width: 150px"></el-input>
         </el-form-item>
-        <!-- 设置列 -->
         <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
           <template v-for="(collist,i) in gridOptions.columnDefs">
             <div class="colVisible">
@@ -51,8 +50,6 @@
                    :suppressPaginationPanel="true">
       </ag-grid-vue>
     </div>
-
-    <!--分页-->
     <div style="text-align: center;margin-top:2%">
       <el-pagination
         @size-change="handleSizeChange"
@@ -64,8 +61,6 @@
         :total="rowCount">
       </el-pagination>
     </div>
-
-    <!-- 列表显示弹窗 -->
     <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
       <template v-for="(collist,i) in gridOptions.columnDefs">
         <div>
@@ -248,11 +243,9 @@ export default {
         this.gridOptions.columnApi.setColumnVisible(collist[i].field, collist[i].visible)
       }
     },
-    // 编辑/增加异动信息
     addEdit () {
       setTimeout(() => { this.addEditVisable = false }, 600)
     },
-    // 删除异动信息
     del () {
       this.delVisable = false
     },
@@ -265,12 +258,10 @@ export default {
     gridfilterChange () {
       this.calculateGrid()
     },
-    // 设置分页组件数据总数
     calculateGrid () {
       this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
       this.rowCount = this.gridOptions.api.getModel().getRowCount()
     },
-    // 绘制表格
     drawGrid () {
       this.updateGrid()
       this.createRowData()
@@ -281,13 +272,60 @@ export default {
     }
   },
   beforeMount () {
-    // this.createRowData()
   },
   mounted () {
-    // this.changeColumnDefsBoolen()
     this.calculateGrid()
   }
 }
 </script>
-<style>
+<!-- <template>
+<div class="pdf-wrap" id="pdfWrap">
+ <button v-on:click="getPdf">点击下载PDF</button>
+ <div class="pdf-dom" id="pdfDom">
+   <div>测试pdf</div>
+   <h2>biaoti</h2>
+ </div>
+</div>
+</template>
+<style lang="scss" scoped>
 </style>
+<script>
+ import html2Canvas from 'html2canvas'
+ import JsPDF from 'jspdf'
+ export default {
+   methods: {
+     getPdf: function () {
+       // let _this = this
+       let pdfDom = document.querySelector('#pdfDom')
+       html2Canvas(pdfDom, {
+         onrendered: function (canvas) {
+           let contentWidth = canvas.width
+           let contentHeight = canvas.height
+           let pageHeight = contentWidth / 592.28 * 841.89
+           let leftHeight = contentHeight
+           let position = 0
+           let imgWidth = 595.28
+           let imgHeight = 592.28 / contentWidth * contentHeight
+           let pageData = canvas.toDataURL('image/jpeg', 1.0)
+           let PDF = new JsPDF('', 'pt', 'a4')
+           if (leftHeight < pageHeight) {
+             PDF.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight)
+           } else {
+             while (leftHeight > 0) {
+               PDF.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
+               leftHeight -= pageHeight
+               position -= 841.89
+               if (leftHeight > 0) {
+                 PDF.addPage()
+               }
+             }
+           }
+           // PDF.save(_this.pdfData.title + '.pdf')
+           PDF.save('123.pdf')
+         }
+       })
+       html2Canvas()
+     }
+   }
+ }
+</script>

@@ -381,26 +381,19 @@
                 "icon": "reserveCheck",
                 "subs": [
                     {
-                        "index": "reserveCheck",
+                        "index": "depotInfo",
                         "title": "查看库存",
+                        "icon": ""
+                    },
+                    {
+                        "index": "reserveCheck",
+                        "title": "短途入库",
                         "icon": ""
                     },
                     {
                         "index": "stockinInfo",
                         "title": "长途入库",
-                        "icon": "",
-                        "subs": [
-                            {
-                                "index": "stockinInfo",
-                                "title": "入库信息",
-                                "icon": ""
-                            },
-                            {
-                                "index": "stockinChange",
-                                "title": "入库更新",
-                                "icon": ""
-                            }
-                        ]
+                        "icon": ""
                     }
                 ]
             },

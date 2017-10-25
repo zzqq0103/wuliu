@@ -45,9 +45,9 @@
               </div>
             </template>
           </el-popover>
+          <el-button @click="drawGrid(1)" style='float:right'>提 取</el-button>
           <el-button v-popover:popover1 style='margin-left:10px;float:right'>设 置</el-button>
           <el-button style='float:right'>导 出</el-button>
-          <el-button @click="drawGrid(1)" style='float:right'>提 取</el-button>
        </el-form>
     </div>
     <div style="clear: both;"></div>
@@ -211,7 +211,6 @@
           </el-form>
           <el-button @click="rightSelect"> < </el-button>
           <el-button @click="rightSelectAll"> << </el-button>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
           <!--待核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"

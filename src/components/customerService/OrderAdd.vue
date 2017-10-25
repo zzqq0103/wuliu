@@ -1,10 +1,8 @@
 <template>
   <div>
     <h2 style="text-align:center">网点开单</h2>
-    <el-form  :model="form" ref="form">
+    <el-form  :model="form" ref="form" id="pdfDom">
       <div style='margin-top:2%;display:inline-block;width:100%'>
-        <!-- <span style='float:left;padding-top:0.7%;width:80px'>日期：</span>
-        <span style='float:left;padding-top:0.9%;width:150px'>{{timeNow}}</span> -->
         <span style='float:left;padding:0.7% 0 0 2%;width:100px'>订单号：</span>
         <span style='float:left;padding-top:0.9%;width:150px'>{{initForm.orderId}}</span>
         <span class='order-title-base' style='width:80px'>始发站：</span>
@@ -26,13 +24,6 @@
             <el-option v-for="item in initForm.stationOptions" :value="item" :key="item" :label="item"></el-option>
           </el-select>
         </el-form-item>
-        <!-- <div style="width: 150px; float: left">
-            <el-cascader
-              expand-trigger="hover"
-              :options="initForm.stationOptions"
-              @change="handleChange2">
-            </el-cascader>
-        </div> -->
       </div>
       <div style='margin-top:2%;clear:both'>
         <span class='label col-1'>发货方</span>
@@ -41,22 +32,12 @@
             <div class="dropdown-content" v-show="fahuoShow" style='width:39%'> 
               <div class='dropdown-select'>
                 <ul class='dropdown-fahuo'>
-                  <li v-bind:key="data" v-for="(data,i) in this.fahuoList"  v-on:dblclick="clickFahuo(data)">{{data}}</li>
+                  <li v-bind:key="data" v-for="(data,i) in this.fahuoList"  v-on:dblclick="clickFahuo(data,i)">{{data.shipNam + ' ' + data.shipTel}}</li>
                 </ul>
               </div>
             </div>
         </div>
         <span class='label col-1'>收货方</span>
-        <!-- <div id='focus_shouhuo' class='dropdown col-4' style='outline:none' contenteditable="false" tabindex="0" @click="getFocus(3)"  @blur="check(10, 'receNam')">
-            <input type="text" id='focus_shouhuo_input' v-model="form.receNam" class='input' style='width:100%' @keyup="getSearchShouhuo()" placeholder="请选择发货地址" v-bind:class="{'error':isreceNam}"  prop="receNam"></input>
-            <div class="dropdown-content" v-show="shouhuoShow" style='width:39%'>
-              <div class='dropdown-select'>
-                <ul class='dropdown-fahuo'>
-                  <li v-for="(data,i) in this.shouhuoList" :key='data' v-on:dblclick="clickShouhuo(data)">{{data}}</li>
-                </ul>
-              </div>
-            </div>
-        </div> -->
         <div class='dropdown_fahuo col-4'>
             <input type="text"  class='input' style='width:100%' v-model='form.receNam' @keyup="getSearchShouhuo()" @keyup.enter="setBlur(2)" v-bind:class="{'error':isreceNam}" placeholder="请输入收货方名称"  @blur="check(10, 'receNam')"></input>
             <div class="dropdown-content" v-show="shouhuoShow" style='width:39%'> 
@@ -175,8 +156,8 @@
         <label class='label2 col-1' style="height:29px">金额</label>
         <label class='label2 col-1' style="height:29px">支付方式</label>
         <el-select placeholder="" class='col-1 select input-mid' v-model="form.isListenToRele">
-          <el-option key="yes" label="是" value="yes"></el-option>
-          <el-option key="no" label="否" value="no"></el-option>
+          <el-option label='是' value = 1></el-option>
+          <el-option label="否" value = 0></el-option>
         </el-select>
         <input class='input col-1 input-mid' @click="baseFeeVisible=true" v-model="form.baseFee" type="number" v-bind:class="{'error':isbaseFee}" @blur="check(9,'baseFee')"></input>
         <input class='input col-1 input-mid' v-model="form.pickUpFee" type="number" v-bind:class="{'error':ispickUpFee}" @blur="check(9,'pickUpFee')"></input>
@@ -278,6 +259,8 @@
 <script>
 import regionJson from '../../../static/region.json'
 import api from '../../api/customerService/api.js'
+import html2Canvas from 'html2canvas'
+import JsPDF from 'jspdf'
 export default {
   created () {
     this.regionList = regionJson
@@ -285,6 +268,12 @@ export default {
   },
   data: function () {
     return {
+      selected: 'A',
+      options: [
+        { text: 'One', value: 'A' },
+        { text: 'Two', value: 'B' },
+        { text: 'Three', value: 'C' }
+      ],
       allHave: false, // 表单内容是否全部填上
       feeHave: false, // 可生成基本费用的内容已全部填上
       wrongNote: '',
@@ -361,19 +350,6 @@ export default {
       goodsPayment2: 0, // 代收费
       branchList: [], // 选择自提后的网点列表
       retuPayModeObject: {}, // 支付方式下拉框样式
-      fahuoRelated: {
-        shenfenSelected: '北京',
-        shiSelected: '北京',
-        quSelected: '海淀区',
-        baseAddressFa: '',
-        shipNam: '张三发',
-        shipTel: '15003582722',
-        pickUpAdr: '提货地址',
-        goodsNam: '1212',
-        goodsWeight: 1,
-        goodsVolumn: 2,
-        receNums: 3
-      },
       shouhuoRelated: {
         shenfenSelected2: '江苏',
         shiSelected2: '无锡',
@@ -445,7 +421,7 @@ export default {
         orderType: '普件', // 送货方式
         sendMode: '送货上门', // 交货方式
         branch: '无', // 提货网点
-        isListenToRele: '否', // 是否听通知放货
+        isListenToRele: '0', // 是否听通知放货
         /** 回单信息 */
         receNums: 0, // 回单份数
         receMoney: 0, // 回单押款
@@ -525,11 +501,44 @@ export default {
     test () {
       alert('sds')
     },
+    getPdf: function () {
+      // let _this = this
+      // let pdfDom = document.querySelector('#pdfDom')
+      html2Canvas(document.body, {
+        onrendered: function (canvas) {
+          /* let contentWidth = canvas.width
+          let contentHeight = canvas.height
+          let pageHeight = contentWidth / 592.28 * 841.89
+          let leftHeight = contentHeight
+          let position = 0
+          let imgWidth = 595.28
+          let imgHeight = 592.28 / contentWidth * contentHeight */
+          let pageData = canvas.toDataURL('image/jpeg', 1.0)
+          let PDF = new JsPDF('', 'pt', 'a4')
+          /* if (leftHeight < pageHeight) {
+            PDF.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight)
+          } else {
+            while (leftHeight > 0) {
+              // pdf.addImage(pageData, 'JPEG', 0, 0, 595.28, 592.28/canvas.width * canvas.height )
+              PDF.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
+              leftHeight -= pageHeight
+              position -= 841.89
+              if (leftHeight > 0) {
+                PDF.addPage()
+              }
+            }
+          } */
+          PDF.addImage(pageData, 'JPEG', 0, 0, 595.28, 592.28 / canvas.width * canvas.height)
+          // PDF.save(_this.pdfData.title + '.pdf')
+          PDF.save('123.pdf')
+        }
+      })
+      html2Canvas()
+    },
     // 交货方式改变时设置相关列表
     setsendMode () {
       if (this.form.sendMode === 'ziti') {
         this.branchList = ['网点1', '网点2', '网点2']
-        this.branchList.push('枢纽')
         this.form.branch = this.branchList[0]
       } else {
         this.branchList = []
@@ -538,11 +547,6 @@ export default {
     },
     // 设置弹窗隐藏
     setBlur (num) {
-      /*
-      document.getElementById('focus2').blur()
-      document.getElementById('inputfocus2').focus() */
-      /* document.getElementById('focus_shouhuo').focus()
-      document.getElementById('focus_shouhuo').blur() */
       if (num === 1) {
         this.fahuoShow = false
       } else {
@@ -650,7 +654,6 @@ export default {
     },
     // 选择始发站，目的站后补全下方表单地址信息
     toShi (type, shiData, shenData) {
-      alert('test')
       let shen = 'form.shenSelected' + type
       let shi = 'form.shiSelected' + type
       this[shen] = shenData
@@ -817,7 +820,13 @@ export default {
     submitOrder () {
       this.submitOrderVisible = false
       this.form.orderTim = new Date()
-      console.log(this.form)
+      this.form.isListenToRele = parseInt(this.form.isListenToRele)
+      // console.log(this.form)
+      // let test = ['goodsNums', 'goodsWeight', 'goodsVolumn', 'branch', 'isListenToRele', 'receNums', 'receMoney', 'baseFee',
+        // 'pickUpFee', 'sendFee', 'packFee', 'landingFee', 'coverage', 'goodsPayment', 'refuMoney', 'retuPayMode', 'unActIncome', 'unActExpense', 'totalFreight']
+      /* for (let i = 0; i < test.length; i++) {
+        console.log(this.form[test[i]])
+      } */
       this.setOrderFro()
     },
     // 从服务器获取基本运费
@@ -928,6 +937,20 @@ export default {
       } else if (this.form.shipNam === '') {
         this.fahuoShow = false
       }
+      this.fahuoList = [
+        {'shipNam': '123',
+          'shipTel': '电话123',
+          'shenfenSelected': '北京',
+          'shiSelected': '北京',
+          'quSelected': '海淀区',
+          'pickUpAdr': '提货地址'},
+        {'shipNam': '234',
+          'shipTel': '电话234',
+          'shenfenSelected': '江苏',
+          'shiSelected': '南京',
+          'quSelected': '白下区',
+          'pickUpAdr': '提货地址'}
+      ]
     },
 
     // 获取对应收货方列表
@@ -940,13 +963,13 @@ export default {
       }
     },
     // 双击发货方列表补充数据
-    clickFahuo (data) {
+    clickFahuo (data, num) {
       let list = ['shipTel', 'pickUpAdr', 'shenfenSelected', 'shiSelected', 'quSelected', 'baseAddressFa',
         'goodsNam', 'goodsNums', 'goodsWeight', 'goodsVolumn', 'receNums']
-      this.form.shipNam = data
+      this.form.shipNam = data.shipNam
       this.fahuoShow = false
       for (let i = 0; i < list.length; i++) {
-        this.form[list[i]] = this.fahuoRelated[list[i]]
+        this.form[list[i]] = this.fahuoList[num][list[i]]
       }
       this.setShi(1)
       this.setQuyu(1)
@@ -1109,7 +1132,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .el-scrollbar__bar.is-vertical {
     width: 6px;
     top: 2px;
@@ -1352,3 +1375,55 @@ export default {
   background-color: #E0E0E0
 }
 </style>
+
+<!-- <template>
+<div class="pdf-wrap" id="pdfWrap">
+ <button v-on:click="getPdf">点击下载PDF</button>
+ <div class="pdf-dom" id="pdfDom">
+   <div>测试pdf</div>
+   <h2>biaoti</h2>
+ </div>
+</div>
+</template>
+<style lang="scss" scoped>
+</style>
+<script>
+ import html2Canvas from 'html2canvas'
+ import JsPDF from 'jspdf'
+ export default {
+   methods: {
+     getPdf: function () {
+       // let _this = this
+       let pdfDom = document.querySelector('#pdfDom')
+       html2Canvas(pdfDom, {
+         onrendered: function (canvas) {
+           let contentWidth = canvas.width
+           let contentHeight = canvas.height
+           let pageHeight = contentWidth / 592.28 * 841.89
+           let leftHeight = contentHeight
+           let position = 0
+           let imgWidth = 595.28
+           let imgHeight = 592.28 / contentWidth * contentHeight
+           let pageData = canvas.toDataURL('image/jpeg', 1.0)
+           let PDF = new JsPDF('', 'pt', 'a4')
+           if (leftHeight < pageHeight) {
+             PDF.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight)
+           } else {
+             while (leftHeight > 0) {
+               PDF.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
+               leftHeight -= pageHeight
+               position -= 841.89
+               if (leftHeight > 0) {
+                 PDF.addPage()
+               }
+             }
+           }
+           // PDF.save(_this.pdfData.title + '.pdf')
+           PDF.save('123.pdf')
+         }
+       })
+       html2Canvas()
+     }
+   }
+ }
+</script>

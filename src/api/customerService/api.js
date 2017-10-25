@@ -16,6 +16,18 @@ export function fetch (url, params) {
 }
 
 export default {
+  /** 查看订单页面 */
+
+  // 查看订单列表
+  getOrderList (params) {
+    return fetch('/logistics/interface/reservationManagement/queryReservationByOrderId', params)
+  },
+
+  // 编辑异常（订单异常和运费异常）
+  setOrderError (params) {
+    return fetch('/logistics/interface/reservationManagement/queryReservationByOrderId', params)
+  },
+
   /** 新建预约单页面 */
 
   // 获取预约单列表（测试）
@@ -50,10 +62,6 @@ export default {
 
   /** 网点开单页面 */
 
-  // 查看订单列表
-  getOrderList (params) {
-    return fetch('/logistics/interface/reservationManagement/queryReservationByOrderId', params)
-  },
   // 获取网点列表
   getBranch (params) {
     return fetch('/logistics/interface/netBranchesManagement/addBranch', params)
