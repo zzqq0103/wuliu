@@ -54,6 +54,14 @@ const epibolingList = []
 // 装载单中的订单列表
 const orderList = []
 
+// 订单表、子件表、预约单表 的数据
+for (let i = 0; i < 25; i++) {
+  // 订单表
+  // orderList.push(Mock.mock({
+  //   orderId:
+  // }))
+}
+
 // 所有“已完成”页面的数据
 for (let i = 0; i < 100; i++) {
   // “已送货” 订单数据
@@ -66,7 +74,7 @@ for (let i = 0; i < 100; i++) {
     receAdr: Mock.mock('@county(true)'),
     receArea: Mock.mock('@county(true)'),
     goodsNam: '重货',
-    driverNam: '货物',
+    driverNam: Mock.mock('@cname()'),
     driverTel: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
     licePlateNum: Mock.mock('@string("number",5)'),
     goodsPackage: '箱装',
@@ -83,7 +91,7 @@ for (let i = 0; i < 100; i++) {
   deliveredLoadedSubList.push(Mock.mock({
     id: Mock.mock('@increment(1)'),
     orderId: Mock.mock('@string("number",5)'),
-    subId: Mock.mock('@string("number"),10'),
+    subId: Mock.mock('@string("number",8)'),
     orderTim: Mock.mock('@date()'),
     receNam: Mock.mock('@cname'),
     receTel: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,

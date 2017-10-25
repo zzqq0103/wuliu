@@ -8,28 +8,36 @@ export default {
   bootstrap () {
     let mock = new MockAdapter(axios)
 
-    // 已送货 （订单）
-    mock.onPost(`${host}/interface/short_delivered_management/query_delivered_order`).reply(config => {
-      console.log(config)
-      let {pageNum, recordNum} = JSON.parse(config.data)
-      let mockList = getListDataBySize(mockData.deliveredLoadedList, recordNum, pageNum)
-      let pages = mockList.length
+    // 订单列表数据
+    mock.onPost(`${host}/interface/short_delivered_management/orderList`).reply(config => {
+      let mockList = mockData.orderList
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          resolve([200, {orderlists: mockList, totalPages: pages}])
+          resolve([200, {orderlists: mockList, totalPages: mockData.deliveredLoadedList.length}])
+        }, 1000)
+      })
+    })
+
+    // 已送货 （订单）
+    mock.onPost(`${host}/interface/short_delivered_management/query_delivered_order`).reply(config => {
+      let {pageNum, recordNum} = JSON.parse(config.data)
+      console.log(`pageNum : ${pageNum}`)
+      let mockList = getListDataBySize(mockData.deliveredLoadedList, recordNum, pageNum)
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {orderlists: mockList, totalPages: mockData.deliveredLoadedList.length}])
         }, 1000)
       })
     })
 
     // 已送货 （子件）
     mock.onPost(`${host}/interface/short_delivered_management/query_delivered_sub`).reply(config => {
-      console.log(config)
       let {pageNum, recordNum} = JSON.parse(config.data)
-      let mockList = getListDataBySize(mockData.deliveredLoadedList, recordNum, pageNum)
-      let pages = mockList.length
+      console.log(`pageNum : ${pageNum}`)
+      let mockList = getListDataBySize(mockData.deliveredLoadedSubList, recordNum, pageNum)
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          resolve([200, {orderlists: mockList, totalPages: pages}])
+          resolve([200, {orderlists: mockList, totalPages: mockData.deliveredLoadedSubList.length}])
         }, 1000)
       })
     })

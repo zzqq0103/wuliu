@@ -5,7 +5,7 @@
       <h3 style="text-align: center;color:red; margin-top:25px; margin-bottom:25px;">订 单 列 表</h3>
       <ag-grid-vue style="widht:100%;height: 700px; margin-top:20px; "
                    class="ag-blue"
-                   :gridOptions="gridOptions_left"
+                   :gridOptions="gridOptions_Order"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
                    :suppressRowClickSelection="true"
@@ -71,7 +71,7 @@
           'remarks': '',
           'operation': ''
         },
-        gridOptions_left: {
+        gridOptions_Order: {
           context: {
             componentParent: this
           },
@@ -79,14 +79,6 @@
           rowSelection: 'single',
           columnDefs: [
             {
-              headerName: '#',
-              width: 30,
-              checkboxSelection: true,
-              suppressSorting: true,
-              suppressMenu: true,
-              pinned: true
-            },
-            {
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
@@ -122,9 +114,6 @@
             {
               headerName: '发货地址', width: 120, field: 'deliverAddress', suppressMenu: true, hide: false, visible: true
             },
-            // {
-            //   headerName: '序号', width: 120, field: 'deliverArea', suppressMenu: true, hide: false, visible: true
-            // },
             {
               headerName: '收货单位', width: 120, field: 'consignee', suppressMenu: true, hide: false, visible: true
             },
@@ -137,9 +126,6 @@
             {
               headerName: '收货地址', width: 120, field: 'consigneeAddress', suppressMenu: true, hide: false, visible: true
             },
-            // {
-            //   headerName: '', width: 120, field: 'consigneeArea', suppressMenu: true, hide: false, visible: true
-            // },
             {
               headerName: '商品名称', width: 120, field: 'goodsName', suppressMenu: true, hide: false, visible: true
             },
@@ -160,7 +146,7 @@
             }
           ]
         },
-        gridOptions_right: {
+        gridOptions_subOrder: {
           context: {
             componentParent: this
           },
@@ -248,7 +234,7 @@
             }
           ]
         },
-        gridOptions_new: {
+        gridOptions_reservationOrder: {
           context: {
             componentParent: this
           },

@@ -112,10 +112,10 @@
       <order-details :orderId="orderId"></order-details>
     </el-dialog>
 
-    <!-- 订单列表 -->
-    <el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
-      <Dispatched></Dispatched>
-    </el-dialog>
+    <!--&lt;!&ndash; 订单列表 &ndash;&gt;-->
+    <!--<el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>-->
+      <!--<Dispatched></Dispatched>-->
+    <!--</el-dialog>-->
   </div>
 </template>
 
@@ -155,7 +155,7 @@
         list: [],
         options: [],
         loading: false,
-        titleText: '已送货装载单订单列表',
+        titleText: '送货成功订单列表',
         status: 1,
         deliveringVisible: false,
         listLoading: false, // 加载圆圈（默认不显示）
@@ -526,21 +526,34 @@
         }
       },
 
-      // 装载单订单列表弹框
+      // 订单详情弹框
       detailDoubleClick (event) {
         this.orderId = event.data.orderId
-        this.deliveringVisible = true
+        this.detailVisible = true
       },
 
       // 改变每页显示的个数
       handleSizeChange (val) {
-        this.pageSize = val
-        this.getOrderList()
+        if (this.formQuery.selectClass === '1') {
+          this.pageSize = val
+          this.formQuery.currentpage = 1
+          this.queryCurrentDeliveredList()
+        } else {
+          this.pageSize = val
+          this.formQuery.currentpage = 1
+          this.queryCurrentDeliveredSubOrderList()
+        }
       },
 
       // 点击当前选中的第几页
       handleCurrentChange (val) {
-        this.formQuery.currentpage = val
+        if (this.formQuery.selectClass === '1') {
+          this.formQuery.currentpage = val
+          this.queryCurrentDeliveredList()
+        } else {
+          this.formQuery.currentpage = val
+          this.queryCurrentDeliveredSubOrderList()
+        }
       },
 
       // 设置显示表格的哪些列
@@ -601,6 +614,7 @@
         this.listLoading = true
         if (this.formQuery.selectClass === '1') {
           getCurrentDeliveredList(para).then((res) => {
+            console.log(res)
             this.gridOptions.rowData = res.data.orderlists
             this.gridOptions.api.setRowData(res.data.orderlists)
             this.orderlist = res.data.orderlists
@@ -609,6 +623,7 @@
           })
         } else {
           getCurrentDeliveredSubOrderList(para).then((res) => {
+            console.log(res)
             this.gridOptions.rowData = res.data.orderlists
             this.gridOptions.api.setRowData(res.data.orderlists)
             this.orderlist = res.data.orderlists
@@ -616,7 +631,6 @@
             this.listLoading = false
           })
         }
-
         return null
       },
 
@@ -624,29 +638,41 @@
       queryCurrentDeliveredSubOrderList () {
         let para = {
           // 页码
-          pageNum: '', // required
+          pageNum: this.formQuery.currentpage, // required
           // 每页记录数
-          recordNum: '', // required
+          recordNum: this.pageSize, // required
           // 开始时间
-          startTime: '', // required
+          startTime: this.formQuery.dateInterval, // required
           // 结束时间
-          endTime: '', // required
+          endTime: this.formQuery.dateInterval, // required
           // 需要查询的订单Id
-          orderId: '', // optional
+          orderId: this.formQuery.queryOrderId, // optional
           // 查询的司机姓名
-          driverName: '', // optional
+          driverName: this.formQuery.driverNam, // optional
           // 查询的发货方姓名
-          shipNam: '', // optional
+          shipNam: this.formQuery.shipNam, // optional
           // 查询的收货方姓名
-          receNam: '' // optional
+          receNam: this.formQuery.receNam // optional
         }
-        // this.listLoading = true
-        getCurrentDeliveredSubOrderList(para).then(res => {
-          this.gridOptions.api.setRowData(res.data.querylists)
-          this.orderlist = res.data.querylists
-          this.totalpages = res.data.totalpages
-          // this.listLoading = false
-        })
+        if (this.formQuery.selectClass === '1') {
+          getCurrentDeliveredSubOrderList(para).then((res) => {
+            console.log(res)
+            this.gridOptions.rowData = res.data.orderlists
+            this.gridOptions.api.setRowData(res.data.orderlists)
+            this.orderlist = res.data.orderlists
+            this.totalpages = res.data.totalPages
+            this.listLoading = false
+          })
+        } else {
+          getCurrentDeliveredSubOrderList(para).then((res) => {
+            console.log(res)
+            this.gridOptions.rowData = res.data.orderlists
+            this.gridOptions.api.setRowData(res.data.orderlists)
+            this.orderlist = res.data.orderlists
+            this.totalpages = res.data.totalPages
+            this.listLoading = false
+          })
+        }
       }
     },
 
