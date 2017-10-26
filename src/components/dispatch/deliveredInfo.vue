@@ -72,6 +72,7 @@
         </div>
 
       </div>
+
     </div>
 
     <!-- 清除浮动 -->
@@ -130,10 +131,6 @@
   // 引入装载单页面的 （dispatched.vue）页面
   import Dispatched from './dispatched'
 
-  // 引入装载单订单页面 （deliverOrderList.vue） 页面
-  import DeliverOrderList from './deliverOrderList'
-//  import ElDialog from "../../../node_modules/element-ui/packages/dialog/src/component";
-//  import ElFormItem from "../../../node_modules/element-ui/packages/form/src/form-item";
   export default {
     data () {
       return {
@@ -498,8 +495,7 @@
     components: {
       'ag-grid-vue': AgGridVue,
       OrderDetails,
-      Dispatched,
-      DeliverOrderList
+      Dispatched
     },
 
     methods: {
@@ -651,6 +647,7 @@
           // 查询的收货方姓名
           receNam: this.formQuery.receNam // optional
         }
+        this.listLoading = true
         if (this.formQuery.selectClass === '1') {
           getCurrentDeliveredSubOrderList(para).then((res) => {
             console.log(res)

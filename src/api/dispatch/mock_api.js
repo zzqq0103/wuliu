@@ -26,7 +26,7 @@ export const getCurrentDeliveredSubOrderList = params => {
 // 待送货（订单）
 export const getCurrentDeliveringList = params => {
   // return axios.post(`${baseUrl}/deliveredOrder/getLoadedlist`, params) // mock.js 假数据的接口
-  return axios.post(`${baseUrl}/interface/short_delivering_management/query_delivered_order`, params)
+  return axios.post(`${baseUrl}/interface/short_delivering_management/query_delivering_order`, params)
 }
 
 // 待送货（子件）
@@ -38,9 +38,9 @@ export const getCurrentDeliveringSubOrderList = params => {
 
 // **************************    送 货 手 动 调 度 页 面 接 口 开 始 (manualDeliverlingInfo.vue)  **************************
 
-// 送货手动调度
+// 送货手动调度 (订单列表）
 export const queryDeliveringReservation = params => {
-  return axios.post(`${baseUrl}/interface/short_delivering_dispatch/query_delivering_reservation`)
+  return axios.post(`${baseUrl}/interface/short_delivering_dispatch/query_delivering_order`)
 }
 
 // 点击手动调度

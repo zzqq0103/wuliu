@@ -9,14 +9,14 @@ export default {
     let mock = new MockAdapter(axios)
 
     // 订单列表数据
-    mock.onPost(`${host}/interface/short_delivered_management/orderList`).reply(config => {
-      let mockList = mockData.orderList
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve([200, {orderlists: mockList, totalPages: mockData.deliveredLoadedList.length}])
-        }, 1000)
-      })
-    })
+    // mock.onPost(`${host}/interface/short_delivered_management/orderList`).reply(config => {
+    //   let mockList = mockData.orderList
+    //   return new Promise((resolve, reject) => {
+    //     setTimeout(() => {
+    //       resolve([200, {orderlists: mockList, totalPages: mockData.deliveredLoadedList.length}])
+    //     }, 1000)
+    //   })
+    // })
 
     // 已送货 （订单）
     mock.onPost(`${host}/interface/short_delivered_management/query_delivered_order`).reply(config => {
@@ -43,46 +43,29 @@ export default {
     })
 
     // // 待送货 （订单）
-    // mock.onPost(`${host}/interface/short_delivered_management/getCurrentDeliveredList`).reply(config => {
-    //   console.log(config)
-    //   let {page, pageSize} = JSON.parse(config.data)
-    //   let mockList = getListDataBySize(_deliveredLoadedList, pageSize, page)
-    //   let pages = _deliveredLoadedList.length
-    //   return new Promise((resolve, reject) => {
-    //     setTimeout(() => {
-    //       resolve([200, {orderlists: mockList, totalPages: pages}])
-    //     }, 1000)
-    //   })
-    // })
-    //
+    mock.onPost(`${host}/interface/short_delivering_management/query_delivering_order`).reply(config => {
+      let {pageNum, recordNum} = JSON.parse(config.data)
+      console.log(`pageNum : ${pageNum}`)
+      let mockList = getListDataBySize(mockData.deliveringLoadingList, recordNum, pageNum)
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {orderlists: mockList, totalPages: mockData.deliveringLoadingList.length}])
+        }, 1000)
+      })
+    })
+
     // // 待送货 （子件）
-    // mock.onPost('/deliveredOrder/getQueryOrderList').reply(config => {
-    //   let {queryName, queryClass} = JSON.parse(config.data)
-    //   let parseclass = parseInt(queryClass)
-    //   let queryData
-    //   // 装载单查询
-    //   if (parseclass === 1) {
-    //     let mockOrderLists = searchByIndexOf(_deliveredLoadedList, queryName, 'deliverOrderId')
-    //     queryData = mockOrderLists
-    //     // 司机姓名查询
-    //   } else if (parseclass === 3) {
-    //     let mockOrderLists = searchByIndexOf(_deliveredLoadedList, queryName, 'driverName')
-    //     queryData = mockOrderLists
-    //     // 订单号查询
-    //   } else {
-    //     let mockOrderLists = searchByIndexOf(_deliveredLoadedList, queryName, 'orderId')
-    //     queryData = mockOrderLists
-    //   }
-    //   return new Promise((resolve, reject) => {
-    //     setTimeout(() => {
-    //       resolve([
-    //         200,
-    //         {querylists: queryData, totalpages: queryData.length}
-    //       ])
-    //     }, 1000)
-    //   })
-    // })
-    //
+    mock.onPost(`${host}/interface/short_delivering_management/query_delivering_sub`).reply(config => {
+      let {pageNum, recordNum} = JSON.parse(config.data)
+      console.log(`pageNum : ${pageNum}`)
+      let mockList = getListDataBySize(mockData.deliveringLoadingSubList, recordNum, pageNum)
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {orderlists: mockList, totalPages: mockData.deliveringLoadingSubList.length}])
+        }, 1000)
+      })
+    })
+
     // // 已接货 （订单）
     // mock.onPost(`${host}/interface/short_delivered_management/getCurrentDeliveredList`).reply(config => {
     //   console.log(config)

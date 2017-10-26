@@ -226,7 +226,7 @@ for (let i = 0; i < 100; i++) {
 
 // 所有“待完成”的页面的数据
 for (let i = 0; i < 100; i++) {
-  // “待送货” 订单数据
+  // “正在送货” 订单数据
   deliveringLoadingList.push(Mock.mock({
     id: Mock.mock('@increment(1)'),
     orderId: Mock.mock('@string("number",5)'),
@@ -235,25 +235,25 @@ for (let i = 0; i < 100; i++) {
     receTel: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
     receAdr: Mock.mock('@county(true)'),
     receArea: Mock.mock('@county(true)'),
-    goodsNam: Mock.mock('@ctitle(5)'),
-    driverNam: '货物',
+    goodsNam: '重货',
+    driverNam: Mock.mock('@cname()'),
     driverTel: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
     licePlateNum: Mock.mock('@string("number",5)'),
     goodsPackage: '箱装',
     'goodsNums|1-20': 15,
     'goodsWeight|1-20': 16,
-    'goodsVolumn|1-20': 17,
+    'goodsVolumn|1-20': 15,
     'tonnage|1-20': 20,
     'capacity|1-20': 25,
     clieOrderNote: '客户订单备注',
     inteOrderNote: '内部订单备注'
   }))
 
-  // “待送货” 子件数据
+  // “正在送货” 子件数据
   deliveringLoadingSubList.push(Mock.mock({
     id: Mock.mock('@increment(1)'),
     orderId: Mock.mock('@string("number",5)'),
-    subId: Mock.mock('@string("number"),10'),
+    subId: Mock.mock('@string("number",8)'),
     orderTim: Mock.mock('@date()'),
     receNam: Mock.mock('@cname'),
     receTel: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
