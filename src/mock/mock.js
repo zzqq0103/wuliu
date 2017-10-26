@@ -54,7 +54,7 @@ export default {
       })
     })
 
-    // // 待送货 （子件）
+    // 待送货 （子件）
     mock.onPost(`${host}/interface/short_delivering_management/query_delivering_sub`).reply(config => {
       let {pageNum, recordNum} = JSON.parse(config.data)
       console.log(`pageNum : ${pageNum}`)
@@ -62,6 +62,31 @@ export default {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve([200, {orderlists: mockList, totalPages: mockData.deliveringLoadingSubList.length}])
+        }, 1000)
+      })
+    })
+
+    // 待确认（ 司机--订单）数据接口
+    mock.onPost(`${host}/interface/short_dispatch_confirm/query_delivering_car`).reply(config => {
+      let {pageNum, recordNum} = JSON.parse(config.data)
+      console.log(`pageNum : ${pageNum}`)
+      let mockList = getListDataBySize(mockData.deliveringCarList, recordNum, pageNum)
+      console.log(mockList)
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {orderlists: mockList, totalPages: mockData.deliveringCarList.length}])
+        }, 1000)
+      })
+    })
+
+    // 双击后查看司机送货订单和子件列表及仓库中的订单和子件列表
+    mock.onPost(`${host}/interface/short_dispatch_confirm/query_delivering_dispatch`).reply(config => {
+      console.log(JSON.parse(config.data))
+      let mockListLeft = mockData.deliveringWarehouse
+      let mockListRight = mockData.deliveringDriver
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {orderlists: mockListLeft, deliveringDriverList: mockListRight, totalPages: mockData.deliveringCarList.length}])
         }, 1000)
       })
     })

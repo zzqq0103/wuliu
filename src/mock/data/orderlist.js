@@ -54,6 +54,13 @@ const epibolingList = []
 // 装载单中的订单列表
 const orderList = []
 
+// 待确认页面的司机--订单
+const deliveringCarList = []
+
+const deliveringWarehouse = []
+
+const deliveringDriver = []
+
 // 订单表、子件表、预约单表 的数据
 for (let i = 0; i < 25; i++) {
   // 订单表
@@ -271,6 +278,67 @@ for (let i = 0; i < 100; i++) {
     'capacity|1-20': 25
   }))
 
+  // “待确认” 司机-订单数据
+  deliveringCarList.push(Mock.mock({
+    id: Mock.mock('@increment(1)'),
+    depotId: Mock.mock('@string("number",5)'),
+    depotSite: '北京',
+    driverTel: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
+    driverNam: Mock.mock('@cname'),
+    'totalWeight|1-20': 15,
+    'totalVolumn|1-20': 16,
+    'totalNums|1-20': 17,
+    licePlateNum: Mock.mock('@string("number",5)'),
+    'tonnage|1-20': 15,
+    'capacity|1-25': 20,
+    carType: '大车'
+  }))
+
+  // 双击后查看司机送货订单和子件列表及仓库中的订单和子件列表
+  deliveringWarehouse.push(Mock.mock({
+    id: Mock.mock('@increment(1)'),
+    orderId: Mock.mock('@string("number",5)'),
+    subId: Mock.mock('@string("number",5)'),
+    startStation: '北京',
+    arrStation: '南京',
+    shipNam: Mock.mock('@cname'),
+    shipTel: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
+    shipAdr: Mock.mock('@county(true)'),
+    shipArea: '北京',
+    receNam: Mock.mock('@cname'),
+    receTel: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
+    receAdr: Mock.mock('@county(true)'),
+    receArea: '南京',
+    goodsNam: Mock.mock('@ctitle(5)'),
+    'goodsNums|1-20': '',
+    'goodsWeight|1-20': '',
+    'goodsVolumn|1-20': '',
+    goodsPackage: '箱装',
+    flag: '子件'
+  }))
+
+  deliveringDriver.push(Mock.mock({
+    id: Mock.mock('@increment(1)'),
+    orderId: Mock.mock('@string("number",5)'),
+    subId: Mock.mock('@string("number",5)'),
+    startStation: '北京',
+    arrStation: '南京',
+    shipNam: Mock.mock('@cname'),
+    shipTel: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
+    shipAdr: Mock.mock('@county(true)'),
+    shipArea: '北京',
+    receNam: Mock.mock('@cname'),
+    receTel: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
+    receAdr: Mock.mock('@county(true)'),
+    receArea: '南京',
+    goodsNam: Mock.mock('@ctitle(5)'),
+    'goodsNums|1-20': '',
+    'goodsWeight|1-20': '',
+    'goodsVolumn|1-20': '',
+    goodsPackage: '箱装',
+    flag: '子件'
+  }))
+
   // “待接货” 订单数据
   receivingList.push(Mock.mock({
     id: Mock.mock('@increment(1)'),
@@ -415,5 +483,8 @@ export {
   receivedSubList,
   receivingSubList,
   receivingReservationList,
-  receivedReservationList
+  receivedReservationList,
+  deliveringCarList,
+  deliveringWarehouse,
+  deliveringDriver
 }

@@ -40,17 +40,17 @@ export const getCurrentDeliveringSubOrderList = params => {
 
 // 送货手动调度 (订单列表）
 export const queryDeliveringReservation = params => {
-  return axios.post(`${baseUrl}/interface/short_delivering_dispatch/query_delivering_order`)
+  return axios.post(`${baseUrl}/interface/short_delivering_dispatch/query_delivering_order`, params)
 }
 
 // 点击手动调度
 export const manualDeliveringDispatch = params => {
-  return axios.post(`${baseUrl}/interface/short_delivering_dispatch/manual_dispatch`)
+  return axios.post(`${baseUrl}/interface/short_delivering_dispatch/manual_dispatch`, params)
 }
 
 // 点击编辑
 export const queryManualDeliveringDispatch = params => {
-  return axios.post(`${baseUrl}/interface/short_delivering_dispatch/query_manual_dispatch`)
+  return axios.post(`${baseUrl}/interface/short_delivering_dispatch/query_manual_dispatch`, params)
 }
 
 // **************************    送 货 手 动 调 度 页 面 接 口 结 束 (manualDeliverlingInfo.vue) **************************
@@ -59,22 +59,22 @@ export const queryManualDeliveringDispatch = params => {
 
 // 送货司机列表显示
 export const queryDeliveringCar = params => {
-  return axios.post(`${baseUrl}/interface/short_dispatch_confirm/query_delivering_car`)
+  return axios.post(`${baseUrl}/interface/short_dispatch_confirm/query_delivering_car`, params)
 }
 
 // 双击后查看司机送货订单和子件列表及仓库中的订单和子件列表
 export const queryDeliveringDispatch = params => {
-  return axios.post(`${baseUrl}/interface/short_dispatch_confirm/query_delivering_dispatch`)
+  return axios.post(`${baseUrl}/interface/short_dispatch_confirm/query_delivering_dispatch`, params)
 }
 
 // 调整后点击确认
 export const updateDeliveringDispatch = params => {
-  return axios.post(`${baseUrl}/interface/short_dispatch_confirm/update_delivering_dispatch`)
+  return axios.post(`${baseUrl}/interface/short_dispatch_confirm/update_delivering_dispatch`, params)
 }
 
 // 调整完，点击司机列表后边的确认
 export const updateDeliveringSuccess = params => {
-  return axios.post(`${baseUrl}/interface/short_dispatch_confirm/update_delivering_success`)
+  return axios.post(`${baseUrl}/interface/short_dispatch_confirm/update_delivering_success`, params)
 }
 
 // **************************   待 确 认 送 货 调 度 页 面 接 口 结 束 (deliveringAffirm.vue) **************************
@@ -122,17 +122,17 @@ export const getCurrentReceivingSubOrderList = params => {
 
 // 接货手动调度
 export const queryReceivingReservation = params => {
-  return axios.post(`${baseUrl}/interface/short_receiving_dispatch/query_receiving_dispatch`)
+  return axios.post(`${baseUrl}/interface/short_receiving_dispatch/query_receiving_dispatch`, params)
 }
 
 // 点击手动调度
 export const manualReceivingDispatch = params => {
-  return axios.post(`${baseUrl}/interface/short_receiving_dispatch/manual_dispatch`)
+  return axios.post(`${baseUrl}/interface/short_receiving_dispatch/manual_dispatch`, params)
 }
 
 // 点击编辑
 export const queryManualReceivingDispatch = params => {
-  return axios.post(`${baseUrl}/interface/short_receiving_dispatch/query_manual_dispatch`)
+  return axios.post(`${baseUrl}/interface/short_receiving_dispatch/query_manual_dispatch`, params)
 }
 
 // **************************  接 货 手 动 调 度 页 面 接 口 结 束 (manualDeliverlingInfo.vue) **************************
@@ -156,17 +156,17 @@ export const queryOrderListInTransport = params => {
 
 // 待长途运输装载单
 export const queryCurrentTransportingList = params => {
-  return axios.post(`${baseUrl}/interface/long_transporting_management/query_loading_info`)
+  return axios.post(`${baseUrl}/interface/long_transporting_management/query_loading_info`, params)
 }
 
 // 修改装载单状态
 export const updateTransportListInfo = params => {
-  return axios.post(`${baseUrl}/interface/long_transporting_management/update_loading_state`)
+  return axios.post(`${baseUrl}/interface/long_transporting_management/update_loading_state`, params)
 }
 
 // 查询装载单中订单信息
 export const QueryOrderInfo = params => {
-  return axios.post(`${baseUrl}/interface/long_transporting_management/query_order_info`)
+  return axios.post(`${baseUrl}/interface/long_transporting_management/query_order_info`, params)
 }
 
 // **************************  待 长 途 运 输 订 单 结 束  (transportingInfo.vue) **************************
@@ -174,12 +174,12 @@ export const QueryOrderInfo = params => {
 
 // 查询长途直送装载单列表
 export const queryCurrentTransportDirectList = params => {
-  return axios.post(`${baseUrl}/interface/long_transporting_management/query_loading_info`)
+  return axios.post(`${baseUrl}/interface/long_transporting_management/query_loading_info`, params)
 }
 
 // 修改长途直送装载单信息
 export const updateTransportDirectListInfo = params => {
-  return axios.post(`${baseUrl}/interface/long_transporting_management/update_loading_state`)
+  return axios.post(`${baseUrl}/interface/long_transporting_management/update_loading_state`, params)
 }
 
 // **************************  待 长 途 直 送 订 单 结 束  (transportingInfo.vue) **************************
