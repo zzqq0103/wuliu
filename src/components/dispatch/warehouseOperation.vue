@@ -3,13 +3,10 @@
   <div>
     <div id="top">
       <!-- 标题 -->
-      <h2 style="text-align:center">短 途 接 货 手 动 调 度 页</h2>
+      <h2 style="text-align:center">库 存 订 单 信 息 页</h2>
 
-      <!-- 操作栏 -->
-      <div style="margin-top:2%">
-
-        <!-- 查询菜单 -->
-        <div style="margin-top:2%;float:left;">
+      <!-- 查询菜单 -->
+      <div style="margin-top:2%;float:left;">
           <el-form :inline="true" :model="formQuery" class="demo-form-inline">
             <el-form-item label="订单时间:">
               <el-date-picker v-model="formQuery.dateInterval" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions" range-separator='/' style="width: 150px">
@@ -17,9 +14,6 @@
             </el-form-item>
             <el-form-item label="订单号:">
               <el-input v-model="formQuery.orderId" placeholder="请输入订单号" style="width:124px;margin-right:5px;"></el-input>
-            </el-form-item>
-            <el-form-item label="司机姓名:">
-              <el-input v-model="formQuery.driverNam" placeholder="请输入司机姓名" style="width:165px;margin-right:5px;"></el-input>
             </el-form-item>
             <el-form-item label="发货人姓名:">
               <el-input v-model="formQuery.shipNam" placeholder="请输入发货人姓名" style="width:140px;margin-right:5px;"></el-input>
@@ -31,33 +25,30 @@
               <el-button type="primary" @click="submitQuery">查询</el-button>
             </el-form-item>
           </el-form>
+      </div>
+      <!-- 导出 -->
+      <div style="float:right;margin-top:2%;">
+        <el-button style="float:right; margin-right:10px;">导出</el-button>
+        <!-- 设置div -->
+        <div style="float:right;margin-right:10px;">
+          <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
+          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+            <template v-for="(collist,i) in gridOptions.columnDefs">
+              <div class="colVisible">
+                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"  style="float: left;width: 180px">
+                  {{collist.headerName}}
+                </el-checkbox>
+              </div>
+            </template>
+            <template>
+              <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
+                <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+              </div>
+            </template>
+          </el-popover>
+          <el-button v-popover:popover1>设置</el-button>
         </div>
-
-        <!-- 导出 -->
-        <div style="float:right;margin-top:2%;">
-          <el-button style="float:right; margin-right:10px;">导出</el-button>
-          <!-- 设置div -->
-          <div style="float:right;margin-right:10px;">
-            <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
-            <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-              <template v-for="(collist,i) in gridOptions.columnDefs">
-                <div class="colVisible">
-                  <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"  style="float: left;width: 180px">
-                    {{collist.headerName}}
-                  </el-checkbox>
-                </div>
-              </template>
-              <template>
-                <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
-                  <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-                  <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
-                </div>
-              </template>
-            </el-popover>
-            <el-button v-popover:popover1>设置</el-button>
-          </div>
-        </div>
-
       </div>
     </div>
 
@@ -93,11 +84,6 @@
       </el-pagination>
     </div>
 
-    <!-- 装载单订单列表展示 -->
-    <el-dialog :title="已装载单订单列表" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
-      <Dispatched :status="status"> </Dispatched>
-    </el-dialog>
-
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
     <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
       <order-details :orderId="orderId"></order-details>
@@ -110,50 +96,44 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {queryReceivingReservation, manualReceivingDispatch, queryManualReceivingDispatch} from '../../api/dispatch/api'
+  import {queryCurrentEpiboliedList, queryOrderDetail} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
-  // 引入装载单页面的 （dispatched.vue）页面
-  import Dispatched from './dispatched'
-  // 引入装载单订单页面 （deliverOrderList.vue） 页面
-  import DeliverOrderList from './deliverOrderList'
+  import ElButton from '../../../node_modules/element-ui/packages/button/src/button'
   export default {
     data () {
       return {
         formQuery: {
           dateInterval: '', // 时间间隔
           orderId: '', // 订单号
-          driverNam: '', // 中转外包公司名
           shipNam: '', // 发货人姓名
           receNam: '' // 收货人姓名
         },
-        titleText: '已送货装载单订单列表',
-        status: 1,
-        deliveringVisible: false,
         listLoading: false, // 加载圆圈（默认不显示）
         queryName: '', // 查询参数值
         currentpage: 1, // 当前页数
         colVisible: false, // 设置弹窗的显示boolean值
-        orderId: '', // 运单号
-        dispatchVisible: false, // 设置装载单列表的订单信息的boolean值
         tableForm: {
-          'id': '',
-          'loadOrderId': '',
-          'loadOrderStatus': '',
-          'adjustmentStatus': '',
-          'warehouse': '',
-          'driverName': '',
-          'driverPhone': '',
-          'deliverTime': '',
-          'deliveRemarks': '',
-          'allWeights': '',
-          'allVolumes': '',
-          'allNumbers': '',
-          'dispatcherId': '',
-          'dispatcherName': '',
-          'remarks': ''
+          'id': '', // 序号
+          'orderId': '', // 订单号
+          'orderTim': '', // 订单时间
+          'shipNam': '', // 发货人姓名
+          'receNam': '', // 收货人姓名
+          'arrStation': '', // 到站
+          'goodsNam': '', // 货物名称
+          'goodsNums': '', // 件数
+          'goodsWeight': '', // 重量
+          'goodsVolumn': '', // 体积
+          'package': '', // 包装
+          'rouSelection': '', // 线路选择
+          'changeStart': '', // 中转起始地
+          'changeFee': '', // 中转费
+          'orderNote': '', // 订单备注
+          'lineTel': '', // 外包企业线路账号（联系方式）
+          'lineNam': '', // 联系人
+          'contractPrice': '' // 合同价格
         },
-        rules: {}, //
+        rules: {},
         formLabelWidth: '120px',
         // Ag-grid 表格组件的data
         gridOptions: {
@@ -167,49 +147,59 @@
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '装载单号', width: 120, field: 'loadOrderId', filter: 'text', hide: false, visible: true
+              headerName: '订单号', width: 120, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '装载单状态', width: 120, field: 'loadOrderStatus', filter: 'text', hide: false, visible: true
+              headerName: '开单时间', width: 120, field: 'orderTim', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '调整状态', width: 120, field: 'adjustmentStatus', filter: 'text', hide: false, visible: true
+              headerName: '到站点', width: 120, field: 'arrStation', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '所属仓库', width: 120, field: 'warehouse', filter: 'text', hide: false, visible: true
+              headerName: '中转起始点', width: 120, field: 'changeStart', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '司机姓名', width: 120, field: 'driverName', filter: 'text', hide: false, visible: true
+              headerName: '中转外包公司', width: 120, field: 'rouSelection', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '司机电话', width: 120, field: 'driverPhone', filter: 'text', hide: false, visible: true
+              headerName: '中转花费', width: 120, field: 'changeFee', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '送货时间', width: 120, field: 'deliverTime', filter: 'text', hide: false, visible: true
+              headerName: '合同价格', width: 120, field: 'contractPrice', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '送货备注', width: 120, field: 'deliveRemarks', filter: 'text', hide: false, visible: true
+              headerName: '外包企业联系人', width: 140, field: 'lineNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总重量', width: 120, field: 'allWeights', filter: 'text', hide: false, visible: true
+              headerName: '外包企业联系电话', width: 150, field: 'lineTel', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总体积', width: 120, field: 'allVolumes', filter: 'text', hide: false, visible: true
+              headerName: '发货人姓名', width: 120, field: 'shipNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总件数', width: 120, field: 'allNumbers', filter: 'text', hide: false, visible: true
+              headerName: '收货人姓名', width: 120, field: 'receNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '调度管理员编号', width: 120, field: 'dispatcherId', filter: 'text', hide: false, visible: true
+              headerName: '货物名称', width: 120, field: 'goodsNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '调度管理员姓名', field: 'dispatcherName', width: 120, filter: 'text', hide: false, visible: true
+              headerName: '包装', field: 'package', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '备注', field: 'remarks', width: 120, filter: 'text', hide: false, visible: true
+              headerName: '件数', field: 'goodsNums', width: 120, filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '重量', field: 'goodsWeight', width: 120, filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '体积', field: 'goodsVolumn', width: 120, filter: 'text', hide: false, visible: true
+            },
+            {
+              headerName: '备注', field: 'orderNote', width: 120, filter: 'text', hide: false, visible: true
             }
           ]
         },
+        // 查询的参数
         orderlist: [], // 订单列表
         totalpages: 1, // 总页数
         pageSize: 25, // 每页展示的个数
@@ -277,22 +267,21 @@
     },
     // 实例组件
     components: {
+      ElButton,
       'ag-grid-vue': AgGridVue,
-      OrderDetails,
-      Dispatched,
-      DeliverOrderList
+      OrderDetails
     },
-    // 实例方法
+// 实例方法
     methods: {
       // 查询按钮点击
       submitQuery () {
         console.log('click submitQuery function')
       },
-      // 装载单订单列表弹框
+      // 订单详情弹框
       detailDoubleClick (event) {
-        this.loadOrderId = event.data.loadOrderId
-        console.log(event.data.loadOrderId)
-        this.deliveringVisible = true
+        console.log(event.data.orderId)
+        this.orderId = event.data.orderId
+        this.detailVisible = true
       },
       // 改变每页显示的个数
       handleSizeChange (val) {
@@ -340,24 +329,18 @@
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
       },
-      // 查询接货需要手动调度的预约单列表
-      getQueryReceivingReservation () {
+      // 获得当前已中转的订单列表
+      getQueryCurrentEpiboliedList () {
         let para = {
-          // 页码
-          pageNum: this.currentpage, // required
-          // 每页记录数
-          recordNum: this.pageSize, // required
-          // 需要查询的订单Id
-          orderId: '', // optional
-          // 查询的司机姓名
-          driverName: '', // optional
-          // 查询的发货方姓名
-          shipNam: '', // optional
-          // 查询的收货方姓名
-          receNam: '' // optional
+          page: this.currentpage,
+          orderId: this.orderId,
+          driverName: this.driverName,
+          deliverOrderId: this.deliverOrderId,
+          selectvalue: this.selectvalue,
+          pageSize: this.pageSize
         }
         // this.listLoading = true
-        queryReceivingReservation(para).then((res) => {
+        queryCurrentEpiboliedList(para).then((res) => {
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
@@ -365,27 +348,15 @@
         })
         return null
       },
-      // 点击手动调度
-      getManualReceivingDispatch () {
+      // 查看订单详情
+      getQueryOrderDetail () {
         let para = {
-          orderId: this.orderId,
-          dispatchList: []
+          queryName: this.queryName,
+          queryClass: this.selectvalue,
+          pageSize: this.pageSize
         }
         // this.listLoading = true
-        manualReceivingDispatch(para).then(res => {
-          this.gridOptions.api.setRowData(res.data.querylists)
-          this.orderlist = res.data.querylists
-          this.totalpages = res.data.totalpages
-          // this.listLoading = false
-        })
-      },
-      // 点击编辑
-      setQueryManualReceivingDispatch () {
-        let para = {
-          orderId: this.orderId
-        }
-        // this.listLoading = true
-        queryManualReceivingDispatch(para).then(res => {
+        queryOrderDetail(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
@@ -395,12 +366,14 @@
     },
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getQueryReceivingReservation()
+      this.$nextTick(function () {
+        this.getQueryCurrentEpiboliedList()
+      })
     }
   }
 </script>
-<style scoped>
 
+<style scoped>
   .el-select-css {
     width: 50%;
   }
@@ -413,6 +386,7 @@
     border: 1px solid rgb(191, 217, 216);
     color: rgb(31, 61, 60);
     padding: 5px 10px;
-    font-size: 10px
+    font-size: 10px;
+
   }
 </style>

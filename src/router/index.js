@@ -214,6 +214,11 @@ export default new Router({
           path: '/deliveringAffirm',
           component: resolve => require(['../components/dispatch/deliveringAffirm.vue'], resolve)
         },
+        // 短直送运输
+        {
+          path: '/deliveringDirect',
+          component: resolve => require(['../components/dispatch/deliveringDirect.vue'], resolve)
+        },
         // 3、已接货
         {
           path: '/receivedInfo',
@@ -253,6 +258,11 @@ export default new Router({
         {
           path: '/epobolingInfo',
           component: resolve => require(['../components/dispatch/epobolingInfo.vue'], resolve)
+        },
+        // 9、库存管理
+        {
+          path: '/warehouseOperation',
+          component: resolve => require(['../components/dispatch/warehouseOperation.vue'], resolve)
         },
         // 系统管理员
         {

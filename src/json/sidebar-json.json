@@ -295,6 +295,18 @@
             "index": "transportingInfo",
             "title": "待运输",
             "icon": ""
+          }
+        ]
+      },
+      {
+        "icon": "directSend",
+        "index": "directSend",
+        "title": "订单直送管理",
+        "subs": [
+          {
+            "index": "deliveringDirect",
+            "title": "短途直送",
+            "icon": ""
           },
           {
             "index": "transportDirect",

@@ -73,7 +73,6 @@
                    :suppressMovableColumns="true"
                    :enableColResize="true"
                    :enableSorting="true"
-                   :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight="40"
@@ -196,8 +195,6 @@
   } from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
-  // 引入外部筛选函数组件系统
-  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   import ElForm from '../../../node_modules/element-ui/packages/form/src/form'
   import ElFormItem from '../../../node_modules/element-ui/packages/form/src/form-item'
   import ElDialog from '../../../node_modules/element-ui/packages/dialog/src/component'
@@ -248,151 +245,63 @@
           rowSelection: 'single',
           columnDefs: [
             {
-              headerName: '序号', field: 'id', suppressMenu: true, hide: false, visible: true
+              headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '订单号',
-              field: 'orderId',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '订单号', width: 120, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '开单时间',
-              field: 'orderTim',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '开单时间', width: 120, field: 'orderTim', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '到站点',
-              field: 'arrStation',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '到站点', width: 120, field: 'arrStation', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '中转起始点',
-              field: 'changeStart',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '中转起始点', width: 120, field: 'changeStart', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '中转外包公司',
-              field: 'rouSelection',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '中转外包公司', width: 120, field: 'rouSelection', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '中转花费',
-              field: 'changeFee',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '中转花费', width: 120, field: 'changeFee', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '合同价格',
-              field: 'contractPrice',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '合同价格', width: 120, field: 'contractPrice', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '外包企业联系人',
-              width: 140,
-              field: 'lineNam',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '外包企业联系人', width: 140, field: 'lineNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '外包企业联系电话',
-              width: 150,
-              field: 'lineTel',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '外包企业联系电话', width: 150, field: 'lineTel', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '发货人姓名',
-              field: 'shipNam',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '发货人姓名', width: 120, field: 'shipNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '收货人姓名',
-              field: 'receNam',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '收货人姓名', width: 120, field: 'receNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '货物名称',
-              field: 'goodsNam',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '货物名称', width: 120, field: 'goodsNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '包装',
-              field: 'package',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '包装', field: 'package', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '件数',
-              field: 'goodsNums',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '件数', field: 'goodsNums', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '重量',
-              field: 'goodsWeight',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '重量', field: 'goodsWeight', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '体积',
-              field: 'goodsVolumn',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '体积', field: 'goodsVolumn', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '备注',
-              field: 'orderNote',
-              filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
+              headerName: '备注', field: 'orderNote', width: 120, filter: 'text', hide: false, visible: true
             },
             {
               headerName: '操作',
               field: 'operate',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true,
               cellRendererFramework: 'operateComponent',

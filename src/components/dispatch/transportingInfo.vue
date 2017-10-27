@@ -70,7 +70,6 @@
                    :suppressMovableColumns="true"
                    :enableColResize="true"
                    :enableSorting="true"
-                   :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight="40"
@@ -112,8 +111,6 @@
   import {queryCurrentTransportingList, updateTransportListInfo, QueryOrderInfo} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
-  // 引入外部筛选函数组件系统
-  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   // 引入dispatchLoaderInfo 组件页面
   import DeliverOrderList from './deliverOrderList'
   // 引入装载单页面的 （dispatched.vue）页面
@@ -176,7 +173,6 @@
               width: 120,
               field: 'loadOrderId',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -185,7 +181,6 @@
               width: 120,
               field: 'loadOrderStatus',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -194,7 +189,6 @@
               width: 120,
               field: 'adjustmentStatus',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -203,7 +197,6 @@
               width: 120,
               field: 'startStation',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -212,7 +205,6 @@
               width: 120,
               field: 'endStation',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -221,7 +213,6 @@
               width: 120,
               field: 'driverName',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -230,7 +221,6 @@
               width: 120,
               field: 'driverPhone',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -239,7 +229,6 @@
               width: 120,
               field: 'departTime',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -248,7 +237,6 @@
               width: 120,
               field: 'arriveTime',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -257,7 +245,6 @@
               width: 120,
               field: 'gross',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -266,7 +253,6 @@
               width: 120,
               field: 'freight',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -275,7 +261,6 @@
               width: 120,
               field: 'transhipment',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -284,7 +269,6 @@
               width: 120,
               field: 'refund',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -293,7 +277,6 @@
               width: 120,
               field: 'sendFee',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -302,7 +285,6 @@
               width: 120,
               field: 'allWeights',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -311,7 +293,6 @@
               width: 120,
               field: 'allVolumes',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -320,7 +301,6 @@
               width: 120,
               field: 'allNumbers',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -329,7 +309,6 @@
               width: 120,
               field: 'dispatcherId',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -338,7 +317,6 @@
               field: 'dispatcherName',
               width: 120,
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -347,7 +325,6 @@
               field: 'remarks',
               width: 120,
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
             },
@@ -356,7 +333,6 @@
               field: 'operator',
               width: 60,
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true,
               cellRendererFramework: 'operateComponent',

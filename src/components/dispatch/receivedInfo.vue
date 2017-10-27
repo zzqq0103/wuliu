@@ -72,7 +72,6 @@
                    :suppressMovableColumns="true"
                    :enableColResize="true"
                    :enableSorting="true"
-                   :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight="40"
@@ -109,8 +108,6 @@
   import {getCurrentReceivedList, getCurrentReceivedReservationList, getCurrentReceivedSubOrderList} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
-  // 引入外部筛选函数组件系统
-  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   export default {
     data () {
       return {
@@ -161,58 +158,58 @@
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '订单号', width: 120, field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '订单号', width: 120, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '开单时间', width: 120, field: 'orderDate', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单时间', width: 120, field: 'orderDate', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '发货单位', width: 120, field: 'forwarding', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '发货单位', width: 120, field: 'forwarding', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '发货人姓名', width: 120, field: 'shipper', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '发货人姓名', width: 120, field: 'shipper', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '发货人联系电话', width: 120, field: 'phone', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '发货人联系电话', width: 120, field: 'phone', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '取货地址', width: 120, field: 'receivedAddr', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '取货地址', width: 120, field: 'receivedAddr', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '取货货物区域', width: 120, field: 'receivedArea', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '取货货物区域', width: 120, field: 'receivedArea', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '货物名称', width: 120, field: 'goodsName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '货物名称', width: 120, field: 'goodsName', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '接货司机姓名', field: 'driverName', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '接货司机姓名', field: 'driverName', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '接货司机电话', field: 'driverPhone', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '接货司机电话', field: 'driverPhone', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '接货司机车牌号', field: 'carLicence', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '接货司机车牌号', field: 'carLicence', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '包装', width: 120, field: 'pack', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '包装', width: 120, field: 'pack', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '件数', width: 120, field: 'numbers', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '件数', width: 120, field: 'numbers', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '重量', width: 120, field: 'weight', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '重量', width: 120, field: 'weight', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '体积', width: 120, field: 'volume', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '体积', width: 120, field: 'volume', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '车载吨位', field: 'carTon', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '车载吨位', field: 'carTon', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '车载容量', field: 'carVolume', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '车载容量', field: 'carVolume', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '订单备注', field: 'remarks', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '订单备注', field: 'remarks', width: 120, filter: 'text', hide: false, visible: true
             }
           ]
         },
