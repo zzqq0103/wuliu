@@ -1,43 +1,47 @@
 <template>
-<!-- 组件必须头元素被一个div容器包括 -->
+  <!-- 组件必须头元素被一个div容器包括 -->
   <div>
     <div id="top">
       <!-- 标题 -->
       <h2 style="text-align:center">长 途 直 送 装 载 单 信 息 页</h2>
       <!-- 操作栏 -->
       <div style="margin-top:2%">
-      <!-- 查询菜单 -->
-      <div style="margin-top:2%;float:left;">
+        <!-- 查询菜单 -->
+        <div style="margin-top:2%;float:left;">
           <el-form :inline="true" :model="formQuery" class="demo-form-inline">
             <el-form-item label="订单时间:">
-              <el-date-picker v-model="formQuery.dateInterval" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions" range-separator='/' style="width: 150px">
+              <el-date-picker v-model="formQuery.dateInterval" type="daterange" placeholder="选择日期范围"
+                              :picker-options="pickerOptions" range-separator='/' style="width: 150px">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="装载单号:">
-              <el-input v-model="formQuery.orderId" placeholder="请输入订单号" style="width:124px;margin-right:5px;"></el-input>
+              <el-input v-model="formQuery.orderId" placeholder="请输入订单号"
+                        style="width:124px;margin-right:5px;"></el-input>
             </el-form-item>
             <el-form-item label="司机姓名:">
-              <el-input v-model="formQuery.driverNam" placeholder="请输入司机姓名" style="width:165px;margin-right:5px;"></el-input>
+              <el-input v-model="formQuery.driverNam" placeholder="请输入司机姓名"
+                        style="width:165px;margin-right:5px;"></el-input>
             </el-form-item>
             <!--<el-form-item label="装载单状态:">-->
             <!--<el-input v-model="formQuery.shipNam" placeholder="请输入发货人姓名" style="width:140px;margin-right:5px;"></el-input>-->
             <!--</el-form-item>-->
             <el-form-item>
-              <el-button type="primary" @click="submitQuery">查询</el-button>
+              <el-button type="primary" @click="queryAreaList">查询</el-button>
             </el-form-item>
           </el-form>
         </div>
-      <!-- 导出 -->
-      <div style="float:right;margin-top:2%;">
-        <el-button style="float:right; margin-right:10px;">导出</el-button>
-        <el-button style="float:right; margin-right:10px;" @click="createLoaderList">新增装载单</el-button>
-        <!-- 设置div -->
+        <!-- 导出 -->
+        <div style="float:right;margin-top:2%;">
+          <el-button style="float:right; margin-right:10px;">导出</el-button>
+          <el-button style="float:right; margin-right:10px;" @click="createLoaderList">新增装载单</el-button>
+          <!-- 设置div -->
           <div style="float:right;margin-right:10px;">
             <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
             <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
               <template v-for="(collist,i) in gridOptions.columnDefs">
                 <div class="colVisible">
-                  <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"  style="float: left;width: 180px">
+                  <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"
+                               style="float: left;width: 180px">
                     {{collist.headerName}}
                   </el-checkbox>
                 </div>
@@ -88,7 +92,8 @@
       <deliver-order-list :loaderId="loadOrderId" :flag="flag"></deliver-order-list>
     </el-dialog>
     <!-- 装载单订单列表展示 -->
-    <el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
+    <el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false
+               :modal-append-to-body=false>
       <deliver-order-list></deliver-order-list>
     </el-dialog>
   </div>
@@ -98,7 +103,7 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {queryCurrentTransportDirectList, updateTransportDirectListInfo} from '../../api/dispatch/api'
+  import {queryCurrentTransportDirectList, updateTransportDirectListInfo, getAreaList} from '../../api/dispatch/mock_api'
   // 引入dispatchLoaderInfo 组件页面
   import DeliverOrderList from './deliverOrderList'
   // 引入装载单页面的 （dispatched.vue）页面
@@ -372,7 +377,7 @@
         })
         return null
       },
-       // 修改长途直送装载单信息
+      // 修改长途直送装载单信息
       setTransportDirectListInfo () {
         let para = {
           queryName: this.queryName,
@@ -386,11 +391,21 @@
           this.totalpages = res.data.totalpages
           this.listLoading = false
         })
+      },
+      queryAreaList () {
+        console.log('xxx')
+        let para = {
+          hubNam: '北京'
+        }
+        getAreaList(para).then((res) => {
+          console.log(res.data)
+        })
       }
     },
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getQueryCurrentTransportDirectList()
+//      this.queryAreaList()
+//      this.getQueryCurrentTransportDirectList()
     }
   }
 </script>
@@ -398,6 +413,7 @@
   .el-select-css {
     width: 50%;
   }
+
   .del-but {
     cursor: pointer;
     float: right;

@@ -94,7 +94,7 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {queryCurrentTransportDirectList, updateTransportDirectListInfo} from '../../api/dispatch/api'
+  import api from '../../api/dispatch/mock_api'
   // 引入dispatchLoaderInfo 组件页面
   import DeliverOrderList from './deliverOrderList'
   // 引入装载单页面的 （dispatched.vue）页面
@@ -356,7 +356,7 @@
           pageSize: this.pageSize
         }
         // this.listLoading = true
-        queryCurrentTransportDirectList(para).then((res) => {
+        api.queryCurrentTransportDirectList(para).then((res) => {
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
@@ -372,7 +372,7 @@
           pageSize: this.pageSize
         }
         // this.listLoading = true
-        updateTransportDirectListInfo(para).then(res => {
+        api.updateTransportDirectListInfo(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages

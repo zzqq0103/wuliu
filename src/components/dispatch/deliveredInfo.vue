@@ -123,7 +123,7 @@
   //  import {getCurrentDeliveredList, getCurrentDeliveredSubOrderList} from '../../api/dispatch/api'
 
   // 引入axios中的mock_api.js 后台数据
-  import {getCurrentDeliveredList, getCurrentDeliveredSubOrderList} from '../../api/dispatch/mock_api'
+  import api from '../../api/dispatch/mock_api'
 
   // 引入外部 “订单详情" 页面
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
@@ -606,7 +606,8 @@
         }
         this.listLoading = true
         if (this.formQuery.selectClass === '1') {
-          getCurrentDeliveredList(para).then((res) => {
+          console.log('xyxyxy')
+          api.getCurrentDeliveredList(para).then((res) => {
             console.log(res)
             this.gridOptions.rowData = res.data.orderlists
             this.gridOptions.api.setRowData(res.data.orderlists)
@@ -615,7 +616,7 @@
             this.listLoading = false
           })
         } else {
-          getCurrentDeliveredSubOrderList(para).then((res) => {
+          api.getCurrentDeliveredSubOrderList(para).then((res) => {
             console.log(res)
             this.gridOptions.rowData = res.data.orderlists
             this.gridOptions.api.setRowData(res.data.orderlists)
@@ -629,6 +630,7 @@
 
       // 查询已送货的子件列表
       queryCurrentDeliveredSubOrderList () {
+        console.log('xyxyxy')
         let para = {
           // 页码
           pageNum: this.formQuery.currentpage, // required
@@ -649,7 +651,7 @@
         }
         this.listLoading = true
         if (this.formQuery.selectClass === '1') {
-          getCurrentDeliveredSubOrderList(para).then((res) => {
+          api.getCurrentDeliveredSubOrderList(para).then((res) => {
             console.log(res)
             this.gridOptions.rowData = res.data.orderlists
             this.gridOptions.api.setRowData(res.data.orderlists)
@@ -658,7 +660,7 @@
             this.listLoading = false
           })
         } else {
-          getCurrentDeliveredSubOrderList(para).then((res) => {
+          api.getCurrentDeliveredSubOrderList(para).then((res) => {
             console.log(res)
             this.gridOptions.rowData = res.data.orderlists
             this.gridOptions.api.setRowData(res.data.orderlists)

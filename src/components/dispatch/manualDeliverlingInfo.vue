@@ -111,7 +111,7 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {queryDeliveringReservation, manualDeliveringDispatch, queryManualDeliveringDispatch} from '../../api/dispatch/api'
+  import api from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
   // 引入外部筛选函数组件系统
@@ -360,7 +360,7 @@
           receNam: '' // optional
         }
         // this.listLoading = true
-        queryDeliveringReservation(para).then((res) => {
+        api.queryDeliveringReservation(para).then((res) => {
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
@@ -375,7 +375,7 @@
           dispatchList: []
         }
         // this.listLoading = true
-        manualDeliveringDispatch(para).then(res => {
+        api.manualDeliveringDispatch(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
@@ -388,7 +388,7 @@
           orderId: this.orderId
         }
         // this.listLoading = true
-        queryManualDeliveringDispatch(para).then(res => {
+        api.queryManualDeliveringDispatch(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages

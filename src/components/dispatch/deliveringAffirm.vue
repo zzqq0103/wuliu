@@ -12,25 +12,16 @@
         <!-- 查询菜单 -->
         <div style=" margin-top:2%; float:left; ">
           <el-form :inline="true" :model="formQuery" class="demo-form-inline">
-            <el-form-item label="订单时间:">
-              <el-date-picker v-model="formQuery.dateInterval" type="daterange" placeholder="选择日期范围"
-                              :picker-options="pickerOptions" range-separator='/' style="width: 150px">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-input v-model="formQuery.queryOrderId" placeholder="请输入单号"
-                        style="width:150px;margin-right:5px;"></el-input>
-            </el-form-item>
             <el-form-item label="司机姓名:">
               <el-input v-model="formQuery.driverNam" placeholder="请输入司机姓名"
                         style="width:165px;margin-right:5px;"></el-input>
             </el-form-item>
-            <el-form-item label="发货人姓名:">
-              <el-input v-model="formQuery.shipNam" placeholder="请输入发货人姓名"
+            <el-form-item label="司机电话:">
+              <el-input v-model="formQuery.shipNam" placeholder="请输入司机电话"
                         style="width:140px;margin-right:5px;"></el-input>
             </el-form-item>
-            <el-form-item label="收货人姓名:">
-              <el-input v-model="formQuery.receNam" placeholder="请输入收货人姓名" style="width:140px;"></el-input>
+            <el-form-item label="仓库ID:">
+              <el-input v-model="formQuery.receNam" placeholder="请输入仓库ID" style="width:140px;"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitQuery">查询</el-button>
@@ -131,9 +122,7 @@
   import {AgGridVue} from 'ag-grid-vue'
 
   // 引入axios中的mock_api.js 后台数据
-  import {
-    queryDeliveringCar
-  } from '../../api/dispatch/mock_api'
+  import api from '../../api/dispatch/mock_api'
 
   // 引入外部 “订单详情" 页面
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
@@ -491,7 +480,7 @@
           receNam: '' // optional
         }
         this.listLoading = true
-        queryDeliveringCar(para).then((res) => {
+        api.queryDeliveringCar(para).then((res) => {
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages

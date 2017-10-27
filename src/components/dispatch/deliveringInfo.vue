@@ -123,7 +123,7 @@
   //  import {getCurrentDeliveredList, getCurrentDeliveredSubOrderList} from '../../api/dispatch/api'
 
   // 引入axios中的mock_api.js 后台数据
-  import {getCurrentDeliveringList, getCurrentDeliveringSubOrderList} from '../../api/dispatch/mock_api'
+  import api from '../../api/dispatch/mock_api'
 
   // 引入外部 “订单详情" 页面
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
@@ -610,7 +610,7 @@
         }
         this.listLoading = true
         if (this.formQuery.selectClass === '1') {
-          getCurrentDeliveringList(para).then((res) => {
+          api.getCurrentDeliveringList(para).then((res) => {
             console.log(res)
             this.gridOptions.rowData = res.data.orderlists
             this.gridOptions.api.setRowData(res.data.orderlists)
@@ -619,7 +619,7 @@
             this.listLoading = false
           })
         } else {
-          getCurrentDeliveringSubOrderList(para).then((res) => {
+          api.getCurrentDeliveringSubOrderList(para).then((res) => {
             console.log(res)
             this.gridOptions.rowData = res.data.orderlists
             this.gridOptions.api.setRowData(res.data.orderlists)
@@ -653,7 +653,7 @@
         }
         this.listLoading = true
         if (this.formQuery.selectClass === '1') {
-          getCurrentDeliveringList(para).then((res) => {
+          api.getCurrentDeliveringList(para).then((res) => {
             console.log(res)
             this.gridOptions.rowData = res.data.orderlists
             this.gridOptions.api.setRowData(res.data.orderlists)
@@ -662,7 +662,7 @@
             this.listLoading = false
           })
         } else {
-          getCurrentDeliveringSubOrderList(para).then((res) => {
+          api.getCurrentDeliveringSubOrderList(para).then((res) => {
             console.log(res)
             this.gridOptions.rowData = res.data.orderlists
             this.gridOptions.api.setRowData(res.data.orderlists)
