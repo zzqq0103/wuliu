@@ -61,6 +61,8 @@ const deliveringWarehouse = []
 
 const deliveringDriver = []
 
+// 送货需要手动调度的订单列表
+const deliveringOperationOrderList = []
 // 订单表、子件表、预约单表 的数据
 for (let i = 0; i < 25; i++) {
   // 订单表
@@ -456,8 +458,26 @@ for (let i = 0; i < 100; i++) {
 
 // “手动调度” 部分页面的数据
 for (let i = 0; i < 100; i++) {
-  // 接货部分
   // 送货部分
+  deliveringOperationOrderList.push(Mock.mock({
+    id: Mock.mock('@increment(1)'),
+    orderId: Mock.mock('@string("number",5)'),
+    orderTim: Mock.mock('@datetime'),
+    receNam: Mock.mock('@cname'),
+    receTel: /^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$/,
+    receAdr: Mock.mock('@county(true)'),
+    receArea: Mock.mock('@county(true)'),
+    goodsNam: Mock.mock('@ctitle(5)'),
+    goodsPackage: '箱装',
+    'goodsNums|1-20': 15,
+    'goodsWeight|1-20': 16,
+    'goodsVolumn|1-20': 15,
+    clieOrderNote: '客户订单备注',
+    inteOrderNote: '内部订单备注',
+    dispatNote: '调度备注',
+    dispatState: '未分配'
+  }))
+  // 接货部分
 }
 
 // 库存部分
@@ -486,5 +506,6 @@ export {
   receivedReservationList,
   deliveringCarList,
   deliveringWarehouse,
-  deliveringDriver
+  deliveringDriver,
+  deliveringOperationOrderList
 }

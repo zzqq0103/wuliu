@@ -91,6 +91,18 @@ export default {
       })
     })
 
+    // 查询接货需要手动调度的订单列表接口
+    mock.onPost(`${host}/interface/short_delivering_dispatch/query_delivering_order`).reply(config => {
+      let {pageNum, recordNum} = JSON.parse(config.data)
+      console.log(`pageNum : ${pageNum}`)
+      let mockList = getListDataBySize(mockData.deliveringOperationOrderList, recordNum, pageNum)
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {orderlists: mockList, totalPages: mockData.deliveringOperationOrderList.length}])
+        }, 1000)
+      })
+    })
+
     // // 已接货 （订单）
     // mock.onPost(`${host}/interface/short_delivered_management/getCurrentDeliveredList`).reply(config => {
     //   console.log(config)

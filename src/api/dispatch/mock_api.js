@@ -66,7 +66,7 @@ export default {
 // **************************    送 货 手 动 调 度 页 面 接 口 开 始 (manualDeliverlingInfo.vue)  **************************
 
 // 送货手动调度 (订单列表）
-  queryDeliveringReservation (params) {
+  queryDeliveringOrderList (params) {
     return axios.post(`${baseUrl}/interface/short_delivering_dispatch/query_delivering_order`, params)
   },
 
