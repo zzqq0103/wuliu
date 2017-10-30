@@ -4,7 +4,7 @@
     <div id="top">
 
       <!-- 标题 -->
-      <h2 style="text-align:center">送 货 成 功 订 单 信 息 页</h2>
+      <h2 style="text-align:center">已 送 货 订 单 信 息 页</h2>
 
       <!-- 操作栏 -->
       <div style="margin-top:2%">
@@ -51,7 +51,7 @@
 
             <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
             <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-              <template v-for="(collist,i) in gridOptions.columnDefs">
+              <template v-for="(collist,i) in this.gridOptions.columnDefs">
                 <div class="colVisible">
                   <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"
                                style="float: left;width: 180px">
@@ -72,6 +72,7 @@
         </div>
 
       </div>
+
     </div>
 
     <!-- 清除浮动 -->
@@ -108,7 +109,7 @@
     </div>
 
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
-    <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
+    <el-dialog title="订单详情" :visible.sync="detailVisible" size="small" :closeOnClickModal="false" top="10%">
       <order-details :orderId="orderId"></order-details>
     </el-dialog>
   </div>
@@ -122,26 +123,20 @@
   //  import {getCurrentDeliveredList, getCurrentDeliveredSubOrderList} from '../../api/dispatch/api'
 
   // 引入axios中的mock_api.js 后台数据
-  import {getCurrentDeliveredList, getCurrentDeliveredSubOrderList} from '../../api/dispatch/mock_api'
+  import api from '../../api/dispatch/mock_api'
 
   // 引入外部 “订单详情" 页面
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
 
-  // 引入外部筛选函数组件系统
-  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
-
   // 引入装载单页面的 （dispatched.vue）页面
   import Dispatched from './dispatched'
-
-  // 引入装载单订单页面 （deliverOrderList.vue） 页面
-  import DeliverOrderList from './deliverOrderList'
 
   export default {
     data () {
       return {
         formQuery: {
           dateInterval: '', // 时间间隔
-          queryOrderId: '', // 订单号
+          queryOrderId: '', // 单号
           driverNam: '', // 中转外包公司名
           shipNam: '', // 发货人姓名
           receNam: '', // 收货人姓名
@@ -150,12 +145,11 @@
         },
         orderId: '', // 订单号
         selectClass: '',
-//        currentpage: 1, // 当前页数
         value_Search: [],
         list: [],
         options: [],
         loading: false,
-        titleText: '已送货装载单订单列表',
+        titleText: '送货成功订单列表',
         status: 1,
         deliveringVisible: false,
         listLoading: false, // 加载圆圈（默认不显示）
@@ -184,7 +178,6 @@
         },
         rules: {}, //
         formLabelWidth: '120px',
-        // Ag-grid 表格组件的data
         gridOptions: {
           context: {
             componentParent: this
@@ -194,11 +187,11 @@
           columnDefs: [
             {
               headerName: '序号',
-              width: 120,
+              width: 80,
               field: 'id',
-              suppressMenu: true,
               hide: false,
               visible: true,
+              suppressMenu: true,
               cellStyle: {textAlign: 'center'}
             },
             {
@@ -206,171 +199,190 @@
               width: 120,
               field: 'orderId',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '子件号',
               width: 120,
               field: 'subId',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: true,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '开单时间',
               width: 120,
               field: 'orderTim',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '收货人姓名',
               width: 120,
               field: 'receNam',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '收货人联系方式',
               width: 120,
               field: 'receTel',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '收货地址',
-              width: 120,
+              width: 200,
               field: 'receAdr',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '收货货物区域',
-              width: 120,
+              width: 200,
               field: 'receArea',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '货物名称',
               width: 120,
               field: 'goodsNam',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '接货司机姓名',
               width: 120,
               field: 'driverNam',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '接货司机电话',
               width: 120,
               field: 'driverTel',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '接货司机车辆',
               width: 120,
               field: 'licePlateNum',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '包装',
               width: 120,
               field: 'goodsPackage',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '件数',
               field: 'goodsNums',
               width: 120,
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '重量',
               field: 'goodsWeight',
-              width: 200,
+              width: 120,
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '体积',
               width: 120,
-              field: 'goodsVolume',
+              field: 'goodsVolumn',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '车辆吨位',
               width: 120,
               field: 'tonnage',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '车辆容量',
               width: 120,
               field: 'capacity',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '客户订单备注',
-              width: 120,
+              width: 150,
               field: 'clieOrderNote',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             },
             {
               headerName: '内部订单备注',
-              width: 120,
+              width: 150,
               field: 'inteOrderNote',
               filter: 'text',
-              filterFramework: PartialMatchFilterComponent,
               hide: false,
-              visible: true
+              visible: true,
+              suppressMenu: true,
+              cellStyle: {textAlign: 'center'}
             }
           ]
         },
@@ -441,27 +453,16 @@
     watch: {
       'formQuery.selectClass': function (newValue) {
         let tempGridColumns = this.gridOptions.columnDefs
-        console.log(`tempGridColumn:`)
-        console.log(tempGridColumns)
-        console.log(`newValue = ${newValue}`)
         if (newValue === '1') { // 订单查询
           let that = this
-          console.log(`that: `)
-          console.log(that)
           tempGridColumns.forEach(function (ele, index, arr) {
-            if (ele === 'clieOrderNote') {
-              console.log(`that: `)
-              console.log(that)
+            if (ele.field === 'clieOrderNote') {
               that.gridOptions.columnDefs[index].visible = true
               that.gridOptions.columnApi.setColumnVisible(that.gridOptions.columnDefs[index].field, that.gridOptions.columnDefs[index].visible)
-            } else if (ele === 'inteOrderNote') {
-              console.log(`that: `)
-              console.log(that)
+            } else if (ele.field === 'inteOrderNote') {
               that.gridOptions.columnDefs[index].visible = true
               that.gridOptions.columnApi.setColumnVisible(that.gridOptions.columnDefs[index].field, that.gridOptions.columnDefs[index].visible)
-            } else if (ele === 'subId') {
-              console.log(`that: `)
-              console.log(that)
+            } else if (ele.field === 'subId') {
               that.gridOptions.columnDefs[index].visible = false
               that.gridOptions.columnApi.setColumnVisible(that.gridOptions.columnDefs[index].field, that.gridOptions.columnDefs[index].visible)
             } else {
@@ -469,39 +470,34 @@
             }
           })
         } else {
-          if (newValue === '2') { // 子件查询
-            let that = this
-            tempGridColumns.forEach(function (ele, index, arr) {
-              if (ele === 'clieOrderNote') {
-                console.log(`that: `)
-                console.log(that)
-                that.gridOptions.columnDefs[index].visible = false
-                that.gridOptions.columnApi.setColumnVisible(that.gridOptions.columnDefs[index].field, that.gridOptions.columnDefs[index].visible)
-              } else if (ele === 'inteOrderNote') {
-                console.log(`that: `)
-                console.log(that)
-                that.gridOptions.columnDefs[index].visible = false
-                that.gridOptions.columnApi.setColumnVisible(that.gridOptions.columnDefs[index].field, that.gridOptions.columnDefs[index].visible)
-              } else if (ele === 'subId') {
-                console.log(`that: `)
-                console.log(that)
-                that.gridOptions.columnDefs[index].visible = true
-                that.gridOptions.columnApi.setColumnVisible(that.gridOptions.columnDefs[index].field, that.gridOptions.columnDefs[index].visible)
-              } else {
-                that.gridOptions.columnApi.setColumnVisible(that.gridOptions.columnDefs[index].field, that.gridOptions.columnDefs[index].visible)
-              }
-            })
-          }
+          let that = this
+          tempGridColumns.forEach(function (ele, index, arr) {
+            if (ele.field === 'clieOrderNote') {
+              that.gridOptions.columnDefs[index].visible = false
+              that.gridOptions.columnApi.setColumnVisible(that.gridOptions.columnDefs[index].field, that.gridOptions.columnDefs[index].visible)
+            } else if (ele.field === 'inteOrderNote') {
+              that.gridOptions.columnDefs[index].visible = false
+              that.gridOptions.columnApi.setColumnVisible(that.gridOptions.columnDefs[index].field, that.gridOptions.columnDefs[index].visible)
+            } else if (ele.field === 'subId') {
+              that.gridOptions.columnDefs[index].visible = true
+              that.gridOptions.columnApi.setColumnVisible(that.gridOptions.columnDefs[index].field, that.gridOptions.columnDefs[index].visible)
+            } else {
+              that.gridOptions.columnApi.setColumnVisible(that.gridOptions.columnDefs[index].field, that.gridOptions.columnDefs[index].visible)
+            }
+          })
         }
       }
+    },
+    // 计算属性
+    computed: {
     },
     // 实例组件
     components: {
       'ag-grid-vue': AgGridVue,
       OrderDetails,
-      Dispatched,
-      DeliverOrderList
+      Dispatched
     },
+
     methods: {
       // 查询按钮点击
       submitQuery () {
@@ -523,22 +519,34 @@
         }
       },
 
-      // 装载单订单列表弹框
+      // 订单详情弹框
       detailDoubleClick (event) {
-        this.loadOrderId = event.data.loadOrderId
-        console.log(event.data.loadOrderId)
-        this.deliveringVisible = true
+        this.orderId = event.data.orderId
+        this.detailVisible = true
       },
 
       // 改变每页显示的个数
       handleSizeChange (val) {
-        this.pageSize = val
-        this.getOrderList()
+        if (this.formQuery.selectClass === '1') {
+          this.pageSize = val
+          this.formQuery.currentpage = 1
+          this.queryCurrentDeliveredList()
+        } else {
+          this.pageSize = val
+          this.formQuery.currentpage = 1
+          this.queryCurrentDeliveredSubOrderList()
+        }
       },
 
       // 点击当前选中的第几页
       handleCurrentChange (val) {
-        this.formQuery.currentpage = val
+        if (this.formQuery.selectClass === '1') {
+          this.formQuery.currentpage = val
+          this.queryCurrentDeliveredList()
+        } else {
+          this.formQuery.currentpage = val
+          this.queryCurrentDeliveredSubOrderList()
+        }
       },
 
       // 设置显示表格的哪些列
@@ -548,6 +556,7 @@
           columnlist[i].hide = !columnlist[i].hide
         }
       },
+
       // 设置按钮的启动
       setting () {
         this.colVisible = true
@@ -577,70 +586,95 @@
 
       // 当前已送货的订单列表接口
       queryCurrentDeliveredList () {
-        console.log(`送货接口： ${this}`)
         let para = {
           // 页码
-          pageNum: '', // required
+          pageNum: this.formQuery.currentpage, // required
           // 每页记录数
-          recordNum: '', // required
+          recordNum: this.pageSize, // required
           // 开始时间
-          startTime: '', // required
+          startTime: this.formQuery.dateInterval, // required
           // 结束时间
-          endTime: '', // required
+          endTime: this.formQuery.dateInterval, // required
           // 需要查询的订单Id
-          orderId: '', // optional
+          orderId: this.formQuery.queryOrderId, // optional
           // 查询的司机姓名
-          driverName: '', // optional
+          driverName: this.formQuery.driverNam, // optional
           // 查询的发货方姓名
-          shipNam: '', // optional
+          shipNam: this.formQuery.shipNam, // optional
           // 查询的收货方姓名
-          receNam: '' // optional
+          receNam: this.formQuery.receNam // optional
         }
-        console.log(para)
-        // this.listLoading = true
-        getCurrentDeliveredList(para).then((res) => {
-          this.gridOptions.rowData = res.data.orderlists
-          this.gridOptions.api.setRowData(res.data.orderlists)
-          this.orderlist = res.data.orderlists
-          this.totalpages = res.data.totalPages
-          // this.listLoading = false
-        })
+        this.listLoading = true
+        if (this.formQuery.selectClass === '1') {
+          console.log('xyxyxy')
+          api.getCurrentDeliveredList(para).then((res) => {
+            console.log(res)
+            this.gridOptions.rowData = res.data.orderlists
+            this.gridOptions.api.setRowData(res.data.orderlists)
+            this.orderlist = res.data.orderlists
+            this.totalpages = res.data.totalPages
+            this.listLoading = false
+          })
+        } else {
+          api.getCurrentDeliveredSubOrderList(para).then((res) => {
+            console.log(res)
+            this.gridOptions.rowData = res.data.orderlists
+            this.gridOptions.api.setRowData(res.data.orderlists)
+            this.orderlist = res.data.orderlists
+            this.totalpages = res.data.totalPages
+            this.listLoading = false
+          })
+        }
         return null
       },
 
       // 查询已送货的子件列表
       queryCurrentDeliveredSubOrderList () {
+        console.log('xyxyxy')
         let para = {
           // 页码
-          pageNum: '', // required
+          pageNum: this.formQuery.currentpage, // required
           // 每页记录数
-          recordNum: '', // required
+          recordNum: this.pageSize, // required
           // 开始时间
-          startTime: '', // required
+          startTime: this.formQuery.dateInterval, // required
           // 结束时间
-          endTime: '', // required
+          endTime: this.formQuery.dateInterval, // required
           // 需要查询的订单Id
-          orderId: '', // optional
+          orderId: this.formQuery.queryOrderId, // optional
           // 查询的司机姓名
-          driverName: '', // optional
+          driverName: this.formQuery.driverNam, // optional
           // 查询的发货方姓名
-          shipNam: '', // optional
+          shipNam: this.formQuery.shipNam, // optional
           // 查询的收货方姓名
-          receNam: '' // optional
+          receNam: this.formQuery.receNam // optional
         }
-        // this.listLoading = true
-        getCurrentDeliveredSubOrderList(para).then(res => {
-          this.gridOptions.api.setRowData(res.data.querylists)
-          this.orderlist = res.data.querylists
-          this.totalpages = res.data.totalpages
-          // this.listLoading = false
-        })
+        this.listLoading = true
+        if (this.formQuery.selectClass === '1') {
+          api.getCurrentDeliveredSubOrderList(para).then((res) => {
+            console.log(res)
+            this.gridOptions.rowData = res.data.orderlists
+            this.gridOptions.api.setRowData(res.data.orderlists)
+            this.orderlist = res.data.orderlists
+            this.totalpages = res.data.totalPages
+            this.listLoading = false
+          })
+        } else {
+          api.getCurrentDeliveredSubOrderList(para).then((res) => {
+            console.log(res)
+            this.gridOptions.rowData = res.data.orderlists
+            this.gridOptions.api.setRowData(res.data.orderlists)
+            this.orderlist = res.data.orderlists
+            this.totalpages = res.data.totalPages
+            this.listLoading = false
+          })
+        }
       }
     },
 
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.queryCurrentDeliveredList()
+      this.queryCurrentDeliveredList() // 进入页面的时刻，需要加载已送货的订单列表
     }
   }
 </script>
@@ -649,7 +683,6 @@
   .el-select-css {
     width: 50%;
   }
-
   .del-but {
     cursor: pointer;
     float: right;

@@ -248,7 +248,14 @@
       cancelEdit () {
         this.editVisible = false
         this.$refs.tree.setCheckedKeys([])
+      },
+      getStationList () {
+
       }
+    },
+    mounted () {
+      console.log('加载页面：挂载了！！')
+      this.getStationList()
     }
   }
 </script>

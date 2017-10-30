@@ -67,7 +67,6 @@
                    :suppressMovableColumns="true"
                    :enableColResize="true"
                    :enableSorting="true"
-                   :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight="40"
@@ -106,8 +105,6 @@
   import {queryCurrentTransportedData, queryTransOrderList, queryOrderListInTransport} from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
-  // 引入外部筛选函数组件系统
-  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   // 引入装载单页面的 （dispatched.vue）页面
   import Dispatched from './dispatched'
   // 引入dispatchLoaderInfo 组件页面
@@ -165,64 +162,64 @@
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '装载单号', width: 120, field: 'loadingId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '装载单号', width: 120, field: 'loadingId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '装载单状态', width: 120, field: 'LoadingState', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '装载单状态', width: 120, field: 'LoadingState', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '调整状态', width: 120, field: 'isAdjust', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调整状态', width: 120, field: 'isAdjust', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '起始站', width: 120, field: 'startStation', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '起始站', width: 120, field: 'startStation', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '到达站', width: 120, field: 'arrStation', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '到达站', width: 120, field: 'arrStation', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '大车司机姓名', width: 120, field: 'driverNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车司机姓名', width: 120, field: 'driverNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '大车司机电话', width: 120, field: 'driverTel', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车司机电话', width: 120, field: 'driverTel', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '发车时间', width: 120, field: 'departTim', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '发车时间', width: 120, field: 'departTim', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '到达时间', width: 120, field: 'arrTim', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '到达时间', width: 120, field: 'arrTim', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '大车总毛利', width: 120, field: 'grossCarProfit', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车总毛利', width: 120, field: 'grossCarProfit', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总运费', width: 120, field: 'totalFreight', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总运费', width: 120, field: 'totalFreight', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总中转费', width: 120, field: 'totalChanFee', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总中转费', width: 120, field: 'totalChanFee', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总返款', width: 120, field: 'totalRefund', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总返款', width: 120, field: 'totalRefund', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总提送费', width: 120, field: 'totalPickUpFee', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总提送费', width: 120, field: 'totalPickUpFee', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总重量', width: 120, field: 'totalWeight', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总重量', width: 120, field: 'totalWeight', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总体积', width: 120, field: 'totalVolume', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总体积', width: 120, field: 'totalVolume', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总件数', width: 120, field: 'totalNums', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总件数', width: 120, field: 'totalNums', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '调度管理员编号', width: 120, field: 'dispatAdmiId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调度管理员编号', width: 120, field: 'dispatAdmiId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '调度管理员姓名', field: 'dispatAdmiNam', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调度管理员姓名', field: 'dispatAdmiNam', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '备注', field: 'remarks', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '备注', field: 'remarks', width: 120, filter: 'text', hide: false, visible: true
             }
           ]
         },

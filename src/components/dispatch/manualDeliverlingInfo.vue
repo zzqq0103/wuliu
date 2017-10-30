@@ -18,14 +18,11 @@
             <el-form-item label="订单号:">
               <el-input v-model="formQuery.orderId" placeholder="请输入订单号" style="width:124px;margin-right:5px;"></el-input>
             </el-form-item>
-            <el-form-item label="司机姓名:">
-              <el-input v-model="formQuery.driverNam" placeholder="请输入司机姓名" style="width:165px;margin-right:5px;"></el-input>
-            </el-form-item>
             <el-form-item label="发货人姓名:">
-              <el-input v-model="formQuery.shipNam" placeholder="请输入发货人姓名" style="width:140px;margin-right:5px;"></el-input>
+              <el-input v-model="formQuery.shipNam" placeholder="请输入发货人姓名" style="width:140px;"></el-input>
             </el-form-item>
             <el-form-item label="收货人姓名:">
-              <el-input v-model="formQuery.receNam" placeholder="请输入收货人姓名" style="width:140px;"></el-input>
+              <el-input v-model="formQuery.receNam" placeholder="请输入收货人姓名" style="width:140px;margin-right:5px;"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitQuery">查询</el-button>
@@ -72,7 +69,6 @@
                    :suppressMovableColumns="true"
                    :enableColResize="true"
                    :enableSorting="true"
-                   :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight="40"
@@ -94,14 +90,28 @@
       </el-pagination>
     </div>
 
-    <!-- 装载单订单列表展示 -->
-    <el-dialog :title="已装载单订单列表" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
-      <Dispatched :status="status"> </Dispatched>
+    <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
+    <el-dialog title="订 单 详 情" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
+      <order-details :orderId="orderId"></order-details>
     </el-dialog>
 
-    <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
-    <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
-      <order-details :orderId="orderId"></order-details>
+    <!-- 手动派车的对话框表单页面 -->
+    <el-dialog title="手 动 派 车" class="dispatchCar" :visible.sync="operateVisible" size="small" :close-on-click-modal="false" center>
+      <el-form :inline="true" :modal="formCars">
+        <el-form-item label="车 型">
+           <el-select placeholder="请选择车型" v-model="selectedCar">
+             <el-option label="小车(短途)" value="smallCar">
+             </el-option>
+             <el-option label="中车(短途)" value="middleCar">
+             </el-option>
+             <el-option label="大车(短途)" value="largeCar">
+             </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="数 量">
+          <el-input-number v-model="carNumber" controls-position="right" :min="0" :max="5" size="small"></el-input-number>
+        </el-form-item>
+      </el-form>
     </el-dialog>
 
   </div>
@@ -111,13 +121,9 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {queryDeliveringReservation, manualDeliveringDispatch, queryManualDeliveringDispatch} from '../../api/dispatch/api'
+  import api from '../../api/dispatch/mock_api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
-  // 引入外部筛选函数组件系统
-  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
-  // 引入装载单页面的 （dispatched.vue）页面
-  import Dispatched from './dispatched'
   // 引入装载单订单页面 （deliverOrderList.vue） 页面
   import DeliverOrderList from './deliverOrderList'
   export default {
@@ -126,10 +132,13 @@
         formQuery: {
           dateInterval: '', // 时间间隔
           orderId: '', // 订单号
-          driverNam: '', // 中转外包公司名
           shipNam: '', // 发货人姓名
-          receNam: '' // 收货人姓名
+          receNam: '', // 收货人姓名
+          currentpage: 1 // 当前页数
         },
+        formCars: [],
+        selectedCar: '', // 选中的车型
+        carNumber: 1,
         titleText: '已送货装载单订单列表',
         status: 1,
         deliveringVisible: false,
@@ -141,20 +150,21 @@
         dispatchVisible: false, // 设置装载单列表的订单信息的boolean值
         tableForm: {
           'id': '',
-          'loadOrderId': '',
-          'loadOrderStatus': '',
-          'adjustmentStatus': '',
-          'warehouse': '',
-          'driverName': '',
-          'driverPhone': '',
-          'deliverTime': '',
-          'deliveRemarks': '',
-          'allWeights': '',
-          'allVolumes': '',
-          'allNumbers': '',
-          'dispatcherId': '',
-          'dispatcherName': '',
-          'remarks': ''
+          'orderId': '',
+          'orderTim': '',
+          'receNam': '',
+          'receTel': '',
+          'receAdr': '',
+          'receArea': '',
+          'goodsNam': '',
+          'goodsPackage': '',
+          'goodsNums': '',
+          'goodsWeight': '',
+          'goodsVolumn': '',
+          'clieOrderNote': '',
+          'inteOrderNote': '',
+          'dispatNote': '',
+          'dispatState': ''
         },
         rules: {}, //
         formLabelWidth: '120px',
@@ -167,49 +177,60 @@
           rowSelection: 'single',
           columnDefs: [
             {
-              headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
+              headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '装载单号', width: 120, field: 'loadOrderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '订单ID', width: 120, field: 'orderId', filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '装载单状态', width: 120, field: 'loadOrderStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单时间', width: 120, field: 'orderTim', filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '调整状态', width: 120, field: 'adjustmentStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '收货人姓名', width: 120, field: 'receNam', filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '所属仓库', width: 120, field: 'warehouse', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '收货人联系电话', width: 120, field: 'receTel', filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '司机姓名', width: 120, field: 'driverName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '收货地址', width: 120, field: 'receAdr', filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '司机电话', width: 120, field: 'driverPhone', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '收货货物区域', width: 120, field: 'receArea', filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '送货时间', width: 120, field: 'deliverTime', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '货物名称', width: 120, field: 'goodsNam', filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '送货备注', width: 120, field: 'deliveRemarks', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '包装', width: 120, field: 'goodsPackage', filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '总重量', width: 120, field: 'allWeights', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '件数', width: 120, field: 'goodsNums', filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '总体积', width: 120, field: 'allVolumes', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '重量', width: 120, field: 'goodsWeight', filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '总件数', width: 120, field: 'allNumbers', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '体积', width: 120, field: 'goodsVolumn', filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '调度管理员编号', width: 120, field: 'dispatcherId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '客户订单备注', width: 120, field: 'clieOrderNote', filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '调度管理员姓名', field: 'dispatcherName', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '内部订单备注', field: 'inteOrderNote', width: 120, filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
             },
             {
-              headerName: '备注', field: 'remarks', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调度备注', field: 'dispatNote', width: 120, filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
+            },
+            {
+              headerName: '分配状态', field: 'dispatState', width: 120, filter: 'text', hide: false, visible: true, cellStyle: {textAlign: 'center'}
+            },
+            {
+              headerName: '操作',
+              width: 80,
+              hide: false,
+              visible: true,
+              cellRendererFramework: 'operateComponent',
+              pinned: 'right'
             }
           ]
         },
@@ -275,15 +296,27 @@
           }
         },
         dateValue: '', // 日期值
-        detailVisible: false // 订单详情弹框
+        detailVisible: false, // 订单详情弹框
+        operateVisible: false // 手动派车弹窗
       }
     },
     // 实例组件
     components: {
       'ag-grid-vue': AgGridVue,
       OrderDetails,
-      Dispatched,
-      DeliverOrderList
+      DeliverOrderList,
+      operateComponent: {
+        template: '<span style="margin-left:5px;"><el-button  class="del-but" @click="operation" type="info" size="small">手动派车</el-button></span>',
+        methods: {
+          // 点击" 手动调整 "按钮，显示确认弹框，之后在弹框中将该行数据转移至 手动调整 的页面中显示。
+          operation () {
+            console.log(this)
+            let self = this.params.context.componentParent
+            console.log('所选中的行数据:')
+            self.operateVisible = true
+          }
+        }
+      }
     },
     // 实例方法
     methods: {
@@ -300,12 +333,13 @@
       // 改变每页显示的个数
       handleSizeChange (val) {
         this.pageSize = val
-        this.getOrderList()
+        this.formQuery.currentpage = 1
+        this.getQueryDeliveringOrderList()
       },
       // 点击当前选中的第几页
       handleCurrentChange (val) {
-        this.currentpage = val
-        this.getOrderList()
+        this.formQuery.currentpage = val
+        this.getQueryDeliveringOrderList()
       },
       // 点击查询的Icon，进行查询
       handleIconClick (input) {
@@ -343,28 +377,26 @@
         }
         this.updataColumnDefs(this.gridOptions.columnDefs)
       },
-      // 查询接货需要手动调度的预约单列表
-      getQueryDeliveringReservation () {
+      // 查询接货需要手动调度的订单列表
+      getQueryDeliveringOrderList () {
         let para = {
           // 页码
-          pageNum: this.currentpage, // required
+          pageNum: this.formQuery.currentpage, // required
           // 每页记录数
           recordNum: this.pageSize, // required
           // 需要查询的订单Id
           orderId: '', // optional
-          // 查询的司机姓名
-          driverName: '', // optional
           // 查询的发货方姓名
           shipNam: '', // optional
           // 查询的收货方姓名
           receNam: '' // optional
         }
-        // this.listLoading = true
-        queryDeliveringReservation(para).then((res) => {
+        this.listLoading = true
+        api.queryDeliveringOrderList(para).then((res) => {
           this.gridOptions.api.setRowData(res.data.orderlists)
           this.orderlist = res.data.orderlists
           this.totalpages = res.data.totalPages
-          // this.listLoading = false
+          this.listLoading = false
         })
         return null
       },
@@ -375,7 +407,7 @@
           dispatchList: []
         }
         // this.listLoading = true
-        manualDeliveringDispatch(para).then(res => {
+        api.manualDeliveringDispatch(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
@@ -388,7 +420,7 @@
           orderId: this.orderId
         }
         // this.listLoading = true
-        queryManualDeliveringDispatch(para).then(res => {
+        api.queryManualDeliveringDispatch(para).then(res => {
           this.gridOptions.api.setRowData(res.data.querylists)
           this.orderlist = res.data.querylists
           this.totalpages = res.data.totalpages
@@ -398,24 +430,38 @@
     },
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getQueryDeliveringReservation()
+      this.getQueryDeliveringOrderList()
     }
   }
 </script>
-<style scoped>
+<style>
+  .dispatchCar .el-dialog__body{
+    width:75%;
+    margin:auto;
+  }
+ .el-form--inline .el-form-item__label{
+    float:left;
+  }
+  .dispatchCar .el-form-item__label{
+    padding-top: 12px;
+  }
+  .dispatchCar .el-input--small .el-input__inner{
+    height:36px;
+    text-align: center;
+  }
+  .dispatchCar .el-form--inline .el-form-item{
+    margin-right:45px;
+    margin-bottom:12px;
+  }
+  .dispatchCar .el-input-number--small .el-input-number__decrease, .el-input-number--small .el-input-number__increase{
+    line-height: 34px;
+  }
+  .dispatchCar .el-input-number--small{
+    width:110px;
+  }
+  .dispatchCar .el-input__icon + .el-input__inner{
+    width:150px;
+    padding-left: 10px;
+  }
 
-  .el-select-css {
-    width: 50%;
-  }
-  .del-but {
-    cursor: pointer;
-    float: right;
-    margin-right: 10px;
-    border-radius: 4px;
-    background: #fff;
-    border: 1px solid rgb(191, 217, 216);
-    color: rgb(31, 61, 60);
-    padding: 5px 10px;
-    font-size: 10px
-  }
 </style>

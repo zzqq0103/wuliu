@@ -7,11 +7,10 @@
           <el-form-item label="企业详细地址:" class="Taddress">
             <div id='focus1' class='dropdown1' style='outline:none' tabindex="0"  @click="getFocus(1)" @blur="addressVisible=false">
               <el-input v-model="filterForm.receAdr" style="width: 142.5px;"></el-input>
-              <div class="dropdown-content" style='width:80%' v-show="addressVisible">
+              <div class="dropdown-content" style='width:142.5px' v-show="addressVisible">
                 <ul class='dropdown-content-select'>
-                  <li @click="setShenfen(1)" class='dropdown-li' v-bind:class="{'selectOn':shenfen}">省份</li>
-                  <li @click="setShi(1)" class='dropdown-li' v-bind:class="{'selectOn':shi}">城市</li>
-                  <li @click="setQuyu(1)" class='dropdown-li' v-bind:class="{'selectOn':quyu}">区县</li>
+                  <li @click="setShenfen(1)" class='dropdown-li dropdown-two' v-bind:class="{'selectOn':shenfen}">省份</li>
+                  <li @click="setShi(1)" class='dropdown-li dropdown-two' v-bind:class="{'selectOn':shi}">城市</li>
                 </ul>
                 <div class='dropdown-select'>
                   <ul class='dropdown-shenfen' v-show="shenfen">
@@ -30,39 +29,33 @@
           <el-form-item label="所属区域名称:">
             <el-input v-model="filterForm.regionName" style="width: 150px"></el-input>
           </el-form-item>
-          <el-button @click="drawGrid()">提取</el-button>
-        </el-form>
+          <el-button @click="drawGrid()" style="margin-right: 10px">提取</el-button>
 
-        <div>
-          <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-            <template v-for="(collist,i) in gridOptions.columnDefs">
-              <div class="colVisible">
-                <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"
-                             style="float: left;width: 180px">
-                  {{collist.headerName}}
-                </el-checkbox>
-              </div>
-            </template>
-            <template>
-              <div class="colVisible">
-                <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-                <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
-              </div>
-            </template>
-          </el-popover>
-          <el-button v-popover:popover1>设置</el-button>
-        </div>
+            <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+              <template v-for="(collist,i) in gridOptions.columnDefs">
+                <div class="colVisible">
+                  <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"
+                               style="float: left;width: 180px">
+                    {{collist.headerName}}
+                  </el-checkbox>
+                </div>
+              </template>
+              <template>
+                <div class="colVisible">
+                  <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                  <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+                </div>
+              </template>
+            </el-popover>
+            <el-button v-popover:popover1>设置</el-button>
+        </el-form>
       </div>
     </div>
-    <div style="clear: both;">
-    </div>
-    <div style="margin-top:2%">
+    <div>
       <ag-grid-vue style="width: 100%;height: 450px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
-                   :enableSorting="true"
-                   :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight=40
@@ -75,7 +68,7 @@
     </div>
 
     <!--分页-->
-    <div style="text-align: center;margin-top:2%">
+    <div style="text-align: center">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrnetChange"
@@ -99,12 +92,12 @@
         <el-form-item label="行政区:" :label-width="formLabelWidth" >
           <el-input v-model="regionForm.adminRegion" style="width: 50%" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="所属区域:" :label-width="formLabelWidth" prop="area">
+        <el-form-item label="所属区域:" :label-width="formLabelWidth" prop="regionName">
           <el-select v-model="regionForm.regionName">
-            <el-option label="A" value="A"></el-option>
-            <el-option label="B" value="B"></el-option>
-            <el-option label="C" value="C"></el-option>
-            <el-option label="D" value="D"></el-option>
+            <el-option value="A"></el-option>
+            <el-option value="B"></el-option>
+            <el-option value="C"></el-option>
+            <el-option value="D"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -120,20 +113,6 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="delFormVisible = false">取 消</el-button>
         <el-button @click="delFormVisible = false" type="danger">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <!-- 列表显示弹窗 -->
-    <el-dialog title="选择要显示的列表:" :visible.sync="colVisible" size="tiny" :closeOnClickModal="false">
-      <template v-for="(collist,i) in gridOptions.columnDefs">
-        <div>
-          <el-checkbox v-model="collist.hide" @change="updataColumnDefs(gridOptions.columnDefs)">
-            {{collist.headerName}}
-          </el-checkbox>
-        </div>
-      </template>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="colVisible = false">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -169,7 +148,7 @@
         },
         rerender: true, // 用于重新刷新添加的弹框
         rules: {
-          area: [{
+          regionName: [{
             required: true, message: '请输入区域', trigger: 'blur'
           }]
         },
@@ -617,6 +596,10 @@
     outline: 0;
     padding: 3px 10px;
     transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+  }
+
+  .dropdown-two{
+    width: 50%;
   }
 
   .Taddress label{

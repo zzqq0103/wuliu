@@ -239,17 +239,17 @@
         "subs": [
           {
             "index": "deliveredInfo",
-            "title": "送货成功",
+            "title": "已送货",
             "icon": ""
           },
           {
             "index": "deliveringInfo",
-            "title": "正在送货",
+            "title": "待送货",
             "icon": ""
           },
           {
             "index": "deliveringAffirm",
-            "title": "待确认",
+            "title": "待调整",
             "icon": ""
           },
           {
@@ -299,6 +299,18 @@
           {
             "index": "transportDirect",
             "title": "长途直送",
+            "icon": ""
+          }
+        ]
+      },
+      {
+        "icon": "directSend",
+        "index": "directSend",
+        "title": "订单直送管理",
+        "subs": [
+          {
+            "index": "deliveringDirect",
+            "title": "短途直送",
             "icon": ""
           }
         ]
@@ -403,33 +415,26 @@
         ]
       },
       {
-        "index": "2",
-        "title": "库存",
-        "icon": "reserveCheck",
-        "subs": [
-          {
-            "index": "reserveCheck",
-            "title": "查看库存",
-            "icon": ""
-          },
-          {
-            "index": "stockinInfo",
-            "title": "长途入库",
-            "icon": "",
-            "subs": [
+          "index": "2",
+          "title": "库存",
+          "icon": "reserveCheck",
+          "subs": [
               {
-                "index": "stockinInfo",
-                "title": "入库信息",
-                "icon": ""
+                  "index": "depotInfo",
+                  "title": "查看库存",
+                  "icon": ""
               },
               {
-                "index": "stockinChange",
-                "title": "入库更新",
-                "icon": ""
+                  "index": "reserveCheck",
+                  "title": "短途入库",
+                  "icon": ""
+              },
+              {
+                  "index": "stockinInfo",
+                  "title": "长途入库",
+                  "icon": ""
               }
-            ]
-          }
-        ]
+          ]
       },
       {
         "index": "transfer",

@@ -307,7 +307,7 @@
               visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '发货方',
               width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
@@ -315,7 +315,7 @@
               visible: true
             },
             {
-              headerName: '发货人联系方式',
+              headerName: '发货方联系方式',
               width: 150,
               field: 'shipTel',
               filterFramework: PartialMatchFilterComponent,
@@ -323,7 +323,7 @@
               visible: false
             },
             {
-              headerName: '收货人',
+              headerName: '收货方',
               width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
@@ -331,7 +331,7 @@
               visible: true
             },
             {
-              headerName: '收货人联系方式',
+              headerName: '收货方联系方式',
               width: 150,
               field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
@@ -358,14 +358,6 @@
               headerName: '开单客服',
               width: 100,
               field: 'serviceNam',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
-              headerName: '类型',
-              width: 150,
-              field: 'payType',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -488,7 +480,7 @@
               visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '发货方',
               width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
@@ -496,7 +488,7 @@
               visible: true
             },
             {
-              headerName: '发货人联系方式',
+              headerName: '发货方联系方式',
               width: 150,
               field: 'shipTel',
               filterFramework: PartialMatchFilterComponent,
@@ -504,7 +496,7 @@
               visible: false
             },
             {
-              headerName: '收货人',
+              headerName: '收货方',
               width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
@@ -512,7 +504,7 @@
               visible: true
             },
             {
-              headerName: '收货人联系方式',
+              headerName: '收货方联系方式',
               width: 150,
               field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
@@ -544,14 +536,6 @@
               visible: true
             },
             {
-              headerName: '类型',
-              width: 150,
-              field: 'payType',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
               headerName: '归还日期',
               width: 150,
               field: 'collDate',
@@ -563,6 +547,46 @@
               headerName: '货款归还金额',
               width: 150,
               field: 'goodsPayment',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销状态',
+              width: 150,
+              field: 'goodsPayVeriStat',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销人',
+              width: 150,
+              field: 'goodsPayVeriNam',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销日期',
+              width: 150,
+              field: 'goodsPayVeriTim',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销网点',
+              width: 150,
+              field: 'goodsPayVeriSite',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '支付方式',
+              width: 150,
+              field: 'goodsPayMode',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -629,7 +653,7 @@
               visible: true
             },
             {
-              headerName: '发货人',
+              headerName: '发货方',
               width: 100,
               field: 'shipNam',
               filterFramework: PartialMatchFilterComponent,
@@ -637,7 +661,7 @@
               visible: true
             },
             {
-              headerName: '发货人联系方式',
+              headerName: '发货方联系方式',
               width: 150,
               field: 'shipTel',
               filterFramework: PartialMatchFilterComponent,
@@ -645,7 +669,7 @@
               visible: false
             },
             {
-              headerName: '收货人',
+              headerName: '收货方',
               width: 100,
               field: 'receNam',
               filterFramework: PartialMatchFilterComponent,
@@ -653,7 +677,7 @@
               visible: true
             },
             {
-              headerName: '收货人联系方式',
+              headerName: '收货方联系方式',
               width: 150,
               field: 'receTel',
               filterFramework: PartialMatchFilterComponent,
@@ -685,14 +709,6 @@
               visible: true
             },
             {
-              headerName: '类型',
-              width: 150,
-              field: 'payType',
-              filterFramework: PartialMatchFilterComponent,
-              hide: false,
-              visible: true
-            },
-            {
               headerName: '归还日期',
               width: 150,
               field: 'collDate',
@@ -707,6 +723,46 @@
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
+            },
+            {
+              headerName: '核销状态',
+              width: 150,
+              field: 'goodsPayVeriStat',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销人',
+              width: 150,
+              field: 'goodsPayVeriNam',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销日期',
+              width: 150,
+              field: 'goodsPayVeriTim',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '核销网点',
+              width: 150,
+              field: 'goodsPayVeriSite',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
+            },
+            {
+              headerName: '支付方式',
+              width: 150,
+              field: 'goodsPayMode',
+              filterFramework: PartialMatchFilterComponent,
+              hide: false,
+              visible: true
             }
           ]
         },
@@ -716,7 +772,6 @@
           startPoint: '', //  区间起点
           endPoint: '', //  区间终点
           shipNam: '', //  发货方
-          payType: 'nowPay', // 类型（现付，到付，欠付，月结）
           orderId: '', // 运单号
           veriState: '', // 核销状态
           pageNum: 1, // 当前页码数

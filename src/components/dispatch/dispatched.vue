@@ -2,10 +2,10 @@
   <!-- 所有的组件必须要有一个div给包裹住 -->
   <div style="width:100%;">
     <div style="float:left; width:90%; margin-left:5%;">
-      <h3 style="text-align: center;color:red; margin-top:25px; margin-bottom:25px;">装载单订单列表</h3>
+      <h3 style="text-align: center;color:red; margin-top:25px; margin-bottom:25px;">订 单 列 表</h3>
       <ag-grid-vue style="widht:100%;height: 700px; margin-top:20px; "
                    class="ag-blue"
-                   :gridOptions="gridOptions_left"
+                   :gridOptions="gridOptions_Order"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
                    :suppressRowClickSelection="true"
@@ -18,15 +18,11 @@
       </ag-grid-vue>
       <el-button type="danger" style="float:right;margin-top:20px;">取消</el-button>
     </div>
+
     <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
     <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :modal-append-to-body=false :close-on-press-escape=false top="5%">
         <order-details :orderId="orderId">
         </order-details>
-    </el-dialog>
-
-    <!-- 待长途装载单订单对话框  -->
-    <el-dialog :title="titleText" :visible.sync="dialogVisible" size="full" :modal=false :modal-append-to-body=false>
-      <deliver-order-list :loaderId="loadOrderId" :flag="flag"></deliver-order-list>
     </el-dialog>
 
   </div>
@@ -75,7 +71,7 @@
           'remarks': '',
           'operation': ''
         },
-        gridOptions_left: {
+        gridOptions_Order: {
           context: {
             componentParent: this
           },
@@ -83,14 +79,6 @@
           rowSelection: 'single',
           columnDefs: [
             {
-              headerName: '#',
-              width: 30,
-              checkboxSelection: true,
-              suppressSorting: true,
-              suppressMenu: true,
-              pinned: true
-            },
-            {
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
@@ -126,9 +114,6 @@
             {
               headerName: '发货地址', width: 120, field: 'deliverAddress', suppressMenu: true, hide: false, visible: true
             },
-            // {
-            //   headerName: '序号', width: 120, field: 'deliverArea', suppressMenu: true, hide: false, visible: true
-            // },
             {
               headerName: '收货单位', width: 120, field: 'consignee', suppressMenu: true, hide: false, visible: true
             },
@@ -141,9 +126,6 @@
             {
               headerName: '收货地址', width: 120, field: 'consigneeAddress', suppressMenu: true, hide: false, visible: true
             },
-            // {
-            //   headerName: '', width: 120, field: 'consigneeArea', suppressMenu: true, hide: false, visible: true
-            // },
             {
               headerName: '商品名称', width: 120, field: 'goodsName', suppressMenu: true, hide: false, visible: true
             },
@@ -164,7 +146,7 @@
             }
           ]
         },
-        gridOptions_right: {
+        gridOptions_subOrder: {
           context: {
             componentParent: this
           },
@@ -252,7 +234,7 @@
             }
           ]
         },
-        gridOptions_new: {
+        gridOptions_reservationOrder: {
           context: {
             componentParent: this
           },

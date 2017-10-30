@@ -1,43 +1,47 @@
 <template>
-<!-- 组件必须头元素被一个div容器包括 -->
+  <!-- 组件必须头元素被一个div容器包括 -->
   <div>
     <div id="top">
       <!-- 标题 -->
       <h2 style="text-align:center">长 途 直 送 装 载 单 信 息 页</h2>
       <!-- 操作栏 -->
       <div style="margin-top:2%">
-      <!-- 查询菜单 -->
-      <div style="margin-top:2%;float:left;">
+        <!-- 查询菜单 -->
+        <div style="margin-top:2%;float:left;">
           <el-form :inline="true" :model="formQuery" class="demo-form-inline">
             <el-form-item label="订单时间:">
-              <el-date-picker v-model="formQuery.dateInterval" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions" range-separator='/' style="width: 150px">
+              <el-date-picker v-model="formQuery.dateInterval" type="daterange" placeholder="选择日期范围"
+                              :picker-options="pickerOptions" range-separator='/' style="width: 150px">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="装载单号:">
-              <el-input v-model="formQuery.orderId" placeholder="请输入订单号" style="width:124px;margin-right:5px;"></el-input>
+              <el-input v-model="formQuery.orderId" placeholder="请输入订单号"
+                        style="width:124px;margin-right:5px;"></el-input>
             </el-form-item>
             <el-form-item label="司机姓名:">
-              <el-input v-model="formQuery.driverNam" placeholder="请输入司机姓名" style="width:165px;margin-right:5px;"></el-input>
+              <el-input v-model="formQuery.driverNam" placeholder="请输入司机姓名"
+                        style="width:165px;margin-right:5px;"></el-input>
             </el-form-item>
             <!--<el-form-item label="装载单状态:">-->
             <!--<el-input v-model="formQuery.shipNam" placeholder="请输入发货人姓名" style="width:140px;margin-right:5px;"></el-input>-->
             <!--</el-form-item>-->
             <el-form-item>
-              <el-button type="primary" @click="submitQuery">查询</el-button>
+              <el-button type="primary" @click="queryAreaList">查询</el-button>
             </el-form-item>
           </el-form>
         </div>
-      <!-- 导出 -->
-      <div style="float:right;margin-top:2%;">
-        <el-button style="float:right; margin-right:10px;">导出</el-button>
-        <el-button style="float:right; margin-right:10px;" @click="createLoaderList">新增装载单</el-button>
-        <!-- 设置div -->
+        <!-- 导出 -->
+        <div style="float:right;margin-top:2%;">
+          <el-button style="float:right; margin-right:10px;">导出</el-button>
+          <el-button style="float:right; margin-right:10px;" @click="createLoaderList">新增装载单</el-button>
+          <!-- 设置div -->
           <div style="float:right;margin-right:10px;">
             <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
             <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
               <template v-for="(collist,i) in gridOptions.columnDefs">
                 <div class="colVisible">
-                  <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"  style="float: left;width: 180px">
+                  <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"
+                               style="float: left;width: 180px">
                     {{collist.headerName}}
                   </el-checkbox>
                 </div>
@@ -64,7 +68,6 @@
                    :suppressMovableColumns="true"
                    :enableColResize="true"
                    :enableSorting="true"
-                   :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight="40"
@@ -89,7 +92,8 @@
       <deliver-order-list :loaderId="loadOrderId" :flag="flag"></deliver-order-list>
     </el-dialog>
     <!-- 装载单订单列表展示 -->
-    <el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false :modal-append-to-body=false>
+    <el-dialog :title="titleText" :visible.sync="deliveringVisible" size="full" :modal=false
+               :modal-append-to-body=false>
       <deliver-order-list></deliver-order-list>
     </el-dialog>
   </div>
@@ -99,9 +103,7 @@
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {queryCurrentTransportDirectList, updateTransportDirectListInfo} from '../../api/dispatch/api'
-  // 引入外部筛选函数组件系统
-  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
+  import {queryCurrentTransportDirectList, updateTransportDirectListInfo, getAreaList} from '../../api/dispatch/mock_api'
   // 引入dispatchLoaderInfo 组件页面
   import DeliverOrderList from './deliverOrderList'
   // 引入装载单页面的 （dispatched.vue）页面
@@ -159,64 +161,64 @@
               headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '装载单号', width: 120, field: 'loadOrderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '装载单号', width: 120, field: 'loadOrderId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '装载单状态', width: 120, field: 'loadOrderStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '装载单状态', width: 120, field: 'loadOrderStatus', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '调整状态', width: 120, field: 'adjustmentStatus', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调整状态', width: 120, field: 'adjustmentStatus', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '起始站', width: 120, field: 'startStation', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '起始站', width: 120, field: 'startStation', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '到达站', width: 120, field: 'endStation', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '到达站', width: 120, field: 'endStation', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '大车司机姓名', width: 120, field: 'driverName', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车司机姓名', width: 120, field: 'driverName', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '大车司机电话', width: 120, field: 'driverPhone', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车司机电话', width: 120, field: 'driverPhone', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '发车时间', width: 120, field: 'departTime', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '发车时间', width: 120, field: 'departTime', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '到达时间', width: 120, field: 'arriveTime', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '到达时间', width: 120, field: 'arriveTime', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '大车总毛利', width: 120, field: 'gross', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '大车总毛利', width: 120, field: 'gross', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总运费', width: 120, field: 'freight', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总运费', width: 120, field: 'freight', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总中转费', width: 120, field: 'transhipment', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总中转费', width: 120, field: 'transhipment', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总返款', width: 120, field: 'refund', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总返款', width: 120, field: 'refund', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总提送费', width: 120, field: 'sendFee', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总提送费', width: 120, field: 'sendFee', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总重量', width: 120, field: 'allWeights', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总重量', width: 120, field: 'allWeights', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总体积', width: 120, field: 'allVolumes', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总体积', width: 120, field: 'allVolumes', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '总件数', width: 120, field: 'allNumbers', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '总件数', width: 120, field: 'allNumbers', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '调度管理员编号', width: 120, field: 'dispatcherId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调度管理员编号', width: 120, field: 'dispatcherId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '调度管理员姓名', field: 'dispatcherName', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '调度管理员姓名', field: 'dispatcherName', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '备注', field: 'remarks', width: 120, filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '备注', field: 'remarks', width: 120, filter: 'text', hide: false, visible: true
             }
           ]
         },
@@ -303,11 +305,11 @@
         console.log(this.deliveringVisible)
         this.deliveringVisible = true
 //        this.dialogVisible = true
-//        this.flag = false
+//        this.flag = '1'
       },
       // 新增装载单
       createLoaderList () {
-        this.flag = true
+        this.flag = '2'
         this.dialogVisible = true
       },
       // 改变每页显示的个数
@@ -375,7 +377,7 @@
         })
         return null
       },
-       // 修改长途直送装载单信息
+      // 修改长途直送装载单信息
       setTransportDirectListInfo () {
         let para = {
           queryName: this.queryName,
@@ -389,11 +391,21 @@
           this.totalpages = res.data.totalpages
           this.listLoading = false
         })
+      },
+      queryAreaList () {
+        console.log('xxx')
+        let para = {
+          hubNam: '北京'
+        }
+        getAreaList(para).then((res) => {
+          console.log(res.data)
+        })
       }
     },
     // 挂载元素完毕，自执行函数
     mounted () {
-      this.getQueryCurrentTransportDirectList()
+//      this.queryAreaList()
+//      this.getQueryCurrentTransportDirectList()
     }
   }
 </script>
@@ -401,6 +413,7 @@
   .el-select-css {
     width: 50%;
   }
+
   .del-but {
     cursor: pointer;
     float: right;

@@ -6,7 +6,7 @@
         <div>
           <el-form :model="filterForm" ref="filterForm" :inline="true">
             <el-form-item label="司机姓名:">
-              <el-input v-model="filterForm.driverName" style="width: 100px"></el-input>
+              <el-input v-model="filterForm.driverNam" style="width: 100px"></el-input>
             </el-form-item>
             <el-form-item label="车型:">
               <el-select v-model="filterForm.carType" style="width: 80px" placeholder="类型">
@@ -88,11 +88,11 @@
         <el-form-item label="车牌号码:" :label-width="formLabelWidth" prop="licePlateNum">
           <el-input v-model="vehicleForm.licePlateNum" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverName">
-          <el-input v-model="vehicleForm.driverName" style="width: 50%"></el-input>
+        <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverNam">
+          <el-input v-model="vehicleForm.driverNam" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="tel">
-          <el-input v-model="vehicleForm.tel" style="width: 50%"></el-input>
+        <el-form-item label="联系电话:" :label-width="formLabelWidth" prop="driverTel">
+          <el-input v-model="vehicleForm.driverTel" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="车容量:" :label-width="formLabelWidth" prop="capacity">
           <el-input v-model="vehicleForm.capacity" style="width: 30%"></el-input>
@@ -134,11 +134,11 @@
         <el-form-item label="车牌号码:" :label-width="formLabelWidth" prop="licePlateNum">
           <el-input v-model="editForm.licePlateNum" style="width: 50%"></el-input>
         </el-form-item>
-        <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverName">
-          <el-input v-model="editForm.driverName" style="width: 50%"></el-input>
+        <el-form-item label="司机姓名:" :label-width="formLabelWidth" prop="driverNam">
+          <el-input v-model="editForm.driverNam" style="width: 50%"></el-input>
         </el-form-item>
         <el-form-item label="联系电话:" :label-width="formLabelWidth">
-          <el-input v-model="editForm.tel" style="width: 50%" :disabled="true"></el-input>
+          <el-input v-model="editForm.driverTel" style="width: 50%" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="车容量:" :label-width="formLabelWidth">
           <el-input v-model="editForm.capacity" style="width: 30%" disabled="true"></el-input>
@@ -208,8 +208,8 @@
       for (var i = 0; i < 100; i++) {
         this.vehicleList.push({
           'licePlateNum': 'num' + i,
-          'driverName': 'test' + i,
-          'tel': '电话号码' + i,
+          'driverNam': 'test' + i,
+          'driverTel': '电话号码' + i,
           'contractID': '合同ID' + i,
           'contractPrice': '合同价格' + i,
           'capacity': '车容量' + i,
@@ -231,8 +231,8 @@
         editVisable: false,
         vehicleForm: {
           'licePlateNum': '', // 车牌号
-          'driverName': '', // 司机姓名
-          'tel': '', // 司机联系方式
+          'driverNam': '', // 司机姓名
+          'driverTel': '', // 司机联系方式
           'capacity': '', // 车容量
           'carType': '', // 车型
           'tonnage': '', // 吨位
@@ -241,8 +241,8 @@
         },
         editForm: {
           'licePlateNum': '', // 车牌号
-          'driverName': '', // 司机姓名
-          'tel': '', // 司机联系方式
+          'driverNam': '', // 司机姓名
+          'driverTel': '', // 司机联系方式
           'capacity': '', // 车容量
           'carType': '', // 车型
           'tonnage': '', // 吨位
@@ -250,7 +250,7 @@
           'carPosition': '' // 车辆位置
         },
         filterForm: {
-          'driverName': '', // 司机姓名
+          'driverNam': '', // 司机姓名
           'carType': '', // 车型
           'carState': '', // 车辆状态
           'carPosition': '', // 车辆位置
@@ -261,10 +261,10 @@
           licePlateNum: [{
             required: true, message: '请输入车牌号', trigger: 'blur'
           }],
-          driverName: [{
+          driverNam: [{
             required: true, message: '请输入司机姓名', trigger: 'blur'
           }],
-          tel: [{
+          driverTel: [{
             required: true, message: '请输入联系方式', trigger: 'blur'
           }],
           capacity: [{
@@ -313,7 +313,7 @@
             {
               headerName: '司机姓名',
               width: 150,
-              field: 'driverName',
+              field: 'driverNam',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -321,7 +321,7 @@
             {
               headerName: '联系电话',
               width: 150,
-              field: 'tel',
+              field: 'driverTel',
               filterFramework: PartialMatchFilterComponent,
               hide: false,
               visible: true
@@ -442,8 +442,8 @@
       vehicleAdd () {
         this.vehicleVisable = true
         this.vehicleForm.licePlateNum = ''
-        this.vehicleForm.driverName = ''
-        this.vehicleForm.tel = ''
+        this.vehicleForm.driverNam = ''
+        this.vehicleForm.driverTel = ''
         this.vehicleForm.capacity = ''
         this.vehicleForm.carType = ''
         this.vehicleForm.tonnage = ''

@@ -21,8 +21,10 @@
           </el-form-item>
           <el-form-item label="装载单状态：">
             <el-select style='width:100px' v-model="filterForm1.loadingState">
+              <el-option value="已分配"></el-option>
               <el-option value='已发车'></el-option>
               <el-option value="已到货"></el-option>
+              <el-option value="已取消"></el-option>
               <el-option value="异常"></el-option>
             </el-select>
           </el-form-item>
@@ -43,9 +45,9 @@
               </div>
             </template>
           </el-popover>
+          <el-button @click="drawGrid(1)" style='float:right'>提 取</el-button>
           <el-button v-popover:popover1 style='margin-left:10px;float:right'>设 置</el-button>
           <el-button style='float:right'>导 出</el-button>
-          <el-button @click="drawGrid(1)" style='float:right'>提 取</el-button>
        </el-form>
     </div>
     <div style="clear: both;"></div>
@@ -70,9 +72,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrnetChange"
-        :current-page="currentPage"
+        :current-page="filterForm1.currentPage"
         :page-sizes="[20,50,100,200]"
-        :page-size="pageSize"
+        :page-size="filterForm1.pageSize"
         layout="total,sizes,prev,pager,next"
         :total="rowCount"></el-pagination>
     </div>
@@ -121,7 +123,7 @@
         <el-col :span="12">
           <el-form :model="filterForm2" ref="filterForm" :inline="true">
             <div>
-              <el-form-item label="发车时间：">
+              <el-form-item label="下单时间：">
                 <el-date-picker v-model="filterForm2.startTime" type="daterange" placeholder="选择日期范围"
                                   :picker-options="pickerOptions" style='width:200px' range-separator='/'>
                 </el-date-picker>
@@ -209,7 +211,6 @@
           </el-form>
           <el-button @click="rightSelect"> < </el-button>
           <el-button @click="rightSelectAll"> << </el-button>
-          <el-input type="text" placeholder="请输入要搜索的内容" @input="onQuickFilterChanged3" style="width: 200px"></el-input>
           <!--待核销处表格-->
           <div style="margin-top: 10px">
             <ag-grid-vue style="width: 100%;height: 550px" class="ag-blue"
@@ -220,7 +221,6 @@
                          :rowHeight=40
                          :headerHeight=40
 
-                         :gridReady="grid3Ready"
                          :rowDoubleClicked="rightDoubleClick"
                          :animateRows="true"
                          rowSelection="multiple"
@@ -296,14 +296,24 @@
     <el-dialog title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false">
       <order-details :orderId="filterForm2.orderId"></order-details>
     </el-dialog>
+
+    <!-- 请求数据提示弹窗 -->
+    <el-dialog title="" :visible.sync="pointVisible" size="" tiny>
+      <h2 style="text-align:center;padding: 30px 0 30px 0px">{{Note}}</h2>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import {AgGridVue} from 'ag-grid-vue'
   import OrderDetails from '../financialAdministrator/ShowOrderDetails.vue'
+  import api from '../../api/customerService/api.js'
   export default {
     created () {
+      /**         // 初始
+        initForm: {
+          startStationList: ['始发站1', '始发站2', '始发站3', '始发站4', '始发站5']
+        }, */
       for (let i = 0; i < 100; i++) {
         this.testData1.push({
           'loadingId': '装载单ID' + i,
@@ -312,13 +322,13 @@
           'startPoint': '起始站' + i,
           'endPoint': '终点站' + i,
           'departTim': '发车时间' + i,
+          'isLock': '是',
           'loadingState': '装载单状态'
         })
         this.testData2.push({
           'orderId': '订单号' + i,
           'subId': '子件号' + i,
           'goodsNam': '货物名称' + i,
-          'licePlateNum': '车牌号' + i,
           'shipNam': '发货人' + i,
           'shipTel': '发货人联系方式' + i,
           'receNam': '收货人' + i,
@@ -332,11 +342,12 @@
         testData2: [], // 表2测试数据
         // 添加大车异常
         errorForm: {
-          'loadingId': '',
-          'licePlateNum': '',
-          'unActExpense': '',
-          'unActTim': new Date(),
-          'unActDes': ''
+          'loadingId': '', // 装载单号
+          'licePlateNum': '', // 车牌号
+          'unActExpense': '', // 异动支出
+          'unActTim': new Date(), // 异动时间
+          'unActDes': '', // 异动描述
+          'serviceNam': '弓莉' // 客服名称
         },
         // 定义三个表格数据
         gridOptions: {
@@ -361,6 +372,9 @@
               headerName: '发车时间', width: 200, field: 'departTim', filter: 'text', hide: false, visible: true
             },
             {
+              headerName: '是否加锁', width: 200, field: 'isLock', filter: 'text', hide: false, visible: true
+            },
+            {
               headerName: '装载单状态', width: 200, field: 'loadingState', filter: 'text', hide: false, visible: true
             },
             {
@@ -382,9 +396,6 @@
             },
             {
               headerName: '货物名称', width: 150, field: 'goodsNam', filter: 'text', hide: false, visible: true
-            },
-            {
-              headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true
             },
             {
               headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true
@@ -416,9 +427,6 @@
               headerName: '货物名称', width: 150, field: 'goodsNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '车牌号', width: 150, field: 'licePlateNum', filter: 'text', hide: false, visible: true
-            },
-            {
               headerName: '发货人', width: 150, field: 'shipNam', filter: 'text', hide: false, visible: true
             },
             {
@@ -441,16 +449,16 @@
         },
         // 定义筛选条件
         filterForm1: {
-          departTimStart: '', // 发车区域开始
-          departTimEnd: '', // 发车区域结束
+          departTimStart: [], // 发车时间区域 departTimStart[0]为起,departTimStart[1]为终
           loadingId: '', // 装载单ID
-          driverNam: '', // 司机姓名
+          startStation: '', // 始发站
           loadingState: '', // 装载单状态
-          startStation: '' // 始发站
+          pageSize: 50, // 每个页面展示数目
+          currentPage: 1 // 当前页面
         },
         filterForm2: {
           orderId: '', // 订单号
-          startTime: ''
+          startTime: [] // 下单时间区域 startTime[0]为起，startTime[1]终
         },
         pickerOptions: {
           shortcuts: [{
@@ -509,7 +517,7 @@
             return timeYear < (nowYear - 1)
           }
         },
-        // 入库完成后提交给后台的数据
+        // 正常入库/异常入库
         confirmSubForm: {
           orderId: [],
           type: 1 // 1为正常入库，0为入库异常
@@ -528,6 +536,8 @@
           ]
         },
         // dialog的可见性
+        pointVisible: false, // 接受信息提示弹窗
+        Note: '', // 接收信息相关提示
         errorEditVisable: false, // 编辑异常弹窗
         colVisible: false, // 切换列可见性的弹窗
         colVisible2: false,
@@ -537,8 +547,6 @@
         unusualVisible: false, // 提交入库异常信息弹窗
         errorVisible: false, // 错误信息弹框
         detailVisible: false, // 订单详情弹框
-        currentPage: 1, // 分页当前页面
-        pageSize: 20, // 每页显示的数据
         rowCount: 0 // 总数据量（如果有筛选，则是筛选后的）
       }
     },
@@ -557,7 +565,7 @@
               'unActExpense': '',
               'unActTim': new Date(),
               'unActDes': '',
-              'serviceNam': ''
+              'serviceNam': '弓莉'
             }
             self.errorForm.loadingId = this.params.data.loadingId
             self.errorForm.licePlateNum = this.params.data.licePlateNum
@@ -577,15 +585,17 @@
           this.$refs[formName].resetFields()
         })
       },
-      // 提交订单异常
+      // 提交大车异常信息
       submitError (formName) {
         const self = this
         self.$refs[formName].validate((valid) => {
           if (valid) {
             this.errorEditVisable = false
             // 向服务器提交数据
+            console.log('大车异常：')
+            console.log(this.errorForm)
+            this.setDaErrorFro()
           } else {
-            console.log('error submit!!!')
             return false
           }
         })
@@ -617,6 +627,7 @@
       },
       // 绘制表格，包括更新列信息与行信息
       drawGrid (i) {
+        console.log(typeof (this.filterForm1.departTimStart[0]))
         if (i === 2) {
           this.gridOptions3.api.selectAll()
           this.delChoose(this.gridOptions3.api.getSelectedRows())
@@ -627,9 +638,13 @@
       // 获取行数据
       createRowData (i) {
         if (i === 1) {
+          console.log(this.filterForm1)
+          // this.getLongLoadFro()
           this.gridOptions.rowData = this.testData1
           this.gridOptions.api.setRowData(this.gridOptions.rowData)
         } else if (i === 2) {
+          console.log(this.filterForm2)
+          this.getLoadingOrderFro()
           this.gridOptions2.rowData = this.testData2
           this.gridOptions2.api.setRowData(this.gridOptions2.rowData)
         }
@@ -661,12 +676,23 @@
         this.gridOptions3.api.setQuickFilter(input)
       },
       // 分页的操作
-      // 每页显示数量改变时
+      // 分页大小改变
       handleSizeChange (val) {
+        console.log('分页大小改变')
+        this.filterForm1.pageSize = val
+        this.filterForm1.currentPage = 1
+        // 向后台发送数据
+        console.log(this.filterForm1.pageSize)
+        // this.getLongLoadFro()
         this.gridOptions.api.paginationSetPageSize(Number(val))
       },
       // 切换不同分页时
       handleCurrnetChange (val) {
+        console.log('切换页数为：')
+        this.filterForm1.currentPage = val
+        // 向后台发送数据
+        // this.getLongLoadFro()
+        console.log(this.filterForm1.currentPage)
         this.gridOptions.api.paginationGoToPage(val - 1)
       },
       // 发生筛选时，重新计算分页数量
@@ -675,7 +701,7 @@
       },
       // 计算总数据量
       calculateGrid () {
-        this.gridOptions.api.paginationSetPageSize(Number(this.pageSize))
+        this.gridOptions.api.paginationSetPageSize(Number(this.filterForm1.pageSize))
         this.rowCount = this.gridOptions.api.getModel().getRowCount()
       },
       // 显示切换列可见的弹框
@@ -707,7 +733,6 @@
       leftSelect () {
         const selectedData = this.gridOptions2.api.getSelectedRows()
         this.addChoose(selectedData)
-//        console.log(this.gridOptions3.api.getAllRows())
       },
       // 核销界面左侧表格全选切换至右侧
       leftSelectAll () {
@@ -739,7 +764,8 @@
       // 打开提交入库结果的窗口 type=1为正常入库 type=0为入库异常
       confirmSubmit (type) {
         this.gridOptions3.api.selectAllFiltered()
-        const confirmData = this.gridOptions3.api.getSelectedRows()
+        let confirmData = this.gridOptions3.api.getSelectedRows()
+        this.confirmSubForm.orderId = []
         if (confirmData.length < 1) {
           this.errorVisible = true
         } else {
@@ -747,25 +773,99 @@
             this.confirmSubForm.orderId[i] = confirmData[i].orderId
           }
           if (type === 1) {
+            this.confirmSubForm.type = 1
             this.confirmSubVisible = true
           }
           if (type === 0) {
+            this.confirmSubForm.type = 0
             this.unusualVisible = true
           }
         }
-        console.log(confirmData)
         // this.drawGrid(2)
       },
-      // 提交后台
+      // 确认入库/确认提交异常
       submit (type) {
         if (type) {
+          this.setOrderStatusFro()
           this.confirmSubVisible = false
         } else {
+          this.setOrderStatusFro()
           this.unusualVisible = false
         }
-        console.log(this.confirmSubForm)
+        this.gridOptions3.api.selectAll()
+        this.delChoose(this.gridOptions3.api.getSelectedRows())
+        // this.drawGrid(2)
+      },
+      /** 后台相关接口 */
 
-        this.drawGrid(2)
+      // 根据筛选条件和页数获取对应长途入库装载单数据
+      getLongLoadFro () {
+        // 入参：筛选条件，第几个页面
+        // 回参：对应页面表格数据，对应筛选条件下的页数
+        // 默认为0
+        api.getLongLoad(this.filterForm1).then(res => {
+          console.log('成功')
+          console.log(res)
+        })
+        .catch(error => {
+          this.pointVisible = true
+          setTimeout(() => { this.pointVisible = false }, 800)
+          this.Note = '获取数据失败，网络异常请检查'
+          console.log('失败')
+          console.log(error)
+        })
+      },
+      // 提交大车异常
+      setDaErrorFro () {
+        // 入参：大车异常列表
+        // 回参：是否添加成功
+        api.setDaError(this.errorForm).then(res => {
+          console.log('成功')
+          console.log(res)
+          this.pointVisible = true
+          setTimeout(() => { this.pointVisible = false }, 800)
+          this.Note = '大车异常添加成功'
+        })
+        .catch(error => {
+          this.pointVisible = true
+          setTimeout(() => { this.pointVisible = false }, 800)
+          this.Note = '大车异常添加失败，网络异常请检查'
+          console.log('失败')
+          console.log(error)
+        })
+      },
+      // 获取某一装载单所有订单列表
+      getLoadingOrderFro () {
+        // 入参：筛选条件
+        // 回参：该装载单所有订单
+        api.getLoadingOrder(this.filterForm2).then(res => {
+          console.log('成功')
+          console.log(res)
+        })
+        .catch(error => {
+          this.pointVisible = true
+          setTimeout(() => { this.pointVisible = false }, 800)
+          this.Note = '获取数据失败，网络异常请检查'
+          console.log('失败')
+          console.log(error)
+        })
+      },
+     // 修改订单状态，正常入库/异常入库
+      setOrderStatusFro () {
+        // 入参：type；订单课表
+        // 回参：成功/失败
+        console.log(this.confirmSubForm)
+        api.setOrderStatus(this.confirmSubForm).then(res => {
+          console.log('成功')
+          console.log(res)
+        })
+        .catch(error => {
+          this.pointVisible = true
+          setTimeout(() => { this.pointVisible = false }, 800)
+          this.Note = '操作失败失败，网络异常请检查'
+          console.log('失败')
+          console.log(error)
+        })
       }
     },
     computed: {

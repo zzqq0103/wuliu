@@ -1,74 +1,78 @@
 <template>
-<!-- 组件必须头元素被一个div容器包括 -->
+  <!-- 组件必须头元素被一个div容器包括 -->
   <div>
-      <div id="top">
-          <!-- 标题 -->
-          <h2 style="text-align:center">待 中 转 订 单 信 息 页</h2>
+    <div id="top">
+      <!-- 标题 -->
+      <h2 style="text-align:center">待 中 转 订 单 信 息 页</h2>
 
-          <!-- 操作栏 -->
-          <div style="margin-top:2%">
+      <!-- 操作栏 -->
+      <div style="margin-top:2%">
 
-          <!-- 查询菜单 -->
-          <div style="margin-top:2%;float:left;">
-              <el-form :inline="true" :model="formQuery" class="demo-form-inline">
-                <el-form-item label="订单时间:">
-                  <el-date-picker v-model="formQuery.dateInterval" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions" range-separator='/' style="width: 150px">
-                  </el-date-picker>
-                </el-form-item>
-                <el-form-item label="订单号:">
-                  <el-input v-model="formQuery.orderId" placeholder="请输入订单号" style="width:124px;margin-right:5px;"></el-input>
-                </el-form-item>
-                <el-form-item label="中转外包公司">
-                  <el-input v-model="formQuery.rouSelection" placeholder="请输入中转外包公司名" style="width:165px;margin-right:5px;"></el-input>
-                </el-form-item>
-                <el-form-item label="发货人姓名:">
-                  <el-input v-model="formQuery.shipNam" placeholder="请输入发货人姓名" style="width:140px;margin-right:5px;"></el-input>
-                </el-form-item>
-                <el-form-item label="收货人姓名:">
-                  <el-input v-model="formQuery.receNam" placeholder="请输入收货人姓名" style="width:140px;"></el-input>
-                </el-form-item>
-                <el-form-item>
-                  <el-button type="primary" @click="submitQuery">查询</el-button>
-                </el-form-item>
-              </el-form>
-            </div>
-          <!-- 导出 -->
-          <div style="float:right;margin-top:2%;">
-              <el-button style="float:right; margin-right:10px;">导出</el-button>
-              <!-- 设置div -->
-              <div style="float:right;margin-right:10px;">
-                <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
-                <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
-                  <template v-for="(collist,i) in gridOptions.columnDefs">
-                    <div class="colVisible">
-                      <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"  style="float: left;width: 180px">
-                        {{collist.headerName}}
-                      </el-checkbox>
-                    </div>
-                  </template>
-                  <template>
-                    <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
-                      <el-button @click="visibleChoice(1)" size="small">全选</el-button>
-                      <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
-                    </div>
-                  </template>
-                </el-popover>
-                <el-button v-popover:popover1>设置</el-button>
-              </div>
-            </div>
+        <!-- 查询菜单 -->
+        <div style="margin-top:2%;float:left;">
+          <el-form :inline="true" :model="formQuery" class="demo-form-inline">
+            <el-form-item label="订单时间:">
+              <el-date-picker v-model="formQuery.dateInterval" type="daterange" placeholder="选择日期范围"
+                              :picker-options="pickerOptions" range-separator='/' style="width: 150px">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="订单号:">
+              <el-input v-model="formQuery.orderId" placeholder="请输入订单号"
+                        style="width:124px;margin-right:5px;"></el-input>
+            </el-form-item>
+            <el-form-item label="中转外包公司">
+              <el-input v-model="formQuery.rouSelection" placeholder="请输入中转外包公司名"
+                        style="width:165px;margin-right:5px;"></el-input>
+            </el-form-item>
+            <el-form-item label="发货人姓名:">
+              <el-input v-model="formQuery.shipNam" placeholder="请输入发货人姓名"
+                        style="width:140px;margin-right:5px;"></el-input>
+            </el-form-item>
+            <el-form-item label="收货人姓名:">
+              <el-input v-model="formQuery.receNam" placeholder="请输入收货人姓名" style="width:140px;"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="submitQuery">查询</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+        <!-- 导出 -->
+        <div style="float:right;margin-top:2%;">
+          <el-button style="float:right; margin-right:10px;">导出</el-button>
+          <!-- 设置div -->
+          <div style="float:right;margin-right:10px;">
+            <!-- 鼠标移动上“设置”按钮，浮动出属性列表弹窗 -->
+            <el-popover ref="popover1" placement="right-start" title="选择显示的列表" width="500" trigger="hover">
+              <template v-for="(collist,i) in gridOptions.columnDefs">
+                <div class="colVisible">
+                  <el-checkbox v-model="collist.visible" @change="updataColumnDefs(gridOptions.columnDefs)"
+                               style="float: left;width: 180px">
+                    {{collist.headerName}}
+                  </el-checkbox>
+                </div>
+              </template>
+              <template>
+                <div class="colVisible" style="width:200px;clear:both;float:right;margin-top:10px;">
+                  <el-button @click="visibleChoice(1)" size="small">全选</el-button>
+                  <el-button @click="visibleChoice(2)" size="small">全不选</el-button>
+                </div>
+              </template>
+            </el-popover>
+            <el-button v-popover:popover1>设置</el-button>
+          </div>
+        </div>
       </div>
-       </div>
-      <!-- 清除浮动 -->
-      <div style="clear: both;">
-      </div>
-      <!-- 表格 -->
-      <div id="middle" style="margin-top:2%" v-loading="listLoading">
+    </div>
+    <!-- 清除浮动 -->
+    <div style="clear: both;">
+    </div>
+    <!-- 表格 -->
+    <div id="middle" style="margin-top:2%" v-loading="listLoading">
       <ag-grid-vue style="width: 100%;height: 580px" class="ag-blue"
                    :gridOptions="gridOptions"
                    :suppressMovableColumns="true"
                    :enableColResize="true"
                    :enableSorting="true"
-                   :enableFilter="true"
                    :groupHeaders="true"
                    :suppressCellSelection="true"
                    :rowHeight="40"
@@ -77,8 +81,8 @@
                    :colWidth="120"
       ></ag-grid-vue>
     </div>
-      <!-- 分页 -->
-      <div id="bottom" class="block" style="float:right; margin-top:30px;">
+    <!-- 分页 -->
+    <div id="bottom" class="block" style="float:right; margin-top:30px;">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -90,101 +94,107 @@
       </el-pagination>
     </div>
 
-      <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
-      <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false" top="7%">
-        <order-details :orderId="orderId"></order-details>
-      </el-dialog>
+    <!--订单详情弹框  默认隐藏，引用订单详情外部组件-->
+    <el-dialog id="shuangji" title="订单详情:" :visible.sync="detailVisible" size="small" :closeOnClickModal="false"
+               top="7%">
+      <order-details :orderId="orderId"></order-details>
+    </el-dialog>
 
-      <!-- 是否确认中转对话框 -->
-      <el-dialog title="" :visible.sync="departVisible" size="tiny" :close-on-click-modal="false" :close-on-press-escape="false" top="30%">
-          <h2 style="padding:30px">您确认中转吗？</h2>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="departVisible = false">取 消</el-button>
-            <el-button @click="transfer" type="danger">确 定</el-button>
-          </div>
-      </el-dialog>
+    <!-- 是否确认中转对话框 -->
+    <el-dialog title="" :visible.sync="departVisible" size="tiny" :close-on-click-modal="false"
+               :close-on-press-escape="false" top="30%">
+      <h2 style="padding:30px">您确认中转吗？</h2>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="departVisible = false">取 消</el-button>
+        <el-button @click="transfer" type="danger">确 定</el-button>
+      </div>
+    </el-dialog>
 
-      <!--编辑待中转订单信息，只能修改合同价格 和 外包公司， 外包公司和 外包联系人需要做一个级联-->
-      <el-dialog title="编辑" :visible.sync="editFormVisible" size="tiny" :close-on-click-modal="false" :close-on-press-escape="false" top="5%">
-        <el-form :model="tableForm">
-          <el-form-item label="订单号:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.orderId"  :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="开单时间:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.orderTim"  :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="到站点:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.arrStation"  :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="中转起始点:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.changeStart"  :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="中转外包公司:" :label-width="formLabelWidth">
-            <el-select v-model="selectEpolyComp" filterable placeholder="请选择中转外包公司">
-              <el-option
-                v-for="item in selectEpolyCompsOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="合同价格:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.contractPrice" ></el-input>
-          </el-form-item>
-          <el-form-item label="外包联系人:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.lineNam"  :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="外包联系电话:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.lineTel"  :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="中转花费:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.changeFee"  :disabled="true" ></el-input>
-          </el-form-item>
-          <el-form-item label="发货人姓名:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.shipNam" :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="收货人姓名:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.receNam" :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="货物名称:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.goodsNam" :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="包装:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.package" :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="件数:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.goodsNums" :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="重量:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.goodsWeight" :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="体积:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.goodsVolumn" :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="备注:" :label-width="formLabelWidth">
-            <el-input v-model="tableForm.orderNote" :disabled="true"></el-input>
-          </el-form-item>
+    <!--编辑待中转订单信息，只能修改合同价格 和 外包公司， 外包公司和 外包联系人需要做一个级联-->
+    <el-dialog title="编辑" :visible.sync="editFormVisible" size="tiny" :close-on-click-modal="false"
+               :close-on-press-escape="false" top="5%">
+      <el-form :model="tableForm">
+        <el-form-item label="订单号:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.orderId" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="开单时间:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.orderTim" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="到站点:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.arrStation" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="中转起始点:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.changeStart" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="中转外包公司:" :label-width="formLabelWidth">
+          <el-select v-model="selectEpolyComp" filterable placeholder="请选择中转外包公司">
+            <el-option
+              v-for="item in selectEpolyCompsOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="合同价格:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.contractPrice"></el-input>
+        </el-form-item>
+        <el-form-item label="外包联系人:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.lineNam" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="外包联系电话:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.lineTel" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="中转花费:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.changeFee" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="发货人姓名:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.shipNam" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="收货人姓名:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.receNam" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="货物名称:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.goodsNam" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="包装:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.package" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="件数:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.goodsNums" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="重量:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.goodsWeight" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="体积:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.goodsVolumn" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="备注:" :label-width="formLabelWidth">
+          <el-input v-model="tableForm.orderNote" :disabled="true"></el-input>
+        </el-form-item>
 
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="editFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="editEpolyForm">确 定</el-button>
-        </div>
-      </el-dialog>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editEpolyForm">确 定</el-button>
+      </div>
+    </el-dialog>
 
-</div>
+  </div>
 </template>
 
 <script>
   // 引入表格组件
   import {AgGridVue} from 'ag-grid-vue'
   // 引入axios后台接口
-  import {queryCurrentEpibolingList, queryOrderDetail, setCurrentEpibolingEdit, setCurrentEpibolingTransfer} from '../../api/dispatch/api'
+  import {
+    queryCurrentEpibolingList,
+    queryOrderDetail,
+    setCurrentEpibolingEdit,
+    setCurrentEpibolingTransfer
+  } from '../../api/dispatch/api'
   // 引入外部 “订单详情接口"
   import OrderDetails from '../financialAdministrator/ShowOrderDetails'
-  // 引入外部筛选函数组件系统
-  import PartialMatchFilterComponent from '../common/PartialMatchFilterComponent'
   import ElForm from '../../../node_modules/element-ui/packages/form/src/form'
   import ElFormItem from '../../../node_modules/element-ui/packages/form/src/form-item'
   import ElDialog from '../../../node_modules/element-ui/packages/dialog/src/component'
@@ -235,61 +245,67 @@
           rowSelection: 'single',
           columnDefs: [
             {
-              headerName: '序号', field: 'id', suppressMenu: true, hide: false, visible: true
+              headerName: '序号', width: 120, field: 'id', suppressMenu: true, hide: false, visible: true
             },
             {
-              headerName: '订单号', field: 'orderId', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '订单号', width: 120, field: 'orderId', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '开单时间', field: 'orderTim', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '开单时间', width: 120, field: 'orderTim', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '到站点', field: 'arrStation', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '到站点', width: 120, field: 'arrStation', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '中转起始点', field: 'changeStart', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '中转起始点', width: 120, field: 'changeStart', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '中转外包公司', field: 'rouSelection', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '中转外包公司', width: 120, field: 'rouSelection', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '中转花费', field: 'changeFee', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '中转花费', width: 120, field: 'changeFee', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '合同价格', field: 'contractPrice', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '合同价格', width: 120, field: 'contractPrice', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '外包企业联系人', width: 140, field: 'lineNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '外包企业联系人', width: 140, field: 'lineNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '外包企业联系电话', width: 150, field: 'lineTel', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '外包企业联系电话', width: 150, field: 'lineTel', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '发货人姓名', field: 'shipNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '发货人姓名', width: 120, field: 'shipNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '收货人姓名', field: 'receNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '收货人姓名', width: 120, field: 'receNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '货物名称', field: 'goodsNam', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '货物名称', width: 120, field: 'goodsNam', filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '包装', field: 'package', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '包装', field: 'package', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '件数', field: 'goodsNums', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '件数', field: 'goodsNums', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '重量', field: 'goodsWeight', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '重量', field: 'goodsWeight', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '体积', field: 'goodsVolumn', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '体积', field: 'goodsVolumn', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '备注', field: 'orderNote', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true
+              headerName: '备注', field: 'orderNote', width: 120, filter: 'text', hide: false, visible: true
             },
             {
-              headerName: '操作', field: 'operate', filter: 'text', filterFramework: PartialMatchFilterComponent, hide: false, visible: true, cellRendererFramework: 'operateComponent', pinned: 'right'
+              headerName: '操作',
+              field: 'operate',
+              filter: 'text',
+              hide: false,
+              visible: true,
+              cellRendererFramework: 'operateComponent',
+              pinned: 'right'
             }
           ]
         },
@@ -552,15 +568,18 @@
   }
 </script>
 <style scoped>
-  .el-form-item__label{
+  .el-form-item__label {
     text-align: center;
   }
+
   .el-select-css {
     width: 50%;
   }
-  .el-input{
-    color:black !important;
+
+  .el-input {
+    color: black !important;
   }
+
   .del-but {
     cursor: pointer;
     float: right;
@@ -573,19 +592,24 @@
     font-size: 0.99em;
     margin-top: 4px !important;
   }
-  .el-select{
-    width:85%;
+
+  .el-select {
+    width: 85%;
   }
-  .el-form-item__content{
+
+  .el-form-item__content {
     margin-left: 130px;
   }
-  .el-form-item__label{
+
+  .el-form-item__label {
     width: 140px !important;
   }
-  .el-form-item{
-    margin-bottom:10px;
+
+  .el-form-item {
+    margin-bottom: 10px;
   }
-  .el-input{
-    width:85%;
+
+  .el-input {
+    width: 85%;
   }
 </style>
