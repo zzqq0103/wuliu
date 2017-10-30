@@ -435,7 +435,7 @@
   }
 </script>
 <style>
-  .el-dialog__body{
+  .dispatchCar .el-dialog__body{
     width:75%;
     margin:auto;
   }

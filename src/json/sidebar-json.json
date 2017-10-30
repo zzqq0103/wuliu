@@ -239,17 +239,17 @@
         "subs": [
           {
             "index": "deliveredInfo",
-            "title": "送货成功",
+            "title": "已送货",
             "icon": ""
           },
           {
             "index": "deliveringInfo",
-            "title": "正在送货",
+            "title": "待送货",
             "icon": ""
           },
           {
             "index": "deliveringAffirm",
-            "title": "待确认",
+            "title": "待调整",
             "icon": ""
           },
           {
@@ -295,6 +295,11 @@
             "index": "transportingInfo",
             "title": "待运输",
             "icon": ""
+          },
+          {
+            "index": "transportDirect",
+            "title": "长途直送",
+            "icon": ""
           }
         ]
       },
@@ -306,11 +311,6 @@
           {
             "index": "deliveringDirect",
             "title": "短途直送",
-            "icon": ""
-          },
-          {
-            "index": "transportDirect",
-            "title": "长途直送",
             "icon": ""
           }
         ]

@@ -4,7 +4,7 @@
     <div id="top">
 
       <!-- 标题 -->
-      <h2 style="text-align:center">正 在 送 货 订 单 信 息 页</h2>
+      <h2 style="text-align:center">待 送 货 订 单 信 息 页</h2>
 
       <!-- 操作栏 -->
       <div style="margin-top:2%">
